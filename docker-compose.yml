@@ -1,0 +1,16 @@
+version: "3"
+services:
+  postgres:
+    container_name: network_database
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - network_db_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=network_db
+
+volumes:
+  network_db_data: ~

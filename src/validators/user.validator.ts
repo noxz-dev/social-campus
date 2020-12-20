@@ -1,0 +1,22 @@
+import { IsEmail, IsString, MinLength } from 'class-validator';
+import { Field, InputType } from 'type-graphql';
+
+@InputType()
+export class UserValidator {
+  @Field()
+  @IsString()
+  firstName: string;
+
+  @Field()
+  @IsString()
+  lastname: string;
+
+  @Field()
+  @IsEmail()
+  email: string;
+
+  @Field()
+  @IsString()
+  @MinLength(5)
+  password: string;
+}

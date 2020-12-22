@@ -40,6 +40,8 @@ export class UserResolver {
   public async register(@Arg('input') input: UserValidator, @Ctx() ctx: MyContext): Promise<User | null> {
     const hashedPassword = await argon2.hash(input.password);
     const user = new User(input, hashedPassword);
+    user.followers = [];
+    user.following = [];
     await getRepository(User).save(user);
     return user;
   }

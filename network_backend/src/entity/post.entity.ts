@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, getRepository, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from './base';
 import { Comment } from './comment.entity';
 import { Like } from './like.entity';
@@ -23,4 +23,18 @@ export class Post extends Base {
   @Field(() => [Like])
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
+
+  @Field(() => Number)
+  likesCount: number;
+
+  @AfterLoad()
+  async countLikes(): Promise<void> {
+    const { count } = await getRepository(Like)
+      .createQueryBuilder('like')
+      .where('like.post = :id', { id: this.id })
+      .select('COUNT(*)', 'count')
+      .getRawOne();
+
+    this.likesCount = count;
+  }
 }

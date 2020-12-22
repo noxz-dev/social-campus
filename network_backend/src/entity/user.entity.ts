@@ -32,6 +32,15 @@ export class User extends Base {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
+  @Field(() => [User])
+  @ManyToMany(() => User, (user) => user.following)
+  @JoinTable()
+  followers: User[];
+
+  @Field(() => [User])
+  @ManyToMany(() => User, (user) => user.followers)
+  following: User[];
+
   constructor(body: UserValidator, hashedPassword: string) {
     super();
     this.firstname = body?.firstName;

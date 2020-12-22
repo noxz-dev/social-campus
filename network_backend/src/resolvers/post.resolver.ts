@@ -15,7 +15,17 @@ export class PostResolver {
   })
   public async getPosts(@Arg('userID') userID: string): Promise<Post[] | null> {
     const posts = await getRepository(Post).find({
-      relations: ['comments', 'user', 'likes', 'likes.user', 'comments.user', 'comments.likes', 'comments.likes.user'],
+      relations: [
+        'comments',
+        'user',
+        'likes',
+        'likes.user',
+        'user.followers',
+        'user.following',
+        'comments.user',
+        'comments.likes',
+        'comments.likes.user',
+      ],
       where: { user: { id: userID } },
     });
     if (!posts) {
@@ -35,13 +45,15 @@ export class PostResolver {
     const user = await getRepository(User).findOne({
       relations: [
         'posts',
-        'post.comments',
-        'post.user',
-        'post.likes',
-        'post.likes.user',
-        'post.comments.user',
-        'post.comments.likes',
-        'post.comments.likes.user',
+        'posts.comments',
+        'posts.user',
+        'posts.user.followers',
+        'posts.user.following',
+        'posts.likes',
+        'posts.likes.user',
+        'posts.comments.user',
+        'posts.comments.likes',
+        'posts.comments.likes.user',
       ],
       where: { id: ctx.req.user.id },
     });

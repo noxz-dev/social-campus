@@ -37,6 +37,7 @@
       "tsconfig-paths": "^3.9.0"
    },
    "dependencies": {
+      "@boost/log": "^2.1.8",
       "argon2": "^0.27.1",
       "body-parser": "^1.19.0",
       "class-validator": "^0.12.2",
@@ -65,6 +66,7 @@
       "lint": "eslint src/**/*.ts --fix",
       "gen-env-types": "gen-env-types .env -o src/utils/types/env.d.ts -e .",
       "start": "npm run build && node dist/index.js",
-      "tnode": "ts-node-dev --respawn --transpile-only src/index.ts"
+      "tnode": "ts-node-dev --respawn --transpile-only src/index.ts",
+      "typeorm:cli": "ts-node ./node_modules/typeorm/cli"
    }
 }

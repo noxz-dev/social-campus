@@ -10,12 +10,14 @@ import { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { Connection, createConnection } from 'typeorm';
+import { CommentResolver } from './resolvers/comment.resolver';
+import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 import { customAuthChecker } from './utils/helpers/authChecker';
+import { log } from './utils/helpers/logger';
 import { MyContext } from './utils/interfaces/context.interface';
 import { authenticateToken } from './utils/middlewares/auth';
-
 
 export class Application {
   public host: express.Application;
@@ -50,7 +52,7 @@ export class Application {
 
       // initialize schema
       const schema: GraphQLSchema = await buildSchema({
-        resolvers: [UserResolver, RoleResolver],
+        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver],
         authChecker: customAuthChecker,
       });
 
@@ -76,7 +78,8 @@ export class Application {
           res: express.Response,
           next: express.NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
         ): void => {
-          console.error('🚨  Something went wrong', error);
+          // console.error('🚨  Something went wrong', error);
+          log.error(`something went wrong: ${error.stack}`);
           res.status(400).send(error);
         },
       );

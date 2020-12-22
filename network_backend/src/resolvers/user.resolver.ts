@@ -6,10 +6,10 @@ import { JwtToken } from '../entity/jwtToken.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
+import { log } from '../utils/helpers/logger';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/JwtUser';
 import { UserValidator } from '../validators/user.validator';
-
 @Resolver(() => User)
 export class UserResolver {
   @Authorized('ADMIN')
@@ -70,7 +70,7 @@ export class UserResolver {
     if (!valid) {
       return null;
     }
-
+    log.info(`user with the id: ${user.id} logged in`);
     const jwtUser: JwtUser = {
       id: user.id,
       email: user.email,

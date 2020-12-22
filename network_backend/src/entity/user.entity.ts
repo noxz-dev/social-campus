@@ -1,7 +1,8 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
+import { Post } from './post.entity';
 import { Role } from './role.entity';
 
 @Entity()
@@ -26,6 +27,10 @@ export class User extends Base {
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
   roles: Role[];
+
+  @Field(() => [Post])
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   constructor(body: UserValidator, hashedPassword: string) {
     super();

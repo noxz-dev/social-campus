@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { JwtUser } from '../interfaces/JwtUser';
 
 export const generateAccessToken = (user: JwtUser): string => {
-  return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '30m' });
+  return jwt.sign(user, process.env.JWT_SECRET);
 };
 
 export const generateRefreshToken = (user: JwtUser): string => {

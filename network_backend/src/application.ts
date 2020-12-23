@@ -6,6 +6,7 @@ import 'express-async-errors';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
@@ -61,6 +62,7 @@ export class Application {
         '/graphql',
         authenticateToken,
         bodyParser.json(),
+        graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 1 }),
         graphqlHTTP((req, res) => ({
           schema,
           context: { req, res } as MyContext,

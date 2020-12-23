@@ -1,7 +1,6 @@
 version: "3"
 services:
   postgres:
-    container_name: network_database
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -20,18 +19,26 @@ services:
     environment:
       - MINIO_ACESS_KEY=root
       - MINIO_SECRET_KEY=root
-  nginx:
-    image: nginx:1.19.6-alpine
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
   backend:
     image: node:14
     command: npm run tnode
     ports:
-      - 5000:3000
+      - 3000:3000
     volumes:
       - .:/srv/backend:rw
     working_dir: /srv/backend
+    depends_on:
+      - postgres
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on: 
+      - backend
+   
 
 volumes:
   network_db_data: ~

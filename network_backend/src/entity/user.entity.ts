@@ -1,5 +1,7 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { log } from '../utils/services/logger';
+import { minioClient } from '../utils/services/minio';
 import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
 import { Post } from './post.entity';
@@ -40,6 +42,25 @@ export class User extends Base {
   @Field(() => [User])
   @ManyToMany(() => User, (user) => user.followers)
   following: User[];
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  profilePicName: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  profilePicLink: string;
+
+  @AfterLoad()
+  async generatePictureLink(): Promise<void> {
+    if (!this.profilePicLink) {
+      minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
+        if (err) return log.error('link generation failed');
+        console.log(url);
+        this.profilePicLink = url;
+      });
+    }
+  }
 
   constructor(body: UserValidator, hashedPassword: string) {
     super();

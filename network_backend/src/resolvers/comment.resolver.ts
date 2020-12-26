@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
@@ -68,6 +69,39 @@ export class CommentResolver {
 
     comment.likes.push(like);
     await getRepository(Like).save(like);
+    await getRepository(Comment).save(comment);
+    return comment;
+  }
+
+  @Authorized()
+  @Mutation(() => Comment)
+  public async unlikeComment(@Ctx() ctx: MyContext, @Arg('commentID') commentID: string): Promise<Comment | null> {
+    const id = ctx.req.user.id;
+    if (!id) {
+      return null;
+    }
+
+    const comment = await getRepository(Comment).findOne({
+      relations: ['likes', 'likes.user', 'user', 'likes.comment'],
+      where: { id: commentID },
+    });
+    if (!comment) {
+      return null;
+    }
+
+    let like;
+    _.remove(comment.likes, (currentObject) => {
+      if (currentObject.comment.id === commentID) {
+        like = currentObject;
+        return true;
+      }
+      return false;
+    });
+
+    if (like) {
+      await getRepository(Like).remove(like);
+    }
+
     await getRepository(Comment).save(comment);
     return comment;
   }

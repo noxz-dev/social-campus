@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import argon2 from 'argon2';
+import { createWriteStream, unlink } from 'fs';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import _ from 'lodash';
+import os from 'os';
+import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
-import { log } from '../utils/helpers/logger';
 import { MyContext } from '../utils/interfaces/context.interface';
-import { JwtUser } from '../utils/interfaces/JwtUser';
+import { JwtUser } from '../utils/interfaces/jwtUser';
+import { log } from '../utils/services/logger';
+import { minioClient } from '../utils/services/minio';
 import { UserValidator } from '../validators/user.validator';
+
 @Resolver(() => User)
 export class UserResolver {
   @Authorized('ADMIN')
@@ -29,7 +37,7 @@ export class UserResolver {
       return null;
     }
 
-    const user = getRepository(User).findOne({ relations: ['roles'], where: { id } });
+    const user = getRepository(User).findOne({ relations: ['roles', 'following', 'followers'], where: { id } });
     if (!user) {
       return null;
     }
@@ -91,64 +99,102 @@ export class UserResolver {
     return response;
   }
 
-  // @Mutation(() => Boolean)
-  // public async confirmUser(@Arg('token') token: string, @Ctx() ctx: MyContext): Promise<boolean> {
-  //   const userToken = await getRepository(Token).findOne({ token: `confirm:${token}` });
+  @Authorized()
+  @Mutation(() => User)
+  async uploadProfileImage(@Ctx() ctx: MyContext, @Arg('file', () => GraphQLUpload) file: FileUpload): Promise<User> {
+    const id = ctx.req.user.id;
+    if (!id) {
+      return null;
+    }
 
-  //   if (!userToken) {
-  //     return null;
-  //   }
+    const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
+    if (!user) {
+      return null;
+    }
 
-  //   const user = await ctx.em.getRepository(User).findOneOrFail({ id: userToken.userId });
+    const metaData = {
+      'Content-Type': 'application/octet-stream',
+      'X-Amz-Meta-Testing': 1234,
+      example: 5678,
+    };
+    const filenameUUID = uuidv4();
+    const { createReadStream, filename } = await file;
 
-  //   user.confirmed = true;
+    const fileEnding = filename.split('.')[1];
+    const newFileName = filenameUUID + '.' + fileEnding;
+    const destinationPath = path.join(os.tmpdir(), filename);
+    await new Promise((res, rej) =>
+      createReadStream()
+        .pipe(createWriteStream(destinationPath))
+        .on('error', rej)
+        .on('finish', () => {
+          minioClient.fPutObject('profile-pics', newFileName, destinationPath, metaData, (err, etag) => {
+            if (err) {
+              log.error(err.stack);
+              throw Error('image upload failed');
+            }
+            log.info('File uploaded successfully.');
 
-  //   await ctx.em.getRepository(Token).remove(userToken);
-  //   await ctx.em.flush();
-  //   return user.confirmed;
-  // }
+            //Delete the tmp file uploaded
+            unlink(destinationPath, () => {
+              res('file upload complete');
+            });
+          });
+        }),
+    );
 
-  // @Mutation(() => Boolean)
-  // public async forgotPassword(@Arg('email') email: string, @Ctx() ctx: MyContext): Promise<boolean> {
-  //   const user = await ctx.em.getRepository(User).findOne({ email });
+    user.profilePicName = newFileName;
 
-  //   if (!user) {
-  //     return false;
-  //   }
+    await getRepository(User).save(user);
+    return user;
+  }
 
-  //   const changePasswordUrl = await createTokenUrl({
-  //     user,
-  //     type: 'change-password',
-  //     ctx,
-  //   });
+  @Authorized()
+  @Mutation(() => User)
+  async addFollower(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<User | null> {
+    const id = ctx.req.user.id;
+    if (!id) {
+      return null;
+    }
+    const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
+    if (!user) {
+      return null;
+    }
+    const follower = await getRepository(User).findOne({
+      where: { id: userID },
+      relations: ['following', 'followers'],
+    });
+    if (!follower) {
+      return null;
+    }
+    user.following.push(follower);
 
-  //   await sendEmail({
-  //     email,
-  //     subject: '🔑  Dont worry, set your new password now.',
-  //     html: `To reset your password, <a href="${changePasswordUrl}">click here</a>`,
-  //   });
+    const userRepo = await getRepository(User);
 
-  //   return true;
-  // }
+    userRepo.save(user);
 
-  // @Mutation(() => User)
-  // public async changePassword(
-  //   @Arg('password') password: string,
-  //   @Arg('token') token: string,
-  //   @Ctx() ctx: MyContext,
-  // ): Promise<User | null> {
-  //   const userToken = await ctx.em.getRepository(Token).findOne({ token: `change-password:${token}` });
+    return user;
+  }
 
-  //   if (!userToken) {
-  //     return null;
-  //   }
+  @Authorized()
+  @Mutation(() => User)
+  async removeFollower(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<User | null> {
+    const id = ctx.req.user.id;
+    if (!id) {
+      return null;
+    }
 
-  //   const user = await ctx.em.getRepository(User).findOneOrFail({ id: userToken.userId });
+    const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
+    if (!user) {
+      return null;
+    }
 
-  //   user.password = await argon2.hash(password);
-  //   await ctx.em.getRepository(Token).remove(userToken);
-  //   await ctx.em.flush();
+    _.remove(user.following, {
+      id: userID,
+    });
 
-  //   return user;
-  // }
+    await getRepository(User).save(user);
+
+    return user;
+  }
 }

@@ -16,9 +16,10 @@ import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 import { customAuthChecker } from './utils/helpers/authChecker';
-import { log } from './utils/helpers/logger';
 import { MyContext } from './utils/interfaces/context.interface';
 import { authenticateToken } from './utils/middlewares/auth';
+import { log } from './utils/services/logger';
+import { minioClient } from './utils/services/minio';
 
 export class Application {
   public host: express.Application;
@@ -41,6 +42,30 @@ export class Application {
     if (process.env.NODE_ENV !== 'production') {
       this.host.get('/graphql', expressPlayground({ endpoint: '/graphql' }));
     }
+
+    minioClient.bucketExists('profile-pics', function (err, exists) {
+      if (err) {
+        log.error(err.stack);
+      }
+      if (!exists) {
+        minioClient.makeBucket('profile-pics', 'eu', (err) => {
+          if (err) log.error(err.stack);
+          console.log('Bucket created successfully in "eu".');
+        });
+      }
+    });
+
+    minioClient.bucketExists('post-images', function (err, exists) {
+      if (err) {
+        log.error(err.stack);
+      }
+      if (!exists) {
+        minioClient.makeBucket('post-images', 'eu', (err) => {
+          if (err) log.error(err.stack);
+          console.log('Bucket created successfully in "eu".');
+        });
+      }
+    });
 
     try {
       // enable cors
@@ -89,7 +114,7 @@ export class Application {
       // start server on default port 4000
       const port = process.env.PORT || 5000;
       this.server = this.host.listen(port, () => {
-        console.log(`🚀  http://localhost:${port}/graphql`);
+        log.info(`🚀  http://localhost:${port}/graphql`);
       });
     } catch (error) {
       console.error('🚨  Could not start server', error);

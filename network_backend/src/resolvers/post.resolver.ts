@@ -1,10 +1,17 @@
+import { createWriteStream, unlink } from 'fs';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import _ from 'lodash';
+import os from 'os';
+import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { Like } from '../entity/like.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
-import { LikeCountResponse } from '../graphql_types/likeCountResponse';
 import { MyContext } from '../utils/interfaces/context.interface';
+import { log } from '../utils/services/logger';
+import { minioClient } from '../utils/services/minio';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -36,7 +43,11 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post)
-  public async addPost(@Ctx() ctx: MyContext, @Arg('text') text: string): Promise<Post | null> {
+  public async addPost(
+    @Ctx() ctx: MyContext,
+    @Arg('text') text: string,
+    @Arg('file', () => GraphQLUpload, { nullable: true }) file: FileUpload,
+  ): Promise<Post | null> {
     const id = ctx.req.user.id;
     if (!id) {
       return null;
@@ -60,6 +71,39 @@ export class PostResolver {
     if (!user) {
       return null;
     }
+
+    const metaData = {
+      'Content-Type': 'application/octet-stream',
+      'X-Amz-Meta-Testing': 1234,
+      example: 5678,
+    };
+    const filenameUUID = uuidv4();
+    const { createReadStream, filename } = await file;
+
+    const fileEnding = filename.split('.')[1];
+    const newFileName = filenameUUID + '.' + fileEnding;
+    const destinationPath = path.join(os.tmpdir(), filename);
+    await new Promise((res, rej) =>
+      createReadStream()
+        .pipe(createWriteStream(destinationPath))
+        .on('error', rej)
+        .on('finish', () => {
+          minioClient.fPutObject('post-images', newFileName, destinationPath, metaData, (err, etag) => {
+            if (err) {
+              log.error(err.stack);
+              throw Error('image upload failed');
+            }
+            log.info('File uploaded successfully.');
+
+            //Delete the tmp file uploaded
+            unlink(destinationPath, () => {
+              res('file upload complete');
+            });
+          });
+        }),
+    );
+
+    user.profilePicName = newFileName;
 
     const post = new Post();
     post.text = text;
@@ -106,17 +150,43 @@ export class PostResolver {
   }
 
   @Authorized()
-  @Query(() => LikeCountResponse)
-  public async getLikeCountFromPost(@Arg('postID') postID: string): Promise<LikeCountResponse | null> {
-    const post = await getRepository(Post).findOne({ relations: ['likes'], where: { id: postID } });
-    if (!post) {
+  @Mutation(() => Post)
+  public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
+    const id = ctx.req.user.id;
+    if (!id) {
       return null;
     }
 
-    const likeCount = new LikeCountResponse();
+    const post = await getRepository(Post).findOne({
+      relations: [
+        'comments',
+        'user',
+        'likes',
+        'likes.user',
+        'likes.post',
+        'comments.user',
+        'comments.likes',
+        'comments.likes.user',
+      ],
+      where: { id: postID },
+    });
+    if (!post) {
+      return null;
+    }
+    let like;
+    _.remove(post.likes, (currentObject) => {
+      if (currentObject.post.id === postID) {
+        like = currentObject;
+        return true;
+      }
+      return false;
+    });
 
-    likeCount.likeCount = post.likes.length;
+    if (like) {
+      await getRepository(Like).remove(like);
+    }
 
-    return likeCount;
+    await getRepository(Post).save(post);
+    return post;
   }
 }

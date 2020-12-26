@@ -17,11 +17,14 @@ services:
     volumes:
       - ./minio_data:/data
     environment:
-      - MINIO_ACESS_KEY=root
-      - MINIO_SECRET_KEY=root
+      MINIO_ACCESS_KEY: root
+      MINIO_SECRET_KEY: password
+    command: server /data
+    depends_on: 
+      - backend
   backend:
     image: node:14
-    command: npm run tnode
+    command: npm run dev
     ports:
       - 3000:3000
     volumes:

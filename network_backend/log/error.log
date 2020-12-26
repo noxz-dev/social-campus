@@ -996,3 +996,224 @@
     at H:\projects\network\network_backend\node_modules\type-graphql\dist\resolvers\helpers.js:83:26
     at dispatchHandler (H:\projects\network\network_backend\node_modules\type-graphql\dist\resolvers\helpers.js:82:24)
     at graphqlMiddleware (H:\projects\network\network_backend\node_modules\express-graphql\index.js:125:26) (host=nox-desktop, name=network_logger, pid=29768)
+[2020-12-25T16:45:41.122Z] ERROR something went wrong: GraphQLError: Field "followers" of type "[User!]!" must have a selection of subfields. Did you mean "followers { ... }"?
+    at Object.Field (/srv/backend/node_modules/graphql/validation/rules/ScalarLeafsRule.js:40:31)
+    at Object.enter (/srv/backend/node_modules/graphql/language/visitor.js:323:29)
+    at Object.enter (/srv/backend/node_modules/graphql/utilities/TypeInfo.js:370:25)
+    at visit (/srv/backend/node_modules/graphql/language/visitor.js:243:26)
+    at validate (/srv/backend/node_modules/graphql/validation/validate.js:69:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:98:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=ea7beb035c73, name=network_logger, pid=38)
+[2020-12-25T16:45:57.752Z] ERROR something went wrong: Error: Cannot return null for non-nullable field User.followers.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at resolveField (/srv/backend/node_modules/graphql/execution/execute.js:474:19)
+    at executeFields (/srv/backend/node_modules/graphql/execution/execute.js:294:18)
+    at collectAndExecuteSubfields (/srv/backend/node_modules/graphql/execution/execute.js:749:10)
+    at completeObjectValue (/srv/backend/node_modules/graphql/execution/execute.js:739:10)
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:592:12)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at async Promise.all (index 0)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=ea7beb035c73, name=network_logger, pid=38)
+[2020-12-25T16:51:25.404Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.removeFollower.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=ea7beb035c73, name=network_logger, pid=138)
+[2020-12-25T20:02:52.713Z] ERROR Error: write EPROTO 140472612833088:error:1408F10B:SSL routines:ssl3_get_record:wrong version number:../deps/openssl/openssl/ssl/record/ssl3_record.c:332:
+
+    at WriteWrap.onWriteComplete [as oncomplete] (internal/stream_base_commons.js:94:16) (host=cc76d8ff70ba, name=network_logger, pid=264)
+[2020-12-25T20:02:52.718Z] ERROR Error: write EPROTO 140472612833088:error:1408F10B:SSL routines:ssl3_get_record:wrong version number:../deps/openssl/openssl/ssl/record/ssl3_record.c:332:
+
+    at WriteWrap.onWriteComplete [as oncomplete] (internal/stream_base_commons.js:94:16) (host=cc76d8ff70ba, name=network_logger, pid=264)
+[2020-12-25T20:51:22.438Z] ERROR something went wrong: Error: you already liked this post
+    at PostResolver.likePost (/srv/backend/src/resolvers/post.resolver.ts:96:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1041)
+[2020-12-25T20:53:04.279Z] ERROR something went wrong: Error: you already liked this post
+    at PostResolver.unlikePost (/srv/backend/src/resolvers/post.resolver.ts:130:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1041)
+[2020-12-25T20:53:35.864Z] ERROR something went wrong: TypeError: Cannot read property 'id' of undefined
+    at /srv/backend/src/resolvers/post.resolver.ts:130:33
+    at Function.remove (/srv/backend/node_modules/lodash/lodash.js:7881:13)
+    at PostResolver.unlikePost (/srv/backend/src/resolvers/post.resolver.ts:129:7)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1077)
+[2020-12-25T20:55:16.365Z] ERROR something went wrong: Error: you already liked this post
+    at PostResolver.likePost (/srv/backend/src/resolvers/post.resolver.ts:96:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1089)
+[2020-12-25T20:55:46.748Z] ERROR something went wrong: Error: you already liked this post
+    at PostResolver.likePost (/srv/backend/src/resolvers/post.resolver.ts:96:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1089)
+[2020-12-25T21:00:19.363Z] ERROR something went wrong: MustBeEntityError: Cannot remove, given value must be an entity, instead "undefined" is given.
+    at new MustBeEntityError (/srv/backend/src/error/MustBeEntityError.ts:8:9)
+    at EntityPersistExecutor.execute (/srv/backend/src/persistence/EntityPersistExecutor.ts:45:35)
+    at EntityManager.remove (/srv/backend/src/entity-manager/EntityManager.ts:362:14)
+    at Repository.remove (/srv/backend/src/repository/Repository.ts:167:29)
+    at PostResolver.unlikePost (/srv/backend/src/resolvers/post.resolver.ts:146:31)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1192)
+[2020-12-25T21:05:24.264Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.likeComment.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1444)
+[2020-12-25T21:05:34.294Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.likeComment.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1444)
+[2020-12-25T21:06:02.629Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.likeComment.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1444)
+[2020-12-25T21:06:27.545Z] ERROR something went wrong: TypeError: Cannot read property 'id' of undefined
+    at /srv/backend/src/resolvers/comment.resolver.ts:94:33
+    at Function.remove (/srv/backend/node_modules/lodash/lodash.js:7881:13)
+    at CommentResolver.unlikeComment (/srv/backend/src/resolvers/comment.resolver.ts:93:7)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1444)
+[2020-12-25T21:45:29.492Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.login.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T21:55:45.881Z] ERROR something went wrong: GraphQLError: Unknown operation named "Query".
+    at buildExecutionContext (/srv/backend/node_modules/graphql/execution/execute.js:197:15)
+    at executeImpl (/srv/backend/node_modules/graphql/execution/execute.js:103:20)
+    at execute (/srv/backend/node_modules/graphql/execution/execute.js:62:35)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:32)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T21:57:06.928Z] ERROR something went wrong: Error: Access denied! You need to be authorized to perform this action!
+    at /srv/backend/node_modules/type-graphql/dist/helpers/auth-middleware.js:13:44
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at async Promise.all (index 0)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T21:57:16.647Z] ERROR something went wrong: Error: Access denied! You need to be authorized to perform this action!
+    at /srv/backend/node_modules/type-graphql/dist/helpers/auth-middleware.js:13:44
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at async Promise.all (index 0)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:06:09.523Z] ERROR something went wrong: GraphQLError: Upload literal unsupported.
+    at GraphQLScalarType.parseLiteral (/srv/backend/node_modules/graphql-upload/public/GraphQLUpload.js:85:11)
+    at isValidValueNode (/srv/backend/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js:125:28)
+    at Object.StringValue (/srv/backend/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js:93:14)
+    at Object.enter (/srv/backend/node_modules/graphql/language/visitor.js:323:29)
+    at Object.enter (/srv/backend/node_modules/graphql/utilities/TypeInfo.js:370:25)
+    at visit (/srv/backend/node_modules/graphql/language/visitor.js:243:26)
+    at validate (/srv/backend/node_modules/graphql/validation/validate.js:69:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:98:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:06:48.850Z] ERROR something went wrong: GraphQLError: Unknown argument "image" on field "Mutation.uploadProfileImage".
+    at Object.Argument (/srv/backend/node_modules/graphql/validation/rules/KnownArgumentNamesRule.js:46:29)
+    at Object.enter (/srv/backend/node_modules/graphql/language/visitor.js:323:29)
+    at Object.enter (/srv/backend/node_modules/graphql/utilities/TypeInfo.js:370:25)
+    at visit (/srv/backend/node_modules/graphql/language/visitor.js:243:26)
+    at validate (/srv/backend/node_modules/graphql/validation/validate.js:69:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:98:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:07:52.742Z] ERROR something went wrong: GraphQLError: Unknown argument "image" on field "Mutation.uploadProfileImage".
+    at Object.Argument (/srv/backend/node_modules/graphql/validation/rules/KnownArgumentNamesRule.js:46:29)
+    at Object.enter (/srv/backend/node_modules/graphql/language/visitor.js:323:29)
+    at Object.enter (/srv/backend/node_modules/graphql/utilities/TypeInfo.js:370:25)
+    at visit (/srv/backend/node_modules/graphql/language/visitor.js:243:26)
+    at validate (/srv/backend/node_modules/graphql/validation/validate.js:69:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:98:38)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:16:47.535Z] ERROR something went wrong: GraphQLError: Variable "$file" of non-null type "Upload!" must not be null.
+    at _loop (/srv/backend/node_modules/graphql/execution/values.js:105:15)
+    at coerceVariableValues (/srv/backend/node_modules/graphql/execution/values.js:121:16)
+    at getVariableValues (/srv/backend/node_modules/graphql/execution/values.js:50:19)
+    at buildExecutionContext (/srv/backend/node_modules/graphql/execution/execute.js:205:61)
+    at executeImpl (/srv/backend/node_modules/graphql/execution/execute.js:103:20)
+    at execute (/srv/backend/node_modules/graphql/execution/execute.js:62:35)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:32)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:17:28.838Z] ERROR something went wrong: TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of ReadStream
+    at WriteStream.Writable.write (internal/streams/writable.js:285:13)
+    at UserResolver.uploadProfileImage (/srv/backend/src/resolvers/user.resolver.ts:114:8)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/create.js:31:98
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1456)
+[2020-12-25T22:19:19.265Z] ERROR something went wrong: TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of ReadStream
+    at WriteStream.Writable.write (internal/streams/writable.js:285:13)
+    at UserResolver.uploadProfileImage (/srv/backend/src/resolvers/user.resolver.ts:113:8)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/create.js:31:98
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at /srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+    at dispatchHandler (/srv/backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1468)
+[2020-12-25T22:33:02.439Z] ERROR something went wrong: Error: Cannot return null for non-nullable field Mutation.uploadProfileImage.
+    at completeValue (/srv/backend/node_modules/graphql/execution/execute.js:561:13)
+    at /srv/backend/node_modules/graphql/execution/execute.js:471:16
+    at graphqlMiddleware (/srv/backend/node_modules/express-graphql/index.js:125:26) (host=cc76d8ff70ba, name=network_logger, pid=1614)
+[2020-12-25T22:48:20.344Z] ERROR Error: ENOENT: no such file or directory, open '/tmp/26b73c24-213a-40da-a024-3d20fa8bb37f' (host=cc76d8ff70ba, name=network_logger, pid=79)
+[2020-12-25T22:48:59.375Z] ERROR Error: ENOENT: no such file or directory, open '/tmp/ada424cd38781f34d172daccd0be80c5.jpg' (host=cc76d8ff70ba, name=network_logger, pid=103)
+[2020-12-25T22:49:45.031Z] ERROR Error: ENOENT: no such file or directory, open '/tmp/ada424cd38781f34d172daccd0be80c5.jpg' (host=cc76d8ff70ba, name=network_logger, pid=115)
+[2020-12-25T22:52:45.144Z] ERROR Error: ENOENT: no such file or directory, open '/tmp/concept idea.png' (host=cc76d8ff70ba, name=network_logger, pid=163)
+[2020-12-25T22:57:20.444Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/concept idea.png' (host=cc76d8ff70ba, name=network_logger, pid=175)
+[2020-12-25T22:58:31.799Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/concept idea.png' (host=cc76d8ff70ba, name=network_logger, pid=187)
+[2020-12-25T22:58:48.775Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/concept idea.png' (host=cc76d8ff70ba, name=network_logger, pid=199)
+[2020-12-25T23:00:48.972Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/concept idea.png' (host=cc76d8ff70ba, name=network_logger, pid=211)
+[2020-12-25T23:01:11.684Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=211)
+[2020-12-25T23:01:17.716Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=211)
+[2020-12-25T23:03:47.349Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=223)
+[2020-12-25T23:04:24.825Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=235)
+[2020-12-25T23:06:39.556Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=54)
+[2020-12-25T23:07:48.145Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=66)
+[2020-12-25T23:08:39.945Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=102)
+[2020-12-25T23:09:20.244Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=114)
+[2020-12-25T23:09:35.885Z] ERROR something went wrong: Error: ENOENT: no such file or directory, open '../../temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=126)
+[2020-12-25T23:19:31.040Z] ERROR Error: ENOENT: no such file or directory, open '/srv/backend/temp_data/astro.jpg' (host=cc76d8ff70ba, name=network_logger, pid=193)
+[2020-12-25T23:53:59.974Z] ERROR something went wrong: InvalidBucketNameError: Invalid bucket name: profilePics
+    at Client.presignedGetObject (/srv/backend/node_modules/minio/dist/main/minio.js:2023:15)
+    at Client.<anonymous> (/srv/backend/node_modules/minio/dist/main/helpers.js:69:51)
+    at User.generatePictureLink (/srv/backend/src/entity/user.entity.ts:57:19)
+    at EntityListenerMetadata.execute (/srv/backend/src/metadata/EntityListenerMetadata.ts:71:45)
+    at /srv/backend/src/subscriber/Broadcaster.ts:417:58
+    at Array.forEach (<anonymous>)
+    at /srv/backend/src/subscriber/Broadcaster.ts:415:45
+    at Array.forEach (<anonymous>)
+    at Broadcaster.broadcastLoadEventsForAll (/srv/backend/src/subscriber/Broadcaster.ts:396:18)
+    at SelectQueryBuilder.<anonymous> (/srv/backend/src/query-builder/SelectQueryBuilder.ts:1992:41) (host=cc76d8ff70ba, name=network_logger, pid=126)
+[2020-12-25T23:54:19.503Z] ERROR something went wrong: InvalidBucketNameError: Invalid bucket name: profilePics
+    at Client.presignedGetObject (/srv/backend/node_modules/minio/dist/main/minio.js:2023:15)
+    at Client.<anonymous> (/srv/backend/node_modules/minio/dist/main/helpers.js:69:51)
+    at User.generatePictureLink (/srv/backend/src/entity/user.entity.ts:57:19)
+    at EntityListenerMetadata.execute (/srv/backend/src/metadata/EntityListenerMetadata.ts:71:45)
+    at /srv/backend/src/subscriber/Broadcaster.ts:417:58
+    at Array.forEach (<anonymous>)
+    at /srv/backend/src/subscriber/Broadcaster.ts:415:45
+    at Array.forEach (<anonymous>)
+    at Broadcaster.broadcastLoadEventsForAll (/srv/backend/src/subscriber/Broadcaster.ts:396:18)
+    at SelectQueryBuilder.<anonymous> (/srv/backend/src/query-builder/SelectQueryBuilder.ts:1992:41) (host=cc76d8ff70ba, name=network_logger, pid=150)

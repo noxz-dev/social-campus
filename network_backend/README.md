@@ -1,4 +1,4 @@
-# Awesome Project 
+# Network Backend 
 
 * TODO:
     * [x] implement basic followers entity structure

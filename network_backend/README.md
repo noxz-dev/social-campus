@@ -9,6 +9,7 @@
     * [x] setup minio s3 container (docker)
     * [x] setup nginx reverse proxy
     * [x] add profileimages to user (save in container)
-    * [ ] add the functionality to upload a image to a post (needs frontend)
+    * [X] add the functionality to upload a image to a post
     * [x] add groups entity and resolver
     * [x] add functionality to create and join groups
+    * [x] set minio policy on bucket creation

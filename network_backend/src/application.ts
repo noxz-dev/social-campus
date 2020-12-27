@@ -20,7 +20,7 @@ import { customAuthChecker } from './utils/helpers/authChecker';
 import { MyContext } from './utils/interfaces/context.interface';
 import { authenticateToken } from './utils/middlewares/auth';
 import { log } from './utils/services/logger';
-import { minioClient } from './utils/services/minio';
+import { initS3 } from './utils/services/minio';
 
 export class Application {
   public host: express.Application;
@@ -44,29 +44,7 @@ export class Application {
       this.host.get('/graphql', expressPlayground({ endpoint: '/graphql' }));
     }
 
-    minioClient.bucketExists('profile-pics', function (err, exists) {
-      if (err) {
-        log.error(err.stack);
-      }
-      if (!exists) {
-        minioClient.makeBucket('profile-pics', 'eu', (err) => {
-          if (err) log.error(err.stack);
-          console.log('Bucket created successfully in "eu".');
-        });
-      }
-    });
-
-    minioClient.bucketExists('post-images', function (err, exists) {
-      if (err) {
-        log.error(err.stack);
-      }
-      if (!exists) {
-        minioClient.makeBucket('post-images', 'eu', (err) => {
-          if (err) log.error(err.stack);
-          console.log('Bucket created successfully in "eu".');
-        });
-      }
-    });
+    initS3();
 
     try {
       // enable cors

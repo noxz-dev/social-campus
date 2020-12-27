@@ -6,6 +6,7 @@ import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
@@ -20,7 +21,7 @@ export class PostResolver {
     nullable: true,
     description: 'getPosts returns all posts from a given userID',
   })
-  public async getPosts(@Arg('userID') userID: string): Promise<Post[] | null> {
+  public async getPostsFromUser(@Arg('userID') userID: string): Promise<Post[] | null> {
     const posts = await getRepository(Post).find({
       relations: [
         'comments',
@@ -42,11 +43,38 @@ export class PostResolver {
   }
 
   @Authorized()
+  @Query(() => [Post], {
+    nullable: true,
+    description: 'getPosts returns all posts from a given groupID',
+  })
+  public async getPostsFromGroup(@Arg('groupID') groupID: string): Promise<Post[] | null> {
+    const posts = await getRepository(Post).find({
+      relations: [
+        'comments',
+        'user',
+        'likes',
+        'likes.user',
+        'user.followers',
+        'user.following',
+        'comments.user',
+        'comments.likes',
+        'comments.likes.user',
+      ],
+      where: { group: { id: groupID } },
+    });
+    if (!posts) {
+      return null;
+    }
+    return posts;
+  }
+
+  @Authorized()
   @Mutation(() => Post)
   public async addPost(
     @Ctx() ctx: MyContext,
     @Arg('text') text: string,
     @Arg('file', () => GraphQLUpload, { nullable: true }) file: FileUpload,
+    @Arg('groupID', { nullable: true }) groupID: string,
   ): Promise<Post | null> {
     const id = ctx.req.user.id;
     if (!id) {
@@ -58,6 +86,7 @@ export class PostResolver {
         'posts',
         'posts.comments',
         'posts.user',
+        'posts.group',
         'posts.user.followers',
         'posts.user.following',
         'posts.likes',
@@ -71,44 +100,54 @@ export class PostResolver {
     if (!user) {
       return null;
     }
+    if (file) {
+      const metaData = {
+        'Content-Type': 'application/octet-stream',
+        'X-Amz-Meta-Testing': 1234,
+        example: 5678,
+      };
+      const filenameUUID = uuidv4();
+      const { createReadStream, filename } = await file;
 
-    const metaData = {
-      'Content-Type': 'application/octet-stream',
-      'X-Amz-Meta-Testing': 1234,
-      example: 5678,
-    };
-    const filenameUUID = uuidv4();
-    const { createReadStream, filename } = await file;
+      const fileEnding = filename.split('.')[1];
+      const newFileName = filenameUUID + '.' + fileEnding;
+      const destinationPath = path.join(os.tmpdir(), filename);
+      await new Promise((res, rej) =>
+        createReadStream()
+          .pipe(createWriteStream(destinationPath))
+          .on('error', rej)
+          .on('finish', () => {
+            minioClient.fPutObject('post-images', newFileName, destinationPath, metaData, (err, etag) => {
+              if (err) {
+                log.error(err.stack);
+                throw Error('image upload failed');
+              }
+              log.info('File uploaded successfully.');
 
-    const fileEnding = filename.split('.')[1];
-    const newFileName = filenameUUID + '.' + fileEnding;
-    const destinationPath = path.join(os.tmpdir(), filename);
-    await new Promise((res, rej) =>
-      createReadStream()
-        .pipe(createWriteStream(destinationPath))
-        .on('error', rej)
-        .on('finish', () => {
-          minioClient.fPutObject('post-images', newFileName, destinationPath, metaData, (err, etag) => {
-            if (err) {
-              log.error(err.stack);
-              throw Error('image upload failed');
-            }
-            log.info('File uploaded successfully.');
-
-            //Delete the tmp file uploaded
-            unlink(destinationPath, () => {
-              res('file upload complete');
+              //Delete the tmp file uploaded
+              unlink(destinationPath, () => {
+                res('file upload complete');
+              });
             });
-          });
-        }),
-    );
+          }),
+      );
 
-    user.profilePicName = newFileName;
+      user.profilePicName = newFileName;
+    }
+    let group;
+    if (groupID) {
+      group = getRepository(Group).findOne({ where: { id: groupID } });
+    }
+
+    if (groupID && !group) {
+      return null;
+    }
 
     const post = new Post();
     post.text = text;
     post.user = user;
     post.likes = [];
+    post.group = group;
     user.posts.push(post);
     await getRepository(Post).save(post);
     await getRepository(User).save(user);

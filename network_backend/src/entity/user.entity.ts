@@ -4,6 +4,7 @@ import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
 import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
+import { Group } from './group.entity';
 import { Post } from './post.entity';
 import { Role } from './role.entity';
 
@@ -25,6 +26,14 @@ export class User extends Base {
   @Column()
   password: string;
 
+  @Field(() => String)
+  @Column({ nullable: true })
+  profilePicName: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  profilePicLink: string;
+
   @Field(() => [Role])
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
@@ -43,21 +52,18 @@ export class User extends Base {
   @ManyToMany(() => User, (user) => user.followers)
   following: User[];
 
-  @Field(() => String)
-  @Column({ nullable: true })
-  profilePicName: string;
-
-  @Field(() => String)
-  @Column({ nullable: true })
-  profilePicLink: string;
+  @Field(() => [Group])
+  @ManyToMany(() => Group, (group) => group.members)
+  groups: Group[];
 
   @AfterLoad()
   async generatePictureLink(): Promise<void> {
     if (!this.profilePicLink) {
       minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
         if (err) return log.error('link generation failed');
-        console.log(url);
-        this.profilePicLink = url;
+
+        const editUrl = url.split('?')[0].replace('http://minio:9000', '');
+        this.profilePicLink = editUrl;
       });
     }
   }

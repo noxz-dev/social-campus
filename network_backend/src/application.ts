@@ -12,6 +12,7 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { Connection, createConnection } from 'typeorm';
 import { CommentResolver } from './resolvers/comment.resolver';
+import { GroupResolver } from './resolvers/group.resolver';
 import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { UserResolver } from './resolvers/user.resolver';
@@ -78,7 +79,7 @@ export class Application {
 
       // initialize schema
       const schema: GraphQLSchema = await buildSchema({
-        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver],
+        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver, GroupResolver],
         authChecker: customAuthChecker,
       });
 

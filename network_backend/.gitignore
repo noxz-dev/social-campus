@@ -6,3 +6,4 @@ tmp/
 temp/
 .env
 minio_data
+log

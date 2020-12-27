@@ -3,6 +3,6 @@
 - Typescript
 - Vue 3
 - TypeORM
-- Graphql
+- GraphQL
 - Postgres
 - Docker

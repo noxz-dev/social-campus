@@ -6,3 +6,10 @@
 - GraphQL
 - Postgres
 - Docker
+
+## Startup
+
+* run npm install in network_backend
+* run npm install in network_frontend
+
+* run docker-compose up

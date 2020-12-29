@@ -44,14 +44,14 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User)
-  public async register(@Arg('input') input: UserValidator, @Ctx() ctx: MyContext): Promise<User | null> {
+  @Mutation(() => Boolean)
+  public async register(@Arg('input') input: UserValidator, @Ctx() ctx: MyContext): Promise<boolean | null> {
     const hashedPassword = await argon2.hash(input.password);
     const user = new User(input, hashedPassword);
     user.followers = [];
     user.following = [];
     await getRepository(User).save(user);
-    return user;
+    return true;
   }
 
   @Mutation(() => Boolean)
@@ -70,7 +70,7 @@ export class UserResolver {
     @Arg('email') email: string,
     @Arg('password') password: string,
     @Ctx() ctx: MyContext,
-  ): Promise<JwtResponse> {
+  ): Promise<JwtResponse | null> {
     const user = await getRepository(User).findOne({ where: { email }, relations: ['roles'] });
     if (!user) {
       return null;
@@ -78,7 +78,7 @@ export class UserResolver {
 
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
-      return null;
+      throw Error('wrong email or password');
     }
     log.info(`user with the id: ${user.id} logged in`);
     const jwtUser: JwtUser = {

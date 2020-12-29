@@ -5,7 +5,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - network_db_data:/var/lib/postgresql
+      - ./network_backend/network_db_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
@@ -15,7 +15,7 @@ services:
     ports: 
       - "9000:9000"
     volumes:
-      - ./minio_data:/data
+      - ./network_backend/minio_data:/data
     environment:
       MINIO_ACCESS_KEY: root
       MINIO_SECRET_KEY: password
@@ -28,8 +28,18 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .:/srv/backend:rw
+      - ./network_backend:/srv/backend:rw
     working_dir: /srv/backend
+    depends_on:
+      - postgres
+  frontend:
+    image: node:14
+    command: npm run serve
+    ports:
+      - 8080:8080
+    volumes:
+      - ./network_frontend:/srv/frontend:rw
+    working_dir: /srv/frontend
     depends_on:
       - postgres
   nginx:
@@ -38,10 +48,11 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./network_backend/nginx:/etc/nginx/conf.d
     depends_on: 
       - backend
       - minio
+      - frontend
    
 
 volumes:

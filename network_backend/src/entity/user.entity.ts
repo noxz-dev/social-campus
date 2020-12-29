@@ -34,6 +34,10 @@ export class User extends Base {
   @Column({ nullable: true })
   profilePicLink: string;
 
+  @Field(() => String)
+  @Column({ type: 'text', nullable: true })
+  bio: string;
+
   @Field(() => [Role])
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()

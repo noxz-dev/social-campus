@@ -11,6 +11,10 @@ export class Group extends Base {
   @Column()
   name: string;
 
+  @Field()
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];

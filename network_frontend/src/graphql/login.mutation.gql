@@ -1,0 +1,7 @@
+mutation {
+  login(email: "test13@email.com", password: "Password123") {
+    accessToken
+    refreshToken
+  }
+}
+

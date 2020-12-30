@@ -8,8 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "@vue/apollo-composable": "^4.0.0-alpha.12",
     "core-js": "^3.6.5",
-    "vue": "^3.0.0"
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "react": "^17.0.1",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.2",
+    "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.2",

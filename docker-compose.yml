@@ -53,7 +53,3 @@ services:
       - backend
       - minio
       - frontend
-   
-
-volumes:
-  network_db_data: ~

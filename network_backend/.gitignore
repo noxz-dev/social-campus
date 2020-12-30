@@ -7,3 +7,4 @@ temp/
 .env
 minio_data
 log
+network_db_data

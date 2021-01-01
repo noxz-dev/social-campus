@@ -14,4 +14,6 @@
 
 * run npm install in network_frontend
 
-* run docker-compose up
+
+* add .env file to the root folder for container configuration (.env-sample is given)
+* run docker-compose up -d

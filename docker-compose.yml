@@ -7,9 +7,9 @@ services:
     volumes:
       - ./network_backend/network_db_data:/var/lib/postgresql
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=network_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
   minio:
     image: minio/minio
     ports: 
@@ -17,8 +17,8 @@ services:
     volumes:
       - ./network_backend/minio_data:/data
     environment:
-      MINIO_ACCESS_KEY: root
-      MINIO_SECRET_KEY: password
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
     command: server /data
     depends_on: 
       - backend

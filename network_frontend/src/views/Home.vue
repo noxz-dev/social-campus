@@ -4,11 +4,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useMutation } from "@vue/apollo-composable";
-import { ref } from "vue";
+import { defineComponent, ref } from "vue";
+
 import loginMutation from "../graphql/login.mutation.gql";
-export default {
+export default defineComponent({
   setup() {
     const message = ref("hsh_net, coming soon ...");
 
@@ -19,7 +20,7 @@ export default {
     });
     return { message, login };
   }
-};
+});
 </script>
 
 <style></style>

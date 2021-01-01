@@ -1,32 +1,17 @@
 <template>
-  <div class="min-h-screen dark:bg-gray-900 dark:text-gray-100 text-gray-900">
-    <Contentview />
-  </div>
+  <Contentview />
 </template>
 
-<script>
-import { useMutation } from "@vue/apollo-composable";
-import { ref } from "vue";
-import loginMutation from "./graphql/login.mutation.gql";
-import Contentview from "./views/Contentview";
+<script lang="ts">
+import { defineComponent } from "vue";
+import Contentview from "./views/Contentview.vue";
 
-export default {
+export default defineComponent({
   name: "App",
   components: {
     Contentview
   },
-
-  setup() {
-    const message = ref("hsh_net, coming soon ...");
-
-    const { mutate: login, onDone } = useMutation(loginMutation);
-
-    onDone(result => {
-      console.log(result.data);
-    });
-    return { message, login };
-  }
-};
+});
 </script>
 
 <style>

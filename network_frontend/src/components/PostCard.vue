@@ -1,37 +1,49 @@
 <template>
-  <div class="p-10 flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-800 p-4 rounded-xl border max-w-xl">
-      <div class="flex justify-between">
-        <div class="flex items-center">
-          <img class="h-11 w-11 rounded-full" src="https://api.multiavatar.com/b28a9f54c81664e6aed6.png" />
-          <div class="ml-1.5 text-sm leading-tight">
-            <span class="text-black dark:text-white font-bold block">Finn Beer</span>
-          </div>
-        </div>
+  <div class="mx-auto py-2 w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
+    <div class="bg-white dark:bg-gray-800 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
+      <div class="md:flex-shrink-0">
+        <img
+          src="https://ik.imagekit.io/q5edmtudmz/post1_fOFO9VDzENE.jpg"
+          alt="image from a post"
+          class="w-full h-64 rounded-lg rounded-b-none object-cover"
+        />
       </div>
-      <p class="text-black dark:text-white block text-xl leading-snug mt-3">
-        Das hier ist der Post Text
-      </p>
-      <img
-        class="mt-2 rounded-2xl border border-gray-100 dark:border-gray-700"
-        src="https://pbs.twimg.com/media/EpkuplDXEAEjbFc?format=jpg&name=medium"
-      />
-      <p class="text-gray-500 dark:text-gray-400 text-base py-1 my-0.5">10:05 AM · Dec 19, 2020</p>
-      <div class="border-gray-200 dark:border-gray-600 border border-b-0 my-1"></div>
-      <div class="text-gray-500 dark:text-gray-400 flex mt-3">
-        <div class="flex items-center mr-6">
-          <svg
-            viewBox="0 0 24 24"
-            class="fill-current h-5 w-auto r-1re7ezh r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr"
-            style=""
-          >
-            <g>
+      <div class="px-4 py-2 mt-2">
+        <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white">
+          {{ postText }}
+        </p>
+        <div class="flex items-center justify-between">
+          <div class="author flex items-center -ml-3 my-3">
+            <div class="user-logo">
+              <img
+                class="w-12 h-12 object-cover rounded-full mx-4 shadow"
+                src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=731&q=80"
+                alt="avatar"
+              />
+            </div>
+            <h2 class="text-sm text-gray-900 dark:text-white">
+              <span>{{ name }}</span>
+              <span class="text-gray-600 dark:text-white ml-5">{{ postDate.toLocaleString() }} </span>
+            </h2>
+          </div>
+          <div class="flex">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-7" viewBox="0 0 24 24" stroke="currentColor">
               <path
-                d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"
-              ></path>
-            </g>
-          </svg>
-          <span class="ml-3">ganz viele likes</span>
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-7 ml-2" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -41,8 +53,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({});
+export default defineComponent({
+  props: {
+    name: String,
+    postDate: Date,
+    postText: String,
+  },
+});
 </script>
 
-<style>
-</style>
+<style></style>

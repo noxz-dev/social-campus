@@ -9,12 +9,15 @@ import Contentview from "./views/Contentview.vue";
 export default defineComponent({
   name: "App",
   components: {
-    Contentview
+    Contentview,
   },
 });
 </script>
 
 <style>
+body::-webkit-scrollbar {
+  display: none;
+}
 #app {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;

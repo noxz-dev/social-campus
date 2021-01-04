@@ -1,0 +1,12 @@
+query {
+  getFeed {
+    id
+    user {
+      firstname
+      lastname
+    }
+    text
+    likesCount
+    createdAt
+  }
+}

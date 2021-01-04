@@ -1,28 +1,26 @@
 <template>
-  <div class="w-full h-screen flex items-center justify-center bg-gray-900 flex-col">
-    <h1 class="text-9xl text-white">{{ message }}</h1>
-     <post-card />
+  <div class="w-full h-full flex items-center justify-center bg-gray-750 flex-col">
+    <new-post />
+    <post-list :posts="posts"></post-list>
   </div>
- 
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import { defineComponent, ref } from "vue";
-import loginMutation from "../graphql/login.mutation.gql";
-import PostCard from "@/components/PostCard.vue";
+import NewPost from '@/components/NewPost.vue';
+import { useQuery, useResult } from '@vue/apollo-composable';
+import { defineComponent } from 'vue';
+import feedQuery from '@/graphql/feed.query.gql';
+import PostList from '@/components/PostList.vue';
+
 export default defineComponent({
-  components: {PostCard},
+  components: { NewPost, PostList },
   setup() {
-    const message = ref("hsh_net, coming soon ...");
+    const { result, error } = useQuery(feedQuery, null, { pollInterval: 10000 });
 
-    const { mutate: login, onDone } = useMutation(loginMutation);
-
-    onDone(result => {
-      console.log(result.data);
-    });
-    return { message, login };
-  }
+    const posts = useResult(result);
+    console.log(posts);
+    return { posts, error };
+  },
 });
 </script>
 

@@ -1,5 +1,7 @@
 import { Field, ObjectType } from 'type-graphql';
 import { AfterLoad, Column, Entity, getRepository, ManyToOne, OneToMany } from 'typeorm';
+import { log } from '../utils/services/logger';
+import { minioClient } from '../utils/services/minio';
 import { Base } from './base';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
@@ -31,6 +33,24 @@ export class Post extends Base {
 
   @Field(() => Number)
   likesCount: number;
+
+  @Column(() => String)
+  imageName: string;
+
+  @Field(() => String, { nullable: true })
+  imageLink: string;
+
+  @AfterLoad()
+  async generateImageLink(): Promise<void> {
+    if (this.imageName) {
+      minioClient.presignedGetObject('post-images', this.imageName, (err, url: string) => {
+        if (err) return log.error('link generation failed');
+
+        const editUrl = url.split('?')[0].replace('http://minio:9000', '');
+        this.imageLink = editUrl;
+      });
+    }
+  }
 
   @AfterLoad()
   async countLikes(): Promise<void> {

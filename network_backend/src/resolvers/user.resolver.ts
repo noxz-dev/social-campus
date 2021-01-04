@@ -197,4 +197,18 @@ export class UserResolver {
 
     return user;
   }
+  @Authorized()
+  @Mutation(() => User)
+  async setBio(@Ctx() ctx: MyContext, @Arg('bio') bio: string): Promise<User | null> {
+    const userID = ctx.req.user.id;
+
+    if (!userID) return null;
+    const userRepo = await getRepository(User);
+    const user = await userRepo.findOne({ id: userID });
+    user.bio = bio;
+
+    await userRepo.save(user);
+
+    return user;
+  }
 }

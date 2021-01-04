@@ -4,7 +4,7 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -65,6 +65,31 @@ export class PostResolver {
     if (!posts) {
       return null;
     }
+    return posts;
+  }
+
+  @Authorized()
+  @Query(() => [Post])
+  public async getFeed(@Ctx() ctx: MyContext): Promise<Post[] | null> {
+    const userID = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({
+      where: { id: userID },
+      relations: ['following'],
+    });
+
+    const following = user.following.map((user: User) => user.id);
+
+    // push own user id to see also your own posts
+    following.push(userID);
+
+    //fetch all posts from the users you follow
+    const posts = await getRepository(Post).find({
+      where: { user: In(following) },
+      order: { createdAt: 'DESC' },
+      relations: ['user', 'comments'],
+    });
+
     return posts;
   }
 

@@ -26,12 +26,10 @@ export class User extends Base {
   @Column()
   password: string;
 
-  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   profilePicName: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
   profilePicLink: string;
 
   @Field(() => String)
@@ -62,8 +60,7 @@ export class User extends Base {
 
   @AfterLoad()
   async generatePictureLink(): Promise<void> {
-    if (this.profilePicLink !== null) {
-      console.log("here")
+    if (this.profilePicName !== null) {
       minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
         if (err) return log.error('link generation failed');
 

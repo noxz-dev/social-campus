@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex items-center justify-center bg-gray-750 flex-col">
-    <new-post />
-    <post-list :posts="posts"></post-list>
+    <new-post class="pt-2" />
+    <post-list :posts="posts" />
   </div>
 </template>
 

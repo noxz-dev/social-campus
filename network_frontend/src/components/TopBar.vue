@@ -282,7 +282,7 @@ export default defineComponent({
   setup(props) {
     const showProfileMenu = ref(false);
     const user = {
-      name: "Lisa"
+      name: "Dede"
     }
     return {
       showProfileMenu,

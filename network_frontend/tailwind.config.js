@@ -1,19 +1,25 @@
 module.exports = {
-  purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
-  darkMode: "media", // or 'media' or 'class'
+  purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
-    textIndent: theme => theme('spacing'),
+    textIndent: (theme) => theme('spacing'),
     extend: {
       colors: {
-        gray: {
-          750: '#1F2128',
-          800: '#242731'
-        }
-      }
-    }
+        lightTheme: {
+          
+        },
+        darkTheme: {
+          600: '#262A34',
+          700: '#181A20',
+          800: '#1A1B20',
+          900: "#fff"
+        },
+      },
+      fill: theme => theme('colors')
+    },
   },
   variants: {
-    extend: {}
+    extend: {},
   },
-  plugins: []
+  plugins: [require('@tailwindcss/forms')],
 };

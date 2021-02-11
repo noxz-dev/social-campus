@@ -1,0 +1,11 @@
+mutation addPost($text: String!) {
+  addPost(text: $text) {
+    id
+    user {
+      firstname
+      lastname
+    }
+    text
+    createdAt
+  }
+}

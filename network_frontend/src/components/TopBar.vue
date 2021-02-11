@@ -1,49 +1,295 @@
 <template>
-  <div class="bg-gray-800 w-full h-14 fixed">
-    <div class="flex justify-end items-center h-full dark:text-white">
-      <div class="pr-0 md:pr-32 flex">
-        <svg class="h-7 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M11.6115 2C6.30323 2 2 6.20819 2 11.3993C2 16.5903 6.30323 20.7985 11.6115 20.7985C13.8819 20.7985 15.9684 20.0287 17.613 18.7415L20.7371 21.7886L20.8202 21.8586C21.1102 22.0685 21.5214 22.0446 21.7839 21.7873C22.0726 21.5043 22.072 21.0459 21.7825 20.7636L18.6952 17.7523C20.2649 16.0794 21.2231 13.8487 21.2231 11.3993C21.2231 6.20819 16.9198 2 11.6115 2ZM11.6115 3.44774C16.1022 3.44774 19.7426 7.00776 19.7426 11.3993C19.7426 15.7908 16.1022 19.3508 11.6115 19.3508C7.12086 19.3508 3.48044 15.7908 3.48044 11.3993C3.48044 7.00776 7.12086 3.44774 11.6115 3.44774Z"
-            fill="white"
-          />
-        </svg>
-
-        <input class="rounded dark:text-black text-indent" type="text" placeholder="Finde andere Nutzer" />
-      </div>
-      <div class="pr-0 md:pr-5">
-        <div>
-          <svg viewBox="0 0 24 24" class="h-9 text-white" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M18.7071 8.79633C18.7071 10.0523 19.039 10.7925 19.7695 11.6456C20.3231 12.2741 20.5 13.0808 20.5 13.956C20.5 14.8302 20.2128 15.6601 19.6373 16.3339C18.884 17.1417 17.8215 17.6573 16.7372 17.747C15.1659 17.8809 13.5937 17.9937 12.0005 17.9937C10.4063 17.9937 8.83505 17.9263 7.26375 17.747C6.17846 17.6573 5.11602 17.1417 4.36367 16.3339C3.78822 15.6601 3.5 14.8302 3.5 13.956C3.5 13.0808 3.6779 12.2741 4.23049 11.6456C4.98384 10.7925 5.29392 10.0523 5.29392 8.79633V8.3703C5.29392 6.68834 5.71333 5.58852 6.577 4.51186C7.86106 2.9417 9.91935 2 11.9558 2H12.0452C14.1254 2 16.2502 2.98702 17.5125 4.62466C18.3314 5.67916 18.7071 6.73265 18.7071 8.3703V8.79633ZM9.07367 20.0608C9.07367 19.5573 9.53582 19.3266 9.96318 19.2279C10.4631 19.1222 13.5093 19.1222 14.0092 19.2279C14.4366 19.3266 14.8987 19.5573 14.8987 20.0608C14.8738 20.5402 14.5926 20.9653 14.204 21.2352C13.7001 21.628 13.1088 21.8767 12.4906 21.9664C12.1487 22.0107 11.8128 22.0117 11.4828 21.9664C10.8636 21.8767 10.2723 21.628 9.76938 21.2342C9.37978 20.9653 9.09852 20.5402 9.07367 20.0608Z"
-              fill="white"
-            />
-          </svg>
-        </div>
-      </div>
-      <div class="pr- md:pr-5">
-        <div>
-          <div class="user-logo">
-            <img
-              class="w-11 h-11 object-cover rounded-full mx-4 shadow"
-              src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=731&q=80"
-              alt="avatar"
-            />
+  <header class="fixed bg-white dark:bg-darkTheme-800 shadow-sm w-full lg:overflow-y-visible">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
+        <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="#">
+              <img
+                class="block h-8 w-auto"
+                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
+                alt="Workflow"
+              >
+            </a>
           </div>
+          <div class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50">
+            Hey {{ user.name }} 👋
+          </div>
+        </div>
+        <div class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5">
+          <div class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
+            <div class="w-full">
+              <label
+                for="search"
+                class="sr-only"
+              >Search</label>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <svg
+                    class="h-5 w-5 text-gray-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  id="search"
+                  name="search"
+                  class="block w-full dark:text-gray-100 dark:bg-darkTheme-600 bg-white border border-gray-300 dark:border-darkTheme-600 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 dark:focus:text-gray-100 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Finde neue Leute"
+                  type="search"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden">
+          <!-- Mobile menu button -->
+          <button
+            type="button"
+            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open menu</span>
+            <!-- Icon when menu is closed. -->
+            <!--
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+            <svg
+              class="block h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+            <!-- Icon when menu is open. -->
+            <!--
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+            <svg
+              class="hidden h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
+          <a
+            href="#"
+            class="ml-5 flex-shrink-0 bg-white dark:bg-darkTheme-600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-darkTheme-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <span class="sr-only">View notifications</span>
+            <!-- Heroicon name: outline/bell -->
+            <svg
+              class="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+          </a>
+
+          <!-- Profile dropdown -->
+          <div class="flex-shrink-0 relative ml-5">
+            <div>
+              <button
+                id="user-menu"
+                type="button"
+                class="bg-white dark:bg-darkTheme-700 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+                aria-haspopup="true"
+                @click="showProfileMenu = !showProfileMenu"
+              >
+                <span class="sr-only">Open user menu</span>
+                <img
+                  class="h-8 w-8 rounded-full"
+                  src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
+                  alt=""
+                >
+              </button>
+            </div>
+            <!--
+            Profile dropdown panel, show/hide based on dropdown state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+            <div
+              v-if="showProfileMenu"
+              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg dark:bg-darkTheme-700 bg-white ring-1 ring-black ring-opacity-5 py-1"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="user-menu"
+            >
+              <a
+                href="#"
+                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
+                role="menuitem"
+              >Dein Profil</a>
+
+              <a
+                href="#"
+                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
+                role="menuitem"
+              >Einstellungen</a>
+
+              <a
+                href="#"
+                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
+                role="menuitem"
+              >Ausloggen</a>
+            </div>
+          </div>
+
+          <a
+            href="#"
+            class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+            @click="$refs.modal.openModal"
+          >
+            New Post
+          </a>
         </div>
       </div>
     </div>
-  </div>
+
+    <!--
+    Mobile menu, toggle classes based on menu state.
+
+    Menu open: "block", Menu closed: "hidden"
+  -->
+    <nav
+      class="hidden lg:hidden"
+      aria-label="Global"
+    >
+      <div class="border-t border-gray-200 pt-4 pb-3">
+        <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
+          <div class="flex-shrink-0">
+            <img
+              class="h-10 w-10 rounded-full"
+              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
+              alt=""
+            >
+          </div>
+          <div class="ml-3">
+            <div class="text-base font-medium text-gray-800">
+              Chelsea Hagon
+            </div>
+            <div class="text-sm font-medium text-gray-500">
+              chelseahagon@example.com
+            </div>
+          </div>
+          <button
+            type="button"
+            class="ml-auto flex-shrink-0 dark:bg-darkTheme-700 bg-white rounded-full p-1 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+          >
+            <span class="sr-only">View notifications</span>
+            <!-- Heroicon name: outline/bell -->
+            <svg
+              class="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
+          <a
+            href="#"
+            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+          >Your Profile</a>
+
+          <a
+            href="#"
+            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+          >Settings</a>
+
+          <a
+            href="#"
+            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+          >Sign out</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <modal
+    ref="modal"
+    content-text=""
+    header-text="New Post"
+  >
+    <new-post />
+  </modal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import Modal from "@/components/Modal.vue";
+import NewPost from './NewPost.vue';
 
-export default defineComponent({});
+export default defineComponent({
+  components: {
+    Modal,
+    NewPost,
+  },
+  setup(props) {
+    const showProfileMenu = ref(false);
+    const user = {
+      name: "Lisa"
+    }
+    return {
+      showProfileMenu,
+      user
+    };
+  },
+});
 </script>
 
 <style>

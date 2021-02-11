@@ -1,11 +1,13 @@
 <template>
-  <post-card
-    v-for="(post, index) in posts"
-    :key="index"
-    :postText="post.text"
-    :name="post?.user?.firstname + ' ' + post?.user?.lastname"
-    :postDate="new Date(post.createdAt)"
-  />
+  <div class="w-full h-full flex items-center flex-col">
+    <post-card
+      v-for="(post, index) in posts"
+      :key="index"
+      :post-text="post.text"
+      :name="post?.user?.firstname + ' ' + post?.user?.lastname"
+      :post-date="new Date(post.createdAt)"
+    />
+  </div>
 </template>
 
 <script lang="ts">

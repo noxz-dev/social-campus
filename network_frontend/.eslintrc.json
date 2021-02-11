@@ -18,5 +18,6 @@
     "extraFileExtensions": [".vue"]
   },
   "plugins": ["vue", "@typescript-eslint"],
-  "rules": {}
+  "rules": {
+  }
 }

@@ -1,5 +1,7 @@
 <template>
-  <div @click="login">Login</div>
+  <div @click="login">
+    Login
+  </div>
 </template>
 
 <script lang="ts">

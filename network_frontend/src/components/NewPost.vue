@@ -1,17 +1,60 @@
 <template>
   <div
-    class="flex justify-center items-center w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4 h-48 dark:bg-gray-800 rounded-lg dark:text-white flex-col mb-8"
+    class="flex w-full rounded-lg dark:text-white flex-col mb-8"
   >
-    <div class="text-2xl p-3 font-bold">Neuer Post</div>
-    <textarea class="bg-gray-700 w-5/6 h-24 resize-none rounded-lg p-2 outline-none" placeholder="hey, was machst du gerade ?"></textarea>
-    <div class="bg-blue-400 p-2 rounded-lg self-end mt-4 mb-4 mr-4 cursor-pointer">Posten</div>
+    <textarea
+      v-model="message"
+      class="bg-darkTheme-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+      placeholder="Hey, was gibt's Neues ?"
+    />
+  </div>
+  <div class="sm:flex sm:flex-row-reverse">
+    <a
+      href="#"
+      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+      @click="post"
+    >
+      Posten
+    </a>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import addPost from "@/graphql/addPost.mutation.gql"
+import { useMutation } from '@vue/apollo-composable';
+import feedQuery from "@/graphql/feed.query.gql"
+export default defineComponent({
+  setup() {
+    const message = ref("")
+    
+    
+    const { mutate: newPost } = useMutation(addPost, () => ({
+      variables: {
+        text: message.value
+      },
+      update: (cache, {data: { addPost } }) => {
+          const dataInStore:any = cache.readQuery({ query: feedQuery })
+          cache.writeQuery({ query: feedQuery, data: {
+            ...dataInStore,
+            getFeed: [...dataInStore.getFeed, addPost]
+          } })
+      }
+      })
+      )
+    
+    const post = () => {
+      if(message.value == "") return
+      console.log(message.value)
+      newPost()
+    }
 
-export default defineComponent({});
+    return {
+      message,
+      post
+    }
+  }
+});
 </script>
 
 <style></style>

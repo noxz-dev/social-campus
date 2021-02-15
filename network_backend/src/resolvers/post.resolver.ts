@@ -21,7 +21,10 @@ export class PostResolver {
     nullable: true,
     description: 'getPosts returns all posts from a given userID',
   })
-  public async getPostsFromUser(@Arg('userID') userID: string): Promise<Post[] | null> {
+  public async getPostsFromUser(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<Post[] | null> {
+    const userId = ctx.req.user.id;
+    if (!userId) return null;
+
     const posts = await getRepository(Post).find({
       relations: [
         'comments',
@@ -39,6 +42,12 @@ export class PostResolver {
     if (!posts) {
       return null;
     }
+
+    for await (const post of posts) {
+      const likeState = await checkLikeState(userId, post.id);
+      post.liked = likeState;
+    }
+
     return posts;
   }
 
@@ -47,7 +56,9 @@ export class PostResolver {
     nullable: true,
     description: 'getPosts returns all posts from a given groupID',
   })
-  public async getPostsFromGroup(@Arg('groupID') groupID: string): Promise<Post[] | null> {
+  public async getPostsFromGroup(@Ctx() ctx: MyContext, @Arg('groupID') groupID: string): Promise<Post[] | null> {
+    const userId = ctx.req.user.id;
+    if (!userId) return null;
     const posts = await getRepository(Post).find({
       relations: [
         'comments',
@@ -65,6 +76,12 @@ export class PostResolver {
     if (!posts) {
       return null;
     }
+
+    for await (const post of posts) {
+      const likeState = await checkLikeState(userId, post.id);
+      post.liked = likeState;
+    }
+
     return posts;
   }
 
@@ -90,7 +107,38 @@ export class PostResolver {
       relations: ['user', 'comments'],
     });
 
+    if (!posts) return null;
+
+    for await (const post of posts) {
+      const likeState = await checkLikeState(userID, post.id);
+      post.liked = likeState;
+    }
+
     return posts;
+  }
+
+  @Authorized()
+  @Query(() => Post)
+  public async postById(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<Post | null> {
+    const userID = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({
+      where: { id: userID },
+    });
+
+    if (!user) return null;
+
+    const post = await getRepository(Post).findOne({
+      where: { id: postId },
+      relations: ['user', 'comments', 'comments.user'],
+    });
+
+    if (!post) return null;
+
+    const likeState = await checkLikeState(userID, post.id);
+    post.liked = likeState;
+
+    return post;
   }
 
   @Authorized()
@@ -174,20 +222,25 @@ export class PostResolver {
     post.likes = [];
     post.group = group;
     user.posts.push(post);
+
     await getRepository(Post).save(post);
     await getRepository(User).save(user);
+
+    const likeState = await checkLikeState(ctx.req.user.id, post.id);
+    post.liked = likeState;
+
     return post;
   }
 
   @Authorized()
   @Mutation(() => Post)
   public async likePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
-    const id = ctx.req.user.id;
-    if (!id) {
+    const userId = ctx.req.user.id;
+    if (!userId) {
       return null;
     }
 
-    const user = await getRepository(User).findOne({ where: { id: id } });
+    const user = await getRepository(User).findOne({ where: { id: userId } });
     if (!user) {
       return null;
     }
@@ -201,7 +254,7 @@ export class PostResolver {
     }
 
     for (const like of post.likes) {
-      if (id === like.user.id) throw new Error('you already liked this post');
+      if (userId === like.user.id) throw new Error('you already liked this post');
     }
 
     const like = new Like();
@@ -210,14 +263,18 @@ export class PostResolver {
     post.likes.push(like);
     await getRepository(Like).save(like);
     await getRepository(Post).save(post);
+
+    const likeState = await checkLikeState(userId, post.id);
+    post.liked = likeState;
+
     return post;
   }
 
   @Authorized()
   @Mutation(() => Post)
   public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
-    const id = ctx.req.user.id;
-    if (!id) {
+    const userId = ctx.req.user.id;
+    if (!userId) {
       return null;
     }
 
@@ -251,6 +308,16 @@ export class PostResolver {
     }
 
     await getRepository(Post).save(post);
+
+    const likeState = await checkLikeState(userId, post.id);
+    post.liked = likeState;
+
     return post;
   }
 }
+
+const checkLikeState = async (userId: string, postId: string) => {
+  const result = await getRepository(Like).findOne({ where: { user: userId, post: postId } });
+  if (result) return true;
+  return false;
+};

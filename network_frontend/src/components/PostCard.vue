@@ -137,11 +137,15 @@
         </p>
         <div class="flex items-center justify-between p-2">
           <div class="flex">
-            <div class="flex cursor-pointer">
+            <div
+              class="flex cursor-pointer"
+              @click="likePost"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                class="h-6"
+                class="h-6 hover:text-red-500 duration-200 "
+                :class="{'fill-red-500 text-red-500': likeState}"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
@@ -152,7 +156,7 @@
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              <span class="px-2">0</span>
+              <span class="px-2 font-mono">{{ likeCount }}</span>
             </div>
             <div class="flex cursor-pointer">
               <svg
@@ -169,7 +173,7 @@
                   d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
                 />
               </svg>
-              <span class="px-2">0</span>
+              <span class="px-2 font-mono">{{ commentCount }}</span>
             </div>
           </div>
         </div>
@@ -179,22 +183,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 export default defineComponent({
   props: {
+    id: String,
     name: String,
     postDate: Date,
     postText: String,
   },
   setup(props) {
+    const { id } = toRefs(props)
+    const likeState = ref(false)
+    const likeCount = ref(0)
+    const commentCount = ref(0)
+
+
     const creationDate = dayjs(props.postDate).fromNow()
+    const likePost = () => {
+      likeState.value = !likeState.value
+      if(likeState.value) likeCount.value++
+      else likeCount.value--
+      console.log("post liked");
+      console.log(likeState.value)
+    }
 
     return {
-      creationDate
+      creationDate,
+      likePost,
+      likeState,
+      likeCount,
+      commentCount
     }
   }
 });

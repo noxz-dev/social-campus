@@ -34,6 +34,9 @@ export class Post extends Base {
   @Field(() => Number)
   likesCount: number;
 
+  @Field(() => Boolean)
+  liked: boolean;
+
   @Column(() => String)
   imageName: string;
 

@@ -1,11 +1,16 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { DefaultApolloClient } from '@vue/apollo-composable';
+import mitt from 'mitt';
 import { createApp, h, provide } from 'vue';
 import App from './App.vue';
 import './index.css';
 import router from './router';
 import store from './store';
+
+//create event bus 
+const eventbus = mitt();
+
 
 const httpLink = createHttpLink({
   uri: 'http://localhost/api/graphql',
@@ -27,7 +32,9 @@ const defaultClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-createApp({
+
+
+const app = createApp({
   setup() {
     provide(DefaultApolloClient, defaultClient);
   },
@@ -37,4 +44,8 @@ createApp({
 })
   .use(router)
   .use(store)
-  .mount('#app');
+  
+//add eventbus as a global 
+app.config.globalProperties.eventbus = eventbus
+
+app.mount('#app');

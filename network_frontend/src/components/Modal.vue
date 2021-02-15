@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-gray-50 dark:bg-darkTheme-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"> 
+        <!-- <div class="bg-gray-50 dark:bg-darkTheme-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"> 
           <a
             href="#"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
@@ -58,43 +58,50 @@
           >
             Schließen
           </a>
-        </div>
+      </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent } from "vue"
+import { defineComponent, getCurrentInstance, ref } from 'vue';
 export default defineComponent({
-    props: {
+  props: {
     headerText: {
       type: String,
-      default:"header"
+      default: 'header',
     },
     contentText: {
       type: String,
-      default:"content"
+      default: 'content',
     },
-    method: {
-        type: Function,
-        default: () => console.log("button clicked")
+  },
+  setup() {
+    const open = ref(false);
+
+    const openModal = () => {
+      open.value = true;
+    };
+
+    const closeModal = () => {
+      open.value = false;
+    };
+
+    const internalInstance = getCurrentInstance();
+    if (internalInstance) {
+      const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
+      eventbus.on('close-modal', () => closeModal());
+      eventbus.on("open-modal", () => openModal())
     }
-    },
-    data() {
+
     return {
-      open: false,
-    }
+      open,
+      openModal,
+      closeModal,
+    };
   },
-  methods: {
-    openModal() {
-      this.open = true
-    },
-    closeModal() {
-      this.open = false
-    },
-  },
-})
+});
 </script>
 
 <style></style>

@@ -15,5 +15,6 @@ export default defineComponent({
 #contentView {
   /* padding: 0px 10px 20px 10px; */
   padding-top: 70px;
+  height: 100vh;
 }
 </style>

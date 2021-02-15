@@ -12,7 +12,10 @@
               >
             </a>
           </div>
-          <div class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50">
+          <div
+            v-if="breakpoints.is != 'sm'"
+            class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50"
+          >
             Hey {{ user.name }} 👋
           </div>
         </div>
@@ -50,12 +53,13 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden">
+        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-darkTheme-700 ">
           <!-- Mobile menu button -->
           <button
             type="button"
-            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center dark:bg-darkTheme-600 text-gray-400 hover:bg-gray-100 dark:hover:bg-darkTheme-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-expanded="false"
+            @click="openMobileMenu"
           >
             <span class="sr-only">Open menu</span>
             <!-- Icon when menu is closed. -->
@@ -65,7 +69,7 @@
             Menu open: "hidden", Menu closed: "block"
           -->
             <svg
-              class="block h-6 w-6"
+              class="block h-6 w-6 text-gray-50"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -161,30 +165,82 @@
               aria-orientation="vertical"
               aria-labelledby="user-menu"
             >
-              <a
-                href="#"
-                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
-                role="menuitem"
-              >Dein Profil</a>
-
-              <a
-                href="#"
-                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
-                role="menuitem"
-              >Einstellungen</a>
-
-              <a
-                href="#"
-                class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
-                role="menuitem"
-              >Ausloggen</a>
+              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  class="h-6 ml-2 text-white"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <a
+                  href="#"
+                  class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700 "
+                  role="menuitem"
+                >Dein Profil</a>
+              </div>
+              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  class="h-6 ml-2 text-white"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <a
+                  href="#"
+                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 "
+                  role="menuitem"
+                >Einstellungen</a>
+              </div>
+              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  class="h-6 ml-2 text-white"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <a
+                  href="#"
+                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
+                  role="menuitem"
+                >Ausloggen</a>
+              </div>
             </div>
           </div>
 
           <a
             href="#"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
-            @click="$refs.modal.openModal"
+            @click="eventbus.emit('open-modal')"
           >
             New Post
           </a>
@@ -198,10 +254,11 @@
     Menu open: "block", Menu closed: "hidden"
   -->
     <nav
-      class="hidden lg:hidden"
+      class="lg:hidden"
+      :class="showMobileMenu ? 'block' : 'hidden'"
       aria-label="Global"
     >
-      <div class="border-t border-gray-200 pt-4 pb-3">
+      <div class="border-t border-darkTheme-600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
             <img
@@ -211,11 +268,11 @@
             >
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">
-              Chelsea Hagon
+            <div class="text-base font-medium dark:text-gray-50 text-gray-800">
+              {{ user.name }}
             </div>
-            <div class="text-sm font-medium text-gray-500">
-              chelseahagon@example.com
+            <div class="text-sm font-medium dark:text-gray-400 text-gray-500">
+              {{ user.username }}
             </div>
           </div>
           <button
@@ -241,21 +298,21 @@
             </svg>
           </button>
         </div>
-        <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
+        <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4 block">
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-          >Your Profile</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
+          >Dein Profil</a>
 
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-          >Settings</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
+          >Einstellungen</a>
 
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-          >Sign out</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
+          >Ausloggen</a>
         </div>
       </div>
     </nav>
@@ -273,6 +330,8 @@
 import { defineComponent, ref } from 'vue';
 import Modal from "@/components/Modal.vue";
 import NewPost from './NewPost.vue';
+import breakpoints from "@/_helpers/breakpoints"
+
 
 export default defineComponent({
   components: {
@@ -281,12 +340,22 @@ export default defineComponent({
   },
   setup(props) {
     const showProfileMenu = ref(false);
+    const showMobileMenu = ref(false)
     const user = {
-      name: "Dede"
+      name: "Dede",
+      username: "@sliss"
     }
+
+    const openMobileMenu = () => {
+      showMobileMenu.value = !showMobileMenu.value
+    }
+
     return {
       showProfileMenu,
-      user
+      user,
+      breakpoints,
+      openMobileMenu,
+      showMobileMenu
     };
   },
 });

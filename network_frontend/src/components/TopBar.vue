@@ -193,6 +193,7 @@
                 </svg>
                 <a
                   href="#"
+                  @click="$router.push('profile')"
                   class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700"
                   role="menuitem"
                   >Dein Profil</a
@@ -315,6 +316,7 @@
         <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4 block">
           <a
             href="#"
+            @click="$router.push('/profile')"
             class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
             >Dein Profil</a
           >

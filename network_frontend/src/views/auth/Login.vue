@@ -1,13 +1,11 @@
 <template>
-  <div @click="login">
-    Login
-  </div>
+  <div @click="login">Login</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
-import { useMutation } from '@vue/apollo-composable';
-import loginMutation from '@/graphql/login.mutation.gql';
+import { defineComponent, onMounted } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
+import { login as loginMutation } from '../../graphql/mutations/login'
 export default defineComponent({
   setup() {
     const { mutate: login, onDone } = useMutation(loginMutation, {
@@ -15,17 +13,17 @@ export default defineComponent({
         email: 'test12@email.com',
         password: 'Password123',
       },
-    });
+    })
     onDone((result) => {
-      localStorage.setItem('apollo-token', result.data.login.accessToken);
-    });
+      localStorage.setItem('apollo-token', result.data.login.accessToken)
+    })
     onMounted(() => {
-      login();
-    });
+      login()
+    })
 
-    return { login };
+    return { login }
   },
-});
+})
 </script>
 
 <style></style>

@@ -4,7 +4,7 @@
   >
     <textarea
       v-model="message"
-      class="bg-darkTheme-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+      class="dark:bg-dark700 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
       placeholder="Hey, was gibt's Neues ?"
       @blur="v.message.$touch"
     />
@@ -20,14 +20,14 @@
   <div class="sm:flex sm:flex-row-reverse">
     <a
       href="#"
-      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
       @click="post"
     >
       Posten
     </a>
     <a
       href="#"
-      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
       @click="eventbus.emit('close-modal')"
     >
       Abbrechen
@@ -37,9 +37,9 @@
 
 <script lang="ts">
 import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
-import addPost from "@/graphql/addPost.mutation.gql"
+import { addPost } from "../graphql/mutations/addPost"
 import { useMutation } from '@vue/apollo-composable';
-import feedQuery from "@/graphql/feed.query.gql"
+import { getFeed } from "../graphql/queries/getFeed"
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core'
 import { minLength, required } from '@vuelidate/validators'
@@ -64,8 +64,8 @@ export default defineComponent({
       },
       update: (cache, {data: { addPost } }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataInStore:any = cache.readQuery({ query: feedQuery })
-          cache.writeQuery({ query: feedQuery, data: {
+          const dataInStore:any = cache.readQuery({ query: getFeed })
+          cache.writeQuery({ query: getFeed, data: {
             ...dataInStore,
             getFeed: [...dataInStore.getFeed, addPost]
           } })

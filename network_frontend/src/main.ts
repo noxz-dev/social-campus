@@ -3,14 +3,13 @@ import { setContext } from '@apollo/client/link/context';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
 import { createApp, h, provide } from 'vue';
+import 'windi.css';
 import App from './App.vue';
-import './index.css';
 import router from './router';
 import store from './store';
 
 //create event bus 
 const eventbus = mitt();
-
 
 const httpLink = createHttpLink({
   uri: 'http://localhost/api/graphql',
@@ -31,8 +30,12 @@ const authLink = setContext((_, { headers }) => {
 const defaultClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+    },
+  },
 });
-
 
 const app = createApp({
   setup() {
@@ -44,8 +47,7 @@ const app = createApp({
 })
   .use(router)
   .use(store)
-  
-//add eventbus as a global 
+
 app.config.globalProperties.eventbus = eventbus
 
 app.mount('#app');

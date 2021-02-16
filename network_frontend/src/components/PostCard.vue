@@ -1,12 +1,12 @@
 <template>
   <div class="py-2 w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
-    <div class="bg-white dark:bg-darkTheme-600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
-      <div class="bg-white dark:bg-darkTheme-600 px-4 py-5 sm:px-6 rounded-lg">
+    <div class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
+      <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg">
         <div class="flex space-x-3">
           <div class="flex-shrink-0">
             <img
               class="h-10 w-10 rounded-full"
-              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
+              :src="profileImg"
               alt=""
             >
           </div>
@@ -145,7 +145,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 class="h-6 hover:text-red-500 duration-200 "
-                :class="{'fill-red-500 text-red-500': likeState}"
+                :class="{'fill-red-500 text-red-500': liked}"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
@@ -186,6 +186,9 @@
 import { defineComponent, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import {useLikePostMutation, useUnlikePostMutation} from "../graphql/generated/graphqlOperations"
+import { getFeed } from '../graphql/queries/getFeed';
+import { GetFeedQuery} from "../graphql/generated/types"
 dayjs.extend(relativeTime);
 
 export default defineComponent({
@@ -194,29 +197,58 @@ export default defineComponent({
     name: String,
     postDate: Date,
     postText: String,
+    liked: Boolean,
+    likeCount: Number,
+    imageUrl: String
   },
   setup(props) {
-    const { id } = toRefs(props)
-    const likeState = ref(false)
-    const likeCount = ref(0)
-    const commentCount = ref(0)
+    const { id, imageUrl } = toRefs(props);
+    const commentCount = ref(0);
+    console.log(imageUrl?.value)
+    const profileImg:string = imageUrl?.value || "https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg"
 
+    const { mutate: like } = useLikePostMutation({variables: {postID: id?.value}, update: (cache, {data: { likePost } }) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const dataInStore:GetFeedQuery | any = cache.readQuery({ query: getFeed })
+          cache.writeQuery({ query: getFeed, data: {
+            ...dataInStore,
+            getFeed: [...dataInStore.getFeed, likePost]
+          } })
+      }});
 
-    const creationDate = dayjs(props.postDate).fromNow()
-    const likePost = () => {
-      likeState.value = !likeState.value
-      if(likeState.value) likeCount.value++
-      else likeCount.value--
-      console.log("post liked");
-      console.log(likeState.value)
+    const { mutate: unlike } = useUnlikePostMutation({variables: {postID: id?.value}, update: (cache, {data: { unlikePost } }) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const dataInStore:GetFeedQuery | any = cache.readQuery({ query: getFeed })
+          cache.writeQuery({ query: getFeed, data: {
+            ...dataInStore,
+            getFeed: [...dataInStore.getFeed, unlikePost]
+          } })
+      }});
+
+    const creationDate = dayjs(props.postDate).fromNow();
+    const likePost = async () => {
+      try {
+        if(props.liked) {
+          await unlike()
+          console.log("post unliked")
+        } 
+        else {
+          await like()
+          console.log("post liked");
+        }
+         
+      } catch(err) {
+        console.log("couldnt like/unlike the post")
+      }
+      
+     
     }
 
     return {
       creationDate,
       likePost,
-      likeState,
-      likeCount,
-      commentCount
+      commentCount,
+      profileImg
     }
   }
 });

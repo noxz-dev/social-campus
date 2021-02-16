@@ -1,6 +1,6 @@
 <template>
   <div id="contentView">
-    <router-view class="rounded-2xl rounded-r-none rounded-b-none border-2 border-r-0 border-b-0 border-darkTheme-600 h-full xl:ml-44 ml-16" />
+    <router-view class="rounded-2xl rounded-r-none rounded-b-none border-2 border-r-0 border-b-0 border-dark600 h-full xl:ml-44 ml-16" />
   </div>
 </template>
 

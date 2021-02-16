@@ -2,7 +2,7 @@
   <div>
     <div
       id="home"
-      class="flex h-full items-center pt-10 bg-darkTheme-700 flex-col rounded-3xl overflow-y-auto"
+      class="flex h-full items-center pt-10 bg-dark700 flex-col rounded-3xl overflow-y-auto"
     />
   </div>
 </template>

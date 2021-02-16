@@ -1,7 +1,7 @@
 <template>
   <div
-    v-if="show && $route.name !== 'Login' && $route.name !== 'Register'"
-    class="md:flex fixed top-14 h-screen shadow-right transition-all w-14 sm:w-14 md:w-14 lg:w-14 xl:w-44 dark:bg-darkTheme-700"
+    v-if="show && $route?.name !== 'Login' && $route?.name !== 'Register'"
+    class="md:flex fixed top-14 h-screen shadow-right transition-all w-14 sm:w-14 md:w-14 lg:w-14 xl:w-44 dark:bg-dark700"
   >
     <div class="mt-16 w-full flex justify-center flex-col self-start items-center">
       <div
@@ -93,7 +93,7 @@
 
 <script lang="ts">
 
-import breakpoints from "@/_helpers/breakpoints"
+import breakpoints from "../_helpers/breakpoints"
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
 

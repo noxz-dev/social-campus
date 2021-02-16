@@ -1,7 +1,7 @@
 <template>
   <div
     id="app"
-    class="dark:bg-darkTheme-700"
+    class="dark:bg-dark700"
   >
     <side-bar />
     <top-bar />
@@ -34,7 +34,6 @@ export default defineComponent({
 body {
   background: #181A20;
 }
-
 body::-webkit-scrollbar {
   display: none;
 }

@@ -34,7 +34,7 @@ services:
       - postgres
   frontend:
     image: node:14
-    command: npm run serve
+    command: npm run dev
     ports:
       - 8080:8080
     volumes:

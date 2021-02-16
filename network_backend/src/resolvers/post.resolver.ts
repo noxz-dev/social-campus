@@ -155,19 +155,7 @@ export class PostResolver {
     }
 
     const user = await getRepository(User).findOne({
-      relations: [
-        'posts',
-        'posts.comments',
-        'posts.user',
-        'posts.group',
-        'posts.user.followers',
-        'posts.user.following',
-        'posts.likes',
-        'posts.likes.user',
-        'posts.comments.user',
-        'posts.comments.likes',
-        'posts.comments.likes.user',
-      ],
+      relations: ['posts', 'posts.comments', 'posts.user', 'posts.group', 'posts.likes', 'posts.likes.user'],
       where: { id: ctx.req.user.id },
     });
     if (!user) {
@@ -223,13 +211,15 @@ export class PostResolver {
     post.group = group;
     user.posts.push(post);
 
-    await getRepository(Post).save(post);
+    const dbPost = await getRepository(Post).save(post);
     await getRepository(User).save(user);
 
-    const likeState = await checkLikeState(ctx.req.user.id, post.id);
-    post.liked = likeState;
+    const likes = await countLikes(dbPost.id);
+    dbPost.likesCount = likes;
 
-    return post;
+    const likeState = await checkLikeState(ctx.req.user.id, dbPost.id);
+    dbPost.liked = likeState;
+    return dbPost;
   }
 
   @Authorized()
@@ -252,7 +242,6 @@ export class PostResolver {
     if (!post) {
       return null;
     }
-
     for (const like of post.likes) {
       if (userId === like.user.id) throw new Error('you already liked this post');
     }
@@ -316,8 +305,19 @@ export class PostResolver {
   }
 }
 
-const checkLikeState = async (userId: string, postId: string) => {
+const checkLikeState = async (userId: string, postId: string): Promise<boolean> => {
   const result = await getRepository(Like).findOne({ where: { user: userId, post: postId } });
   if (result) return true;
   return false;
+};
+
+const countLikes = async (postId): Promise<number> => {
+  const { count } = await getRepository(Like)
+    .createQueryBuilder('like')
+    .where('like.post = :id', { id: postId })
+    .select('COUNT(*)', 'count')
+    .getRawOne();
+
+  const likesCount = count;
+  return likesCount;
 };

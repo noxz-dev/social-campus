@@ -1,33 +1,42 @@
 <template>
-  <header class="fixed bg-white dark:bg-darkTheme-800 shadow-sm w-full lg:overflow-y-visible">
+  <header
+    class="fixed bg-white dark:bg-dark800 shadow-sm w-full lg:overflow-y-visible"
+  >
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
-        <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
+      <div
+        class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8"
+      >
+        <div
+          class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2"
+        >
           <div class="flex-shrink-0 flex items-center">
             <a href="#">
               <img
                 class="block h-8 w-auto"
                 src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
                 alt="Workflow"
-              >
+              />
             </a>
           </div>
           <div
             v-if="breakpoints.is != 'sm'"
             class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50"
           >
-            Hey {{ user.name }} 👋
+            Hey {{ user?.firstname }} 👋
           </div>
         </div>
-        <div class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5">
-          <div class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
+        <div
+          class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5"
+        >
+          <div
+            class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0"
+          >
             <div class="w-full">
-              <label
-                for="search"
-                class="sr-only"
-              >Search</label>
+              <label for="search" class="sr-only">Search</label>
               <div class="relative">
-                <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                <div
+                  class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center"
+                >
                   <svg
                     class="h-5 w-5 text-gray-200"
                     xmlns="http://www.w3.org/2000/svg"
@@ -45,19 +54,21 @@
                 <input
                   id="search"
                   name="search"
-                  class="block w-full dark:text-gray-100 dark:bg-darkTheme-600 bg-white border border-gray-300 dark:border-darkTheme-600 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 dark:focus:text-gray-100 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="block w-full dark:text-gray-100 dark:bg-dark600 bg-white border border-gray-300 dark:border-dark600 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 dark:focus:text-gray-100 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Finde neue Leute"
                   type="search"
-                >
+                />
               </div>
             </div>
           </div>
         </div>
-        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-darkTheme-700 ">
+        <div
+          class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-dark700"
+        >
           <!-- Mobile menu button -->
           <button
             type="button"
-            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center dark:bg-darkTheme-600 text-gray-400 hover:bg-gray-100 dark:hover:bg-darkTheme-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center dark:bg-dark600 text-gray-400 hover:bg-gray-100 dark:hover:bg-dark700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-expanded="false"
             @click="openMobileMenu"
           >
@@ -106,10 +117,12 @@
             </svg>
           </button>
         </div>
-        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
+        <div
+          class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4"
+        >
           <a
             href="#"
-            class="ml-5 flex-shrink-0 bg-white dark:bg-darkTheme-600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-darkTheme-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-5 flex-shrink-0 bg-white dark:bg-dark600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <!-- Heroicon name: outline/bell -->
@@ -136,16 +149,12 @@
               <button
                 id="user-menu"
                 type="button"
-                class="bg-white dark:bg-darkTheme-700 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+                class="bg-white dark:bg-dark700 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                 aria-haspopup="true"
                 @click="showProfileMenu = !showProfileMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                  alt=""
-                >
+                <img class="h-8 w-8 rounded-full" :src="profileImage" alt="" />
               </button>
             </div>
             <!--
@@ -160,12 +169,14 @@
           -->
             <div
               v-if="showProfileMenu"
-              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg dark:bg-darkTheme-700 bg-white ring-1 ring-black ring-opacity-5 py-1"
+              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 py-1"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="user-menu"
             >
-              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+              <div
+                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -182,11 +193,14 @@
                 </svg>
                 <a
                   href="#"
-                  class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700 "
+                  class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700"
                   role="menuitem"
-                >Dein Profil</a>
+                  >Dein Profil</a
+                >
               </div>
-              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+              <div
+                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -209,11 +223,14 @@
                 </svg>
                 <a
                   href="#"
-                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 "
+                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700"
                   role="menuitem"
-                >Einstellungen</a>
+                  >Einstellungen</a
+                >
               </div>
-              <div class="flex items-center dark:hover:bg-darkTheme-600 hover:bg-gray-100">
+              <div
+                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -230,16 +247,17 @@
                 </svg>
                 <a
                   href="#"
-                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-darkTheme-600 hover:bg-gray-100"
+                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-dark600 hover:bg-gray-100"
                   role="menuitem"
-                >Ausloggen</a>
+                  >Ausloggen</a
+                >
               </div>
             </div>
           </div>
 
           <a
             href="#"
-            class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+            class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
           >
             New Post
@@ -258,26 +276,22 @@
       :class="showMobileMenu ? 'block' : 'hidden'"
       aria-label="Global"
     >
-      <div class="border-t border-darkTheme-600 pt-4 pb-3">
+      <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
-            <img
-              class="h-10 w-10 rounded-full"
-              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-              alt=""
-            >
+            <img class="h-10 w-10 rounded-full" :src="profileImage" alt="" />
           </div>
           <div class="ml-3">
             <div class="text-base font-medium dark:text-gray-50 text-gray-800">
-              {{ user.name }}
+              {{ user?.firstname }}
             </div>
             <div class="text-sm font-medium dark:text-gray-400 text-gray-500">
-              {{ user.username }}
+              {{ user?.firstname }}
             </div>
           </div>
           <button
             type="button"
-            class="ml-auto flex-shrink-0 dark:bg-darkTheme-700 bg-white rounded-full p-1 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-darkTheme-700 focus:ring-indigo-500"
+            class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <!-- Heroicon name: outline/bell -->
@@ -301,37 +315,38 @@
         <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4 block">
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
-          >Dein Profil</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            >Dein Profil</a
+          >
 
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
-          >Einstellungen</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            >Einstellungen</a
+          >
 
           <a
             href="#"
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-darkTheme-600"
-          >Ausloggen</a>
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            >Ausloggen</a
+          >
         </div>
       </div>
     </nav>
   </header>
-  <modal
-    ref="modal"
-    content-text=""
-    header-text="New Post"
-  >
+  <modal ref="modal" content-text="" header-text="New Post">
     <new-post />
   </modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Modal from "@/components/Modal.vue";
-import NewPost from './NewPost.vue';
-import breakpoints from "@/_helpers/breakpoints"
-
+import { defineComponent, ref } from 'vue'
+import Modal from '@/components/Modal.vue'
+import NewPost from './NewPost.vue'
+import { MeQuery } from '../graphql/generated/types'
+import breakpoints from '../_helpers/breakpoints'
+import { useMeQuery } from '../graphql/generated/graphqlOperations'
+import { useResult } from '@vue/apollo-composable'
 
 export default defineComponent({
   components: {
@@ -339,12 +354,25 @@ export default defineComponent({
     NewPost,
   },
   setup(props) {
-    const showProfileMenu = ref(false);
+    const showProfileMenu = ref(false)
     const showMobileMenu = ref(false)
-    const user = {
-      name: "Dede",
-      username: "@sliss"
-    }
+
+    const { result, error, onResult } = useMeQuery()
+
+    const user = useResult(result)
+
+    const profileImage = ref(
+      'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'
+    )
+
+    onResult((user) => {
+      profileImage.value =
+        user?.data?.me?.profilePicLink ||
+        'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'
+      console.log(profileImage.value)
+    })
+
+    profileImage.value = user?.value?.profilePicLink || ''
 
     const openMobileMenu = () => {
       showMobileMenu.value = !showMobileMenu.value
@@ -355,10 +383,11 @@ export default defineComponent({
       user,
       breakpoints,
       openMobileMenu,
-      showMobileMenu
-    };
+      showMobileMenu,
+      profileImage,
+    }
   },
-});
+})
 </script>
 
 <style>

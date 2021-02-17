@@ -1,25 +1,43 @@
 <template>
-  <div
-    id="app"
-    class="dark:bg-dark700"
-  >
-    <side-bar />
-    <top-bar />
-    <Contentview />
+  <div id="app" class="dark:bg-dark700">
+    <div v-if="showLogin">
+      <router-view></router-view>
+    </div>
+    <div v-else>
+      <side-bar />
+      <top-bar />
+      <Contentview />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import Contentview from "@/views/Contentview.vue";
+import { defineComponent, ref, watch } from 'vue';
+import Contentview from '@/views/Contentview.vue';
 import SideBar from '@/components/SideBar.vue';
 import TopBar from '@/components/TopBar.vue';
+import { useRoute } from 'vue-router';
 export default defineComponent({
-  name: "App",
+  name: 'App',
   components: {
     Contentview,
     TopBar,
     SideBar,
+  },
+  setup() {
+    const showLogin = ref(true);
+    const route = useRoute();
+
+    watch(
+      () => route.path,
+      async (newParams) => {
+        showLogin.value = route.path === '/login';
+      }
+    );
+
+    return {
+      showLogin,
+    };
   },
 });
 </script>
@@ -32,13 +50,13 @@ export default defineComponent({
   --margin-left-sidebar: 11rem;
 }
 body {
-  background: #181A20;
+  background: #181a20;
 }
 body::-webkit-scrollbar {
   display: none;
 }
 #app {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

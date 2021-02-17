@@ -1,6 +1,7 @@
 <template>
   <header
-    class="fixed bg-white dark:bg-dark800 shadow-sm w-full lg:overflow-y-visible"
+    v-if="show && $route?.name !== 'Login' && $route?.name !== 'Register'"
+    class="fixed bg-white dark:bg-dark700 shadow-sm w-full lg:overflow-y-visible z-40"
   >
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div
@@ -193,7 +194,14 @@
                 </svg>
                 <a
                   href="#"
-                  @click="$router.push('profile')"
+                  @click="
+                    $router.push({
+                      name: 'Profile',
+                      params: {
+                        id: user.id,
+                      },
+                    })
+                  "
                   class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700"
                   role="menuitem"
                   >Dein Profil</a
@@ -250,6 +258,7 @@
                   href="#"
                   class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-dark600 hover:bg-gray-100"
                   role="menuitem"
+                  @click="logout"
                   >Ausloggen</a
                 >
               </div>
@@ -329,6 +338,7 @@
 
           <a
             href="#"
+            @click="logout"
             class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
             >Ausloggen</a
           >
@@ -342,13 +352,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import Modal from '@/components/Modal.vue'
-import NewPost from './NewPost.vue'
-import { MeQuery } from '../graphql/generated/types'
-import breakpoints from '../_helpers/breakpoints'
-import { useMeQuery } from '../graphql/generated/graphqlOperations'
-import { useResult } from '@vue/apollo-composable'
+import { defineComponent, ref } from 'vue';
+import Modal from '@/components/Modal.vue';
+import NewPost from './NewPost.vue';
+import breakpoints from '../_helpers/breakpoints';
+import { useMeQuery } from '../graphql/generated/graphqlOperations';
+import { useResult } from '@vue/apollo-composable';
+import { onLogout } from '../apollo';
 
 export default defineComponent({
   components: {
@@ -356,40 +366,39 @@ export default defineComponent({
     NewPost,
   },
   setup(props) {
-    const showProfileMenu = ref(false)
-    const showMobileMenu = ref(false)
+    const showProfileMenu = ref(false);
+    const showMobileMenu = ref(false);
+    const show = ref(true);
+    const { result, error, onResult } = useMeQuery();
 
-    const { result, error, onResult } = useMeQuery()
-
-    const user = useResult(result)
-
-    const profileImage = ref(
-      'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'
-    )
-
+    const user = useResult(result);
+    const profileImage = ref('');
     onResult((user) => {
-      profileImage.value =
-        user?.data?.me?.profilePicLink ||
-        'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'
-      console.log(profileImage.value)
-    })
+      profileImage.value = user?.data?.me?.profilePicLink;
+    });
 
-    profileImage.value = user?.value?.profilePicLink || ''
+    profileImage.value = user?.value?.profilePicLink || '';
 
     const openMobileMenu = () => {
-      showMobileMenu.value = !showMobileMenu.value
-    }
+      showMobileMenu.value = !showMobileMenu.value;
+    };
+
+    const logout = () => {
+      onLogout();
+    };
 
     return {
+      logout,
+      show,
       showProfileMenu,
       user,
       breakpoints,
       openMobileMenu,
       showMobileMenu,
       profileImage,
-    }
+    };
   },
-})
+});
 </script>
 
 <style>

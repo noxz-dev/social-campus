@@ -1,27 +1,19 @@
 <template>
-  <div class="py-2 w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
-    <div class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
+  <div class="w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
+    <div
+      class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide"
+    >
       <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg">
         <div class="flex space-x-3">
           <div class="flex-shrink-0">
-            <img
-              class="h-10 w-10 rounded-full"
-              :src="profileImg"
-              alt=""
-            >
+            <img class="h-10 w-10 rounded-full" :src="profileImg" alt="" />
           </div>
           <div class="min-w-0 flex-1">
             <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
-              <a
-                href="#"
-                class="hover:underline"
-              >{{ name }}</a>
+              <a href="#" class="hover:underline">{{ name }}</a>
             </p>
             <p class="text-sm text-gray-500">
-              <a
-                href="#"
-                class="hover:underline"
-              >{{ creationDate }}</a>
+              <a href="#" class="hover:underline">{{ creationDate }}</a>
             </p>
           </div>
           <div class="flex-shrink-0 self-center flex">
@@ -43,7 +35,9 @@
                     fill="currentColor"
                     aria-hidden="true"
                   >
-                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                    <path
+                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -79,7 +73,9 @@
                       fill="currentColor"
                       aria-hidden="true"
                     >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
                     </svg>
                     <span>Stuff</span>
                   </a>
@@ -137,15 +133,12 @@
         </p>
         <div class="flex items-center justify-between p-2">
           <div class="flex">
-            <div
-              class="flex cursor-pointer"
-              @click="likePost"
-            >
+            <div class="flex cursor-pointer" @click="likePost">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                class="h-6 hover:text-red-500 duration-200 "
-                :class="{'fill-red-500 text-red-500': liked}"
+                class="h-6 hover:text-red-500 duration-200"
+                :class="{ 'fill-red-500 text-red-500': liked }"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
@@ -186,9 +179,12 @@
 import { defineComponent, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {useLikePostMutation, useUnlikePostMutation} from "../graphql/generated/graphqlOperations"
+import {
+  useLikePostMutation,
+  useUnlikePostMutation,
+} from '../graphql/generated/graphqlOperations';
 import { getFeed } from '../graphql/queries/getFeed';
-import { GetFeedQuery} from "../graphql/generated/types"
+import { GetFeedQuery } from '../graphql/generated/types';
 dayjs.extend(relativeTime);
 
 export default defineComponent({
@@ -199,58 +195,72 @@ export default defineComponent({
     postText: String,
     liked: Boolean,
     likeCount: Number,
-    imageUrl: String
+    imageUrl: String,
   },
   setup(props) {
     const { id, imageUrl } = toRefs(props);
     const commentCount = ref(0);
-    console.log(imageUrl?.value)
-    const profileImg:string = imageUrl?.value || "https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg"
+    const profileImg: string =
+      imageUrl?.value ||
+      'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
 
-    const { mutate: like } = useLikePostMutation({variables: {postID: id?.value}, update: (cache, {data: { likePost } }) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataInStore:GetFeedQuery | any = cache.readQuery({ query: getFeed })
-          cache.writeQuery({ query: getFeed, data: {
+    const { mutate: like } = useLikePostMutation({
+      variables: { postID: id?.value },
+      update: (cache, { data: { likePost } }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dataInStore: GetFeedQuery | any = cache.readQuery({
+          query: getFeed,
+        });
+        const feedQuery = [...dataInStore.getFeed];
+        cache.writeQuery({
+          query: getFeed,
+          data: {
             ...dataInStore,
-            getFeed: [...dataInStore.getFeed, likePost]
-          } })
-      }});
+            getFeed: [...feedQuery],
+          },
+        });
+      },
+    });
 
-    const { mutate: unlike } = useUnlikePostMutation({variables: {postID: id?.value}, update: (cache, {data: { unlikePost } }) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataInStore:GetFeedQuery | any = cache.readQuery({ query: getFeed })
-          cache.writeQuery({ query: getFeed, data: {
+    const { mutate: unlike } = useUnlikePostMutation({
+      variables: { postID: id?.value },
+      update: (cache, { data: { unlikePost } }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dataInStore: GetFeedQuery | any = cache.readQuery({
+          query: getFeed,
+        });
+
+        const feedQuery = [...dataInStore.getFeed];
+        cache.writeQuery({
+          query: getFeed,
+          data: {
             ...dataInStore,
-            getFeed: [...dataInStore.getFeed, unlikePost]
-          } })
-      }});
+            getFeed: [...feedQuery],
+          },
+        });
+      },
+    });
 
     const creationDate = dayjs(props.postDate).fromNow();
     const likePost = async () => {
       try {
-        if(props.liked) {
-          await unlike()
-          console.log("post unliked")
-        } 
-        else {
-          await like()
-          console.log("post liked");
+        if (props.liked) {
+          await unlike();
+        } else {
+          await like();
         }
-         
-      } catch(err) {
-        console.log("couldnt like/unlike the post")
+      } catch (err) {
+        console.log('couldnt like/unlike the post');
       }
-      
-     
-    }
+    };
 
     return {
       creationDate,
       likePost,
       commentCount,
-      profileImg
-    }
-  }
+      profileImg,
+    };
+  },
 });
 </script>
 

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import argon2 from 'argon2';
-import { createWriteStream, unlink } from 'fs';
+import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import os from 'os';
 import path from 'path';
@@ -50,6 +51,9 @@ export class UserResolver {
     const user = new User(input, hashedPassword);
     user.followers = [];
     user.following = [];
+    const profileImg = jdenticon.toPng(user.firstname, 300);
+    const filename = await uploadFile(profileImg, 'profile-pics');
+    user.profilePicName = filename;
     await getRepository(User).save(user);
     return true;
   }
@@ -112,37 +116,7 @@ export class UserResolver {
       return null;
     }
 
-    const metaData = {
-      'Content-Type': 'application/octet-stream',
-      'X-Amz-Meta-Testing': 1234,
-      example: 5678,
-    };
-    const filenameUUID = uuidv4();
-    const { createReadStream, filename } = await file;
-
-    const fileEnding = filename.split('.')[1];
-    const newFileName = filenameUUID + '.' + fileEnding;
-    const destinationPath = path.join(os.tmpdir(), filename);
-    await new Promise((res, rej) =>
-      createReadStream()
-        .pipe(createWriteStream(destinationPath))
-        .on('error', rej)
-        .on('finish', () => {
-          minioClient.fPutObject('profile-pics', newFileName, destinationPath, metaData, (err, etag) => {
-            if (err) {
-              log.error(err.stack);
-              throw Error('image upload failed');
-            }
-            log.info('File uploaded successfully.');
-
-            //Delete the tmp file uploaded
-            unlink(destinationPath, () => {
-              res('file upload complete');
-            });
-          });
-        }),
-    );
-
+    const newFileName = await uploadFileGraphql(file, 'profile-pics');
     user.profilePicName = newFileName;
 
     await getRepository(User).save(user);
@@ -212,3 +186,62 @@ export class UserResolver {
     return user;
   }
 }
+
+const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
+  const metaData = {
+    'Content-Type': 'application/octet-stream',
+    'X-Amz-Meta-Testing': 1234,
+    example: 5678,
+  };
+  const filenameUUID = uuidv4();
+  const { createReadStream, filename } = await file;
+
+  const fileEnding = filename.split('.')[1];
+  const newFileName = filenameUUID + '.' + fileEnding;
+  const destinationPath = path.join(os.tmpdir(), filename);
+  await new Promise((res, rej) =>
+    createReadStream()
+      .pipe(createWriteStream(destinationPath))
+      .on('error', rej)
+      .on('finish', () => {
+        minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
+          if (err) {
+            log.error(err.stack);
+            throw Error('image upload failed');
+          }
+          log.info('File uploaded successfully.');
+
+          //Delete the tmp file uploaded
+          unlink(destinationPath, () => {
+            res('file upload complete');
+          });
+        });
+      }),
+  );
+  return newFileName;
+};
+
+const uploadFile = async (file: Buffer, bucketName: string): Promise<string> => {
+  const metaData = {
+    'Content-Type': 'application/octet-stream',
+    'X-Amz-Meta-Testing': 1234,
+    example: 5678,
+  };
+  const filenameUUID = uuidv4();
+
+  const fileEnding = 'png';
+  const newFileName = filenameUUID + '.' + fileEnding;
+  const destinationPath = path.join(os.tmpdir(), newFileName);
+  writeFileSync(destinationPath, file);
+  minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
+    if (err) {
+      log.error(err.stack);
+      throw Error('image upload failed');
+    }
+    log.info('File uploaded successfully.');
+    unlink(destinationPath, () => {
+      log.debug('file upload complete');
+    });
+  });
+  return newFileName;
+};

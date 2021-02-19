@@ -1,15 +1,30 @@
-const state = {};
+import { User } from 'src/graphql/generated/types';
+import { Commit } from 'vuex';
 
-const getters = {};
+const state = {
+  user: {},
+};
 
-const actions = {};
+const getters = {
+  user: (state) => state.user,
+};
 
-const mutations = {};
+const actions = {
+  setUser({ commit }: { commit: Commit }, user: User) {
+    commit('SET_USER', user);
+  },
+};
 
-export const user = {
+const mutations = {
+  SET_USER(state, user: User) {
+    state.user = user;
+  },
+};
+
+export const userData = {
   namespaced: true,
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

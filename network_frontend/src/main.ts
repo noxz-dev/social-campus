@@ -1,4 +1,7 @@
-import { DefaultApolloClient } from '@vue/apollo-composable';
+import {
+  DefaultApolloClient,
+  provideApolloClient,
+} from '@vue/apollo-composable';
 import mitt from 'mitt';
 import { createApp, h, provide } from 'vue';
 import 'windi.css';
@@ -12,6 +15,7 @@ const eventbus = mitt();
 
 const app = createApp({
   setup() {
+    provideApolloClient(defaultClient);
     provide(DefaultApolloClient, defaultClient);
   },
   render() {

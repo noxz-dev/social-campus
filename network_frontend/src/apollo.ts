@@ -33,17 +33,7 @@ const authLink = setContext((_, { headers }) => {
 
 export const defaultClient = new ApolloClient({
   link: errorLink.concat(authLink).concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      getFeed: {
-        fields: {
-          Post: {
-            merge: true,
-          },
-        },
-      },
-    },
-  }),
+  cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network',

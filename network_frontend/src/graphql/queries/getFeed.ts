@@ -1,19 +1,19 @@
-
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const getFeed = gql`
-query getFeed{
-  getFeed {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+  query getFeed {
+    getFeed {
+      id
+      liked
+      user {
+        id
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-`
+`;

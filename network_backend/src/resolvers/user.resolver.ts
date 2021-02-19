@@ -77,7 +77,7 @@ export class UserResolver {
   ): Promise<JwtResponse | null> {
     const user = await getRepository(User).findOne({ where: { email }, relations: ['roles'] });
     if (!user) {
-      return null;
+      throw Error('found no user with this email');
     }
 
     const valid = await argon2.verify(user.password, password);
@@ -171,6 +171,7 @@ export class UserResolver {
 
     return user;
   }
+
   @Authorized()
   @Mutation(() => User)
   async setBio(@Ctx() ctx: MyContext, @Arg('bio') bio: string): Promise<User | null> {
@@ -183,6 +184,16 @@ export class UserResolver {
 
     await userRepo.save(user);
 
+    return user;
+  }
+
+  @Authorized()
+  @Query(() => User)
+  async userById(@Ctx() ctx: MyContext, @Arg('userId') userId: string): Promise<User | null> {
+    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['following', 'followers'] });
+    if (!user) {
+      throw Error('no user found');
+    }
     return user;
   }
 }

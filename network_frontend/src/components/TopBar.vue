@@ -4,47 +4,24 @@
     class="fixed bg-white dark:bg-dark700 shadow-sm w-full lg:overflow-y-visible z-40"
   >
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-      <div
-        class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8"
-      >
-        <div
-          class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2"
-        >
+      <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
+        <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
           <div class="flex-shrink-0 flex items-center">
             <a href="#">
-              <img
-                class="block h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-                alt="Workflow"
-              />
+              <img class="block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="Workflow" />
             </a>
           </div>
-          <div
-            v-if="breakpoints.is != 'sm'"
-            class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50"
-          >
+          <div v-if="breakpoints.is != 'sm'" class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50">
             Hey {{ user?.firstname }} 👋
           </div>
         </div>
-        <div
-          class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5"
-        >
-          <div
-            class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0"
-          >
+        <div class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5">
+          <div class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
             <div class="w-full">
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
-                <div
-                  class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center"
-                >
-                  <svg
-                    class="h-5 w-5 text-gray-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
+                <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <svg class="h-5 w-5 text-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path
                       fill-rule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -63,9 +40,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-dark700"
-        >
+        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-dark700">
           <!-- Mobile menu button -->
           <button
             type="button"
@@ -88,12 +63,7 @@
               stroke="currentColor"
               aria-hidden="true"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
             <!-- Icon when menu is open. -->
             <!--
@@ -101,40 +71,19 @@
 
             Menu open: "block", Menu closed: "hidden"
           -->
-            <svg
-              class="hidden h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-        <div
-          class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4"
-        >
+        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
           <a
             href="#"
             class="ml-5 flex-shrink-0 bg-white dark:bg-dark600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <!-- Heroicon name: outline/bell -->
-            <svg
-              class="h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -168,101 +117,70 @@
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           -->
-            <div
-              v-if="showProfileMenu"
-              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 py-1"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu"
-            >
+            <transition name="fade">
               <div
-                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
+                v-if="showProfileMenu"
+                ref="target"
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 py-1"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  class="h-6 ml-2 text-white"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                <a
-                  href="#"
-                  @click="
-                    $router.push({
-                      name: 'Profile',
-                      params: {
-                        id: user.id,
-                      },
-                    })
-                  "
-                  class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700"
-                  role="menuitem"
-                  >Dein Profil</a
-                >
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <a
+                    @click="
+                      $router.push({
+                        name: 'Profile',
+                        params: {
+                          id: user.id,
+                          me: false,
+                        },
+                      })
+                    "
+                    class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700 cursor-pointer"
+                    role="menuitem"
+                    >Dein Profil</a
+                  >
+                </div>
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <a href="#" class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem">Einstellungen</a>
+                </div>
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  <a
+                    href="#"
+                    class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-dark600 hover:bg-gray-100"
+                    role="menuitem"
+                    @click="logout"
+                    >Ausloggen</a
+                  >
+                </div>
               </div>
-              <div
-                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  class="h-6 ml-2 text-white"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <a
-                  href="#"
-                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700"
-                  role="menuitem"
-                  >Einstellungen</a
-                >
-              </div>
-              <div
-                class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  class="h-6 ml-2 text-white"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                <a
-                  href="#"
-                  class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-dark600 hover:bg-gray-100"
-                  role="menuitem"
-                  @click="logout"
-                  >Ausloggen</a
-                >
-              </div>
-            </div>
+            </transition>
           </div>
 
           <a
@@ -281,11 +199,7 @@
 
     Menu open: "block", Menu closed: "hidden"
   -->
-    <nav
-      class="lg:hidden"
-      :class="showMobileMenu ? 'block' : 'hidden'"
-      aria-label="Global"
-    >
+    <nav class="lg:hidden" :class="showMobileMenu ? 'block' : 'hidden'" aria-label="Global">
       <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
@@ -305,14 +219,7 @@
           >
             <span class="sr-only">View notifications</span>
             <!-- Heroicon name: outline/bell -->
-            <svg
-              class="h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -359,6 +266,8 @@ import breakpoints from '../_helpers/breakpoints';
 import { useMeQuery } from '../graphql/generated/graphqlOperations';
 import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';
+import { onClickOutside } from '@vueuse/core';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   components: {
@@ -369,12 +278,24 @@ export default defineComponent({
     const showProfileMenu = ref(false);
     const showMobileMenu = ref(false);
     const show = ref(true);
+    const target = ref(null);
+
+    const store = useStore();
+
+    onClickOutside(target, (event) => {
+      if (event.path[1].id !== 'user-menu') {
+        showProfileMenu.value = false;
+      }
+    });
+
     const { result, error, onResult } = useMeQuery();
 
     const user = useResult(result);
     const profileImage = ref('');
-    onResult((user) => {
-      profileImage.value = user?.data?.me?.profilePicLink;
+    onResult((userResult) => {
+      const userData = userResult.data.me;
+      store.dispatch('userData/setUser', userData);
+      profileImage.value = userData.profilePicLink;
     });
 
     profileImage.value = user?.value?.profilePicLink || '';
@@ -388,6 +309,7 @@ export default defineComponent({
     };
 
     return {
+      target,
       logout,
       show,
       showProfileMenu,
@@ -404,5 +326,31 @@ export default defineComponent({
 <style>
 .text-indent {
   text-indent: 10px;
+}
+
+/* Profile dropdown panel, show/hide based on dropdown state. */
+
+/* Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95" */
+
+.fade-enter-active {
+  transition: all 100ms ease-out;
+}
+
+.fade-leave-active {
+  transition: all 75ms ease-in;
+}
+
+.fade-enter-from {
+  transition: opacity 75ms ease-in;
+  opacity: 100;
+}
+
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

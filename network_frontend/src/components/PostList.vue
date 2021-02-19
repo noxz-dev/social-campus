@@ -10,6 +10,7 @@
       :post-date="new Date(post.createdAt)"
       :id="post.id"
       :imageUrl="post.user.profilePicLink"
+      :userId="post.user.id"
     />
   </div>
 </template>

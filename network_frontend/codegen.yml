@@ -1,16 +1,13 @@
 overwrite: true
 schema: http://localhost:3000/graphql
-documents: "src/graphql/**/*.ts"
+documents: 'src/graphql/**/*.ts'
 generates:
   src/graphql/generated/types.d.ts:
     plugins:
-      - "typescript"
-      - "typescript-operations"
+      - 'typescript'
+      - 'typescript-operations'
   src/graphql/generated/graphqlOperations.ts:
     plugins:
-      - "typescript-vue-apollo"
+      - 'typescript-vue-apollo'
     config:
       withCompositionFunctions: vue
-  src/graphql/generated/graphql.schema.json:
-    plugins:
-      - "introspection"

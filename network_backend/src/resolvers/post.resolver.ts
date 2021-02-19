@@ -38,6 +38,7 @@ export class PostResolver {
         'comments.likes.user',
       ],
       where: { user: { id: userID } },
+      order: { createdAt: 'DESC' },
     });
     if (!posts) {
       return null;
@@ -72,6 +73,7 @@ export class PostResolver {
         'comments.likes.user',
       ],
       where: { group: { id: groupID } },
+      order: { createdAt: 'DESC' },
     });
     if (!posts) {
       return null;

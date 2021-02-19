@@ -1,8 +1,6 @@
 <template>
   <div class="w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
-    <div
-      class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide"
-    >
+    <div class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
       <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg">
         <div class="flex space-x-3">
           <div class="flex-shrink-0">
@@ -10,7 +8,18 @@
           </div>
           <div class="min-w-0 flex-1">
             <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
-              <a href="#" class="hover:underline">{{ name }}</a>
+              <a
+                @click="
+                  $router.push({
+                    name: 'Profile',
+                    params: {
+                      id: userId,
+                    },
+                  })
+                "
+                class="cursor-pointer hover:underline"
+                >{{ name }}</a
+              >
             </p>
             <p class="text-sm text-gray-500">
               <a href="#" class="hover:underline">{{ creationDate }}</a>
@@ -28,16 +37,8 @@
                 >
                   <span class="sr-only">Open options</span>
                   <!-- Heroicon name: solid/dots-vertical -->
-                  <svg
-                    class="h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
-                    />
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                   </svg>
                 </button>
               </div>
@@ -60,11 +61,7 @@
                 aria-labelledby="menu-1"
               >
                 <div class="py-1">
-                  <a
-                    href="#"
-                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
+                  <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
                     <!-- Heroicon name: solid/star -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
@@ -79,11 +76,7 @@
                     </svg>
                     <span>Stuff</span>
                   </a>
-                  <a
-                    href="#"
-                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
+                  <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
                     <!-- Heroicon name: solid/code -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
@@ -100,11 +93,7 @@
                     </svg>
                     <span>Stuff</span>
                   </a>
-                  <a
-                    href="#"
-                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
+                  <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
                     <!-- Heroicon name: solid/flag -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
@@ -152,13 +141,7 @@
               <span class="px-2 font-mono">{{ likeCount }}</span>
             </div>
             <div class="flex cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                class="h-6 ml-2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -179,10 +162,7 @@
 import { defineComponent, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {
-  useLikePostMutation,
-  useUnlikePostMutation,
-} from '../graphql/generated/graphqlOperations';
+import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
 import { getFeed } from '../graphql/queries/getFeed';
 import { GetFeedQuery } from '../graphql/generated/types';
 dayjs.extend(relativeTime);
@@ -196,13 +176,13 @@ export default defineComponent({
     liked: Boolean,
     likeCount: Number,
     imageUrl: String,
+    userId: String,
   },
   setup(props) {
     const { id, imageUrl } = toRefs(props);
     const commentCount = ref(0);
     const profileImg: string =
-      imageUrl?.value ||
-      'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
+      imageUrl?.value || 'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
 
     const { mutate: like } = useLikePostMutation({
       variables: { postID: id?.value },

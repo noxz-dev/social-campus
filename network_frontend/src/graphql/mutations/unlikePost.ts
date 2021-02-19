@@ -1,18 +1,18 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
-export const addPost = gql`
-mutation unlikePost($postID: String!) {
-  unlikePost(postID: $postID) {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+export const unlikePost = gql`
+  mutation unlikePost($postID: String!) {
+    unlikePost(postID: $postID) {
+      id
+      liked
+      user {
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-`
+`;

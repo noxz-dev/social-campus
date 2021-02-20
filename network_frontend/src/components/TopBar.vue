@@ -268,6 +268,7 @@ import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -279,6 +280,7 @@ export default defineComponent({
     const showMobileMenu = ref(false);
     const show = ref(true);
     const target = ref(null);
+    const router = useRouter();
 
     const store = useStore();
 
@@ -306,6 +308,7 @@ export default defineComponent({
 
     const logout = () => {
       onLogout();
+      router.push('/login');
     };
 
     return {

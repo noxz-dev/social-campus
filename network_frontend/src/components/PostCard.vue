@@ -186,39 +186,20 @@ export default defineComponent({
 
     const { mutate: like } = useLikePostMutation({
       variables: { postID: id?.value },
-      update: (cache, { data: { likePost } }) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dataInStore: GetFeedQuery | any = cache.readQuery({
+      refetchQueries: [
+        {
           query: getFeed,
-        });
-        const feedQuery = [...dataInStore.getFeed];
-        cache.writeQuery({
-          query: getFeed,
-          data: {
-            ...dataInStore,
-            getFeed: [...feedQuery],
-          },
-        });
-      },
+        },
+      ],
     });
 
     const { mutate: unlike } = useUnlikePostMutation({
       variables: { postID: id?.value },
-      update: (cache, { data: { unlikePost } }) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dataInStore: GetFeedQuery | any = cache.readQuery({
+      refetchQueries: [
+        {
           query: getFeed,
-        });
-
-        const feedQuery = [...dataInStore.getFeed];
-        cache.writeQuery({
-          query: getFeed,
-          data: {
-            ...dataInStore,
-            getFeed: [...feedQuery],
-          },
-        });
-      },
+        },
+      ],
     });
 
     const creationDate = dayjs(props.postDate).fromNow();
@@ -230,6 +211,7 @@ export default defineComponent({
           await like();
         }
       } catch (err) {
+        console.log(err);
         console.log('couldnt like/unlike the post');
       }
     };

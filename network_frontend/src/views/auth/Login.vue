@@ -1,42 +1,21 @@
 <template>
-  <div
-    class="min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
-  >
+  <div class="min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img
-        class="mx-auto h-12 w-auto"
-        src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-        alt="Workflow"
-      />
-      <h2
-        class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900"
-      >
-        Login SocialCampus
-      </h2>
+      <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
+      <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Login SocialCampus</h2>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div
-        class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-dark800"
-      >
-        <form
-          class="space-y-6"
-          action="#"
-          method="POST"
-          @submit.prevent="login({ email, password })"
-        >
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-dark700 border-1 border-gray-900">
+        <form class="space-y-6" action="#" method="POST" @submit.prevent="login({ email, password })">
           <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-50"
-            >
-              Email
-            </label>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Email </label>
             <div class="mt-1">
               <input
                 id="email"
                 name="email"
                 type="email"
+                placeholder="example@email.com"
                 v-model="email"
                 autocomplete="email"
                 required
@@ -46,16 +25,11 @@
           </div>
 
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium dark:text-gray-50 text-gray-700"
-            >
-              Passwort
-            </label>
+            <label for="password" class="block text-sm font-medium dark:text-gray-50 text-gray-700"> Passwort </label>
             <div class="mt-1">
               <input
                 id="password"
-                placeholder=""
+                placeholder="passwort"
                 v-model="password"
                 name="password"
                 type="password"
@@ -83,10 +57,7 @@
             </div>
 
             <div class="text-sm">
-              <a
-                href="#"
-                class="font-medium text-indigo-600 hover:text-indigo-500"
-              >
+              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
                 <!-- Forgot your password? -->
               </a>
             </div>
@@ -110,10 +81,11 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { useMutation } from '@vue/apollo-composable';
 import { login as loginMutation } from '../../graphql/mutations/login';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const email = ref('');
     const password = ref('');
 
@@ -125,9 +97,7 @@ export default defineComponent({
     });
     onDone((result) => {
       localStorage.setItem('apollo-token', result.data.login.accessToken);
-      router.push({
-        name: 'Home',
-      });
+      router.push(route.query.redirect || '/');
     });
 
     return { login, email, password };

@@ -1,6 +1,10 @@
 {
   "name": "network",
-  "version": "0.0.0",
+  "author": {
+    "name": "Finn Beer"
+  },
+  "license": "MIT",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vuedx-typecheck . && vite build",

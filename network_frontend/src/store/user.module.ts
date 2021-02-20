@@ -1,12 +1,28 @@
 import { User } from 'src/graphql/generated/types';
 import { Commit } from 'vuex';
 
-const state = {
-  user: {},
+interface State {
+  user: User;
+}
+
+const state: State = {
+  user: {
+    id: '',
+    firstname: '',
+    lastname: '',
+    email: '',
+    bio: '',
+    groups: [],
+    posts: [],
+    followers: [],
+    following: [],
+    roles: [],
+    createdAt: '',
+  },
 };
 
 const getters = {
-  user: (state) => state.user,
+  user: (state: State) => state.user,
 };
 
 const actions = {
@@ -16,7 +32,7 @@ const actions = {
 };
 
 const mutations = {
-  SET_USER(state, user: User) {
+  SET_USER(state: State, user: User) {
     state.user = user;
   },
 };

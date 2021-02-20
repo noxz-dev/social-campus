@@ -1,18 +1,40 @@
-import gql from 'graphql-tag';
 import * as VueApolloComposable from '@vue/apollo-composable';
-import * as VueCompositionApi from '@vue/composition-api';
+import gql from 'graphql-tag';
+import * as VueCompositionApi from 'vue';
+import {
+  AddFollowerMutation,
+  AddFollowerMutationVariables,
+  AddPostMutation,
+  AddPostMutationVariables,
+  GetFeedQuery,
+  GetFeedQueryVariables,
+  GetPostsFromUserQuery,
+  GetPostsFromUserQueryVariables,
+  LikePostMutation,
+  LikePostMutationVariables,
+  LoginMutation,
+  LoginMutationVariables,
+  MeQuery,
+  MeQueryVariables,
+  RemoveFollowerMutation,
+  RemoveFollowerMutationVariables,
+  UnlikePostMutation,
+  UnlikePostMutationVariables,
+  UserByIdQuery,
+  UserByIdQueryVariables,
+} from './types';
 export type ReactiveFunction<TParam> = () => TParam;
 
 export const AddFollowerDocument = gql`
-    mutation addFollower($userID: String!) {
-  addFollower(userID: $userID) {
-    id
-    firstname
-    lastname
-    profilePicLink
+  mutation addFollower($userID: String!) {
+    addFollower(userID: $userID) {
+      id
+      firstname
+      lastname
+      profilePicLink
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useAddFollowerMutation__
@@ -31,26 +53,30 @@ export const AddFollowerDocument = gql`
  *   },
  * });
  */
-export function useAddFollowerMutation(options: VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables>>) {
+export function useAddFollowerMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables>>
+) {
   return VueApolloComposable.useMutation<AddFollowerMutation, AddFollowerMutationVariables>(AddFollowerDocument, options);
 }
 export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddFollowerMutation, AddFollowerMutationVariables>;
 export const AddPostDocument = gql`
-    mutation addPost($text: String!) {
-  addPost(text: $text) {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+  mutation addPost($text: String!) {
+    addPost(text: $text) {
+      id
+      liked
+      user {
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-    `;
+`;
 
 /**
  * __useAddPostMutation__
@@ -69,26 +95,30 @@ export const AddPostDocument = gql`
  *   },
  * });
  */
-export function useAddPostMutation(options: VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables>>) {
+export function useAddPostMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables>>
+) {
   return VueApolloComposable.useMutation<AddPostMutation, AddPostMutationVariables>(AddPostDocument, options);
 }
 export type AddPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddPostMutation, AddPostMutationVariables>;
 export const LikePostDocument = gql`
-    mutation likePost($postID: String!) {
-  likePost(postID: $postID) {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+  mutation likePost($postID: String!) {
+    likePost(postID: $postID) {
+      id
+      liked
+      user {
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-    `;
+`;
 
 /**
  * __useLikePostMutation__
@@ -107,18 +137,22 @@ export const LikePostDocument = gql`
  *   },
  * });
  */
-export function useLikePostMutation(options: VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables>>) {
+export function useLikePostMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables>>
+) {
   return VueApolloComposable.useMutation<LikePostMutation, LikePostMutationVariables>(LikePostDocument, options);
 }
 export type LikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LikePostMutation, LikePostMutationVariables>;
 export const LoginDocument = gql`
-    mutation login($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    accessToken
-    refreshToken
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      accessToken
+      refreshToken
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useLoginMutation__
@@ -138,20 +172,24 @@ export const LoginDocument = gql`
  *   },
  * });
  */
-export function useLoginMutation(options: VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables>>) {
+export function useLoginMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables>>
+) {
   return VueApolloComposable.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
 }
 export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginMutation, LoginMutationVariables>;
 export const RemoveFollowerDocument = gql`
-    mutation removeFollower($userID: String!) {
-  removeFollower(userID: $userID) {
-    id
-    firstname
-    lastname
-    profilePicLink
+  mutation removeFollower($userID: String!) {
+    removeFollower(userID: $userID) {
+      id
+      firstname
+      lastname
+      profilePicLink
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useRemoveFollowerMutation__
@@ -170,26 +208,33 @@ export const RemoveFollowerDocument = gql`
  *   },
  * });
  */
-export function useRemoveFollowerMutation(options: VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables>>) {
+export function useRemoveFollowerMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables>>
+) {
   return VueApolloComposable.useMutation<RemoveFollowerMutation, RemoveFollowerMutationVariables>(RemoveFollowerDocument, options);
 }
-export type RemoveFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RemoveFollowerMutation, RemoveFollowerMutationVariables>;
+export type RemoveFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  RemoveFollowerMutation,
+  RemoveFollowerMutationVariables
+>;
 export const UnlikePostDocument = gql`
-    mutation unlikePost($postID: String!) {
-  unlikePost(postID: $postID) {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+  mutation unlikePost($postID: String!) {
+    unlikePost(postID: $postID) {
+      id
+      liked
+      user {
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-    `;
+`;
 
 /**
  * __useUnlikePostMutation__
@@ -208,27 +253,31 @@ export const UnlikePostDocument = gql`
  *   },
  * });
  */
-export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>>) {
+export function useUnlikePostMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>
+    | ReactiveFunction<VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>>
+) {
   return VueApolloComposable.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnlikePostMutation, UnlikePostMutationVariables>;
 export const GetFeedDocument = gql`
-    query getFeed {
-  getFeed {
-    id
-    liked
-    user {
+  query getFeed {
+    getFeed {
       id
-      firstname
-      lastname
-      profilePicLink
+      liked
+      user {
+        id
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-    `;
+`;
 
 /**
  * __useGetFeedQuery__
@@ -242,20 +291,25 @@ export const GetFeedDocument = gql`
  * @example
  * const { result, loading, error } = useGetFeedQuery();
  */
-export function useGetFeedQuery(options: VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> = {}) {
+export function useGetFeedQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> = {}
+) {
   return VueApolloComposable.useQuery<GetFeedQuery, GetFeedQueryVariables>(GetFeedDocument, {}, options);
 }
 export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFeedQuery, GetFeedQueryVariables>;
 export const MeDocument = gql`
-    query me {
-  me {
-    id
-    profilePicLink
-    firstname
-    lastname
+  query me {
+    me {
+      id
+      profilePicLink
+      firstname
+      lastname
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useMeQuery__
@@ -269,26 +323,31 @@ export const MeDocument = gql`
  * @example
  * const { result, loading, error } = useMeQuery();
  */
-export function useMeQuery(options: VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>> = {}) {
+export function useMeQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>> = {}
+) {
   return VueApolloComposable.useQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
 export const GetPostsFromUserDocument = gql`
-    query getPostsFromUser($userID: String!) {
-  getPostsFromUser(userID: $userID) {
-    id
-    liked
-    user {
-      firstname
-      lastname
-      profilePicLink
+  query getPostsFromUser($userID: String!) {
+    getPostsFromUser(userID: $userID) {
+      id
+      liked
+      user {
+        firstname
+        lastname
+        profilePicLink
+      }
+      text
+      likesCount
+      createdAt
     }
-    text
-    likesCount
-    createdAt
   }
-}
-    `;
+`;
 
 /**
  * __useGetPostsFromUserQuery__
@@ -305,32 +364,44 @@ export const GetPostsFromUserDocument = gql`
  *   userID: // value for 'userID'
  * });
  */
-export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariables | VueCompositionApi.Ref<GetPostsFromUserQueryVariables> | ReactiveFunction<GetPostsFromUserQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> = {}) {
+export function useGetPostsFromUserQuery(
+  variables:
+    | GetPostsFromUserQueryVariables
+    | VueCompositionApi.Ref<GetPostsFromUserQueryVariables>
+    | ReactiveFunction<GetPostsFromUserQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> = {}
+) {
   return VueApolloComposable.useQuery<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
 }
-export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>;
+export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  GetPostsFromUserQuery,
+  GetPostsFromUserQueryVariables
+>;
 export const UserByIdDocument = gql`
-    query userById($userId: String!) {
-  userById(userId: $userId) {
-    id
-    firstname
-    lastname
-    profilePicLink
-    followers {
+  query userById($userId: String!) {
+    userById(userId: $userId) {
       id
       firstname
       lastname
       profilePicLink
-    }
-    following {
-      id
-      firstname
-      lastname
-      profilePicLink
+      followers {
+        id
+        firstname
+        lastname
+        profilePicLink
+      }
+      following {
+        id
+        firstname
+        lastname
+        profilePicLink
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useUserByIdQuery__
@@ -347,7 +418,13 @@ export const UserByIdDocument = gql`
  *   userId: // value for 'userId'
  * });
  */
-export function useUserByIdQuery(variables: UserByIdQueryVariables | VueCompositionApi.Ref<UserByIdQueryVariables> | ReactiveFunction<UserByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>> = {}) {
+export function useUserByIdQuery(
+  variables: UserByIdQueryVariables | VueCompositionApi.Ref<UserByIdQueryVariables> | ReactiveFunction<UserByIdQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>> = {}
+) {
   return VueApolloComposable.useQuery<UserByIdQuery, UserByIdQueryVariables>(UserByIdDocument, variables, options);
 }
 export type UserByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<UserByIdQuery, UserByIdQueryVariables>;

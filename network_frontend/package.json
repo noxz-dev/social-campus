@@ -7,7 +7,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "vuedx-typecheck . && vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "postinstall": "node scripts/vue-apollo-patch.js",
     "generate": "graphql-codegen"

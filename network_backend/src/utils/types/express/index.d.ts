@@ -1,4 +1,4 @@
-import { JwtUser } from '../../interfaces/JwtUser';
+import { JwtUser } from '../../interfaces/jwtUser';
 
 declare module 'express' {
   interface Request {

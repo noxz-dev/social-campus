@@ -5,6 +5,7 @@ export const getFeed = gql`
     getFeed {
       id
       liked
+      imageLink
       user {
         id
         firstname

@@ -5,7 +5,9 @@ export const unlikePost = gql`
     unlikePost(postID: $postID) {
       id
       liked
+      imageLink
       user {
+        id
         firstname
         lastname
         profilePicLink

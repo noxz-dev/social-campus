@@ -12,6 +12,14 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col">
             <div class="flex">
+              <div
+                v-if="showEditProfile"
+                class="absolute text-gray-200 h-24 w-24 sm:h-32 sm:w-32 text-lg flex flex-col bg-black rounded-full bg-opacity-70 opacity-0 hover:opacity-100 flex text-center cursor-pointer"
+              >
+                <span class="sm:m-8 sm:mb-0 mt-4 font-medium">Avatar</span>
+                <span class="sm:m-8 sm:mt-1 font-medium">Ändern</span>
+              </div>
+
               <img class="h-24 w-24 rounded-full border-3 sm:h-32 sm:w-32 bg-black" :src="profileImage" alt="profile image" />
             </div>
             <div class="mt-6 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">

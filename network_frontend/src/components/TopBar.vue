@@ -49,12 +49,6 @@
             @click="openMobileMenu"
           >
             <span class="sr-only">Open menu</span>
-            <!-- Icon when menu is closed. -->
-            <!--
-            Heroicon name: outline/menu
-
-            Menu open: "hidden", Menu closed: "block"
-          -->
             <svg
               class="block h-6 w-6 text-gray-50"
               xmlns="http://www.w3.org/2000/svg"
@@ -65,12 +59,6 @@
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <!-- Icon when menu is open. -->
-            <!--
-            Heroicon name: outline/x
-
-            Menu open: "block", Menu closed: "hidden"
-          -->
             <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -82,7 +70,6 @@
             class="ml-5 flex-shrink-0 bg-white dark:bg-dark600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
-            <!-- Heroicon name: outline/bell -->
             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path
                 stroke-linecap="round"
@@ -107,16 +94,7 @@
                 <img class="h-8 w-8 rounded-full" :src="profileImage" alt="" />
               </button>
             </div>
-            <!--
-            Profile dropdown panel, show/hide based on dropdown state.
 
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
             <transition name="fade">
               <div
                 v-if="showProfileMenu"
@@ -193,12 +171,6 @@
         </div>
       </div>
     </div>
-
-    <!--
-    Mobile menu, toggle classes based on menu state.
-
-    Menu open: "block", Menu closed: "hidden"
-  -->
     <nav class="lg:hidden" :class="showMobileMenu ? 'block' : 'hidden'" aria-label="Global">
       <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
@@ -218,7 +190,6 @@
             class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
-            <!-- Heroicon name: outline/bell -->
             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path
                 stroke-linecap="round"
@@ -253,9 +224,13 @@
       </div>
     </nav>
   </header>
+  <floating-button class="lg:hidden sm:block" text="Neuer Post" @click="eventbus.emit('open-modal')" />
   <modal ref="modal" content-text="" header-text="New Post">
     <new-post />
   </modal>
+  <transition name="fade">
+    <post-detail-card></post-detail-card>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -269,11 +244,14 @@ import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-
+import FloatingButton from './FloatingButton.vue';
+import PostDetailCard from './PostDetailCard.vue';
 export default defineComponent({
   components: {
     Modal,
     NewPost,
+    FloatingButton,
+    PostDetailCard,
   },
   setup(props) {
     const showProfileMenu = ref(false);
@@ -330,15 +308,6 @@ export default defineComponent({
 .text-indent {
   text-indent: 10px;
 }
-
-/* Profile dropdown panel, show/hide based on dropdown state. */
-
-/* Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95" */
 
 .fade-enter-active {
   transition: all 100ms ease-out;

@@ -10,7 +10,7 @@
       <div v-if="v.message.$error" class="text-red-400">Post text wird benötigt</div>
     </div>
   </div>
-  <div class="sm:flex sm:flex-row-reverse">
+  <div class="flex flex-row-reverse">
     <a
       href="#"
       class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"

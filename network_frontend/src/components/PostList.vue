@@ -9,8 +9,9 @@
       :likeCount="post.likesCount"
       :post-date="new Date(post.createdAt)"
       :id="post.id"
-      :imageUrl="post.user.profilePicLink"
+      :imageUrlProfile="post.user.profilePicLink"
       :userId="post.user.id"
+      :imageUrl="post.imageLink"
     />
   </div>
 </template>

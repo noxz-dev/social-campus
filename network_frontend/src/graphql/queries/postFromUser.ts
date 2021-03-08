@@ -5,7 +5,9 @@ export const getPostsFromUser = gql`
     getPostsFromUser(userID: $userID) {
       id
       liked
+      imageLink
       user {
+        id
         firstname
         lastname
         profilePicLink

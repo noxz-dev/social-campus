@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="md:min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
       <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Login SocialCampus</h2>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-dark700 border-1 border-gray-900">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-dark700 md:border-1 md:border-gray-700">
         <form class="space-y-6" action="#" method="POST" @submit.prevent="login({ email, password })">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Email </label>
@@ -41,20 +41,7 @@
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <!-- <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label
-                for="remember_me"
-                class="ml-2 block text-sm dark:text-gray-50 text-gray-900"
-              >
-                Remember me
-              </label> -->
-            </div>
+            <div class="flex items-center"></div>
 
             <div class="text-sm">
               <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">

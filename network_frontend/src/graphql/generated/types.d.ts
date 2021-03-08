@@ -277,7 +277,7 @@ export type AddPostMutation = (
   { __typename?: 'Mutation' }
   & { addPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
@@ -294,7 +294,7 @@ export type LikePostMutation = (
   { __typename?: 'Mutation' }
   & { likePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
@@ -338,10 +338,10 @@ export type UnlikePostMutation = (
   { __typename?: 'Mutation' }
   & { unlikePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
     ) }
   ) }
 );
@@ -353,7 +353,7 @@ export type GetFeedQuery = (
   { __typename?: 'Query' }
   & { getFeed: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
@@ -381,10 +381,10 @@ export type GetPostsFromUserQuery = (
   { __typename?: 'Query' }
   & { getPostsFromUser?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
     ) }
   )>> }
 );

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4">
+  <div class="w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4 cursor-pointer" @click.stop="eventbus.emit('open-post-modal')">
     <div class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
       <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg">
         <div class="flex space-x-3">
@@ -9,7 +9,7 @@
           <div class="min-w-0 flex-1">
             <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
               <a
-                @click="
+                @click.stop="
                   $router.push({
                     name: 'Profile',
                     params: {
@@ -36,23 +36,12 @@
                   aria-haspopup="true"
                 >
                   <span class="sr-only">Open options</span>
-                  <!-- Heroicon name: solid/dots-vertical -->
                   <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                   </svg>
                 </button>
               </div>
 
-              <!--
-          Dropdown menu, show/hide based on menu state.
-
-          Entering: "transition ease-out duration-100"
-            From: "transform opacity-0 scale-95"
-            To: "transform opacity-100 scale-100"
-          Leaving: "transition ease-in duration-75"
-            From: "transform opacity-100 scale-100"
-            To: "transform opacity-0 scale-95"
-        -->
               <div
                 v-if="false"
                 class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -62,7 +51,6 @@
               >
                 <div class="py-1">
                   <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
-                    <!-- Heroicon name: solid/star -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
                       xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +65,6 @@
                     <span>Stuff</span>
                   </a>
                   <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
-                    <!-- Heroicon name: solid/code -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
                       xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +81,6 @@
                     <span>Stuff</span>
                   </a>
                   <a href="#" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
-                    <!-- Heroicon name: solid/flag -->
                     <svg
                       class="mr-3 h-5 w-5 text-gray-400"
                       xmlns="http://www.w3.org/2000/svg"
@@ -120,9 +106,12 @@
         <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-6">
           {{ postText }}
         </p>
-        <div class="flex items-center justify-between p-2">
+        <div v-if="imageUrl" class="flex justify-center">
+          <img class="object-cover h-98 w-full rounded-xl m-2" :src="imageUrl" alt="" />
+        </div>
+        <div class="flex items-center justify-between p-2 cursor-default" @click.stop>
           <div class="flex">
-            <div class="flex cursor-pointer" @click="likePost">
+            <div class="flex cursor-pointer" @click.stop="likePost">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -164,7 +153,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
 import { getFeed } from '../graphql/queries/getFeed';
-import { GetFeedQuery } from '../graphql/generated/types';
+
 dayjs.extend(relativeTime);
 
 export default defineComponent({
@@ -176,13 +165,14 @@ export default defineComponent({
     liked: Boolean,
     likeCount: Number,
     imageUrl: String,
+    imageUrlProfile: String,
     userId: String,
   },
   setup(props) {
-    const { id, imageUrl } = toRefs(props);
+    const { id, imageUrlProfile } = toRefs(props);
     const commentCount = ref(0);
     const profileImg: string =
-      imageUrl?.value || 'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
+      imageUrlProfile?.value || 'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
 
     const { mutate: like } = useLikePostMutation({
       variables: { postID: id?.value },

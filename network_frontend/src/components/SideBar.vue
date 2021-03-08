@@ -5,18 +5,12 @@
   >
     <div class="mt-16 w-full flex justify-center flex-col self-start items-center">
       <div
-        class="flex justify-start items-center p-1.5 lg:p-1 rounded-lg w-5/6 h-12 cursor-pointer mb-4"
+        class="flex justify-start items-center p-1.5 rounded-lg w-5/6 h-12 cursor-pointer mb-4"
         :class="{ 'bg-gray-700': homeActive }"
         @click="handleRouting('home')"
       >
         <div>
-          <svg
-            v-if="!homeActive"
-            viewBox="0 0 24 24"
-            fill="none"
-            class="h-8 text-white sm:ml-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg v-if="!homeActive" viewBox="0 0 24 24" fill="none" class="h-8 text-white" xmlns="http://www.w3.org/2000/svg">
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
@@ -24,40 +18,23 @@
               fill="white"
             />
           </svg>
-          <svg
-            v-else
-            viewBox="0 0 24 24"
-            fill="none"
-            class="h-8 text-white sm:ml-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg v-else viewBox="0 0 24 24" fill="none" class="h-8 text-white" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M9.13478 20.7733V17.7156C9.13478 16.9351 9.77217 16.3023 10.5584 16.3023H13.4326C13.8102 16.3023 14.1723 16.4512 14.4393 16.7163C14.7063 16.9813 14.8563 17.3408 14.8563 17.7156V20.7733C14.8539 21.0978 14.9821 21.4099 15.2124 21.6402C15.4427 21.8705 15.7561 22 16.0829 22H18.0438C18.9596 22.0023 19.8388 21.6428 20.4872 21.0008C21.1356 20.3588 21.5 19.487 21.5 18.5778V9.86686C21.5 9.13246 21.1721 8.43584 20.6046 7.96467L13.934 2.67587C12.7737 1.74856 11.1111 1.7785 9.98539 2.74698L3.46701 7.96467C2.87274 8.42195 2.51755 9.12064 2.5 9.86686V18.5689C2.5 20.4639 4.04738 22 5.95617 22H7.87229C8.55123 22 9.103 21.4562 9.10792 20.7822L9.13478 20.7733Z"
               fill="white"
             />
           </svg>
         </div>
-        <div
-          v-if="breakpoints.is === 'xl'"
-          class="dark:text-white ml-4 font-medium text-lg"
-        >
-          Home
-        </div>
+        <div v-if="breakpoints.is === 'xl'" class="dark:text-white ml-4 font-medium text-lg">Home</div>
       </div>
 
       <div
-        class="flex justify-start  items-center p-1.5 rounded-lg w-5/6 h-12 cursor-pointer"
+        class="flex justify-start items-center p-1.5 rounded-lg w-5/6 h-12 cursor-pointer"
         :class="{ 'bg-gray-700': groupsActive }"
         @click="handleRouting('groups')"
       >
         <div>
-          <svg
-            v-if="!groupsActive"
-            viewBox="0 0 24 24"
-            fill="none"
-            class="h-8 text-white sm:ml-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg v-if="!groupsActive" viewBox="0 0 24 24" fill="none" class="h-8 text-white" xmlns="http://www.w3.org/2000/svg">
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
@@ -65,13 +42,7 @@
               fill="white"
             />
           </svg>
-          <svg
-            v-else
-            viewBox="0 0 24 24"
-            fill="none"
-            class="h-8 text-white sm:ml-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg v-else viewBox="0 0 24 24" fill="none" class="h-8 text-white" xmlns="http://www.w3.org/2000/svg">
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
@@ -80,49 +51,43 @@
             />
           </svg>
         </div>
-        <div
-          v-if="breakpoints.is === 'xl'"
-          class="dark:text-white ml-4 font-medium text-lg"
-        >
-          Groups
-        </div>
+        <div v-if="breakpoints.is === 'xl'" class="dark:text-white ml-4 font-medium text-lg">Groups</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-
-import breakpoints from "../_helpers/breakpoints"
+import breakpoints from '../_helpers/breakpoints';
 import { defineComponent, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   setup() {
-    const router = useRouter()
+    const router = useRouter();
     const show = ref(true);
     const homeActive = ref(true);
     const groupsActive = ref(false);
 
     onMounted(() => {
-      console.log(breakpoints.is)
-    })
+      console.log(breakpoints.is);
+    });
 
     const handleRouting = (state: string) => {
       switch (state) {
         case 'home':
-          router.push("/home")
+          router.push('/home');
           homeActive.value = true;
           groupsActive.value = false;
           break;
         case 'groups':
-          router.push("/groups")
+          router.push('/groups');
           homeActive.value = false;
           groupsActive.value = true;
           break;
       }
     };
-    return { show, homeActive, groupsActive, handleRouting, breakpoints};
+    return { show, homeActive, groupsActive, handleRouting, breakpoints };
   },
 });
 </script>

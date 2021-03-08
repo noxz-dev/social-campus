@@ -12,5 +12,33 @@ export default defineConfig({
   server: {
     port: 8080,
   },
-  plugins: [vue(), ...WindiCSS(), VitePWA()],
+  plugins: [
+    vue(),
+    ...WindiCSS(),
+    VitePWA({
+      manifest: {
+        name: 'SocialCampus',
+        short_name: 'SocialCampus',
+        theme_color: '#181A20',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
+    }),
+  ],
 });

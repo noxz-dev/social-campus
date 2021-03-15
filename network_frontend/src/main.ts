@@ -1,12 +1,10 @@
-import {
-  DefaultApolloClient,
-  provideApolloClient,
-} from '@vue/apollo-composable';
+import { DefaultApolloClient, provideApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
 import { createApp, h, provide } from 'vue';
-import 'windi.css';
+// import 'windi.css';
 import { defaultClient } from './apollo';
 import App from './App.vue';
+import './index.css';
 import router from './router';
 import store from './store';
 

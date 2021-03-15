@@ -112,24 +112,9 @@
         <div class="flex items-center justify-between p-2 cursor-default" @click.stop>
           <div class="flex">
             <div class="flex cursor-pointer" @click.stop="likePost">
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                class="h-6 hover:text-red-500 duration-200"
-                :class="{ 'fill-red-500 text-red-500': liked }"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg> -->
               <svg
-                class="h-6 hover:text-red-500 duration-200 stroke-current"
-                :class="{ 'fill-red-500 text-transparent': liked, 'fill-transparent': !liked }"
+                class="h-6 hover:stroke-red duration-200 stroke-current"
+                :class="{ 'fill-red': liked, 'stroke-white fill-dark600': !liked }"
                 viewBox="0 0 24 24"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +134,7 @@
             </div>
             <div class="flex cursor-pointer">
               <svg
-                class="h-6 text-white stroke-current"
+                class="h-6 stroke-white"
                 viewBox="0 0 24 24"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"

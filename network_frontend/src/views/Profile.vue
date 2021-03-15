@@ -101,7 +101,7 @@ import {
   useAddFollowerMutation,
   useRemoveFollowerMutation,
 } from '../graphql/generated/graphqlOperations';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { userById } from '../graphql/queries/userById';
 
@@ -119,6 +119,7 @@ export default defineComponent({
     const user = ref({});
     const store = useStore();
     const following = ref(false);
+    const posts = ref([]);
 
     const userFromStore = computed(() => store.state.userData.user);
 
@@ -128,37 +129,42 @@ export default defineComponent({
       }
     });
 
-    const { onResult } = useUserByIdQuery({
-      userId: route.params.id,
-      pollInterval: 60000,
+    const setData = () => {
+      const { onResult } = useUserByIdQuery({
+        userId: route.params.id,
+      });
+
+      onResult((userResult) => {
+        const userData = userResult.data.userById;
+        profileImage.value = userData.profilePicLink;
+        user.value = userData;
+        followerCount.value = userData.followers.length;
+        followingCount.value = userData.following.length;
+        const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
+        if (userExists) {
+          following.value = true;
+        } else {
+          following.value = false;
+        }
+      });
+
+      const { onResult: onResultPosts } = useGetPostsFromUserQuery({
+        userID: route.params.id,
+        pollInterval: 60000,
+      });
+
+      onResultPosts((postData) => {
+        const postsResult = postData?.data?.getPostsFromUser;
+        postCount.value = postsResult.length;
+        posts.value = [...postsResult];
+      });
+    };
+
+    onBeforeRouteUpdate(() => {
+      setData();
     });
 
-    onResult((userResult) => {
-      const userData = userResult.data.userById;
-      profileImage.value = userData.profilePicLink;
-      user.value = userData;
-      followerCount.value = userData.followers.length;
-      followingCount.value = userData.following.length;
-      const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
-      if (userExists) {
-        following.value = true;
-      } else {
-        following.value = false;
-      }
-    });
-
-    const posts = ref([]);
-
-    const { onResult: onResultPosts } = useGetPostsFromUserQuery({
-      userID: route.params.id,
-      pollInterval: 60000,
-    });
-
-    onResultPosts((postData) => {
-      const postsResult = postData?.data?.getPostsFromUser;
-      postCount.value = postsResult.length;
-      posts.value = [...postsResult];
-    });
+    setData();
 
     const { mutate: follow } = useAddFollowerMutation({
       variables: {

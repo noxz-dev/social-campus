@@ -1,11 +1,14 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, split } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { logErrorMessages } from '@vue/apollo-util';
 import router from './router';
 
 // auth interceptor
 const errorLink = onError((error) => {
+  console.log(error);
   error.graphQLErrors?.forEach((err) => {
     if (err.message.includes('Access denied!')) {
       localStorage.removeItem('apollo-token');
@@ -13,6 +16,13 @@ const errorLink = onError((error) => {
     }
   });
   logErrorMessages(error);
+});
+
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:3000/subscriptions`,
+  options: {
+    reconnect: true,
+  },
 });
 
 const httpLink = createHttpLink({
@@ -31,8 +41,19 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  },
+  wsLink,
+  httpLink
+);
+
 export const defaultClient = new ApolloClient({
-  link: errorLink.concat(authLink).concat(httpLink),
+  link: errorLink.concat(authLink).concat(link),
+
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {

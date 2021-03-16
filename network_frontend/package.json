@@ -25,6 +25,7 @@
     "graphql-tag": "^2.11.0",
     "mitt": "^2.1.0",
     "react": "^17.0.1",
+    "subscriptions-transport-ws": "^0.9.18",
     "vue": "^3.0.5",
     "vue-picture-swipe": "^2.1.0",
     "vue-router": "^4.0.3",

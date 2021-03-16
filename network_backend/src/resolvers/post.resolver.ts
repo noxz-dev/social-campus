@@ -3,7 +3,7 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import _ from 'lodash';
 import os from 'os';
 import path from 'path';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getRepository, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Group } from '../entity/group.entity';
@@ -14,6 +14,9 @@ import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
 
+export interface newPostPayload {
+  post?: Post;
+}
 @Resolver(() => Post)
 export class PostResolver {
   @Authorized()
@@ -221,7 +224,18 @@ export class PostResolver {
 
     const likeState = await checkLikeState(ctx.req.user.id, dbPost.id);
     dbPost.liked = likeState;
+
+    await ctx.req.pubsub.publish('TOPIC', { post: dbPost });
+
     return dbPost;
+  }
+
+  @Subscription(() => Post, {
+    topics: 'TOPIC',
+  })
+  public async newPost(@Ctx() ctx: MyContext, @Root() payload: newPostPayload): Promise<Post> {
+    console.log('NEW POST EVENT', payload);
+    return payload.post;
   }
 
   @Authorized()

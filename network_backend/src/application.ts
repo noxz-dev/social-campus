@@ -1,10 +1,11 @@
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, PubSub } from 'apollo-server-express';
+import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import 'express-async-errors';
 import { GraphQLSchema } from 'graphql';
 import { graphqlUploadExpress } from 'graphql-upload';
-import { Server } from 'http';
+import http, { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { Connection, createConnection } from 'typeorm';
@@ -22,6 +23,7 @@ import { initS3 } from './utils/services/minio';
 export class Application {
   public host: express.Application;
   public server: Server;
+  public pubsub: PubSub;
 
   public connect = async (): Promise<void> => {
     try {
@@ -35,6 +37,7 @@ export class Application {
   // initialize express
   public init = async (): Promise<void> => {
     const app = express();
+    this.pubsub = new PubSub();
 
     initS3();
 
@@ -50,13 +53,20 @@ export class Application {
       // initialize schema
       const schema: GraphQLSchema = await buildSchema({
         resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver, GroupResolver],
+        pubSub: this.pubsub,
         authChecker: customAuthChecker,
       });
 
       //initialize graphql server
       const server = new ApolloServer({
         schema,
-        subscriptions: { path: '/subscriptions' },
+        subscriptions: {
+          path: '/subscriptions',
+          onConnect(connectionParams, webSocket) {
+            console.log(connectionParams);
+            console.log('connected');
+          },
+        },
         context: ({ req, res }) => {
           const context: MyContext = {
             req,
@@ -65,6 +75,7 @@ export class Application {
           return context;
         },
         formatError: (error) => {
+          log.error('GRAPHQL ERROR', error);
           throw error;
         },
         uploads: false,
@@ -83,17 +94,26 @@ export class Application {
         },
       );
 
+      app.use(cors());
       //authentication middleware
       app.use(authenticateToken);
       app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
+      app.use((req: express.Request, res: express.Response, next: express.NextFunction): void => {
+        req.pubsub = this.pubsub;
+        next();
+      });
       server.applyMiddleware({ app });
 
       // start server on default port 4000
       const port = process.env.PORT || 5000;
 
-      this.server = app.listen(port, () => {
-        log.info(`🚀  http://localhost:${port}${server.graphqlPath}`);
+      const httpServer = http.createServer(app);
+      server.installSubscriptionHandlers(httpServer);
+
+      httpServer.listen(port, () => {
+        log.info(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`);
+        log.info(`🚀 Subscriptions ready at ws://localhost:${port}${server.subscriptionsPath}`);
       });
     } catch (error) {
       console.error('🚨  Could not start server', error);

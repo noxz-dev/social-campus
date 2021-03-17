@@ -6,12 +6,14 @@
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
         <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
-          <div class="flex-shrink-0 flex items-center">
-            <a href="#">
-              <img class="block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="Workflow" />
-            </a>
+          <div class="flex-shrink-0 flex items-center flex-row">
+            <img class="block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="Workflow" />
+            <div v-if="breakpoints.is != 'md' && breakpoints.is != 'sm'" class="text-gray-50 ml-5 text-xl font-semibold">SocialCampus</div>
           </div>
-          <div v-if="breakpoints.is != 'sm'" class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50">
+          <div
+            v-if="breakpoints.is != 'sm' && breakpoints.is != 'md' && breakpoints.is != 'lg'"
+            class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50"
+          >
             Hey {{ user?.firstname }} 👋
           </div>
         </div>

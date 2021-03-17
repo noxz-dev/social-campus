@@ -62,9 +62,8 @@ export class Application {
         schema,
         subscriptions: {
           path: '/subscriptions',
-          onConnect(connectionParams, webSocket) {
-            console.log(connectionParams);
-            console.log('connected');
+          onConnect() {
+            console.log('user connected');
           },
         },
         context: ({ req, res }) => {

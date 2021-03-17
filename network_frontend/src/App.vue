@@ -17,8 +17,7 @@ import Contentview from '@/views/Contentview.vue';
 import SideBar from '@/components/SideBar.vue';
 import TopBar from '@/components/TopBar.vue';
 import { useRoute } from 'vue-router';
-import { useSubscription } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
+
 export default defineComponent({
   name: 'App',
   components: {
@@ -29,20 +28,6 @@ export default defineComponent({
   setup() {
     const showLogin = ref(true);
     const route = useRoute();
-
-    const { onResult } = useSubscription(gql`
-      subscription newPost {
-        newPost {
-          id
-          text
-        }
-      }
-    `);
-
-    onResult((res) => {
-      console.log('sub triggerd');
-      console.log(res);
-    });
 
     watch(
       () => route.path,

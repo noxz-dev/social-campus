@@ -129,42 +129,34 @@ export default defineComponent({
       }
     });
 
-    const setData = () => {
-      const { onResult } = useUserByIdQuery({
-        userId: route.params.id,
-      });
+    const { onResult } = useUserByIdQuery(() => ({
+      userId: route.params.id,
+    }));
 
-      onResult((userResult) => {
-        const userData = userResult.data.userById;
-        profileImage.value = userData.profilePicLink;
-        user.value = userData;
-        followerCount.value = userData.followers.length;
-        followingCount.value = userData.following.length;
-        const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
-        if (userExists) {
-          following.value = true;
-        } else {
-          following.value = false;
-        }
-      });
-
-      const { onResult: onResultPosts } = useGetPostsFromUserQuery({
-        userID: route.params.id,
-        pollInterval: 60000,
-      });
-
-      onResultPosts((postData) => {
-        const postsResult = postData?.data?.getPostsFromUser;
-        postCount.value = postsResult.length;
-        posts.value = [...postsResult];
-      });
-    };
-
-    onBeforeRouteUpdate(() => {
-      setData();
+    onResult((userResult) => {
+      const userData = userResult.data.userById;
+      profileImage.value = userData.profilePicLink;
+      user.value = userData;
+      followerCount.value = userData.followers.length;
+      followingCount.value = userData.following.length;
+      const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
+      if (userExists) {
+        following.value = true;
+      } else {
+        following.value = false;
+      }
     });
 
-    setData();
+    const { onResult: onResultPosts } = useGetPostsFromUserQuery(() => ({
+      userID: route.params.id,
+      pollInterval: 60000,
+    }));
+
+    onResultPosts((postData) => {
+      const postsResult = postData?.data?.getPostsFromUser;
+      postCount.value = postsResult.length;
+      posts.value = [...postsResult];
+    });
 
     const { mutate: follow } = useAddFollowerMutation({
       variables: {

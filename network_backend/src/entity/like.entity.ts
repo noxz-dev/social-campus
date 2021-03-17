@@ -12,7 +12,7 @@ export class Like extends Base {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.likes)
+  @ManyToOne(() => Post, (post) => post.likes, { onDelete: 'CASCADE' })
   post: Post;
 
   @ManyToOne(() => Comment, (comment) => comment.likes)

@@ -225,16 +225,31 @@ export class PostResolver {
     const likeState = await checkLikeState(ctx.req.user.id, dbPost.id);
     dbPost.liked = likeState;
 
-    await ctx.req.pubsub.publish('TOPIC', { post: dbPost });
+    await ctx.req.pubsub.publish('NEW_POST', { post: dbPost, userId: id });
 
     return dbPost;
   }
 
+  //subscription to auto update the feed from the followers
+  //using a filter to bypass missing async dynamic topics
   @Subscription(() => Post, {
-    topics: 'TOPIC',
+    topics: 'NEW_POST',
+    filter: async ({ payload, args }) => {
+      const user = await getRepository(User).findOne({
+        where: {
+          id: payload.userId,
+        },
+        relations: ['followers'],
+      });
+      const ids = user.followers.map((u) => u.id);
+      return args.userId, ids.includes(args.userId);
+    },
   })
-  public async newPost(@Ctx() ctx: MyContext, @Root() payload: newPostPayload): Promise<Post> {
-    console.log('NEW POST EVENT', payload);
+  public async newPost(
+    @Ctx() ctx: MyContext,
+    @Root() payload: newPostPayload,
+    @Arg('userId') userId: string,
+  ): Promise<Post> {
     return payload.post;
   }
 
@@ -318,6 +333,19 @@ export class PostResolver {
     post.liked = likeState;
 
     return post;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  public async deletePost(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<boolean | null> {
+    const userId = ctx.req.user.id;
+    if (!userId) {
+      return null;
+    }
+
+    await getRepository(Post).delete({ id: postId });
+
+    return true;
   }
 }
 

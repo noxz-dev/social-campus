@@ -8,9 +8,10 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import http, { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { Connection, createConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { CommentResolver } from './resolvers/comment.resolver';
 import { GroupResolver } from './resolvers/group.resolver';
+import { NotificationResolver } from './resolvers/notification.resolver';
 import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { UserResolver } from './resolvers/user.resolver';
@@ -27,7 +28,7 @@ export class Application {
 
   public connect = async (): Promise<void> => {
     try {
-      const connection: Connection = await createConnection();
+      await createConnection();
     } catch (error) {
       console.error('🚨  Could not connect to the database', error);
       throw Error(error);
@@ -42,17 +43,9 @@ export class Application {
     initS3();
 
     try {
-      // enable cors
-      // this.host.use(
-      //   cors({
-      //     credentials: true,
-      //     origin: '*',
-      //   }),
-      // );
-
-      // initialize schema
+      // initialize schema and register resolvers
       const schema: GraphQLSchema = await buildSchema({
-        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver, GroupResolver],
+        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver, NotificationResolver, GroupResolver],
         pubSub: this.pubsub,
         authChecker: customAuthChecker,
       });
@@ -62,8 +55,20 @@ export class Application {
         schema,
         subscriptions: {
           path: '/subscriptions',
-          onConnect() {
-            console.log('user connected');
+          onConnect(connectionParams) {
+            if (connectionParams.campusToken) {
+              // return validateToken(connectionParams.authToken)
+              //   .then(findUser(connectionParams.authToken))
+              //   .then((user) => {
+              //     return {
+              //       currentUser: user,
+              //     };
+              //   });
+              // console.log(connectionParams.campusToken);
+              console.log('user connected');
+              return;
+            }
+            throw new Error('Missing auth token!');
           },
         },
         context: ({ req, res }) => {
@@ -84,9 +89,9 @@ export class Application {
       app.use(
         (
           error: Error,
-          req: express.Request,
+          _req: express.Request,
           res: express.Response,
-          next: express.NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
+          _next: express.NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
         ): void => {
           log.error(`something went wrong: ${error.stack}`);
           res.status(400).send(error);
@@ -98,7 +103,7 @@ export class Application {
       app.use(authenticateToken);
       app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
-      app.use((req: express.Request, res: express.Response, next: express.NextFunction): void => {
+      app.use((req: express.Request, _res: express.Response, next: express.NextFunction): void => {
         req.pubsub = this.pubsub;
         next();
       });

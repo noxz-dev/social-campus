@@ -18,13 +18,18 @@ const errorLink = onError((error) => {
   logErrorMessages(error);
 });
 
+//subscriptions
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:3000/subscriptions`,
   options: {
     reconnect: true,
+    connectionParams: {
+      campusToken: localStorage.getItem('apollo-token'),
+    },
   },
 });
 
+//querys and mutations
 const httpLink = createHttpLink({
   uri: 'http://localhost/api/graphql',
 });

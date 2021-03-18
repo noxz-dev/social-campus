@@ -13,6 +13,7 @@ import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
+import { SUB_TOPICS } from './notification.resolver';
 
 export interface newPostPayload {
   post?: Post;
@@ -225,15 +226,15 @@ export class PostResolver {
     const likeState = await checkLikeState(ctx.req.user.id, dbPost.id);
     dbPost.liked = likeState;
 
-    await ctx.req.pubsub.publish('NEW_POST', { post: dbPost, userId: id });
+    await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
 
     return dbPost;
   }
 
-  //subscription to auto update the feed from the followers
+  //subscription to auto update the feed from followers
   //using a filter to bypass missing async dynamic topics
   @Subscription(() => Post, {
-    topics: 'NEW_POST',
+    topics: SUB_TOPICS.NEW_POST,
     filter: async ({ payload, args }) => {
       const user = await getRepository(User).findOne({
         where: {
@@ -342,10 +343,13 @@ export class PostResolver {
     if (!userId) {
       return null;
     }
-
-    await getRepository(Post).delete({ id: postId });
-
-    return true;
+    const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user'] });
+    if (!post) return null;
+    if (post.user.id === userId) {
+      await getRepository(Post).delete(post);
+      return true;
+    }
+    throw Error('youre not allowed to do that');
   }
 }
 

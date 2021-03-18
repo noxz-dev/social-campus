@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtUser } from '../interfaces/jwtUser';
+import { JwtUser } from '../interfaces/jwtUser.interface';
 import { log } from '../services/logger';
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {

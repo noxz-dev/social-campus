@@ -7,17 +7,19 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { getRepository, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtToken } from '../entity/jwtToken.entity';
+import { NotificationType } from '../entity/notification.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
 import { MyContext } from '../utils/interfaces/context.interface';
-import { JwtUser } from '../utils/interfaces/jwtUser';
+import { JwtUser } from '../utils/interfaces/jwtUser.interface';
 import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
 import { UserValidator } from '../validators/user.validator';
+import { notify } from './notification.resolver';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -147,6 +149,14 @@ export class UserResolver {
 
     userRepo.save(user);
 
+    await notify(
+      {
+        type: NotificationType.NEW_FOLLOWER,
+        message: `${user.firstname} folgt dir jetzt`,
+        user: follower,
+      },
+      ctx,
+    );
     return user;
   }
 
@@ -195,6 +205,16 @@ export class UserResolver {
       throw Error('no user found');
     }
     return user;
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async search(@Arg('searchString') searchString: string): Promise<User[]> {
+    const users = await getRepository(User).find({
+      where: [{ firstname: ILike(`%${searchString}%`) }, { lastname: ILike(`%${searchString}%`) }],
+    });
+
+    return users;
   }
 }
 

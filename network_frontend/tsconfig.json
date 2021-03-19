@@ -12,9 +12,9 @@
     "types": ["vite/client"],
     "baseUrl": "./",
     "paths": {
-      "src/*": ["src/*"],
+      "src/*": ["src/*"]
     }
   },
-  "typeRoots": ["src/types", "node_modules/@types", "src/graphql/generated"],
+  "typeRoots": ["src/types", "node_modules/@types", "./graphql/generated"],
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

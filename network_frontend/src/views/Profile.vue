@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watchEffect } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 import PostList from '@/components/PostList.vue';
 import {
   useGetPostsFromUserQuery,
@@ -101,7 +101,7 @@ import {
   useAddFollowerMutation,
   useRemoveFollowerMutation,
 } from '../graphql/generated/graphqlOperations';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { userById } from '../graphql/queries/userById';
 
@@ -123,11 +123,17 @@ export default defineComponent({
 
     const userFromStore = computed(() => store.state.userData.user);
 
-    watchEffect(() => {
-      if (userFromStore.value.id === route.params.id) {
-        showEditProfile.value = true;
+    watch(
+      () => route.params.id,
+      () => {
+        console.log('here');
+        if (userFromStore.value.id === route.params.id) {
+          showEditProfile.value = true;
+        } else {
+          showEditProfile.value = false;
+        }
       }
-    });
+    );
 
     const { onResult } = useUserByIdQuery(() => ({
       userId: route.params.id,

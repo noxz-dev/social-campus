@@ -16,7 +16,8 @@ export enum SUB_TOPICS {
 export interface NotificationPayload {
   type: NotificationType;
   message: string;
-  user: User;
+  fromUser: User;
+  toUser: User;
   post?: Post;
   comment?: Comment;
 }
@@ -33,9 +34,9 @@ export class NotificationResolver {
 
     const notifys = await getRepository(Notification).find({
       where: {
-        user: userId,
+        toUser: userId,
       },
-      relations: ['user'],
+      relations: ['toUser', 'fromUser'],
     });
     return notifys;
   }
@@ -43,13 +44,13 @@ export class NotificationResolver {
   @Subscription(() => Notification, {
     topics: SUB_TOPICS.NEW_NOTIFICATION,
     filter: ({ args, payload }) => {
-      if (args.userId === payload.user.id) {
+      if (args.userId === payload.toUser.id) {
         return true;
       }
       return false;
     },
   })
-  public async notifications(@Root() payload: Notification): Promise<Notification> {
+  public async notifications(@Root() payload: Notification, @Arg('userId') userId: string): Promise<Notification> {
     log.debug('notification subscription fired');
 
     return payload;
@@ -70,13 +71,13 @@ export class NotificationResolver {
       where: {
         id: notifyId,
       },
-      relations: ['user'],
+      relations: ['toUser', 'fromUser'],
     });
 
     log.debug('NOTIFY', notify);
 
-    if (notify.user.id === userId) {
-      getRepository(Notification).delete(notify);
+    if (notify.toUser.id === userId) {
+      await getRepository(Notification).delete({ id: notify.id });
       return true;
     }
     throw Error('youre not allowed to do that');

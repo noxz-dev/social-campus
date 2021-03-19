@@ -1,10 +1,10 @@
 <template>
   <router-link :to="to" class="w-full xl:ml-0 hover:text-highlight-500">
     <div
-      class="flex items-center h-14 border-b-6 justify-center border-transparent md:border-b-0 md:border-l-6 border-transparent md:justify-center xl:justify-start xl:pl-4"
+      class="flex xl:mx-3 rounded-xl ml-1 -mr-1 px-6 items-center h-14 border-b-6 justify-center border-transparent md:border-b-0 md:border-l-6 border-transparent md:justify-center xl:justify-start xl:pl-4"
     >
       <slot />
-      <span class="hidden text-bold font-semibold xl:block md:ml-4">{{ name }}</span>
+      <span class="hidden text-bold font-semibold xl:block md:ml-4 text-white">{{ name }}</span>
     </div>
   </router-link>
 </template>
@@ -28,7 +28,7 @@ export default defineComponent({
 
 <style>
 a.router-link-exact-active div {
-  @apply text-indigo-500;
+  @apply text-gray-100;
   @apply border-indigo-500;
 }
 a.router-link-exact-active path {
@@ -39,7 +39,7 @@ a:hover path {
 }
 @screen md {
   a.router-link-exact-active div {
-    @apply bg-dark700;
+    @apply bg-dark600;
     @apply relative;
     @apply border-b-0;
   }

@@ -17,6 +17,7 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  getNotifications: Array<Notification>;
   /** getPosts returns all posts from a given userID */
   getPostsFromUser?: Maybe<Array<Post>>;
   /** getPosts returns all posts from a given groupID */
@@ -28,6 +29,7 @@ export type Query = {
   /** Me returns User info when logged in. */
   me?: Maybe<User>;
   userById: User;
+  search: Array<User>;
 };
 
 
@@ -50,20 +52,25 @@ export type QueryUserByIdArgs = {
   userId: Scalars['String'];
 };
 
-export type Post = {
-  __typename?: 'Post';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  user: User;
-  group?: Maybe<Group>;
-  text: Scalars['String'];
-  comments: Array<Comment>;
-  likes: Array<Like>;
-  likesCount: Scalars['Float'];
-  liked: Scalars['Boolean'];
-  imageLink?: Maybe<Scalars['String']>;
+
+export type QuerySearchArgs = {
+  searchString: Scalars['String'];
 };
 
+export type Notification = {
+  __typename?: 'Notification';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  type: NotificationType;
+  message: Scalars['String'];
+  fromUser: User;
+  toUser: User;
+};
+
+
+export enum NotificationType {
+  NewFollower = 'NEW_FOLLOWER'
+}
 
 export type User = {
   __typename?: 'User';
@@ -88,6 +95,20 @@ export type Role = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   users: Array<User>;
+};
+
+export type Post = {
+  __typename?: 'Post';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  user: User;
+  group?: Maybe<Group>;
+  text: Scalars['String'];
+  comments: Array<Comment>;
+  likes: Array<Like>;
+  likesCount: Scalars['Float'];
+  liked: Scalars['Boolean'];
+  imageLink?: Maybe<Scalars['String']>;
 };
 
 export type Group = {
@@ -124,9 +145,11 @@ export type Mutation = {
   unlikeComment: Comment;
   createGroup: Group;
   joinGroup: Group;
+  deleteNotification: Scalars['Boolean'];
   addPost: Post;
   likePost: Post;
   unlikePost: Post;
+  deletePost: Scalars['Boolean'];
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -162,6 +185,11 @@ export type MutationJoinGroupArgs = {
 };
 
 
+export type MutationDeleteNotificationArgs = {
+  notificationId: Scalars['String'];
+};
+
+
 export type MutationAddPostArgs = {
   groupID?: Maybe<Scalars['String']>;
   file?: Maybe<Scalars['Upload']>;
@@ -176,6 +204,11 @@ export type MutationLikePostArgs = {
 
 export type MutationUnlikePostArgs = {
   postID: Scalars['String'];
+};
+
+
+export type MutationDeletePostArgs = {
+  postId: Scalars['String'];
 };
 
 
@@ -255,6 +288,22 @@ export type JwtResponse = {
   refreshToken: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  notifications: Notification;
+  newPost: Post;
+};
+
+
+export type SubscriptionNotificationsArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type SubscriptionNewPostArgs = {
+  userId: Scalars['String'];
+};
+
 export type AddFollowerMutationVariables = Exact<{
   userID: Scalars['String'];
 }>;
@@ -283,6 +332,16 @@ export type AddPostMutation = (
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
     ) }
   ) }
+);
+
+export type DeleteNotificationMutationVariables = Exact<{
+  notificationId: Scalars['String'];
+}>;
+
+
+export type DeleteNotificationMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteNotification'>
 );
 
 export type LikePostMutationVariables = Exact<{
@@ -372,6 +431,24 @@ export type MeQuery = (
   )> }
 );
 
+export type GetNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetNotificationsQuery = (
+  { __typename?: 'Query' }
+  & { getNotifications: Array<(
+    { __typename?: 'Notification' }
+    & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
+    & { toUser: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ), fromUser: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ) }
+  )> }
+);
+
 export type GetPostsFromUserQueryVariables = Exact<{
   userID: Scalars['String'];
 }>;
@@ -387,6 +464,19 @@ export type GetPostsFromUserQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
     ) }
   )>> }
+);
+
+export type SearchQueryVariables = Exact<{
+  searchString: Scalars['String'];
+}>;
+
+
+export type SearchQuery = (
+  { __typename?: 'Query' }
+  & { search: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+  )> }
 );
 
 export type UserByIdQueryVariables = Exact<{
@@ -406,5 +496,25 @@ export type UserByIdQuery = (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
     )> }
+  ) }
+);
+
+export type NotificationsSubscriptionVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type NotificationsSubscription = (
+  { __typename?: 'Subscription' }
+  & { notifications: (
+    { __typename?: 'Notification' }
+    & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
+    & { fromUser: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ), toUser: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ) }
   ) }
 );

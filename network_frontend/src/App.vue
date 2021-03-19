@@ -4,6 +4,7 @@
       <router-view></router-view>
     </div>
     <div v-else ckass="w-full flex">
+      <notifications-overlay />
       <side-bar />
       <top-bar />
       <Contentview />
@@ -17,6 +18,7 @@ import Contentview from '@/views/Contentview.vue';
 import SideBar from './components/Sidebar/Sidebar.vue';
 import TopBar from '@/components/TopBar.vue';
 import { useRoute } from 'vue-router';
+import NotificationsOverlay from './components/NotificationsOverlay.vue';
 
 export default defineComponent({
   name: 'App',
@@ -24,6 +26,7 @@ export default defineComponent({
     Contentview,
     TopBar,
     SideBar,
+    NotificationsOverlay,
   },
   setup() {
     const showLogin = ref(true);
@@ -60,5 +63,9 @@ body::-webkit-scrollbar {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.notification {
+  @apply bg-highlight-700 py-5 text-gray-50 z-50 mt-20 max-w-sm xl:ml-64 sm:mb-96 !important;
 }
 </style>

@@ -27,6 +27,7 @@
     "react": "^17.0.1",
     "subscriptions-transport-ws": "^0.9.18",
     "vue": "^3.0.5",
+    "vue-dk-toast": "^2.1.2",
     "vue-picture-swipe": "^2.1.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

@@ -74,6 +74,33 @@ export function useAddPostMutation(options: VueApolloComposable.UseMutationOptio
   return VueApolloComposable.useMutation<AddPostMutation, AddPostMutationVariables>(AddPostDocument, options);
 }
 export type AddPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddPostMutation, AddPostMutationVariables>;
+export const DeleteNotificationDocument = gql`
+    mutation deleteNotification($notificationId: String!) {
+  deleteNotification(notificationId: $notificationId)
+}
+    `;
+
+/**
+ * __useDeleteNotificationMutation__
+ *
+ * To run a mutation, you first call `useDeleteNotificationMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNotificationMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteNotificationMutation({
+ *   variables: {
+ *     notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useDeleteNotificationMutation(options: VueApolloComposable.UseMutationOptions<DeleteNotificationMutation, DeleteNotificationMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteNotificationMutation, DeleteNotificationMutationVariables>>) {
+  return VueApolloComposable.useMutation<DeleteNotificationMutation, DeleteNotificationMutationVariables>(DeleteNotificationDocument, options);
+}
+export type DeleteNotificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteNotificationMutation, DeleteNotificationMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {
@@ -278,6 +305,39 @@ export function useMeQuery(options: VueApolloComposable.UseQueryOptions<MeQuery,
   return VueApolloComposable.useQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const GetNotificationsDocument = gql`
+    query getNotifications {
+  getNotifications {
+    id
+    type
+    message
+    createdAt
+    toUser {
+      id
+    }
+    fromUser {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetNotificationsQuery__
+ *
+ * To run a query within a Vue component, call `useGetNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetNotificationsQuery();
+ */
+export function useGetNotificationsQuery(options: VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, {}, options);
+}
+export type GetNotificationsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNotificationsQuery, GetNotificationsQueryVariables>;
 export const GetPostsFromUserDocument = gql`
     query getPostsFromUser($userID: String!) {
   getPostsFromUser(userID: $userID) {
@@ -316,6 +376,36 @@ export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariabl
   return VueApolloComposable.useQuery<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
 }
 export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>;
+export const SearchDocument = gql`
+    query search($searchString: String!) {
+  search(searchString: $searchString) {
+    id
+    firstname
+    lastname
+    profilePicLink
+  }
+}
+    `;
+
+/**
+ * __useSearchQuery__
+ *
+ * To run a query within a Vue component, call `useSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useSearchQuery({
+ *   searchString: // value for 'searchString'
+ * });
+ */
+export function useSearchQuery(variables: SearchQueryVariables | VueCompositionApi.Ref<SearchQueryVariables> | ReactiveFunction<SearchQueryVariables>, options: VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, variables, options);
+}
+export type SearchQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SearchQuery, SearchQueryVariables>;
 export const UserByIdDocument = gql`
     query userById($userId: String!) {
   userById(userId: $userId) {
@@ -358,3 +448,39 @@ export function useUserByIdQuery(variables: UserByIdQueryVariables | VueComposit
   return VueApolloComposable.useQuery<UserByIdQuery, UserByIdQueryVariables>(UserByIdDocument, variables, options);
 }
 export type UserByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<UserByIdQuery, UserByIdQueryVariables>;
+export const NotificationsDocument = gql`
+    subscription notifications($userId: String!) {
+  notifications(userId: $userId) {
+    id
+    type
+    message
+    createdAt
+    fromUser {
+      id
+    }
+    toUser {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useNotificationsSubscription__
+ *
+ * To run a query within a Vue component, call `useNotificationsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationsSubscription` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the subscription
+ * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useNotificationsSubscription({
+ *   userId: // value for 'userId'
+ * });
+ */
+export function useNotificationsSubscription(variables: NotificationsSubscriptionVariables | VueCompositionApi.Ref<NotificationsSubscriptionVariables> | ReactiveFunction<NotificationsSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables>> = {}) {
+  return VueApolloComposable.useSubscription<NotificationsSubscription, NotificationsSubscriptionVariables>(NotificationsDocument, variables, options);
+}
+export type NotificationsSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<NotificationsSubscription, NotificationsSubscriptionVariables>;

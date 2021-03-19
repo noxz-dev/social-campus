@@ -3,7 +3,7 @@
     v-if="['xl', 'lg', 'md'].includes(breakpoints.is)"
     class="md:flex fixed top-14 h-screen shadow-right transition-all w-14 sm:w-14 md:w-14 lg:w-14 xl:w-44 dark:bg-dark700"
   >
-    <div class="mt-16 w-full flex justify-center flex-col self-start items-center">
+    <!-- <div class="mt-16 w-full flex justify-center flex-col self-start items-center">
       <div
         class="flex justify-start items-center p-1.5 rounded-lg w-5/6 h-12 cursor-pointer mb-4"
         :class="{ 'bg-gray-700': homeActive }"
@@ -85,6 +85,11 @@
         </div>
         <div v-if="breakpoints.is === 'xl'" class="dark:text-white ml-4 font-medium text-lg">Groups</div>
       </div>
+    </div> -->
+    <div id="navContent" class="h-16 w-full flex flex-row items-center md:flex-col md:items-start md:pl-0 md:mt-12 md:h-full">
+      <IconLink v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
+        <span v-html="route.icon"></span>
+      </IconLink>
     </div>
   </div>
   <div v-else class="fixed h-16 w-full bottom-0 bg-dark600 md:hidden">

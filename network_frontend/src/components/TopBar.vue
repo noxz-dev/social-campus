@@ -23,21 +23,22 @@
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
                 <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                  <svg class="h-5 w-5 text-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <!-- <svg class="h-5 w-5 text-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path
                       fill-rule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                       clip-rule="evenodd"
                     />
-                  </svg>
+                  </svg> -->
                 </div>
-                <input
+                <search class="h-8" />
+                <!-- <input
                   id="search"
                   name="search"
                   class="block w-full dark:text-gray-100 dark:bg-dark600 bg-white border border-gray-300 dark:border-dark600 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 dark:focus:text-gray-100 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Finde neue Leute"
                   type="search"
-                />
+                /> -->
               </div>
             </div>
           </div>
@@ -68,6 +69,7 @@
         </div>
         <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
           <a
+            @click="notifyOpen = !notifyOpen"
             href="#"
             class="ml-5 flex-shrink-0 bg-white dark:bg-dark600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -81,6 +83,12 @@
               />
             </svg>
           </a>
+
+          <div class="relative">
+            <transition name="fade">
+              <notifications v-if="notifyOpen" @click.prevent />
+            </transition>
+          </div>
 
           <!-- Profile dropdown -->
           <div class="flex-shrink-0 relative ml-5">
@@ -101,12 +109,12 @@
               <div
                 v-if="showProfileMenu"
                 ref="target"
-                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 py-1"
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 border-dark500 border"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="user-menu"
               >
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
@@ -121,7 +129,6 @@
                         name: 'Profile',
                         params: {
                           id: user.id,
-                          me: false,
                         },
                       })
                     "
@@ -130,7 +137,7 @@
                     >Dein Profil</a
                   >
                 </div>
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
@@ -142,7 +149,7 @@
                   </svg>
                   <a href="#" class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem">Einstellungen</a>
                 </div>
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100">
+                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 ml-2 text-white" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
@@ -151,13 +158,7 @@
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                     />
                   </svg>
-                  <a
-                    href="#"
-                    class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700 dark:hover:bg-dark600 hover:bg-gray-100"
-                    role="menuitem"
-                    @click="logout"
-                    >Ausloggen</a
-                  >
+                  <a href="#" class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem" @click="logout">Ausloggen</a>
                 </div>
               </div>
             </transition>
@@ -265,12 +266,16 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import FloatingButton from './FloatingButton.vue';
 import PostDetailCard from './PostDetailCard.vue';
+import Search from './Search.vue';
+import Notifications from './Notifications.vue';
 export default defineComponent({
   components: {
     Modal,
     NewPost,
     FloatingButton,
     PostDetailCard,
+    Search,
+    Notifications,
   },
   setup(props) {
     const showProfileMenu = ref(false);
@@ -278,6 +283,7 @@ export default defineComponent({
     const show = ref(true);
     const target = ref(null);
     const router = useRouter();
+    const notifyOpen = ref(false);
 
     const store = useStore();
 
@@ -318,6 +324,7 @@ export default defineComponent({
       openMobileMenu,
       showMobileMenu,
       profileImage,
+      notifyOpen,
     };
   },
 });

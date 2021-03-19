@@ -153,7 +153,8 @@ export class UserResolver {
       {
         type: NotificationType.NEW_FOLLOWER,
         message: `${user.firstname} folgt dir jetzt`,
-        user: follower,
+        toUser: follower,
+        fromUser: user,
       },
       ctx,
     );

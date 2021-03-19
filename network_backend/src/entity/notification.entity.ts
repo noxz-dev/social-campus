@@ -27,7 +27,11 @@ export class Notification extends Base {
 
   @Field(() => User)
   @ManyToOne(() => User)
-  user: User;
+  fromUser: User;
+
+  @Field(() => User)
+  @ManyToOne(() => User)
+  toUser: User;
 
   @ManyToOne(() => Post, { onDelete: 'CASCADE', nullable: true })
   post: Post;
@@ -39,7 +43,8 @@ export class Notification extends Base {
     super();
     this.type = payload?.type;
     this.message = payload?.message;
-    this.user = payload?.user;
+    this.fromUser = payload?.fromUser;
+    this.toUser = payload?.toUser;
     this.post = payload?.post;
     this.comment = payload?.comment;
   }

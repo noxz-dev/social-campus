@@ -1,21 +1,17 @@
 <template>
   <div>
-    <div
-      id="home"
-      class="flex h-full items-center pt-10 bg-dark700 flex-col rounded-3xl overflow-y-auto"
-    />
+    <div id="home" class="flex h-full items-center pt-10 bg-dark700 flex-col rounded-3xl overflow-y-auto" />
+    <div class="pl-2 hidden"></div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-
 export default defineComponent({});
 </script>
 
 <style>
-
 #home::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -32,5 +28,4 @@ export default defineComponent({});
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #363b41;
 }
-
 </style>

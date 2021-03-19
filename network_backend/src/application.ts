@@ -15,6 +15,7 @@ import { NotificationResolver } from './resolvers/notification.resolver';
 import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { UserResolver } from './resolvers/user.resolver';
+import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
 import { MyContext } from './utils/interfaces/context.interface';
 import { authenticateToken } from './utils/middlewares/auth';
@@ -55,18 +56,13 @@ export class Application {
         schema,
         subscriptions: {
           path: '/subscriptions',
-          onConnect(connectionParams) {
+          onConnect(connectionParams: { campusToken: string }) {
             if (connectionParams.campusToken) {
-              // return validateToken(connectionParams.authToken)
-              //   .then(findUser(connectionParams.authToken))
-              //   .then((user) => {
-              //     return {
-              //       currentUser: user,
-              //     };
-              //   });
-              // console.log(connectionParams.campusToken);
-              console.log('user connected');
-              return;
+              const user = verifyAccessToken(connectionParams.campusToken);
+              log.info('✨ user connected to the subscriptions server');
+              return {
+                user,
+              };
             }
             throw new Error('Missing auth token!');
           },

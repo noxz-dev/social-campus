@@ -3,7 +3,7 @@
     <div v-if="showLogin">
       <router-view></router-view>
     </div>
-    <div v-else>
+    <div v-else ckass="w-full flex">
       <side-bar />
       <top-bar />
       <Contentview />
@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import Contentview from '@/views/Contentview.vue';
-import SideBar from '@/components/SideBar.vue';
+import SideBar from './components/Sidebar/Sidebar.vue';
 import TopBar from '@/components/TopBar.vue';
 import { useRoute } from 'vue-router';
 

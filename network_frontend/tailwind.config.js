@@ -8,6 +8,8 @@ module.exports = {
       dark600: '#262A34',
       dark700: '#181A20',
       dark800: '#1A1B20',
+      indigo: theme('colors.indigo.500'),
+      gray100: theme('colors.gray.100'),
     }),
     stroke: (theme) => ({
       white: theme('colors.white'),

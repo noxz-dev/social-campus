@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import * as VueApolloComposable from '@vue/apollo-composable';
-import * as VueCompositionApi from '@vue/composition-api';
+import * as VueCompositionApi from 'vue';
 export type ReactiveFunction<TParam> = () => TParam;
 
 export const AddFollowerDocument = gql`
@@ -74,6 +74,36 @@ export function useAddPostMutation(options: VueApolloComposable.UseMutationOptio
   return VueApolloComposable.useMutation<AddPostMutation, AddPostMutationVariables>(AddPostDocument, options);
 }
 export type AddPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddPostMutation, AddPostMutationVariables>;
+export const AddCommentDocument = gql`
+    mutation addComment($text: String!, $postID: String!) {
+  addComment(text: $text, postID: $postID) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useAddCommentMutation({
+ *   variables: {
+ *     text: // value for 'text'
+ *     postID: // value for 'postID'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(options: VueApolloComposable.UseMutationOptions<AddCommentMutation, AddCommentMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddCommentMutation, AddCommentMutationVariables>>) {
+  return VueApolloComposable.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+}
+export type AddCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddCommentMutation, AddCommentMutationVariables>;
 export const DeleteNotificationDocument = gql`
     mutation deleteNotification($notificationId: String!) {
   deleteNotification(notificationId: $notificationId)
@@ -338,6 +368,55 @@ export function useGetNotificationsQuery(options: VueApolloComposable.UseQueryOp
   return VueApolloComposable.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, {}, options);
 }
 export type GetNotificationsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNotificationsQuery, GetNotificationsQueryVariables>;
+export const PostByIdDocument = gql`
+    query postById($postId: String!) {
+  postById(postId: $postId) {
+    id
+    liked
+    imageLink
+    user {
+      id
+      firstname
+      lastname
+      profilePicLink
+    }
+    text
+    likesCount
+    createdAt
+    comments {
+      id
+      text
+      createdAt
+      user {
+        id
+        firstname
+        lastname
+        profilePicLink
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePostByIdQuery__
+ *
+ * To run a query within a Vue component, call `usePostByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostByIdQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = usePostByIdQuery({
+ *   postId: // value for 'postId'
+ * });
+ */
+export function usePostByIdQuery(variables: PostByIdQueryVariables | VueCompositionApi.Ref<PostByIdQueryVariables> | ReactiveFunction<PostByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<PostByIdQuery, PostByIdQueryVariables>(PostByIdDocument, variables, options);
+}
+export type PostByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<PostByIdQuery, PostByIdQueryVariables>;
 export const GetPostsFromUserDocument = gql`
     query getPostsFromUser($userID: String!) {
   getPostsFromUser(userID: $userID) {

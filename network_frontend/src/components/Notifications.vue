@@ -9,7 +9,7 @@
       <span class="text-gray-50 p-2 text-center w-full" v-if="notifications?.length === 0"> Keine Mitteilungen vorhanden</span>
       <div
         id="card"
-        class="bg-dark600 rounded text-gray-50 px-1 py-2 cursor-pointer my-2 flex justify-evenly items-cente w-full"
+        class="bg-dark600 rounded text-gray-50 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-cente w-full"
         v-for="notify of notifications"
         :key="notify.id"
         @click="handleNotificationClick(notify)"

@@ -10,7 +10,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "postinstall": "node scripts/vue-apollo-patch.js",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen && node scripts/typescript-vue-apollo-patch.js"
   },
   "dependencies": {
     "@apollo/client": "^3.3.11",
@@ -26,8 +26,9 @@
     "mitt": "^2.1.0",
     "react": "^17.0.1",
     "subscriptions-transport-ws": "^0.9.18",
+    "swiper": "^6.5.0",
     "vue": "^3.0.5",
-    "vue-dk-toast": "^2.1.2",
+    "vue-dk-toast": "^2.2.0",
     "vue-picture-swipe": "^2.1.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
@@ -45,6 +46,7 @@
     "@vuedx/typescript-plugin-vue": "^0.6.3",
     "autoprefixer": "^10.2.5",
     "postcss": "^8.2.8",
+    "sass": "^1.32.8",
     "tailwindcss": "^2.0.3",
     "typescript": "^4.1.5",
     "vite": "^2.0.5",

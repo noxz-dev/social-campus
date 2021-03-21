@@ -74,8 +74,6 @@ export class NotificationResolver {
       relations: ['toUser', 'fromUser'],
     });
 
-    log.debug('NOTIFY', notify);
-
     if (notify.toUser.id === userId) {
       await getRepository(Notification).delete({ id: notify.id });
       return true;

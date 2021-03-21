@@ -334,6 +334,20 @@ export type AddPostMutation = (
   ) }
 );
 
+export type AddCommentMutationVariables = Exact<{
+  text: Scalars['String'];
+  postID: Scalars['String'];
+}>;
+
+
+export type AddCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { addComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  ) }
+);
+
 export type DeleteNotificationMutationVariables = Exact<{
   notificationId: Scalars['String'];
 }>;
@@ -447,6 +461,30 @@ export type GetNotificationsQuery = (
       & Pick<User, 'id'>
     ) }
   )> }
+);
+
+export type PostByIdQueryVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type PostByIdQuery = (
+  { __typename?: 'Query' }
+  & { postById: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    ), comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'text' | 'createdAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      ) }
+    )> }
+  ) }
 );
 
 export type GetPostsFromUserQueryVariables = Exact<{

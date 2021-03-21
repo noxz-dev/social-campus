@@ -1,5 +1,5 @@
 <template>
-  <div class="w-5/6 sm:w-5/6 md:w-3/4 lg:w-3/4 xl:w-2/4 cursor-pointer" @click.stop="eventbus.emit('open-post-modal')">
+  <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 cursor-pointer" @click.stop="eventbus.emit('open-post-modal', id)">
     <div class="bg-white dark:bg-dark600 dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide">
       <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg">
         <div class="flex space-x-3">
@@ -208,6 +208,7 @@ export default defineComponent({
     });
 
     const creationDate = dayjs(props.postDate).fromNow();
+
     const likePost = async () => {
       try {
         if (props.liked) {

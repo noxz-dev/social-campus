@@ -31,10 +31,10 @@ export const AddFollowerDocument = gql`
  *   },
  * });
  */
-export function useAddFollowerMutation(options: VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddFollowerMutation, AddFollowerMutationVariables>>) {
-  return VueApolloComposable.useMutation<AddFollowerMutation, AddFollowerMutationVariables>(AddFollowerDocument, options);
+export function useAddFollowerMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>(AddFollowerDocument, options);
 }
-export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddFollowerMutation, AddFollowerMutationVariables>;
+export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>;
 export const AddPostDocument = gql`
     mutation addPost($text: String!) {
   addPost(text: $text) {
@@ -70,10 +70,10 @@ export const AddPostDocument = gql`
  *   },
  * });
  */
-export function useAddPostMutation(options: VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddPostMutation, AddPostMutationVariables>>) {
-  return VueApolloComposable.useMutation<AddPostMutation, AddPostMutationVariables>(AddPostDocument, options);
+export function useAddPostMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddPostMutation, graphqlOperations.ts.AddPostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddPostMutation, graphqlOperations.ts.AddPostMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.AddPostMutation, graphqlOperations.ts.AddPostMutationVariables>(AddPostDocument, options);
 }
-export type AddPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddPostMutation, AddPostMutationVariables>;
+export type AddPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddPostMutation, graphqlOperations.ts.AddPostMutationVariables>;
 export const AddCommentDocument = gql`
     mutation addComment($text: String!, $postID: String!) {
   addComment(text: $text, postID: $postID) {
@@ -100,10 +100,10 @@ export const AddCommentDocument = gql`
  *   },
  * });
  */
-export function useAddCommentMutation(options: VueApolloComposable.UseMutationOptions<AddCommentMutation, AddCommentMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddCommentMutation, AddCommentMutationVariables>>) {
-  return VueApolloComposable.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+export function useAddCommentMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>(AddCommentDocument, options);
 }
-export type AddCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddCommentMutation, AddCommentMutationVariables>;
+export type AddCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>;
 export const DeleteNotificationDocument = gql`
     mutation deleteNotification($notificationId: String!) {
   deleteNotification(notificationId: $notificationId)
@@ -127,10 +127,10 @@ export const DeleteNotificationDocument = gql`
  *   },
  * });
  */
-export function useDeleteNotificationMutation(options: VueApolloComposable.UseMutationOptions<DeleteNotificationMutation, DeleteNotificationMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteNotificationMutation, DeleteNotificationMutationVariables>>) {
-  return VueApolloComposable.useMutation<DeleteNotificationMutation, DeleteNotificationMutationVariables>(DeleteNotificationDocument, options);
+export function useDeleteNotificationMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables>(DeleteNotificationDocument, options);
 }
-export type DeleteNotificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteNotificationMutation, DeleteNotificationMutationVariables>;
+export type DeleteNotificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {
@@ -166,10 +166,10 @@ export const LikePostDocument = gql`
  *   },
  * });
  */
-export function useLikePostMutation(options: VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LikePostMutation, LikePostMutationVariables>>) {
-  return VueApolloComposable.useMutation<LikePostMutation, LikePostMutationVariables>(LikePostDocument, options);
+export function useLikePostMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.LikePostMutation, graphqlOperations.ts.LikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.LikePostMutation, graphqlOperations.ts.LikePostMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.LikePostMutation, graphqlOperations.ts.LikePostMutationVariables>(LikePostDocument, options);
 }
-export type LikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LikePostMutation, LikePostMutationVariables>;
+export type LikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.LikePostMutation, graphqlOperations.ts.LikePostMutationVariables>;
 export const LoginDocument = gql`
     mutation login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -197,10 +197,10 @@ export const LoginDocument = gql`
  *   },
  * });
  */
-export function useLoginMutation(options: VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LoginMutation, LoginMutationVariables>>) {
-  return VueApolloComposable.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+export function useLoginMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.LoginMutation, graphqlOperations.ts.LoginMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.LoginMutation, graphqlOperations.ts.LoginMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.LoginMutation, graphqlOperations.ts.LoginMutationVariables>(LoginDocument, options);
 }
-export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginMutation, LoginMutationVariables>;
+export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.LoginMutation, graphqlOperations.ts.LoginMutationVariables>;
 export const RemoveFollowerDocument = gql`
     mutation removeFollower($userID: String!) {
   removeFollower(userID: $userID) {
@@ -229,10 +229,10 @@ export const RemoveFollowerDocument = gql`
  *   },
  * });
  */
-export function useRemoveFollowerMutation(options: VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<RemoveFollowerMutation, RemoveFollowerMutationVariables>>) {
-  return VueApolloComposable.useMutation<RemoveFollowerMutation, RemoveFollowerMutationVariables>(RemoveFollowerDocument, options);
+export function useRemoveFollowerMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.RemoveFollowerMutation, graphqlOperations.ts.RemoveFollowerMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.RemoveFollowerMutation, graphqlOperations.ts.RemoveFollowerMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.RemoveFollowerMutation, graphqlOperations.ts.RemoveFollowerMutationVariables>(RemoveFollowerDocument, options);
 }
-export type RemoveFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RemoveFollowerMutation, RemoveFollowerMutationVariables>;
+export type RemoveFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.RemoveFollowerMutation, graphqlOperations.ts.RemoveFollowerMutationVariables>;
 export const UnlikePostDocument = gql`
     mutation unlikePost($postID: String!) {
   unlikePost(postID: $postID) {
@@ -269,10 +269,10 @@ export const UnlikePostDocument = gql`
  *   },
  * });
  */
-export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>>) {
-  return VueApolloComposable.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
+export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
-export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnlikePostMutation, UnlikePostMutationVariables>;
+export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>;
 export const GetFeedDocument = gql`
     query getFeed {
   getFeed {
@@ -304,10 +304,10 @@ export const GetFeedDocument = gql`
  * @example
  * const { result, loading, error } = useGetFeedQuery();
  */
-export function useGetFeedQuery(options: VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<GetFeedQuery, GetFeedQueryVariables>(GetFeedDocument, {}, options);
+export function useGetFeedQuery(options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>(GetFeedDocument, {}, options);
 }
-export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFeedQuery, GetFeedQueryVariables>;
+export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -331,10 +331,10 @@ export const MeDocument = gql`
  * @example
  * const { result, loading, error } = useMeQuery();
  */
-export function useMeQuery(options: VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<MeQuery, MeQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
+export function useMeQuery(options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.MeQuery, graphqlOperations.ts.MeQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.MeQuery, graphqlOperations.ts.MeQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.MeQuery, graphqlOperations.ts.MeQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.MeQuery, graphqlOperations.ts.MeQueryVariables>(MeDocument, {}, options);
 }
-export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.MeQuery, graphqlOperations.ts.MeQueryVariables>;
 export const GetNotificationsDocument = gql`
     query getNotifications {
   getNotifications {
@@ -364,25 +364,25 @@ export const GetNotificationsDocument = gql`
  * @example
  * const { result, loading, error } = useGetNotificationsQuery();
  */
-export function useGetNotificationsQuery(options: VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNotificationsQuery, GetNotificationsQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, {}, options);
+export function useGetNotificationsQuery(options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetNotificationsQuery, graphqlOperations.ts.GetNotificationsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetNotificationsQuery, graphqlOperations.ts.GetNotificationsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetNotificationsQuery, graphqlOperations.ts.GetNotificationsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GetNotificationsQuery, graphqlOperations.ts.GetNotificationsQueryVariables>(GetNotificationsDocument, {}, options);
 }
-export type GetNotificationsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNotificationsQuery, GetNotificationsQueryVariables>;
+export type GetNotificationsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetNotificationsQuery, graphqlOperations.ts.GetNotificationsQueryVariables>;
 export const PostByIdDocument = gql`
     query postById($postId: String!) {
   postById(postId: $postId) {
     id
     liked
     imageLink
+    text
+    likesCount
+    createdAt
     user {
       id
       firstname
       lastname
       profilePicLink
     }
-    text
-    likesCount
-    createdAt
     comments {
       id
       text
@@ -413,10 +413,10 @@ export const PostByIdDocument = gql`
  *   postId: // value for 'postId'
  * });
  */
-export function usePostByIdQuery(variables: PostByIdQueryVariables | VueCompositionApi.Ref<PostByIdQueryVariables> | ReactiveFunction<PostByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<PostByIdQuery, PostByIdQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<PostByIdQuery, PostByIdQueryVariables>(PostByIdDocument, variables, options);
+export function usePostByIdQuery(variables: graphqlOperations.ts.PostByIdQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.PostByIdQueryVariables> | ReactiveFunction<graphqlOperations.ts.PostByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables>(PostByIdDocument, variables, options);
 }
-export type PostByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<PostByIdQuery, PostByIdQueryVariables>;
+export type PostByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables>;
 export const GetPostsFromUserDocument = gql`
     query getPostsFromUser($userID: String!) {
   getPostsFromUser(userID: $userID) {
@@ -451,10 +451,10 @@ export const GetPostsFromUserDocument = gql`
  *   userID: // value for 'userID'
  * });
  */
-export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariables | VueCompositionApi.Ref<GetPostsFromUserQueryVariables> | ReactiveFunction<GetPostsFromUserQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
+export function useGetPostsFromUserQuery(variables: graphqlOperations.ts.GetPostsFromUserQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GetPostsFromUserQueryVariables> | ReactiveFunction<graphqlOperations.ts.GetPostsFromUserQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
 }
-export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>;
+export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>;
 export const SearchDocument = gql`
     query search($searchString: String!) {
   search(searchString: $searchString) {
@@ -481,10 +481,10 @@ export const SearchDocument = gql`
  *   searchString: // value for 'searchString'
  * });
  */
-export function useSearchQuery(variables: SearchQueryVariables | VueCompositionApi.Ref<SearchQueryVariables> | ReactiveFunction<SearchQueryVariables>, options: VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SearchQuery, SearchQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, variables, options);
+export function useSearchQuery(variables: graphqlOperations.ts.SearchQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.SearchQueryVariables> | ReactiveFunction<graphqlOperations.ts.SearchQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.SearchQuery, graphqlOperations.ts.SearchQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.SearchQuery, graphqlOperations.ts.SearchQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.SearchQuery, graphqlOperations.ts.SearchQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.SearchQuery, graphqlOperations.ts.SearchQueryVariables>(SearchDocument, variables, options);
 }
-export type SearchQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SearchQuery, SearchQueryVariables>;
+export type SearchQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.SearchQuery, graphqlOperations.ts.SearchQueryVariables>;
 export const UserByIdDocument = gql`
     query userById($userId: String!) {
   userById(userId: $userId) {
@@ -523,10 +523,10 @@ export const UserByIdDocument = gql`
  *   userId: // value for 'userId'
  * });
  */
-export function useUserByIdQuery(variables: UserByIdQueryVariables | VueCompositionApi.Ref<UserByIdQueryVariables> | ReactiveFunction<UserByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<UserByIdQuery, UserByIdQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<UserByIdQuery, UserByIdQueryVariables>(UserByIdDocument, variables, options);
+export function useUserByIdQuery(variables: graphqlOperations.ts.UserByIdQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.UserByIdQueryVariables> | ReactiveFunction<graphqlOperations.ts.UserByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>(UserByIdDocument, variables, options);
 }
-export type UserByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<UserByIdQuery, UserByIdQueryVariables>;
+export type UserByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>;
 export const NotificationsDocument = gql`
     subscription notifications($userId: String!) {
   notifications(userId: $userId) {
@@ -559,7 +559,7 @@ export const NotificationsDocument = gql`
  *   userId: // value for 'userId'
  * });
  */
-export function useNotificationsSubscription(variables: NotificationsSubscriptionVariables | VueCompositionApi.Ref<NotificationsSubscriptionVariables> | ReactiveFunction<NotificationsSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<NotificationsSubscription, NotificationsSubscriptionVariables>> = {}) {
-  return VueApolloComposable.useSubscription<NotificationsSubscription, NotificationsSubscriptionVariables>(NotificationsDocument, variables, options);
+export function useNotificationsSubscription(variables: graphqlOperations.ts.NotificationsSubscriptionVariables | VueCompositionApi.Ref<graphqlOperations.ts.NotificationsSubscriptionVariables> | ReactiveFunction<graphqlOperations.ts.NotificationsSubscriptionVariables>, options: VueApolloComposable.UseSubscriptionOptions<graphqlOperations.ts.NotificationsSubscription, graphqlOperations.ts.NotificationsSubscriptionVariables> | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<graphqlOperations.ts.NotificationsSubscription, graphqlOperations.ts.NotificationsSubscriptionVariables>> | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<graphqlOperations.ts.NotificationsSubscription, graphqlOperations.ts.NotificationsSubscriptionVariables>> = {}) {
+  return VueApolloComposable.useSubscription<graphqlOperations.ts.NotificationsSubscription, graphqlOperations.ts.NotificationsSubscriptionVariables>(NotificationsDocument, variables, options);
 }
-export type NotificationsSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<NotificationsSubscription, NotificationsSubscriptionVariables>;
+export type NotificationsSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<graphqlOperations.ts.NotificationsSubscription, graphqlOperations.ts.NotificationsSubscriptionVariables>;

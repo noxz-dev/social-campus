@@ -6,15 +6,15 @@ export const postById = gql`
       id
       liked
       imageLink
+      text
+      likesCount
+      createdAt
       user {
         id
         firstname
         lastname
         profilePicLink
       }
-      text
-      likesCount
-      createdAt
       comments {
         id
         text

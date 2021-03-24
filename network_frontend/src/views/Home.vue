@@ -1,7 +1,9 @@
 <template>
   <div>
     <div id="home" class="flex h-full items-center pt-10 bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto">
-      <post-list :posts="posts" />
+      <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
+        <post-list :posts="posts" />
+      </div>
     </div>
   </div>
 </template>

@@ -10,7 +10,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "postinstall": "node scripts/vue-apollo-patch.js",
-    "generate": "graphql-codegen && node scripts/typescript-vue-apollo-patch.js"
+    "generate": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "^3.3.11",

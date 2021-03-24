@@ -68,4 +68,21 @@ body::-webkit-scrollbar {
 .notification {
   @apply bg-highlight-700 py-5 text-gray-50 z-50 mt-20 md:max-w-xs xl:ml-80 lg:ml-28 !important;
 }
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #272b2f;
+}
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: #272b2f;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #363b41;
+}
 </style>

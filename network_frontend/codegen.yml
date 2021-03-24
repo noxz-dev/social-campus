@@ -10,4 +10,6 @@ generates:
     plugins:
       - 'typescript-vue-apollo'
     config:
-      withCompositionFunctions: vue
+      withCompositionFunctions: true
+      vueCompositionApiImportFrom: vue
+      importOperationTypesFrom: 'graphqlOperations.ts'

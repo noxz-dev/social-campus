@@ -9,6 +9,7 @@
     <div class="h-8">
       <div v-if="v.message.$error" class="text-red-400">Du musst schon was eingeben...</div>
     </div>
+    <input type="file" ref="fileInput" />
   </div>
   <div class="flex flex-row-reverse">
     <a
@@ -46,9 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
-import { addPost } from '../graphql/mutations/addPost';
-import { useMutation } from '@vue/apollo-composable';
+import { computed, defineComponent, getCurrentInstance, InputHTMLAttributes, ref } from 'vue';
 import { getFeed } from '../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
@@ -56,10 +55,13 @@ import { minLength, required } from '@vuelidate/validators';
 import { getPostsFromUser } from '../graphql/queries/postFromUser';
 import { useAddPostMutation } from '../graphql/generated/graphqlOperations';
 import { useRoute } from 'vue-router';
+import { AddPostMutationVariables } from 'src/graphql/generated/types';
 export default defineComponent({
   setup() {
     const message = ref('');
     const route = useRoute();
+    const fileInput = ref<HTMLInputElement>();
+    const file = ref();
 
     let eventbus: Emitter;
     const internalInstance = getCurrentInstance();
@@ -77,8 +79,12 @@ export default defineComponent({
     const v = useVuelidate(rules, { message });
 
     const { mutate: newPost } = useAddPostMutation(() => ({
-      variables: {
+      variables: <AddPostMutationVariables>{
         text: message.value,
+        file: file.value,
+      },
+      context: {
+        hasUpload: true,
       },
       update: (cache, { data: { addPost } }) => {
         try {
@@ -95,7 +101,6 @@ export default defineComponent({
           console.log(err);
         }
 
-        console.log(route.params.id);
         if (route.params.id) {
           const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
           console.log(dataInStoreProfile);
@@ -114,7 +119,10 @@ export default defineComponent({
     const post = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
-      newPost();
+      if (!fileInput.value?.files) return;
+      file.value = fileInput.value?.files[0];
+      console.log(file.value);
+      newPost({});
       eventbus.emit('close-modal');
     };
 
@@ -122,6 +130,7 @@ export default defineComponent({
       message,
       post,
       v,
+      fileInput,
     };
   },
 });

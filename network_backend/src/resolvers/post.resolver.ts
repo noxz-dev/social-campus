@@ -128,16 +128,16 @@ export class PostResolver {
   public async postById(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<Post | null> {
     const userID = ctx.req.user.id;
 
-    const user = await getRepository(User).findOne({
-      where: { id: userID },
-    });
-
-    if (!user) return null;
-
-    const post = await getRepository(Post).findOne({
-      where: { id: postId },
-      relations: ['user', 'comments', 'comments.user'],
-    });
+    const post = await getRepository(Post)
+      .createQueryBuilder('post')
+      .where('post.id = :id', { id: postId })
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.comments', 'comments')
+      .orderBy({
+        'comments.createdAt': 'DESC',
+      })
+      .leftJoinAndSelect('comments.user', 'user.comments')
+      .getOne();
 
     if (!post) return null;
 
@@ -167,6 +167,19 @@ export class PostResolver {
     if (!user) {
       return null;
     }
+
+    let group;
+    if (groupID) {
+      group = getRepository(Group).findOne({ where: { id: groupID } });
+    }
+
+    const post = new Post();
+    post.text = text;
+    post.user = user;
+    post.likes = [];
+    post.group = group;
+    user.posts.push(post);
+
     if (file) {
       const metaData = {
         'Content-Type': 'application/octet-stream',
@@ -198,24 +211,11 @@ export class PostResolver {
             });
           }),
       );
-
-      user.profilePicName = newFileName;
+      post.imageName = newFileName;
     }
-    let group;
-    if (groupID) {
-      group = getRepository(Group).findOne({ where: { id: groupID } });
-    }
-
     if (groupID && !group) {
       return null;
     }
-
-    const post = new Post();
-    post.text = text;
-    post.user = user;
-    post.likes = [];
-    post.group = group;
-    user.posts.push(post);
 
     const dbPost = await getRepository(Post).save(post);
     await getRepository(User).save(user);
@@ -227,12 +227,10 @@ export class PostResolver {
     dbPost.liked = likeState;
 
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
-
+    log.info(`'User with the id: ${id} added a new post'`);
     return dbPost;
   }
 
-  //subscription to auto update the feed from followers
-  //using a filter to bypass missing async dynamic topics
   @Subscription(() => Post, {
     topics: SUB_TOPICS.NEW_POST,
     filter: async ({ payload, args }) => {
@@ -287,7 +285,7 @@ export class PostResolver {
 
     const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;
-
+    log.info(`user with the id ${userId} liked the post ${postID}`);
     return post;
   }
 
@@ -332,7 +330,7 @@ export class PostResolver {
 
     const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;
-
+    log.info(`user with the id ${userId} unliked the post ${postID}`);
     return post;
   }
 
@@ -346,7 +344,9 @@ export class PostResolver {
     const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user'] });
     if (!post) return null;
     if (post.user.id === userId) {
+      delete post.likesCount;
       await getRepository(Post).delete(post);
+      log.info(`user with the id ${userId} deleted the post ${postId}`);
       return true;
     }
     throw Error('youre not allowed to do that');

@@ -29,7 +29,8 @@ export class Application {
 
   public connect = async (): Promise<void> => {
     try {
-      await createConnection();
+      const connection = await createConnection();
+      await connection.synchronize();
     } catch (error) {
       console.error('🚨  Could not connect to the database', error);
       throw Error(error);

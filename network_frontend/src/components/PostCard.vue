@@ -1,6 +1,6 @@
 <template>
   <card id="postcard">
-    <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" />
+    <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" />
     <div class="px-4 py-2 mt-2 cursor-pointer" @click="handleNavigation">
       <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-6">
         {{ postText }}
@@ -83,7 +83,9 @@ export default defineComponent({
     postText: String,
     liked: Boolean,
     likeCount: Number,
-    imageUrl: String,
+    imageUrl: {
+      type: String,
+    },
     imageUrlProfile: String,
     userId: String,
   },
@@ -91,8 +93,7 @@ export default defineComponent({
     const { id, imageUrlProfile } = toRefs(props);
     const commentCount = ref(0);
     const router = useRouter();
-    const profileImg: string =
-      imageUrlProfile?.value || 'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg';
+    const profileImg: string = imageUrlProfile?.value || '';
 
     const { mutate: like } = useLikePostMutation({
       variables: <UnlikePostMutationVariables>{ postID: id?.value },

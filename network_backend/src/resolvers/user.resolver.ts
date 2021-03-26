@@ -148,7 +148,7 @@ export class UserResolver {
     const userRepo = await getRepository(User);
 
     userRepo.save(user);
-
+    log.info(`user with the id ${user.id} followed ${userID}`);
     await notify(
       {
         type: NotificationType.NEW_FOLLOWER,
@@ -158,6 +158,7 @@ export class UserResolver {
       },
       ctx,
     );
+
     return user;
   }
 
@@ -179,7 +180,7 @@ export class UserResolver {
     });
 
     await getRepository(User).save(user);
-
+    log.info(`user with the id ${user.id} unfollowed ${userID}`);
     return user;
   }
 
@@ -194,7 +195,7 @@ export class UserResolver {
     user.bio = bio;
 
     await userRepo.save(user);
-
+    log.info(`user with the id ${user.id} updated the bio`);
     return user;
   }
 

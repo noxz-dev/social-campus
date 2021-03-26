@@ -1,9 +1,11 @@
-import { ApolloClient, createHttpLink, InMemoryCache, split } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { split } from '@apollo/client/link/core/split';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { logErrorMessages } from '@vue/apollo-util';
+import { createUploadLink } from 'apollo-upload-client';
 import router from './router';
 
 // auth interceptor
@@ -30,7 +32,7 @@ const wsLink = new WebSocketLink({
 });
 
 //querys and mutations
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: 'http://localhost/api/graphql',
 });
 

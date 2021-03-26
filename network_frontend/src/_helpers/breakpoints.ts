@@ -42,8 +42,8 @@ window.addEventListener(
     breakpoints.w = window.innerWidth;
     breakpoints.h = window.innerHeight;
     breakpoints.is = getBreakpoint(window.innerWidth);
-  }, 10),
-  false,
+  }, 0),
+  false
 );
 
 export default breakpoints;

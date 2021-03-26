@@ -6,7 +6,7 @@
       </IconLink>
     </div>
   </div>
-  <div v-else class="fixed h-16 w-full bottom-0 bg-dark600">
+  <div v-else class="fixed h-16 w-full z-20 bottom-0 bg-dark600">
     <div id="navContent" class="h-16 w-full flex flex-row items-center">
       <IconLink v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>

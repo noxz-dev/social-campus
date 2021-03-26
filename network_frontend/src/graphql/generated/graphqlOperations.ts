@@ -36,8 +36,8 @@ export function useAddFollowerMutation(options: VueApolloComposable.UseMutationO
 }
 export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>;
 export const AddPostDocument = gql`
-    mutation addPost($text: String!) {
-  addPost(text: $text) {
+    mutation addPost($text: String!, $file: Upload!) {
+  addPost(text: $text, file: $file) {
     id
     liked
     imageLink
@@ -67,6 +67,7 @@ export const AddPostDocument = gql`
  * const { mutate, loading, error, onDone } = useAddPostMutation({
  *   variables: {
  *     text: // value for 'text'
+ *     file: // value for 'file'
  *   },
  * });
  */
@@ -131,6 +132,33 @@ export function useDeleteNotificationMutation(options: VueApolloComposable.UseMu
   return VueApolloComposable.useMutation<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables>(DeleteNotificationDocument, options);
 }
 export type DeleteNotificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.DeleteNotificationMutation, graphqlOperations.ts.DeleteNotificationMutationVariables>;
+export const DeletePostDocument = gql`
+    mutation deletePost($postId: String!) {
+  deletePost(postId: $postId)
+}
+    `;
+
+/**
+ * __useDeletePostMutation__
+ *
+ * To run a mutation, you first call `useDeletePostMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeletePostMutation({
+ *   variables: {
+ *     postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useDeletePostMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables>(DeletePostDocument, options);
+}
+export type DeletePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {

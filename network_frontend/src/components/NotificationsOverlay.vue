@@ -26,4 +26,17 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.dk__toast-container,
+.dk__toast-mobile-container {
+  width: 100% !important;
+}
+
+.dk__toast-top-right {
+  align-items: flex-end;
+}
+
+.notification {
+  @apply sm:w-full bg-highlight-700 py-4 md:w-[20rem] text-gray-50 z-40 mt-20 !important;
+}
+</style>

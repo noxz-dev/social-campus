@@ -1,15 +1,12 @@
 <template>
-  <div
-    id="notificationContainer"
-    class="absolute bg-dark700 h-96 w-80 top-12 right-0 rounded-lg border border-dark500 shadow-xl overflow-hidden overflow-auto"
-  >
-    <div class="text-gray-50 text-lg border-b-2 border-dark400 p-2 font-semibold">Mitteilungen</div>
+  <div id="notificationContainer" class="absolute bg-dark700 h-96 w-80 top-12 right-0 rounded-lg border border-dark500 shadow-xl overflow-auto">
+    <div class="text-gray-50 text-lg border-b-2 w-full border-dark400 p-2 font-semibold">Mitteilungen</div>
     <div v-if="notificationsLoading" class="text-gray-50">Loading...</div>
     <div v-else class="p-1 flex flex-col w-full">
       <span class="text-gray-50 p-2 text-center w-full" v-if="notifications?.length === 0"> Keine Mitteilungen vorhanden</span>
       <div
         id="card"
-        class="bg-dark600 rounded text-gray-50 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-cente w-full"
+        class="bg-dark600 rounded text-gray-50 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-cente w-full border-dark500 border"
         v-for="notify of notifications"
         :key="notify.id"
         @click="handleNotificationClick(notify)"
@@ -81,11 +78,6 @@ export default defineComponent({
       variables: {
         notificationId: tobeDeleted.value,
       },
-      refetchQueries: [
-        {
-          query: getNotifications,
-        },
-      ],
     }));
 
     const deleteNotification = async (id: string) => {

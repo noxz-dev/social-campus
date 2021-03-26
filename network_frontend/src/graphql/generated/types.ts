@@ -319,6 +319,7 @@ export type AddFollowerMutation = (
 
 export type AddPostMutationVariables = Exact<{
   text: Scalars['String'];
+  file: Scalars['Upload'];
 }>;
 
 
@@ -356,6 +357,16 @@ export type DeleteNotificationMutationVariables = Exact<{
 export type DeleteNotificationMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteNotification'>
+);
+
+export type DeletePostMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type DeletePostMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePost'>
 );
 
 export type LikePostMutationVariables = Exact<{

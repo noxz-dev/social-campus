@@ -88,7 +88,9 @@
         </div>
       </div>
     </div>
-    <post-list :posts="posts" />
+    <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
+      <post-list :posts="posts" />
+    </div>
   </div>
 </template>
 

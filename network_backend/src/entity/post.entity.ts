@@ -37,7 +37,7 @@ export class Post extends Base {
   @Field(() => Boolean)
   liked: boolean;
 
-  @Column(() => String)
+  @Column({ nullable: true })
   imageName: string;
 
   @Field(() => String, { nullable: true })

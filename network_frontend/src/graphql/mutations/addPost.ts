@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const addPost = gql`
-  mutation addPost($text: String!, $file: Upload!) {
+  mutation addPost($text: String!, $file: Upload) {
     addPost(text: $text, file: $file) {
       id
       liked
@@ -13,6 +13,7 @@ export const addPost = gql`
       }
       text
       likesCount
+      commentCount
       createdAt
     }
   }

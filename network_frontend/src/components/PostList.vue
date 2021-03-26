@@ -8,6 +8,7 @@
       :name="post?.user?.firstname + ' ' + post?.user?.lastname"
       :liked="post.liked"
       :likeCount="post.likesCount"
+      :commentCount="post.commentCount"
       :post-date="new Date(post.createdAt)"
       :id="post.id"
       :imageUrlProfile="post.user.profilePicLink"

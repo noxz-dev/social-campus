@@ -1,5 +1,6 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, getRepository, ManyToOne, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { countComments, countLikes } from '../resolvers/post.resolver';
 import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
 import { Base } from './base';
@@ -34,6 +35,9 @@ export class Post extends Base {
   @Field(() => Number)
   likesCount: number;
 
+  @Field(() => Number)
+  commentCount: number;
+
   @Field(() => Boolean)
   liked: boolean;
 
@@ -57,12 +61,11 @@ export class Post extends Base {
 
   @AfterLoad()
   async countLikes(): Promise<void> {
-    const { count } = await getRepository(Like)
-      .createQueryBuilder('like')
-      .where('like.post = :id', { id: this.id })
-      .select('COUNT(*)', 'count')
-      .getRawOne();
+    this.likesCount = await countLikes(this.id);
+  }
 
-    this.likesCount = count;
+  @AfterLoad()
+  async countComments(): Promise<void> {
+    this.commentCount = await countComments(this.id);
   }
 }

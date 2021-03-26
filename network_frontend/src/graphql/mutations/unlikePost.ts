@@ -14,6 +14,7 @@ export const unlikePost = gql`
       }
       text
       likesCount
+      commentCount
       createdAt
     }
   }

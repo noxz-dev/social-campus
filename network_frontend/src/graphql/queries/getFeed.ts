@@ -14,6 +14,7 @@ export const getFeed = gql`
       }
       text
       likesCount
+      commentCount
       createdAt
     }
   }

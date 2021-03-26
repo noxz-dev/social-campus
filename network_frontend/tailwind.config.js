@@ -14,6 +14,8 @@ module.exports = {
     stroke: (theme) => ({
       white: theme('colors.white'),
       red: theme('colors.red.500'),
+      grayLight: theme('colors.gray.300'),
+      grayDark: theme('colors.gray.500'),
     }),
     extend: {
       colors: {

@@ -56,7 +56,6 @@ export class Application {
       const server = new ApolloServer({
         schema,
         subscriptions: {
-          path: '/subscriptions',
           onConnect(connectionParams: { campusToken: string }) {
             if (connectionParams.campusToken) {
               const user = verifyAccessToken(connectionParams.campusToken);

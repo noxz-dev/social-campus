@@ -6,6 +6,7 @@ import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getRepository, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
 import { Post } from '../entity/post.entity';
@@ -220,11 +221,9 @@ export class PostResolver {
     const dbPost = await getRepository(Post).save(post);
     await getRepository(User).save(user);
 
-    const likes = await countLikes(dbPost.id);
-    dbPost.likesCount = likes;
-
-    const likeState = await checkLikeState(ctx.req.user.id, dbPost.id);
-    dbPost.liked = likeState;
+    dbPost.likesCount = 0;
+    dbPost.commentCount = 0;
+    dbPost.liked = false;
 
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
     log.info(`'User with the id: ${id} added a new post'`);
@@ -359,13 +358,22 @@ const checkLikeState = async (userId: string, postId: string): Promise<boolean> 
   return false;
 };
 
-const countLikes = async (postId): Promise<number> => {
+export const countLikes = async (postId: string): Promise<number> => {
   const { count } = await getRepository(Like)
     .createQueryBuilder('like')
     .where('like.post = :id', { id: postId })
     .select('COUNT(*)', 'count')
     .getRawOne();
 
-  const likesCount = count;
-  return likesCount;
+  return count;
+};
+
+export const countComments = async (postId: string): Promise<number> => {
+  const { count } = await getRepository(Comment)
+    .createQueryBuilder('comment')
+    .where('comment.post = :id', { id: postId })
+    .select('COUNT(*)', 'count')
+    .getRawOne();
+
+  return count;
 };

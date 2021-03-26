@@ -107,6 +107,7 @@ export type Post = {
   comments: Array<Comment>;
   likes: Array<Like>;
   likesCount: Scalars['Float'];
+  commentCount: Scalars['Float'];
   liked: Scalars['Boolean'];
   imageLink?: Maybe<Scalars['String']>;
 };
@@ -140,16 +141,16 @@ export type Like = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addComment: Comment;
-  likeComment: Comment;
-  unlikeComment: Comment;
-  createGroup: Group;
-  joinGroup: Group;
   deleteNotification: Scalars['Boolean'];
   addPost: Post;
   likePost: Post;
   unlikePost: Post;
   deletePost: Scalars['Boolean'];
+  addComment: Comment;
+  likeComment: Comment;
+  unlikeComment: Comment;
+  createGroup: Group;
+  joinGroup: Group;
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -161,27 +162,6 @@ export type Mutation = {
   addFollower: User;
   removeFollower: User;
   setBio: User;
-};
-
-
-export type MutationAddCommentArgs = {
-  postID: Scalars['String'];
-  text: Scalars['String'];
-};
-
-
-export type MutationLikeCommentArgs = {
-  commentID: Scalars['String'];
-};
-
-
-export type MutationUnlikeCommentArgs = {
-  commentID: Scalars['String'];
-};
-
-
-export type MutationJoinGroupArgs = {
-  groupID: Scalars['String'];
 };
 
 
@@ -209,6 +189,27 @@ export type MutationUnlikePostArgs = {
 
 export type MutationDeletePostArgs = {
   postId: Scalars['String'];
+};
+
+
+export type MutationAddCommentArgs = {
+  postID: Scalars['String'];
+  text: Scalars['String'];
+};
+
+
+export type MutationLikeCommentArgs = {
+  commentID: Scalars['String'];
+};
+
+
+export type MutationUnlikeCommentArgs = {
+  commentID: Scalars['String'];
+};
+
+
+export type MutationJoinGroupArgs = {
+  groupID: Scalars['String'];
 };
 
 
@@ -319,7 +320,7 @@ export type AddFollowerMutation = (
 
 export type AddPostMutationVariables = Exact<{
   text: Scalars['String'];
-  file: Scalars['Upload'];
+  file?: Maybe<Scalars['Upload']>;
 }>;
 
 
@@ -327,7 +328,7 @@ export type AddPostMutation = (
   { __typename?: 'Mutation' }
   & { addPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
@@ -378,7 +379,7 @@ export type LikePostMutation = (
   { __typename?: 'Mutation' }
   & { likePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
@@ -422,7 +423,7 @@ export type UnlikePostMutation = (
   { __typename?: 'Mutation' }
   & { unlikePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
@@ -437,7 +438,7 @@ export type GetFeedQuery = (
   { __typename?: 'Query' }
   & { getFeed: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
@@ -483,7 +484,7 @@ export type PostByIdQuery = (
   { __typename?: 'Query' }
   & { postById: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
@@ -507,7 +508,7 @@ export type GetPostsFromUserQuery = (
   { __typename?: 'Query' }
   & { getPostsFromUser?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'createdAt'>
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>

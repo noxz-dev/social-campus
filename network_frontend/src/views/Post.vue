@@ -34,6 +34,7 @@
           :imageUrlProfile="postData.postById.user.profilePicLink"
           :likeCount="postData.postById.likesCount"
           :liked="postData.postById.liked"
+          :commentCount="postData.postById.commentCount"
           :name="postData.postById.user.firstname + '' + postData.postById.user.lastname"
           :postDate="new Date(postData.postById.createdAt)"
           :postText="postData.postById.text"

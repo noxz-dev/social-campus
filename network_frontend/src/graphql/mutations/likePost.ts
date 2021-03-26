@@ -13,6 +13,7 @@ export const likePost = gql`
       }
       text
       likesCount
+      commentCount
       createdAt
     }
   }

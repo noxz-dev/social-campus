@@ -8,6 +8,7 @@ export const postById = gql`
       imageLink
       text
       likesCount
+      commentCount
       createdAt
       user {
         id

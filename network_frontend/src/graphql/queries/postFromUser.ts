@@ -14,6 +14,7 @@ export const getPostsFromUser = gql`
       }
       text
       likesCount
+      commentCount
       createdAt
     }
   }

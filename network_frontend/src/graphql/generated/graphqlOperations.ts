@@ -36,7 +36,7 @@ export function useAddFollowerMutation(options: VueApolloComposable.UseMutationO
 }
 export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>;
 export const AddPostDocument = gql`
-    mutation addPost($text: String!, $file: Upload!) {
+    mutation addPost($text: String!, $file: Upload) {
   addPost(text: $text, file: $file) {
     id
     liked
@@ -48,6 +48,7 @@ export const AddPostDocument = gql`
     }
     text
     likesCount
+    commentCount
     createdAt
   }
 }
@@ -172,6 +173,7 @@ export const LikePostDocument = gql`
     }
     text
     likesCount
+    commentCount
     createdAt
   }
 }
@@ -275,6 +277,7 @@ export const UnlikePostDocument = gql`
     }
     text
     likesCount
+    commentCount
     createdAt
   }
 }
@@ -315,6 +318,7 @@ export const GetFeedDocument = gql`
     }
     text
     likesCount
+    commentCount
     createdAt
   }
 }
@@ -404,6 +408,7 @@ export const PostByIdDocument = gql`
     imageLink
     text
     likesCount
+    commentCount
     createdAt
     user {
       id
@@ -459,6 +464,7 @@ export const GetPostsFromUserDocument = gql`
     }
     text
     likesCount
+    commentCount
     createdAt
   }
 }

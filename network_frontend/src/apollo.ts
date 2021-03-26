@@ -22,7 +22,7 @@ const errorLink = onError((error) => {
 
 //subscriptions
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:3000/subscriptions`,
+  uri: `ws://localhost/subs/`,
   options: {
     reconnect: true,
     connectionParams: {

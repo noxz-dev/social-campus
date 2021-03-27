@@ -199,7 +199,7 @@
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
           >
-            New Post
+            Neuer Post
             <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ml-2 h-6 w-6">
               <g id="Iconly/Bulk/Send" stroke="none" stroke-width="1" fill-rule="evenodd">
                 <g id="Send" transform="translate(2.000000, 2.000000)" fill-rule="nonzero">
@@ -285,7 +285,7 @@
     </nav>
   </header>
   <floating-button v-if="$route.name !== 'DetailPost'" class="lg:hidden sm:block" text="Neuer Post" @click="eventbus.emit('open-modal')" />
-  <modal ref="modal" content-text="" header-text="New Post">
+  <modal ref="modal" content-text="" header-text="Neuer Post">
     <new-post />
   </modal>
   <transition name="fade">

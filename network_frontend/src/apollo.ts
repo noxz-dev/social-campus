@@ -33,7 +33,7 @@ const wsLink = new WebSocketLink({
 
 //querys and mutations
 const httpLink = createUploadLink({
-  uri: 'http://social.noxz.dev/api/graphql',
+  uri: 'https://social.noxz.dev/api/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

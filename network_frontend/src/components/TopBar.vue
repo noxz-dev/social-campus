@@ -193,7 +193,8 @@
             </transition>
           </div>
 
-          <a
+          <button
+            v-if="$route.name !== 'DetailPost'"
             href="#"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
@@ -216,7 +217,7 @@
                 </g>
               </g>
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -250,12 +251,22 @@
           </button>
         </div>
         <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4 block">
-          <a
-            href="#"
-            @click="$router.push('/profile')"
+          <div
+            @click="
+              () => {
+                $router.push({
+                  name: 'Profile',
+                  params: {
+                    id: user.id,
+                  },
+                });
+                showMobileMenu = false;
+              }
+            "
             class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
-            >Dein Profil</a
           >
+            Dein Profil
+          </div>
 
           <a
             href="#"
@@ -273,7 +284,7 @@
       </div>
     </nav>
   </header>
-  <floating-button class="lg:hidden sm:block" text="Neuer Post" @click="eventbus.emit('open-modal')" />
+  <floating-button v-if="$route.name !== 'DetailPost'" class="lg:hidden sm:block" text="Neuer Post" @click="eventbus.emit('open-modal')" />
   <modal ref="modal" content-text="" header-text="New Post">
     <new-post />
   </modal>

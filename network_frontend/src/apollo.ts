@@ -22,7 +22,7 @@ const errorLink = onError((error) => {
 
 //subscriptions
 const wsLink = new WebSocketLink({
-  uri: `wss://social.noxz.dev/subs/`,
+  uri: process.env.VITE_WS_URL || 'ws://localhost/subs/',
   options: {
     reconnect: true,
     connectionParams: {
@@ -33,7 +33,7 @@ const wsLink = new WebSocketLink({
 
 //querys and mutations
 const httpLink = createUploadLink({
-  uri: 'https://social.noxz.dev/api/graphql',
+  uri: process.env.VITE_API_URL || 'http://localhost/api/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

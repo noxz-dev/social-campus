@@ -3,7 +3,7 @@
     <button
       type="button"
       :class="scrolledDown ? 'px-3 py-3' : 'px-6 py-3'"
-      class="transition duration-700 inline-flex items-center border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      class="transition-all duration-200 inline-flex items-center border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     >
       <span v-if="!scrolledDown">{{ text }}</span>
       <svg
@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   props: {
@@ -43,6 +44,32 @@ export default defineComponent({
   },
   setup() {
     const scrolledDown = ref(false);
+    const route = useRoute();
+
+    watch(
+      () => route.name,
+      () => {
+        scrolledDown.value = false;
+        let lastScrollTop = window.pageYOffset;
+        const container = document.querySelector('#home');
+        console.log(document.querySelector('#home'));
+        if (!container) return;
+        container.addEventListener(
+          'scroll',
+          () => {
+            let st = window.pageYOffset || container.scrollTop;
+            if (st > lastScrollTop) {
+              scrolledDown.value = true;
+            } else {
+              scrolledDown.value = false;
+            }
+            lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+          },
+          false
+        );
+      },
+      { flush: 'post' }
+    );
 
     onMounted(() => {
       let lastScrollTop = window.pageYOffset;

@@ -15,6 +15,7 @@ module.exports = {
       white: theme('colors.white'),
       black: theme('colors.black'),
       red: theme('colors.red.500'),
+      indigo: theme('colors.indigo.500'),
       grayLight: theme('colors.gray.300'),
       grayDark: theme('colors.gray.500'),
     }),

@@ -80,7 +80,7 @@
                 <button
                   class="w-full transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 hover:text-gray-900 stroke-grayLight hover:stroke-black rounded-b-lg"
                   role="menuitem"
-                  @click="deletePost()"
+                  @click="deleteContent()"
                 >
                   <svg
                     class="mr-3 h-5 w-5"
@@ -145,7 +145,9 @@ export default defineComponent({
     },
     postId: {
       type: String,
-      required: true,
+    },
+    commentId: {
+      type: String,
     },
   },
   setup(props) {
@@ -167,13 +169,17 @@ export default defineComponent({
       ],
     }));
 
-    const deletePost = () => {
-      console.log('called');
-      console.log(props.postId);
-      delPost();
+    const deleteContent = () => {
+      if (props.postId) {
+        delPost();
+        return;
+      }
+      if (props.commentId) {
+        console.log('todo');
+      }
     };
 
-    return { dayjs, optionsOpen, target, deletePost };
+    return { dayjs, optionsOpen, target, deleteContent };
   },
 });
 </script>

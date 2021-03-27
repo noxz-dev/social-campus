@@ -1,8 +1,8 @@
 <template>
   <card id="postcard">
     <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" />
-    <div class="px-4 py-2 mt-2 cursor-pointer" @click="handleNavigation">
-      <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-6">
+    <div class="px-4 cursor-pointer" @click="handleNavigation">
+      <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         {{ postText }}
       </p>
       <div v-if="imageUrl" class="flex justify-center">

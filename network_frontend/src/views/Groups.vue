@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="home" class="flex h-full items-center pt-10 bg-dark700 flex-col rounded-3xl overflow-y-auto" />
+    <div id="groups" class="flex h-full items-center pt-10 bg-dark700 flex-col rounded-3xl overflow-y-auto" />
     <div class="pl-2 hidden"></div>
   </div>
 </template>

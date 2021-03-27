@@ -22,7 +22,7 @@ const errorLink = onError((error) => {
 
 //subscriptions
 const wsLink = new WebSocketLink({
-  uri: process.env.VITE_WS_URL || 'ws://localhost/subs/',
+  uri: `${import.meta.env.VITE_WS_URL}`,
   options: {
     reconnect: true,
     connectionParams: {
@@ -33,7 +33,7 @@ const wsLink = new WebSocketLink({
 
 //querys and mutations
 const httpLink = createUploadLink({
-  uri: process.env.VITE_API_URL || 'http://localhost/api/graphql',
+  uri: `${import.meta.env.VITE_API_URL}`,
 });
 
 const authLink = setContext((_, { headers }) => {

@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="dark:bg-dark700">
-    <div v-if="showLogin">
+    <div v-if="showLogin" class="h-screen">
       <router-view></router-view>
     </div>
     <div v-else ckass="w-full flex">

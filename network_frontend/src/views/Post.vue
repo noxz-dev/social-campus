@@ -2,7 +2,7 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
       <div
-        class="z-20 py-2 sticky w-full -top-10 cursor-pointer text-gray-50 self-start flex items-center bg-white dark:bg-dark700 hover:text-highlight-500 stroke-white hover:stroke-indigo"
+        class="z-20 py-2 sticky md:static w-full -top-10 cursor-pointer text-gray-50 self-start flex items-center bg-white dark:bg-dark700 hover:text-highlight-500 stroke-white hover:stroke-indigo"
         @click="$router.back()"
       >
         <svg class="h-8" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

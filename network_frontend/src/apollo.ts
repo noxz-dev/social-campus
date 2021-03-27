@@ -22,7 +22,7 @@ const errorLink = onError((error) => {
 
 //subscriptions
 const wsLink = new WebSocketLink({
-  uri: `ws://social.noxz.dev/subs/`,
+  uri: `wss://social.noxz.dev/subs/`,
   options: {
     reconnect: true,
     connectionParams: {

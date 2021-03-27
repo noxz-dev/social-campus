@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex items-center flex-col">
+  <div class="w-full h-full flex items-center flex-col pb-14">
     <div v-if="posts?.length === 0">ganz schön leer hier, schreibe doch einen Post oder folge anderen!</div>
     <post-card
       v-for="post in posts"

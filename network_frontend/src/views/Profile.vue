@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div>
-                <a
+                <button
                   v-if="showEditProfile"
                   class="ml-6 cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                 >
@@ -67,21 +67,23 @@
                     />
                   </svg>
                   Edit Profile
-                </a>
+                </button>
                 <a
                   @click="followUser"
                   v-else-if="!following"
-                  class="ml-6 px-6 inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+                  class="ml-6 px-6 inline-flex cursor-pointer items-center py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                 >
                   Folgen
                 </a>
-                <a
+                <button
+                  @mouseover="followButtonText = 'Entfolgen'"
+                  @mouseout="followButtonText = 'Folge ich'"
                   @click="unfollowUser"
                   v-else
-                  class="ml-6 inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+                  class="ml-6 w-[6.5rem] text-center inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500 duration-200"
                 >
-                  Folge Ich
-                </a>
+                  {{ followButtonText }}
+                </button>
               </div>
             </div>
           </div>
@@ -95,7 +97,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch } from 'vue';
+import { defineComponent, ref, computed, watch, onMounted, watchEffect } from 'vue';
 import PostList from '@/components/PostList.vue';
 import {
   useGetPostsFromUserQuery,
@@ -122,8 +124,17 @@ export default defineComponent({
     const store = useStore();
     const following = ref(false);
     const posts = ref([]);
+    const followButtonText = ref('Folge ich');
 
     const userFromStore = computed(() => store.state.userData.user);
+
+    watchEffect(() => {
+      if (userFromStore.value.id === route.params.id) {
+        showEditProfile.value = true;
+      } else {
+        showEditProfile.value = false;
+      }
+    });
 
     watch(
       () => route.params.id,
@@ -209,6 +220,7 @@ export default defineComponent({
       followerCount,
       followingCount,
       showEditProfile,
+      followButtonText,
     };
   },
 });

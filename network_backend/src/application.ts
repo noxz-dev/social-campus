@@ -74,11 +74,12 @@ export class Application {
           };
           return context;
         },
+        uploads: false,
         formatError: (error) => {
           log.error('GRAPHQL ERROR', error);
-          throw error;
+          const response = { message: error.message };
+          return response;
         },
-        uploads: false,
       });
 
       // error middlware

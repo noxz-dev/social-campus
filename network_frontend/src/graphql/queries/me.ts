@@ -7,6 +7,7 @@ export const me = gql`
       profilePicLink
       firstname
       lastname
+      username
     }
   }
 `;

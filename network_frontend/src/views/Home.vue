@@ -39,6 +39,7 @@ export default defineComponent({
               id
               firstname
               lastname
+              username
               profilePicLink
             }
             text

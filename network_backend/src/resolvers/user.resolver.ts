@@ -50,6 +50,12 @@ export class UserResolver {
   @Mutation(() => Boolean)
   public async register(@Arg('input') input: UserValidator, @Ctx() ctx: MyContext): Promise<boolean | null> {
     const hashedPassword = await argon2.hash(input.password);
+    const result = await getRepository(User).findOne({
+      where: {
+        email: input.email,
+      },
+    });
+    if (result) throw Error('a user with this email already exisits');
     const user = new User(input, hashedPassword);
     user.followers = [];
     user.following = [];

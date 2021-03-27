@@ -20,7 +20,19 @@
           >
         </p>
         <p class="text-sm text-gray-500">
-          <a href="#" class="hover:underline">{{ dayjs(creationDate).fromNow() }}</a>
+          <a
+            class="mr-2 text-gray-400 cursor-pointer hover:underline"
+            @click.stop="
+              $router.push({
+                name: 'Profile',
+                params: {
+                  id: userId,
+                },
+              })
+            "
+            >@{{ username }}</a
+          >
+          <span>{{ dayjs(creationDate).fromNow() }}</span>
         </p>
       </div>
       <div class="flex-shrink-0 self-center flex">
@@ -147,6 +159,9 @@ export default defineComponent({
       type: String,
     },
     commentId: {
+      type: String,
+    },
+    username: {
       type: String,
     },
   },

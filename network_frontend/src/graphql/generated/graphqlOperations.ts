@@ -10,6 +10,7 @@ export const AddFollowerDocument = gql`
     firstname
     lastname
     profilePicLink
+    username
   }
 }
     `;
@@ -45,6 +46,7 @@ export const AddPostDocument = gql`
       firstname
       lastname
       profilePicLink
+      username
     }
     text
     likesCount
@@ -170,6 +172,7 @@ export const LikePostDocument = gql`
       firstname
       lastname
       profilePicLink
+      username
     }
     text
     likesCount
@@ -238,6 +241,7 @@ export const RemoveFollowerDocument = gql`
     firstname
     lastname
     profilePicLink
+    username
   }
 }
     `;
@@ -273,6 +277,7 @@ export const UnlikePostDocument = gql`
       id
       firstname
       lastname
+      username
       profilePicLink
     }
     text
@@ -314,6 +319,7 @@ export const GetFeedDocument = gql`
       id
       firstname
       lastname
+      username
       profilePicLink
     }
     text
@@ -347,6 +353,7 @@ export const MeDocument = gql`
     profilePicLink
     firstname
     lastname
+    username
   }
 }
     `;
@@ -414,6 +421,7 @@ export const PostByIdDocument = gql`
       id
       firstname
       lastname
+      username
       profilePicLink
     }
     comments {
@@ -424,6 +432,7 @@ export const PostByIdDocument = gql`
         id
         firstname
         lastname
+        username
         profilePicLink
       }
     }
@@ -460,6 +469,7 @@ export const GetPostsFromUserDocument = gql`
       id
       firstname
       lastname
+      username
       profilePicLink
     }
     text
@@ -526,6 +536,7 @@ export const UserByIdDocument = gql`
     firstname
     lastname
     profilePicLink
+    username
     followers {
       id
       firstname

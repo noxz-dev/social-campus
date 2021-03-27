@@ -1,6 +1,6 @@
 <template>
   <card id="postcard">
-    <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" />
+    <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" :username="username" />
     <div class="px-4 cursor-pointer" @click="handleNavigation">
       <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         {{ postText }}
@@ -73,6 +73,7 @@ export default defineComponent({
   props: {
     id: String,
     name: String,
+    username: String,
     postDate: Date,
     postText: String,
     liked: Boolean,

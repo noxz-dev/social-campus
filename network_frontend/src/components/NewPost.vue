@@ -10,7 +10,7 @@
       <div v-if="v.message.$error" class="text-red-400">Du musst schon was eingeben...</div>
     </div>
     <div v-if="!previewUrl" class="flex my-4">
-      <div class="mr-4">Bild Hochladen ?</div>
+      <div class="mr-4">Bild Hochladen?</div>
       <toggle-button @toggleStateUpdate="toggle" />
     </div>
     <div v-if="showImageUpload">

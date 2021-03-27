@@ -21,6 +21,10 @@ export class User extends Base {
 
   @Field(() => String)
   @Column({ unique: true })
+  username: string;
+
+  @Field(() => String)
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -74,6 +78,7 @@ export class User extends Base {
     super();
     this.firstname = body?.firstName;
     this.lastname = body?.lastname;
+    this.username = body?.username;
     this.email = body?.email;
     this.password = hashedPassword;
   }

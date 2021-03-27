@@ -10,6 +10,7 @@ export const addPost = gql`
         firstname
         lastname
         profilePicLink
+        username
       }
       text
       likesCount

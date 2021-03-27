@@ -12,6 +12,11 @@ export class UserValidator {
   lastname: string;
 
   @Field()
+  @IsString()
+  @MinLength(3, { message: 'Username muss aus min. 3 Zeichen bestehen' })
+  username: string;
+
+  @Field()
   @IsEmail()
   email: string;
 

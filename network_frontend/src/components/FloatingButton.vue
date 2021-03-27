@@ -52,7 +52,6 @@ export default defineComponent({
         scrolledDown.value = false;
         let lastScrollTop = window.pageYOffset;
         const container = document.querySelector('#home');
-        console.log(document.querySelector('#home'));
         if (!container) return;
         container.addEventListener(
           'scroll',

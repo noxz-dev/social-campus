@@ -7,6 +7,7 @@ export const removeFollower = gql`
       firstname
       lastname
       profilePicLink
+      username
     }
   }
 `;

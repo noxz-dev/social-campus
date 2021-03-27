@@ -6,6 +6,7 @@
       :key="post.id"
       :post-text="post.text"
       :name="post?.user?.firstname + ' ' + post?.user?.lastname"
+      :username="post?.user?.username"
       :liked="post.liked"
       :likeCount="post.likesCount"
       :commentCount="post.commentCount"

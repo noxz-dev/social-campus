@@ -10,6 +10,7 @@ export const getFeed = gql`
         id
         firstname
         lastname
+        username
         profilePicLink
       }
       text

@@ -7,6 +7,7 @@ export const userById = gql`
       firstname
       lastname
       profilePicLink
+      username
       followers {
         id
         firstname

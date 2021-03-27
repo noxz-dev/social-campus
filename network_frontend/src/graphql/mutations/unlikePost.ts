@@ -10,6 +10,7 @@ export const unlikePost = gql`
         id
         firstname
         lastname
+        username
         profilePicLink
       }
       text

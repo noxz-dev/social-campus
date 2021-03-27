@@ -78,6 +78,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   firstname: Scalars['String'];
   lastname: Scalars['String'];
+  username: Scalars['String'];
   email: Scalars['String'];
   profilePicLink?: Maybe<Scalars['String']>;
   bio: Scalars['String'];
@@ -279,6 +280,7 @@ export type RoleValidator = {
 export type UserValidator = {
   firstName: Scalars['String'];
   lastname: Scalars['String'];
+  username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };
@@ -314,7 +316,7 @@ export type AddFollowerMutation = (
   { __typename?: 'Mutation' }
   & { addFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
   ) }
 );
 
@@ -331,7 +333,7 @@ export type AddPostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
     ) }
   ) }
 );
@@ -382,7 +384,7 @@ export type LikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
     ) }
   ) }
 );
@@ -410,7 +412,7 @@ export type RemoveFollowerMutation = (
   { __typename?: 'Mutation' }
   & { removeFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
   ) }
 );
 
@@ -426,7 +428,7 @@ export type UnlikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   ) }
 );
@@ -441,7 +443,7 @@ export type GetFeedQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   )> }
 );
@@ -453,7 +455,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'profilePicLink' | 'firstname' | 'lastname'>
+    & Pick<User, 'id' | 'profilePicLink' | 'firstname' | 'lastname' | 'username'>
   )> }
 );
 
@@ -487,13 +489,13 @@ export type PostByIdQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ), comments: Array<(
       { __typename?: 'Comment' }
       & Pick<Comment, 'id' | 'text' | 'createdAt'>
       & { user: (
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+        & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
       ) }
     )> }
   ) }
@@ -511,7 +513,7 @@ export type GetPostsFromUserQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   )>> }
 );
@@ -538,7 +540,7 @@ export type UserByIdQuery = (
   { __typename?: 'Query' }
   & { userById: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
     & { followers: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>

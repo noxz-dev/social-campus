@@ -29,6 +29,7 @@
           :liked="postData.postById.liked"
           :commentCount="postData.postById.commentCount"
           :name="postData.postById.user.firstname + '' + postData.postById.user.lastname"
+          :username="postData.postById.user.username"
           :postDate="new Date(postData.postById.createdAt)"
           :postText="postData.postById.text"
           :userId="postData.postById.user.id"
@@ -68,6 +69,7 @@
               :name="comment.user.firstname + ' ' + comment.user.lastname"
               :profileImg="comment.user.profilePicLink"
               :userId="comment.user.id"
+              :username="comment.user.username"
             />
             <div class="p-5 pt-0">
               {{ comment.text }}

@@ -10,6 +10,7 @@ export const getPostsFromUser = gql`
         id
         firstname
         lastname
+        username
         profilePicLink
       }
       text

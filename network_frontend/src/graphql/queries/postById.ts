@@ -14,6 +14,7 @@ export const postById = gql`
         id
         firstname
         lastname
+        username
         profilePicLink
       }
       comments {
@@ -24,6 +25,7 @@ export const postById = gql`
           id
           firstname
           lastname
+          username
           profilePicLink
         }
       }

@@ -44,6 +44,8 @@ export class PostResolver {
       ],
       where: { user: { id: userID } },
       order: { createdAt: 'DESC' },
+      take: 10,
+      skip: 10,
     });
     if (!posts) {
       return null;

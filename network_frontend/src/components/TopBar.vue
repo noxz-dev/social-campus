@@ -135,7 +135,7 @@
                       $router.push({
                         name: 'Profile',
                         params: {
-                          id: user.id,
+                          id: user.username,
                         },
                       })
                     "

@@ -6,6 +6,7 @@ export const search = gql`
       id
       firstname
       lastname
+      username
       profilePicLink
     }
   }

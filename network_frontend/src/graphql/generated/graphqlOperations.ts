@@ -505,6 +505,7 @@ export const SearchDocument = gql`
     id
     firstname
     lastname
+    username
     profilePicLink
   }
 }
@@ -572,6 +573,49 @@ export function useUserByIdQuery(variables: graphqlOperations.ts.UserByIdQueryVa
   return VueApolloComposable.useQuery<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>(UserByIdDocument, variables, options);
 }
 export type UserByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.UserByIdQuery, graphqlOperations.ts.UserByIdQueryVariables>;
+export const UserByUsernameDocument = gql`
+    query userByUsername($username: String!) {
+  userByUsername(username: $username) {
+    id
+    firstname
+    lastname
+    profilePicLink
+    username
+    followers {
+      id
+      firstname
+      lastname
+      profilePicLink
+    }
+    following {
+      id
+      firstname
+      lastname
+      profilePicLink
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserByUsernameQuery__
+ *
+ * To run a query within a Vue component, call `useUserByUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserByUsernameQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useUserByUsernameQuery({
+ *   username: // value for 'username'
+ * });
+ */
+export function useUserByUsernameQuery(variables: graphqlOperations.ts.UserByUsernameQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.UserByUsernameQueryVariables> | ReactiveFunction<graphqlOperations.ts.UserByUsernameQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>(UserByUsernameDocument, variables, options);
+}
+export type UserByUsernameQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>;
 export const NotificationsDocument = gql`
     subscription notifications($userId: String!) {
   notifications(userId: $userId) {

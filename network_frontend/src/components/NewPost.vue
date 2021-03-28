@@ -156,7 +156,6 @@ export default defineComponent({
     const post = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
-      if (!file.value) return;
       newPost();
       eventbus.emit('close-modal');
     };

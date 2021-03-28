@@ -40,9 +40,27 @@ const routes = [
     component: () => import('@/views/auth/Register.vue'),
   },
   {
-    path: '/profile/:id',
+    path: '/user/:id',
     name: 'Profile',
+    redirect: { name: 'ProfilePosts' },
     component: () => import('@/views/Profile.vue'),
+    children: [
+      {
+        path: 'posts',
+        name: 'ProfilePosts',
+        component: () => import('@/views/ProfilePosts.vue'),
+      },
+      {
+        path: 'followers',
+        name: 'ProfileFollowers',
+        component: () => import('@/views/ProfilePosts.vue'),
+      },
+      {
+        path: 'following',
+        name: 'ProfileFollowing',
+        component: () => import('@/views/ProfilePosts.vue'),
+      },
+    ],
   },
 ];
 

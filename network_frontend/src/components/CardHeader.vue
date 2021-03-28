@@ -6,18 +6,7 @@
       </div>
       <div class="min-w-0 flex-1">
         <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
-          <a
-            @click.stop="
-              $router.push({
-                name: 'Profile',
-                params: {
-                  id: userId,
-                },
-              })
-            "
-            class="cursor-pointer hover:underline"
-            >{{ name }}</a
-          >
+          <span>{{ name }}</span>
         </p>
         <p class="text-sm text-gray-500">
           <a
@@ -26,7 +15,7 @@
               $router.push({
                 name: 'Profile',
                 params: {
-                  id: userId,
+                  id: username,
                 },
               })
             "

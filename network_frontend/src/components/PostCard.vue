@@ -8,7 +8,7 @@
       <div v-if="imageUrl" class="flex justify-center">
         <img class="object-cover h-96 w-full rounded-xl m-2" :src="imageUrl" alt="" />
       </div>
-      <div class="flex items-center justify-between p-2 cursor-default" @click.stop>
+      <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
           <div class="flex cursor-pointer" @click.stop="likePost">
             <svg

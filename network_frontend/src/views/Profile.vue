@@ -4,7 +4,7 @@
       <div>
         <div>
           <img
-            class="h-32 w-full object-cover lg:h-54 rounded-xl"
+            class="h-32 w-full object-cover lg:h-64 rounded-xl"
             src="https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
             alt=""
           />
@@ -12,15 +12,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col">
             <div class="flex">
-              <div
-                v-if="showEditProfile"
-                class="absolute text-gray-200 h-24 w-24 sm:h-32 sm:w-32 text-lg flex flex-col bg-black rounded-full bg-opacity-70 opacity-0 hover:opacity-100 flex text-center cursor-pointer"
-              >
-                <span class="sm:m-8 sm:mb-0 mt-4 font-medium">Avatar</span>
-                <span class="sm:m-8 sm:mt-1 font-medium">Ändern</span>
-              </div>
-
-              <img class="h-24 w-24 rounded-full border-3 sm:h-32 sm:w-32 bg-black" :src="profileImage" alt="profile image" />
+              <img class="h-24 w-24 rounded-full border-3 sm:h-48 sm:w-48 bg-black" :src="profileImage" alt="profile image" />
             </div>
             <div class="mt-6 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
               <div class="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
@@ -40,10 +32,12 @@
             </div>
             <div class="flex self-start flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-4 justify-between w-full items-center">
               <div class="flex sm:space-x-10 space-x-0 space-y-5 sm:space-y-0 flex-col sm:flex-row">
-                <div class="border-b-3 roundel-xl pb-2">
-                  Posts
-                  <span class="ml-2 font-light dark:text-gray-300">{{ postCount }}</span>
-                </div>
+                <router-link :to="{ name: 'ProfilePosts' }">
+                  <div class="border-b-3 roundel-xl pb-2">
+                    Posts
+                    <span class="ml-2 font-light dark:text-gray-300">{{ postCount }}</span>
+                  </div>
+                </router-link>
                 <div>
                   Followers
                   <span class="ml-2 font-light dark:text-gray-300">{{ followerCount }}</span>
@@ -90,24 +84,19 @@
         </div>
       </div>
     </div>
-    <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
-      <post-list :posts="posts" />
-    </div>
+
+    <router-view v-if="user" :userId="user.id" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, watchEffect } from 'vue';
 import PostList from '@/components/PostList.vue';
-import {
-  useGetPostsFromUserQuery,
-  useUserByIdQuery,
-  useAddFollowerMutation,
-  useRemoveFollowerMutation,
-} from '../graphql/generated/graphqlOperations';
+import { useAddFollowerMutation, useRemoveFollowerMutation, useUserByUsernameQuery } from '../graphql/generated/graphqlOperations';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { userById } from '../graphql/queries/userById';
+import { User } from '../graphql/generated/types';
 
 export default defineComponent({
   components: {
@@ -120,16 +109,16 @@ export default defineComponent({
     const followingCount = ref(0);
     const showEditProfile = ref(false);
     const profileImage = ref('');
-    const user = ref({});
+    const user = ref<User>();
     const store = useStore();
     const following = ref(false);
-    const posts = ref([]);
+
     const followButtonText = ref('Folge ich');
 
     const userFromStore = computed(() => store.state.userData.user);
 
     watchEffect(() => {
-      if (userFromStore.value.id === route.params.id) {
+      if (userFromStore.value.username === route.params.id) {
         showEditProfile.value = true;
       } else {
         showEditProfile.value = false;
@@ -139,8 +128,7 @@ export default defineComponent({
     watch(
       () => route.params.id,
       () => {
-        console.log('here');
-        if (userFromStore.value.id === route.params.id) {
+        if (userFromStore.value.username === route.params.id) {
           showEditProfile.value = true;
         } else {
           showEditProfile.value = false;
@@ -148,16 +136,16 @@ export default defineComponent({
       }
     );
 
-    const { onResult } = useUserByIdQuery(() => ({
-      userId: route.params.id,
+    const { onResult } = useUserByUsernameQuery(() => ({
+      username: route.params.id,
     }));
 
     onResult((userResult) => {
-      const userData = userResult.data.userById;
+      const userData = userResult.data.userByUsername;
       profileImage.value = userData.profilePicLink;
       user.value = userData;
-      followerCount.value = userData.followers.length;
-      followingCount.value = userData.following.length;
+
+      //TODO MOVE TO BACKEND
       const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
       if (userExists) {
         following.value = true;
@@ -166,40 +154,29 @@ export default defineComponent({
       }
     });
 
-    const { onResult: onResultPosts } = useGetPostsFromUserQuery(() => ({
-      userID: route.params.id,
-      pollInterval: 60000,
+    const { mutate: follow } = useAddFollowerMutation(() => ({
+      variables: {
+        userID: user.value?.id,
+      },
+      refetchQueries: [
+        {
+          query: userById,
+          variables: { userId: user.value?.id },
+        },
+      ],
     }));
 
-    onResultPosts((postData) => {
-      const postsResult = postData?.data?.getPostsFromUser;
-      postCount.value = postsResult.length;
-      posts.value = [...postsResult];
-    });
-
-    const { mutate: follow } = useAddFollowerMutation({
+    const { mutate: unfollow } = useRemoveFollowerMutation(() => ({
       variables: {
-        userID: route.params.id,
+        userID: user.value?.id,
       },
       refetchQueries: [
         {
           query: userById,
-          variables: { userId: route.params.id },
+          variables: { userId: user.value?.id },
         },
       ],
-    });
-
-    const { mutate: unfollow } = useRemoveFollowerMutation({
-      variables: {
-        userID: route.params.id,
-      },
-      refetchQueries: [
-        {
-          query: userById,
-          variables: { userId: route.params.id },
-        },
-      ],
-    });
+    }));
 
     const followUser = () => {
       follow();
@@ -214,7 +191,6 @@ export default defineComponent({
       followUser,
       unfollowUser,
       user,
-      posts,
       profileImage,
       postCount,
       followerCount,

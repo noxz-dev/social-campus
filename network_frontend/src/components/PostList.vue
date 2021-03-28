@@ -1,6 +1,8 @@
 <template>
   <div class="w-full h-full flex items-center flex-col pb-14">
-    <div class="dark:text-gray-50" v-if="posts?.length === 0">ganz schön leer hier, schreibe doch einen Post oder folge anderen!</div>
+    <div class="dark:text-gray-50 mt-20 font-semibold text-xl" v-if="posts?.length === 0">
+      ganz schön leer hier, schreibe doch einen Post oder folge anderen!
+    </div>
     <post-card
       v-for="post in posts"
       :key="post.id"

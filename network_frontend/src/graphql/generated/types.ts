@@ -29,6 +29,7 @@ export type Query = {
   /** Me returns User info when logged in. */
   me?: Maybe<User>;
   userById: User;
+  userByUsername: User;
   search: Array<User>;
 };
 
@@ -50,6 +51,11 @@ export type QueryPostByIdArgs = {
 
 export type QueryUserByIdArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
 };
 
 
@@ -527,7 +533,7 @@ export type SearchQuery = (
   { __typename?: 'Query' }
   & { search: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
   )> }
 );
 
@@ -539,6 +545,26 @@ export type UserByIdQueryVariables = Exact<{
 export type UserByIdQuery = (
   { __typename?: 'Query' }
   & { userById: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+    & { followers: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    )>, following: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+    )> }
+  ) }
+);
+
+export type UserByUsernameQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type UserByUsernameQuery = (
+  { __typename?: 'Query' }
+  & { userByUsername: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
     & { followers: Array<(

@@ -11,8 +11,10 @@ import { getRepository, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { NotificationType } from '../entity/notification.entity';
+import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
+import { UserStats } from '../graphql_types/userStats';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/jwtUser.interface';
@@ -216,6 +218,19 @@ export class UserResolver {
   }
 
   @Authorized()
+  @Query(() => User)
+  async userByUsername(@Ctx() ctx: MyContext, @Arg('username') username: string): Promise<User | null> {
+    const user = await getRepository(User).findOne({
+      where: { username: username },
+      relations: ['following', 'followers'],
+    });
+    if (!user) {
+      throw Error('no user found');
+    }
+    return user;
+  }
+
+  @Authorized()
   @Query(() => [User])
   async search(@Arg('searchString') searchString: string): Promise<User[]> {
     const users = await getRepository(User).find({
@@ -223,6 +238,69 @@ export class UserResolver {
     });
 
     return users;
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async following(
+    @Arg('userId') userId: string,
+    @Arg('skip') skip: number,
+    @Arg('take') take: number,
+  ): Promise<User[]> {
+    const following = await getRepository(User)
+      .createQueryBuilder('following')
+      .innerJoin('following.followers', 'followers')
+      .where('followers.id = :id', { id: userId })
+      .skip(skip)
+      .take(take)
+      .getMany();
+
+    return following;
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async followers(
+    @Arg('userId') userId: string,
+    @Arg('skip') skip: number,
+    @Arg('take') take: number,
+  ): Promise<User[]> {
+    const followers = await getRepository(User)
+      .createQueryBuilder('followers')
+      .innerJoin('followers.following', 'following')
+      .where('following.id = :id', { id: userId })
+      .skip(skip)
+      .take(take)
+      .getMany();
+
+    return followers;
+  }
+
+  @Authorized()
+  @Query(() => UserStats)
+  async userStats(@Arg('userId') userId: string): Promise<UserStats> {
+    const followerCount = await getRepository(User)
+      .createQueryBuilder('followers')
+      .innerJoin('followers.following', 'following')
+      .where('following.id = :id', { id: userId })
+      .getCount();
+
+    const followingCount = await getRepository(User)
+      .createQueryBuilder('following')
+      .innerJoin('following.followers', 'followers')
+      .where('followers.id = :id', { id: userId })
+      .getCount();
+
+    const postCount = await getRepository(Post).count({
+      where: {
+        user: userId,
+      },
+      relations: ['user'],
+    });
+
+    const userStats = new UserStats(postCount, followerCount, followingCount);
+
+    return userStats;
   }
 }
 

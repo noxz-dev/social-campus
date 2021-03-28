@@ -49,7 +49,7 @@
         v-for="result in searchResult"
         :key="result.id"
         class="flex items-center w-full bg-dark600 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
-        @click="handleRouting(result.id)"
+        @click="handleRouting(result.username)"
       >
         <div class="table-cell align-middle mr-4"><img class="h-8 w-8 rounded-full" :src="result.profilePicLink" /></div>
         <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
@@ -59,14 +59,14 @@
 </template>
 
 <script lang="ts">
-import { onClickOutside } from '@vueuse/core';
+import { onClickOutside, TimeoutFnResult } from '@vueuse/core';
 import { useSearchQuery } from '../graphql/generated/graphqlOperations';
 import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import InputField from './InputField.vue';
 export type MaybeRef<T> = Ref<T> | T;
 function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside: MaybeRef<boolean> = true) {
-  let timeout: number;
+  let timeout: NodeJS.Timeout;
   return customRef<T>((track, trigger) => {
     return {
       get() {

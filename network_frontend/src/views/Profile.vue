@@ -1,6 +1,6 @@
 <template>
   <div id="profile" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto text-gray-100">
-    <div class="bg-dark600 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
+    <div class="dark:bg-dark600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
       <div>
         <div>
           <img
@@ -33,19 +33,23 @@
             <div class="flex self-start flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-4 justify-between w-full items-center">
               <div class="flex sm:space-x-10 space-x-0 space-y-5 sm:space-y-0 flex-col sm:flex-row">
                 <router-link :to="{ name: 'ProfilePosts' }">
-                  <div class="border-b-3 roundel-xl pb-2">
-                    Posts
-                    <span class="ml-2 font-light dark:text-gray-300">{{ postCount }}</span>
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Posts</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
                   </div>
                 </router-link>
-                <div>
-                  Followers
-                  <span class="ml-2 font-light dark:text-gray-300">{{ followerCount }}</span>
-                </div>
-                <div>
-                  Following
-                  <span class="ml-2 font-light dark:text-gray-300">{{ followingCount }}</span>
-                </div>
+                <router-link :to="{ name: 'ProfileFollowers' }">
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Followers</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'ProfileFollowing' }">
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Following</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
+                  </div>
+                </router-link>
               </div>
               <div>
                 <button
@@ -92,11 +96,17 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, watchEffect } from 'vue';
 import PostList from '@/components/PostList.vue';
-import { useAddFollowerMutation, useRemoveFollowerMutation, useUserByUsernameQuery } from '../graphql/generated/graphqlOperations';
+import {
+  useAddFollowerMutation,
+  useRemoveFollowerMutation,
+  UserStatsQueryCompositionFunctionResult,
+  useUserByUsernameQuery,
+  useUserStatsQuery,
+} from '../graphql/generated/graphqlOperations';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { userById } from '../graphql/queries/userById';
-import { User } from '../graphql/generated/types';
+import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
 
 export default defineComponent({
   components: {
@@ -112,6 +122,7 @@ export default defineComponent({
     const user = ref<User>();
     const store = useStore();
     const following = ref(false);
+    const stats = ref<UserStats>();
 
     const followButtonText = ref('Folge ich');
 
@@ -145,13 +156,17 @@ export default defineComponent({
       profileImage.value = userData.profilePicLink;
       user.value = userData;
 
-      //TODO MOVE TO BACKEND
-      const userExists = userData.followers.some((user) => user.id === userFromStore.value.id);
-      if (userExists) {
-        following.value = true;
-      } else {
-        following.value = false;
-      }
+      const { onResult: onStats } = useUserStatsQuery(
+        () =>
+          <UserStatsQueryVariables>{
+            userId: user.value?.id,
+          }
+      );
+
+      onStats(({ data }) => {
+        console.log(data);
+        stats.value = data;
+      });
     });
 
     const { mutate: follow } = useAddFollowerMutation(() => ({
@@ -197,26 +212,38 @@ export default defineComponent({
       followingCount,
       showEditProfile,
       followButtonText,
+      stats,
     };
   },
 });
 </script>
 
-<style>
-#profile::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  background-color: #272b2f;
+<style scoped>
+a.router-link-exact-active div {
+  @apply text-gray-100;
+  @apply border-indigo-500;
 }
-#profile::-webkit-scrollbar {
-  width: 12px;
-  background-color: #272b2f;
+a.router-link-exact-active path {
+  @apply fill-indigo;
 }
-#profile::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #363b41;
+a:hover path {
+  @apply fill-indigo;
+}
+@screen md {
+  @media (prefers-color-scheme: dark) {
+    a.router-link-exact-active div {
+      @apply bg-highlight-500;
+      @apply relative;
+      @apply border-b-0;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    a.router-link-exact-active div {
+      @apply bg-gray-200;
+      @apply relative;
+      @apply border-b-0;
+    }
+  }
 }
 </style>

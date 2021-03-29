@@ -14,7 +14,11 @@
       <toggle-button @toggleStateUpdate="toggle" />
     </div>
     <div v-if="showImageUpload">
-      <div v-bind="getRootProps()" class="border border-dashed p-8 rounded-lg" :class="{ 'border-highlight-500': isDragActive }">
+      <div
+        v-bind="getRootProps()"
+        class="border border-dashed p-8 rounded-lg border-dark700 dark:border-gray-100"
+        :class="{ 'border-highlight-500': isDragActive }"
+      >
         <input v-bind="getInputProps()" />
         <p v-if="isDragActive">Lass einfach los</p>
         <p v-else-if="!isDragActive && !previewUrl">Ziehe ein Bild hierher, oder klicke um ein Bild auszuwählen</p>

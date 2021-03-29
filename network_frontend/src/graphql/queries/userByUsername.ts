@@ -8,18 +8,6 @@ export const userByUsername = gql`
       lastname
       profilePicLink
       username
-      followers {
-        id
-        firstname
-        lastname
-        profilePicLink
-      }
-      following {
-        id
-        firstname
-        lastname
-        profilePicLink
-      }
     }
   }
 `;

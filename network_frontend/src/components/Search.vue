@@ -8,7 +8,7 @@
       placeholder="Suche nach anderen Usern"
     >
       <template v-slot:icon>
-        <svg class="h-6 w-6 fill-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="h-6 w-6 dark:fill-white fill-dark700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
@@ -23,7 +23,7 @@
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
-          class="fill-white h-14 w-14"
+          class="dark:fill-white fill-dark600 h-14 w-14"
         >
           <g id="Iconly/Bulk/Plus" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Plus" transform="translate(2.000000, 2.000000)" fill-rule="nonzero" class="fill-highlight-500">
@@ -42,17 +42,23 @@
       </template>
     </input-field>
 
-    <div class="text-gray-100 absolute w-full bg-dark500 mt-4 p-4 rounded-lg shadow-2xl" v-if="searchString.length !== 0 && isFocus">
+    <div
+      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark400"
+      v-if="searchString.length !== 0 && isFocus"
+    >
       <div v-if="searchResult.length === 0">Keine Nutzer gefunden</div>
       <div
         v-else
         v-for="result in searchResult"
         :key="result.id"
-        class="flex items-center w-full bg-dark600 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+        class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
         @click="handleRouting(result.username)"
       >
-        <div class="table-cell align-middle mr-4"><img class="h-8 w-8 rounded-full" :src="result.profilePicLink" /></div>
+        <div class="table-cell align-middle mr-4">
+          <img class="h-10 w-10 rounded-full bg-dark700" :src="result.profilePicLink" />
+        </div>
         <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
+        <div class="flex flex-row align-middle ml-3">@{{ result.username }}</div>
       </div>
     </div>
   </div>
@@ -121,6 +127,8 @@ export default defineComponent({
           id,
         },
       });
+      searchString.value = '';
+      isFocus.value = false;
     };
 
     return { searchString, searchResult, isFocus, target, handleRouting };

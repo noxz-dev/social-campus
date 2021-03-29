@@ -1,6 +1,9 @@
 <template>
   <div class="w-full">
-    <div class="bg-white dark:text-white shadow-2xl rounded-lg mb-6 tracking-wide" :class="'dark:' + bgColorDark">
+    <div
+      class="bg-gray-50 dark:text-white shadow-xl rounded-lg mb-6 tracking-wide border border-gray-200 dark:border-dark600"
+      :class="'dark:' + bgColorDark"
+    >
       <slot />
     </div>
   </div>

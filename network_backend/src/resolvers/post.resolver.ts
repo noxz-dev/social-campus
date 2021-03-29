@@ -26,7 +26,12 @@ export class PostResolver {
     nullable: true,
     description: 'getPosts returns all posts from a given userID',
   })
-  public async getPostsFromUser(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<Post[] | null> {
+  public async getPostsFromUser(
+    @Ctx() ctx: MyContext,
+    @Arg('userID') userID: string,
+    @Arg('skip') skip: number,
+    @Arg('take') take: number,
+  ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
     if (!userId) return null;
 
@@ -44,8 +49,8 @@ export class PostResolver {
       ],
       where: { user: { id: userID } },
       order: { createdAt: 'DESC' },
-      take: 10,
-      skip: 10,
+      take: take,
+      skip: skip,
     });
     if (!posts) {
       return null;

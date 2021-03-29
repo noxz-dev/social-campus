@@ -2,7 +2,7 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
       <div
-        class="z-20 py-2 sticky md:static w-full -top-10 cursor-pointer text-gray-50 self-start flex items-center bg-white dark:bg-dark700 hover:text-highlight-500 stroke-white hover:stroke-indigo"
+        class="z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark700 hover:text-highlight-500 dark:stroke-white stroke-black hover:stroke-indigo"
         @click="$router.back()"
       >
         <svg class="h-8" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -41,7 +41,7 @@
             <div class="mb-2">
               <textarea
                 v-model="commentText"
-                class="dark:bg-dark700 dark:text-gray-50 py-5 w-full resize-none rounded-lg outline-none border-none focus:ring-highlight-500"
+                class="dark:bg-dark700 border-2 border-gray-700 h-24 resize-none rounded-lg w-full p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Kommentiere..."
               />
             </div>
@@ -77,7 +77,9 @@
           </card>
         </div>
       </div>
-      <div v-else-if="!loading && !postData" class="text-center font-semibold text-gray-50 text-3xl mt-40">Dieser Post existiert nicht!</div>
+      <div v-else-if="!loading && !postData" class="text-center font-semibold text-gray-900 dark:text-gray-50 text-3xl mt-40">
+        Dieser Post existiert nicht!
+      </div>
     </div>
   </div>
 </template>

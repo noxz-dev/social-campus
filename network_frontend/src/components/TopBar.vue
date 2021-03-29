@@ -8,11 +8,13 @@
         <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
           <div class="flex-shrink-0 flex items-center flex-row">
             <img class="block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="Workflow" />
-            <div v-if="breakpoints.is != 'md' && breakpoints.is != 'sm'" class="text-gray-50 ml-5 text-xl font-semibold">SocialCampus</div>
+            <div v-if="breakpoints.is != 'md' && breakpoints.is != 'sm'" class="text-gray-900 dark:text-gray-50 ml-5 text-xl font-semibold">
+              SocialCampus
+            </div>
           </div>
           <div
             v-if="breakpoints.is != 'sm' && breakpoints.is != 'md' && breakpoints.is != 'lg'"
-            class="pl-28 font-bold text-xl flex-shrink-0 flex items-center text-gray-50"
+            class="pl-28 font-bold text-xl flex-shrink-0 flex items-center dark:text-gray-50 text-gray-900"
           >
             Hey {{ user?.firstname }} 👋
           </div>
@@ -28,17 +30,17 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden bg-dark700">
+        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden dark:bg-dark700 bg-white">
           <!-- Mobile menu button -->
           <button
             type="button"
-            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center dark:bg-dark600 text-gray-400 hover:bg-gray-100 dark:hover:bg-dark700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center bg-white dark:bg-dark600 text-gray-400 hover:bg-gray-100 dark:hover:bg-dark700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-expanded="false"
             @click="openMobileMenu"
           >
             <span class="sr-only">Open menu</span>
             <svg
-              class="block h-6 w-6 text-gray-50"
+              class="block h-6 w-6 dark:text-gray-50 text-gray-900"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -47,7 +49,14 @@
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg
+              class="hidden h-6 w-6 dark:text-gray-50 text-gray-900"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -55,7 +64,7 @@
         <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
           <div
             @click="notifyOpen = !notifyOpen"
-            class="hover:opacity-70 cursor-pointer ml-5 flex-shrink-0 bg-white dark:bg-dark600 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="hover:opacity-70 cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <svg
@@ -63,7 +72,7 @@
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
-              class="h-8 stroke-white fill-dark600"
+              class="h-8 dark:stroke-white stroke-black dark:fill-dark600 fill-white"
             >
               <g id="Iconly/Light/Notification" stroke-width="1" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
                 <g id="Notification" transform="translate(3.500000, 2.000000)" stroke-width="1.5">
@@ -89,12 +98,12 @@
               <button
                 id="user-menu"
                 type="button"
-                class="bg-white dark:bg-dark700 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+                class="p-1 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                 aria-haspopup="true"
                 @click="showProfileMenu = !showProfileMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" :src="profileImage" alt="" />
+                <img class="h-10 w-10 rounded-full bg-dark700" :src="profileImage" alt="" />
               </button>
             </div>
 

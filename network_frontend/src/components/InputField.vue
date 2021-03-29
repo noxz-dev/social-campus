@@ -4,7 +4,7 @@
       <slot name="icon"></slot>
     </div>
     <input
-      class="text-gray-100 w-full border bg-dark500 border border-dark500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-highlight-500 focus:ring-highlight-500"
+      class="dark:text-gray-100 w-full border text-gray-900 dark:bg-dark500 border-dark500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-highlight-500 focus:ring-highlight-500"
       :type="type"
       :value="modelValue"
       @input="onChanged"

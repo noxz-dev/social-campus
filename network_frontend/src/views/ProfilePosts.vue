@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { useGetPostsFromUserQuery } from '../graphql/generated/graphqlOperations';
-import { GetPostsFromUserQueryVariables } from '../graphql/generated/types';
+import { GetPostsFromUserQueryVariables, Post } from '../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
 import PostList from '../components/PostList.vue';
 
@@ -16,13 +16,15 @@ export default defineComponent({
     userId: String,
   },
   setup(props) {
-    const posts = ref([]);
+    const posts = ref<Post>();
     console.log(props.userId);
 
     const { onResult: onResultPosts } = useGetPostsFromUserQuery(
       () =>
         <GetPostsFromUserQueryVariables>{
           userID: props.userId,
+          take: 100,
+          skip: 0,
           pollInterval: 60000,
         }
     );
@@ -30,6 +32,8 @@ export default defineComponent({
     onResultPosts((postData) => {
       const postsResult = postData?.data?.getPostsFromUser;
       posts.value = [...postsResult];
+
+      console.log(posts.value);
     });
 
     return { posts };

@@ -31,10 +31,15 @@ export type Query = {
   userById: User;
   userByUsername: User;
   search: Array<User>;
+  following: Array<User>;
+  followers: Array<User>;
+  userStats: UserStats;
 };
 
 
 export type QueryGetPostsFromUserArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
   userID: Scalars['String'];
 };
 
@@ -61,6 +66,25 @@ export type QueryUserByUsernameArgs = {
 
 export type QuerySearchArgs = {
   searchString: Scalars['String'];
+};
+
+
+export type QueryFollowingArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryFollowersArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserStatsArgs = {
+  userId: Scalars['String'];
 };
 
 export type Notification = {
@@ -144,6 +168,13 @@ export type Like = {
   id: Scalars['String'];
   createdAt: Scalars['DateTime'];
   user: User;
+};
+
+export type UserStats = {
+  __typename?: 'UserStats';
+  postCount: Scalars['Float'];
+  followerCount: Scalars['Float'];
+  followingCount: Scalars['Float'];
 };
 
 export type Mutation = {
@@ -439,6 +470,36 @@ export type UnlikePostMutation = (
   ) }
 );
 
+export type FollowersQueryVariables = Exact<{
+  userId: Scalars['String'];
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+}>;
+
+
+export type FollowersQuery = (
+  { __typename?: 'Query' }
+  & { followers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+  )> }
+);
+
+export type FollowingQueryVariables = Exact<{
+  userId: Scalars['String'];
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+}>;
+
+
+export type FollowingQuery = (
+  { __typename?: 'Query' }
+  & { following: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+  )> }
+);
+
 export type GetFeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -509,6 +570,8 @@ export type PostByIdQuery = (
 
 export type GetPostsFromUserQueryVariables = Exact<{
   userID: Scalars['String'];
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
 }>;
 
 
@@ -567,13 +630,19 @@ export type UserByUsernameQuery = (
   & { userByUsername: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
-    & { followers: Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
-    )>, following: Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
-    )> }
+  ) }
+);
+
+export type UserStatsQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserStatsQuery = (
+  { __typename?: 'Query' }
+  & { userStats: (
+    { __typename?: 'UserStats' }
+    & Pick<UserStats, 'postCount' | 'followerCount' | 'followingCount'>
   ) }
 );
 

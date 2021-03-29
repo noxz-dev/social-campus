@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg w-full">
+  <div class="bg-gray-50 dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg w-full">
     <div class="flex space-x-3">
       <div class="flex-shrink-0 bg-dark700 rounded-full">
         <img class="h-10 w-10 rounded-full" :src="profileImg" alt="" />

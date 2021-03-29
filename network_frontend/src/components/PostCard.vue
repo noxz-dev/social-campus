@@ -13,7 +13,7 @@
           <div class="flex cursor-pointer" @click.stop="likePost">
             <svg
               class="h-6 hover:stroke-red duration-200 stroke-current"
-              :class="{ 'fill-red': liked, 'stroke-white fill-dark600': !liked }"
+              :class="{ 'fill-red': liked, 'dark:stroke-white stroke-black dark:fill-dark600 fill-white': !liked }"
               viewBox="0 0 24 24"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@
           </div>
           <div class="flex cursor-pointer" @click="handleNavigation">
             <svg
-              class="duration-200 h-6 stroke-grayLight hover:stroke-grayDark"
+              class="duration-200 h-6 dark:stroke-grayLight hover:stroke-grayDark"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

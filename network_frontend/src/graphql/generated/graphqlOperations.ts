@@ -309,6 +309,72 @@ export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>;
+export const FollowersDocument = gql`
+    query followers($userId: String!, $take: Float!, $skip: Float!) {
+  followers(userId: $userId, take: $take, skip: $skip) {
+    id
+    firstname
+    lastname
+    username
+    profilePicLink
+  }
+}
+    `;
+
+/**
+ * __useFollowersQuery__
+ *
+ * To run a query within a Vue component, call `useFollowersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFollowersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useFollowersQuery({
+ *   userId: // value for 'userId'
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useFollowersQuery(variables: graphqlOperations.ts.FollowersQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.FollowersQueryVariables> | ReactiveFunction<graphqlOperations.ts.FollowersQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowersQuery, graphqlOperations.ts.FollowersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowersQuery, graphqlOperations.ts.FollowersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowersQuery, graphqlOperations.ts.FollowersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.FollowersQuery, graphqlOperations.ts.FollowersQueryVariables>(FollowersDocument, variables, options);
+}
+export type FollowersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.FollowersQuery, graphqlOperations.ts.FollowersQueryVariables>;
+export const FollowingDocument = gql`
+    query following($userId: String!, $take: Float!, $skip: Float!) {
+  following(userId: $userId, take: $take, skip: $skip) {
+    id
+    firstname
+    lastname
+    username
+    profilePicLink
+  }
+}
+    `;
+
+/**
+ * __useFollowingQuery__
+ *
+ * To run a query within a Vue component, call `useFollowingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFollowingQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useFollowingQuery({
+ *   userId: // value for 'userId'
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useFollowingQuery(variables: graphqlOperations.ts.FollowingQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.FollowingQueryVariables> | ReactiveFunction<graphqlOperations.ts.FollowingQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables>(FollowingDocument, variables, options);
+}
+export type FollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables>;
 export const GetFeedDocument = gql`
     query getFeed {
   getFeed {
@@ -460,8 +526,8 @@ export function usePostByIdQuery(variables: graphqlOperations.ts.PostByIdQueryVa
 }
 export type PostByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.PostByIdQuery, graphqlOperations.ts.PostByIdQueryVariables>;
 export const GetPostsFromUserDocument = gql`
-    query getPostsFromUser($userID: String!) {
-  getPostsFromUser(userID: $userID) {
+    query getPostsFromUser($userID: String!, $take: Float!, $skip: Float!) {
+  getPostsFromUser(userID: $userID, take: $take, skip: $skip) {
     id
     liked
     imageLink
@@ -493,6 +559,8 @@ export const GetPostsFromUserDocument = gql`
  * @example
  * const { result, loading, error } = useGetPostsFromUserQuery({
  *   userID: // value for 'userID'
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
  * });
  */
 export function useGetPostsFromUserQuery(variables: graphqlOperations.ts.GetPostsFromUserQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GetPostsFromUserQueryVariables> | ReactiveFunction<graphqlOperations.ts.GetPostsFromUserQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromUserQuery, graphqlOperations.ts.GetPostsFromUserQueryVariables>> = {}) {
@@ -581,18 +649,6 @@ export const UserByUsernameDocument = gql`
     lastname
     profilePicLink
     username
-    followers {
-      id
-      firstname
-      lastname
-      profilePicLink
-    }
-    following {
-      id
-      firstname
-      lastname
-      profilePicLink
-    }
   }
 }
     `;
@@ -616,6 +672,35 @@ export function useUserByUsernameQuery(variables: graphqlOperations.ts.UserByUse
   return VueApolloComposable.useQuery<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>(UserByUsernameDocument, variables, options);
 }
 export type UserByUsernameQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.UserByUsernameQuery, graphqlOperations.ts.UserByUsernameQueryVariables>;
+export const UserStatsDocument = gql`
+    query userStats($userId: String!) {
+  userStats(userId: $userId) {
+    postCount
+    followerCount
+    followingCount
+  }
+}
+    `;
+
+/**
+ * __useUserStatsQuery__
+ *
+ * To run a query within a Vue component, call `useUserStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserStatsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useUserStatsQuery({
+ *   userId: // value for 'userId'
+ * });
+ */
+export function useUserStatsQuery(variables: graphqlOperations.ts.UserStatsQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.UserStatsQueryVariables> | ReactiveFunction<graphqlOperations.ts.UserStatsQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserStatsQuery, graphqlOperations.ts.UserStatsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserStatsQuery, graphqlOperations.ts.UserStatsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.UserStatsQuery, graphqlOperations.ts.UserStatsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.UserStatsQuery, graphqlOperations.ts.UserStatsQueryVariables>(UserStatsDocument, variables, options);
+}
+export type UserStatsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.UserStatsQuery, graphqlOperations.ts.UserStatsQueryVariables>;
 export const NotificationsDocument = gql`
     subscription notifications($userId: String!) {
   notifications(userId: $userId) {

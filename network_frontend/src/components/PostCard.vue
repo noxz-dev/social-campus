@@ -65,7 +65,7 @@ import { UnlikePostMutationVariables } from '../graphql/generated/types';
 import Card from './Card.vue';
 import { useRouter } from 'vue-router';
 import { scrollState } from '../_helpers/scrollState';
-import * as marked from 'marked';
+import marked from 'marked';
 import DOMPurify from 'dompurify';
 
 dayjs.extend(relativeTime);

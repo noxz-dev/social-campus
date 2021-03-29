@@ -151,6 +151,11 @@ export class UserResolver {
     if (!follower) {
       return null;
     }
+
+    //check if user is already following
+    const followState = user.following.some((user) => user.id === follower.id);
+    if (followState) throw new Error('youre already following this user');
+
     user.following.push(follower);
 
     const userRepo = await getRepository(User);
@@ -214,19 +219,31 @@ export class UserResolver {
     if (!user) {
       throw Error('no user found');
     }
+
+    //could be a bad idea .. maybe better to do via db
+    const followState = user.followers.some((user) => user.id === userId);
+    user.meFollowing = followState;
+
     return user;
   }
 
   @Authorized()
   @Query(() => User)
   async userByUsername(@Ctx() ctx: MyContext, @Arg('username') username: string): Promise<User | null> {
+    const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
       where: { username: username },
       relations: ['following', 'followers'],
     });
+
+    //could be a bad idea .. maybe better to do via db
+
     if (!user) {
       throw Error('no user found');
     }
+
+    const followState = user.followers.some((user) => user.id === userId);
+    user.meFollowing = followState;
     return user;
   }
 

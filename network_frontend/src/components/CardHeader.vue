@@ -118,7 +118,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from './PermissionContainer.vue';
 import { useDeletePostMutation } from '../graphql/generated/graphqlOperations';

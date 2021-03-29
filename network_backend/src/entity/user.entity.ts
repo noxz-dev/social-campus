@@ -62,6 +62,9 @@ export class User extends Base {
   @ManyToMany(() => Group, (group) => group.members)
   groups: Group[];
 
+  @Field(() => Boolean)
+  meFollowing: boolean;
+
   @AfterLoad()
   async generatePictureLink(): Promise<void> {
     if (this.profilePicName !== null) {

@@ -351,6 +351,7 @@ export class PostResolver {
     if (!post) return null;
     if (post.user.id === userId) {
       delete post.likesCount;
+      delete post.commentCount;
       await getRepository(Post).delete(post);
       log.info(`user with the id ${userId} deleted the post ${postId}`);
       return true;

@@ -117,6 +117,7 @@ export type User = {
   followers: Array<User>;
   following: Array<User>;
   groups: Array<Group>;
+  meFollowing: Scalars['Boolean'];
 };
 
 export type Role = {
@@ -629,7 +630,7 @@ export type UserByUsernameQuery = (
   { __typename?: 'Query' }
   & { userByUsername: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
   ) }
 );
 

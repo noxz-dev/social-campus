@@ -2,9 +2,9 @@
   <card id="postcard">
     <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" :username="username" />
     <div class="px-4 cursor-pointer" @click="handleNavigation">
-      <p class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
-        {{ postText }}
-      </p>
+      <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
+        <div class="markdown" v-html="parseMarkdown(postText)"></div>
+      </div>
       <div v-if="imageUrl" class="flex justify-center">
         <img class="object-cover h-96 w-full rounded-xl m-2" :src="imageUrl" alt="" />
       </div>
@@ -65,6 +65,8 @@ import { UnlikePostMutationVariables } from '../graphql/generated/types';
 import Card from './Card.vue';
 import { useRouter } from 'vue-router';
 import { scrollState } from '../_helpers/scrollState';
+import * as marked from 'marked';
+import DOMPurify from 'dompurify';
 
 dayjs.extend(relativeTime);
 
@@ -98,6 +100,10 @@ export default defineComponent({
         },
       ],
     });
+
+    const parseMarkdown = (value: string) => {
+      return DOMPurify.sanitize(marked(value));
+    };
 
     const { mutate: unlike } = useUnlikePostMutation({
       variables: <UnlikePostMutationVariables>{ postID: id?.value },
@@ -133,6 +139,7 @@ export default defineComponent({
       likePost,
       profileImg,
       handleNavigation,
+      parseMarkdown,
     };
   },
 });

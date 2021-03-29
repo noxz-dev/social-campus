@@ -19,7 +19,6 @@ import SideBar from './components/Sidebar/Sidebar.vue';
 import TopBar from '@/components/TopBar.vue';
 import { useRoute } from 'vue-router';
 import NotificationsOverlay from './components/NotificationsOverlay.vue';
-
 export default defineComponent({
   name: 'App',
   components: {

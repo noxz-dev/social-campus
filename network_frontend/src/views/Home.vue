@@ -17,13 +17,16 @@ import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 // import { onBefor } from 'vue-router';
 import { scrollState } from '../_helpers/scrollState';
-
 export default defineComponent({
   components: { PostList },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.userData.user);
     const home = ref<HTMLElement>();
+
+    const loadMore = () => {
+      console.log('load triggerd');
+    };
 
     const { result, error, subscribeToMore } = useGetFeedQuery({ pollInterval: 60000 });
     const posts = useResult(result);
@@ -58,7 +61,7 @@ export default defineComponent({
       // },
     }));
 
-    return { posts, error, home };
+    return { posts, error, home, loadMore };
   },
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
     <card v-for="user in followings" :key="user.id">
-      <div class="p-5">{{ user.firstname }}</div>
+      <div class="p-5">{{ user.firstname + ' ' + user.lastname + ' ' }}@{{ user.username }}</div>
     </card>
   </div>
 </template>

@@ -12,7 +12,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col">
             <div class="flex">
-              <img class="h-24 w-24 rounded-full border-3 sm:h-48 sm:w-48 bg-black" :src="profileImage" alt="profile image" />
+              <img class="h-24 w-24 rounded-full border-3 sm:h-36 sm:w-36 bg-black" :src="profileImage" alt="profile image" />
             </div>
             <div class="mt-6 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
               <div class="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
@@ -107,6 +107,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { userById } from '../graphql/queries/userById';
 import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
+import { userByUsername } from '../graphql/queries/userByUsername';
 
 export default defineComponent({
   components: {
@@ -114,9 +115,6 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const postCount = ref(0);
-    const followerCount = ref(0);
-    const followingCount = ref(0);
     const showEditProfile = ref(false);
     const profileImage = ref('');
     const user = ref<User>();
@@ -156,6 +154,8 @@ export default defineComponent({
       profileImage.value = userData.profilePicLink;
       user.value = userData;
 
+      following.value = userData.meFollowing;
+
       const { onResult: onStats } = useUserStatsQuery(
         () =>
           <UserStatsQueryVariables>{
@@ -164,7 +164,6 @@ export default defineComponent({
       );
 
       onStats(({ data }) => {
-        console.log(data);
         stats.value = data;
       });
     });
@@ -175,8 +174,8 @@ export default defineComponent({
       },
       refetchQueries: [
         {
-          query: userById,
-          variables: { userId: user.value?.id },
+          query: userByUsername,
+          variables: { username: user.value?.username },
         },
       ],
     }));
@@ -187,8 +186,8 @@ export default defineComponent({
       },
       refetchQueries: [
         {
-          query: userById,
-          variables: { userId: user.value?.id },
+          query: userByUsername,
+          variables: { username: user.value?.username },
         },
       ],
     }));
@@ -207,9 +206,6 @@ export default defineComponent({
       unfollowUser,
       user,
       profileImage,
-      postCount,
-      followerCount,
-      followingCount,
       showEditProfile,
       followButtonText,
       stats,

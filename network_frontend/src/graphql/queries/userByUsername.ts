@@ -8,6 +8,7 @@ export const userByUsername = gql`
       lastname
       profilePicLink
       username
+      meFollowing
     }
   }
 `;

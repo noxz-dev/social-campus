@@ -6,9 +6,9 @@ import DKToast from 'vue-dk-toast';
 import { defaultClient } from './apollo';
 import App from './App.vue';
 import './index.css';
+import './markdown.css';
 import router from './router';
 import store from './store';
-
 //create event bus
 const eventbus = mitt();
 

@@ -20,20 +20,7 @@
         <span class="font-semibold text-lg ml-2">Zurück zum Feed</span>
       </div>
       <div v-if="postData" class="w-full mt-10 flex items-center flex-col">
-        <post-card
-          v-if="postData"
-          :id="postData.postById.id"
-          :imageUrl="postData.postById.imageLink"
-          :imageUrlProfile="postData.postById.user.profilePicLink"
-          :likeCount="postData.postById.likesCount"
-          :liked="postData.postById.liked"
-          :commentCount="postData.postById.commentCount"
-          :name="postData.postById.user.firstname + '' + postData.postById.user.lastname"
-          :username="postData.postById.user.username"
-          :postDate="new Date(postData.postById.createdAt)"
-          :postText="postData.postById.text"
-          :userId="postData.postById.user.id"
-        />
+        <post-card v-if="postData" :post="postData.postById" />
         <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-6" />
         <card>
           <div class="p-5 flex flex-col">
@@ -64,13 +51,7 @@
             <p>Noch keine Kommentare vorhanden</p>
           </div>
           <card v-for="comment in postData.postById.comments" :key="comment.id">
-            <card-header
-              :creationDate="new Date(comment.createdAt)"
-              :name="comment.user.firstname + ' ' + comment.user.lastname"
-              :profileImg="comment.user.profilePicLink"
-              :userId="comment.user.id"
-              :username="comment.user.username"
-            />
+            <card-header :comment="comment" />
             <div class="p-5 pt-0">
               {{ comment.text }}
             </div>

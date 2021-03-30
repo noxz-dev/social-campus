@@ -95,7 +95,7 @@ export default defineComponent({
         router.push({
           name: 'Profile',
           params: {
-            id: notify.fromUser.id,
+            id: notify.fromUser.username,
           },
         });
       }

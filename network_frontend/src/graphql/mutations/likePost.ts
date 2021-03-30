@@ -16,6 +16,7 @@ export const likePost = gql`
       likesCount
       commentCount
       createdAt
+      edited
     }
   }
 `;

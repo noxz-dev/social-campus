@@ -9,9 +9,11 @@ export const notificationsSubscription = gql`
       createdAt
       fromUser {
         id
+        username
       }
       toUser {
         id
+        username
       }
     }
   }

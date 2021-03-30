@@ -17,6 +17,7 @@ export const getPostsFromUser = gql`
       likesCount
       commentCount
       createdAt
+      edited
     }
   }
 `;

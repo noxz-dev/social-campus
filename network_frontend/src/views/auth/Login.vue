@@ -1,12 +1,12 @@
 <template>
   <div class="flex justify-center items-center h-full w-full">
-    <div class="md:min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="md:min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8 w-full">
+      <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
         <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
         <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Login SocialCampus</h2>
       </div>
 
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-dark700 md:border-1 md:border-gray-700">
           <form class="space-y-6" action="#" method="POST" @submit.prevent="login({ email, password })">
             <div>

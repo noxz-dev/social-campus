@@ -17,6 +17,7 @@ export const getFeed = gql`
       likesCount
       commentCount
       createdAt
+      edited
     }
   }
 `;

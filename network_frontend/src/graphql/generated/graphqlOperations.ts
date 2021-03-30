@@ -52,6 +52,7 @@ export const AddPostDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
   }
 }
     `;
@@ -162,6 +163,49 @@ export function useDeletePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables>(DeletePostDocument, options);
 }
 export type DeletePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.DeletePostMutation, graphqlOperations.ts.DeletePostMutationVariables>;
+export const EditPostDocument = gql`
+    mutation editPost($postId: String!, $text: String!) {
+  editPost(text: $text, postId: $postId) {
+    id
+    liked
+    imageLink
+    user {
+      firstname
+      lastname
+      profilePicLink
+      username
+    }
+    text
+    likesCount
+    commentCount
+    createdAt
+    edited
+  }
+}
+    `;
+
+/**
+ * __useEditPostMutation__
+ *
+ * To run a mutation, you first call `useEditPostMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useEditPostMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useEditPostMutation({
+ *   variables: {
+ *     postId: // value for 'postId'
+ *     text: // value for 'text'
+ *   },
+ * });
+ */
+export function useEditPostMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>(EditPostDocument, options);
+}
+export type EditPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {
@@ -178,6 +222,7 @@ export const LikePostDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
   }
 }
     `;
@@ -284,6 +329,7 @@ export const UnlikePostDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
   }
 }
     `;
@@ -392,6 +438,7 @@ export const GetFeedDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
   }
 }
     `;
@@ -483,6 +530,7 @@ export const PostByIdDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
     user {
       id
       firstname
@@ -542,6 +590,7 @@ export const GetPostsFromUserDocument = gql`
     likesCount
     commentCount
     createdAt
+    edited
   }
 }
     `;
@@ -711,9 +760,11 @@ export const NotificationsDocument = gql`
     createdAt
     fromUser {
       id
+      username
     }
     toUser {
       id
+      username
     }
   }
 }

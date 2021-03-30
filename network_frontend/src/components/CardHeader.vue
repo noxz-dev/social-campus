@@ -2,11 +2,11 @@
   <div class="bg-gray-50 dark:bg-dark600 px-4 py-5 sm:px-6 rounded-lg w-full">
     <div class="flex space-x-3">
       <div class="flex-shrink-0 bg-dark700 rounded-full">
-        <img class="h-10 w-10 rounded-full" :src="profileImg" alt="" />
+        <img class="h-10 w-10 rounded-full" :src="profilePicLink" alt="" />
       </div>
       <div class="min-w-0 flex-1">
         <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
-          <span>{{ name }}</span>
+          <span>{{ firstname + ' ' + lastname }}</span>
         </p>
         <p class="text-sm text-gray-500">
           <a
@@ -52,6 +52,7 @@
             >
               <div class="">
                 <button
+                  @click="eventbus.emit('open-edit-modal', post)"
                   class="w-full stroke-grayLight hover:stroke-black transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg dark:text-gray-50 hover:text-gray-900"
                   role="menuitem"
                 >
@@ -104,7 +105,7 @@
                       </g>
                     </g>
                   </svg>
-                  <span>Delete</span>
+                  <span>Löschen</span>
                 </button>
               </div>
             </div>
@@ -116,46 +117,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import dayjs from 'dayjs';
 import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from './PermissionContainer.vue';
 import { useDeletePostMutation } from '../graphql/generated/graphqlOperations';
-import { DeletePostMutationVariables } from '../graphql/generated/types';
+import { DeletePostMutationVariables, Post } from '../graphql/generated/types';
 import { getFeed } from '../graphql/queries/getFeed';
 
 export default defineComponent({
   components: { PermissionContainer },
   props: {
-    profileImg: {
-      type: String,
-      required: true,
+    post: {
+      type: Object as PropType<Post>,
     },
-    creationDate: {
-      type: Date,
-      required: true,
-    },
-    userId: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    postId: {
-      type: String,
-    },
-    commentId: {
-      type: String,
-    },
-    username: {
-      type: String,
+    comment: {
+      type: Object,
     },
   },
   setup(props) {
     const optionsOpen = ref(false);
     const target = ref(null);
+
+    const firstname = computed(() => props.post?.user.firstname || props.comment?.user.firstname);
+    const lastname = computed(() => props.post?.user.lastname || props.comment?.user.lastname);
+    const creationDate = computed(() => props.post?.createdAt || props.comment?.createdAt);
+    const userId = computed(() => props.post?.user.id || props.comment?.user.id);
+    const username = computed(() => props.post?.user.username || props.comment?.user.username);
+    const profilePicLink = computed(() => props.post?.user.profilePicLink || props.comment?.user.profilePicLink);
 
     onClickOutside(target, (event) => {
       optionsOpen.value = false;
@@ -163,7 +152,7 @@ export default defineComponent({
 
     const { mutate: delPost } = useDeletePostMutation(() => ({
       variables: <DeletePostMutationVariables>{
-        postId: props.postId,
+        postId: props.post?.id,
       },
       refetchQueries: [
         {
@@ -173,16 +162,16 @@ export default defineComponent({
     }));
 
     const deleteContent = () => {
-      if (props.postId) {
+      if (props.post?.id) {
         delPost();
         return;
       }
-      if (props.commentId) {
+      if (props.comment) {
         console.log('todo');
       }
     };
 
-    return { dayjs, optionsOpen, target, deleteContent };
+    return { dayjs, optionsOpen, target, deleteContent, firstname, lastname, creationDate, userId, username, profilePicLink };
   },
 });
 </script>

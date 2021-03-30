@@ -10,6 +10,7 @@ export const postById = gql`
       likesCount
       commentCount
       createdAt
+      edited
       user {
         id
         firstname

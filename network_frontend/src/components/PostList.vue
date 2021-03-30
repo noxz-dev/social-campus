@@ -3,21 +3,7 @@
     <div class="dark:text-gray-50 text-gray-900 mt-20 font-semibold text-xl" v-if="posts?.length === 0">
       ganz schön leer hier, schreibe doch einen Post oder folge anderen!
     </div>
-    <post-card
-      v-for="post in posts"
-      :key="post.id"
-      :post-text="post.text"
-      :name="post?.user?.firstname + ' ' + post?.user?.lastname"
-      :username="post?.user?.username"
-      :liked="post.liked"
-      :likeCount="post.likesCount"
-      :commentCount="post.commentCount"
-      :post-date="new Date(post.createdAt)"
-      :id="post.id"
-      :imageUrlProfile="post.user.profilePicLink"
-      :userId="post.user.id"
-      :imageUrl="post.imageLink"
-    />
+    <post-card v-for="post in posts" :key="post.id" :post="post" />
   </div>
 </template>
 

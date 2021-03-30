@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const addPost = gql`
-  mutation addPost($text: String!, $file: Upload) {
-    addPost(text: $text, file: $file) {
+export const editPost = gql`
+  mutation editPost($postId: String!, $text: String!) {
+    editPost(text: $text, postId: $postId) {
       id
       liked
       imageLink

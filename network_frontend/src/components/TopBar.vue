@@ -297,6 +297,7 @@
   <modal ref="modal" content-text="" header-text="Neuer Post">
     <new-post />
   </modal>
+  <edit-modal content-text="" header-text="Edit Post" />
   <transition name="fade">
     <post-detail-card></post-detail-card>
   </transition>
@@ -306,6 +307,7 @@
 import { defineComponent, ref } from 'vue';
 import Modal from '@/components/Modal.vue';
 import NewPost from './NewPost.vue';
+import EditPost from './EditPost.vue';
 import breakpoints from '../_helpers/breakpoints';
 import { useMeQuery } from '../graphql/generated/graphqlOperations';
 import { useResult } from '@vue/apollo-composable';
@@ -317,6 +319,7 @@ import FloatingButton from './FloatingButton.vue';
 import PostDetailCard from './PostDetailCard.vue';
 import Search from './Search.vue';
 import Notifications from './Notifications.vue';
+import EditModal from './EditModal.vue';
 export default defineComponent({
   components: {
     Modal,
@@ -325,6 +328,8 @@ export default defineComponent({
     PostDetailCard,
     Search,
     Notifications,
+    EditModal,
+    EditPost,
   },
   setup(props) {
     const showProfileMenu = ref(false);

@@ -1,19 +1,19 @@
 <template>
   <card id="postcard">
-    <card-header :name="name" :creationDate="postDate" :profileImg="profileImg" :userId="userId" :postId="id" :username="username" />
+    <card-header :post="post" />
     <div class="px-4 cursor-pointer" @click="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
-        <div class="markdown" v-html="parseMarkdown(postText)"></div>
+        <div class="markdown" v-html="parseMarkdown(post.text)"></div>
       </div>
-      <div v-if="imageUrl" class="flex justify-center">
-        <img class="object-cover h-96 w-full rounded-xl m-2" :src="imageUrl" alt="" />
+      <div v-if="post.imageLink" class="flex justify-center">
+        <img class="object-cover h-96 w-full rounded-xl m-2" :src="post.imageLink" alt="" />
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
           <div class="flex cursor-pointer" @click.stop="likePost">
             <svg
               class="h-6 hover:stroke-red duration-200 stroke-current"
-              :class="{ 'fill-red': liked, 'dark:stroke-white stroke-black dark:fill-dark600 fill-white': !liked }"
+              :class="{ 'fill-red': post.liked, 'dark:stroke-white stroke-black dark:fill-dark600 fill-white': !post.liked }"
               viewBox="0 0 24 24"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@
                 </g>
               </g>
             </svg>
-            <span class="px-2 font-mono">{{ likeCount }}</span>
+            <span class="px-2 font-mono">{{ post.likesCount }}</span>
           </div>
           <div class="flex cursor-pointer" @click="handleNavigation">
             <svg
@@ -46,9 +46,10 @@
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <span class="px-2 font-mono">{{ commentCount }}</span>
+            <span class="px-2 font-mono">{{ post.commentCount }}</span>
           </div>
         </div>
+        <div v-if="post.edited" class="text-xs dark:text-gray-400 italic">edited</div>
       </div>
     </div>
   </card>
@@ -64,7 +65,6 @@ import CardHeader from './CardHeader.vue';
 import { UnlikePostMutationVariables } from '../graphql/generated/types';
 import Card from './Card.vue';
 import { useRouter } from 'vue-router';
-import { scrollState } from '../_helpers/scrollState';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
 
@@ -73,27 +73,16 @@ dayjs.extend(relativeTime);
 export default defineComponent({
   components: { CardHeader, Card },
   props: {
-    id: String,
-    name: String,
-    username: String,
-    postDate: Date,
-    postText: String,
-    liked: Boolean,
-    likeCount: Number,
-    imageUrl: {
-      type: String,
+    post: {
+      type: Object,
+      required: true,
     },
-    imageUrlProfile: String,
-    userId: String,
-    commentCount: Number,
   },
   setup(props) {
-    const { id, imageUrlProfile } = toRefs(props);
     const router = useRouter();
-    const profileImg: string = imageUrlProfile?.value || '';
 
     const { mutate: like } = useLikePostMutation({
-      variables: <UnlikePostMutationVariables>{ postID: id?.value },
+      variables: <UnlikePostMutationVariables>{ postID: props.post.id },
       refetchQueries: [
         {
           query: getFeed,
@@ -106,7 +95,7 @@ export default defineComponent({
     };
 
     const { mutate: unlike } = useUnlikePostMutation({
-      variables: <UnlikePostMutationVariables>{ postID: id?.value },
+      variables: <UnlikePostMutationVariables>{ postID: props.post?.value },
       refetchQueries: [
         {
           query: getFeed,
@@ -116,7 +105,7 @@ export default defineComponent({
 
     const likePost = async () => {
       try {
-        if (props.liked) {
+        if (props.post.liked) {
           await unlike();
         } else {
           await like();
@@ -128,16 +117,12 @@ export default defineComponent({
     };
 
     const handleNavigation = () => {
-      if (!props.id) return;
-      const container = document.querySelector('#home');
-      scrollState.top = container?.scrollTop || 0;
-      console.log(scrollState);
-      router.push({ name: 'DetailPost', params: { id: props.id } });
+      if (!props.post.id) return;
+      router.push({ name: 'DetailPost', params: { id: props.post.id } });
     };
 
     return {
       likePost,
-      profileImg,
       handleNavigation,
       parseMarkdown,
     };

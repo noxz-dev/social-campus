@@ -47,6 +47,10 @@ export class Post extends Base {
   @Field(() => String, { nullable: true })
   imageLink: string;
 
+  @Field(() => Boolean)
+  @Column({ default: false })
+  edited: boolean;
+
   @AfterLoad()
   async generateImageLink(): Promise<void> {
     if (this.imageName) {

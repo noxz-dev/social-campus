@@ -4,7 +4,7 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
-import { getRepository, In } from 'typeorm';
+import { getManager, getRepository, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
@@ -255,6 +255,7 @@ export class PostResolver {
     @Root() payload: newPostPayload,
     @Arg('userId') userId: string,
   ): Promise<Post> {
+    console.log('fired');
     return payload.post;
   }
 
@@ -355,6 +356,39 @@ export class PostResolver {
       await getRepository(Post).delete(post);
       log.info(`user with the id ${userId} deleted the post ${postId}`);
       return true;
+    }
+    throw Error('youre not allowed to do that');
+  }
+
+  @Authorized()
+  @Mutation(() => Post)
+  public async editPost(
+    @Ctx() ctx: MyContext,
+    @Arg('postId') postId: string,
+    @Arg('text') text: string,
+  ): Promise<Post> {
+    const userId = ctx.req.user.id;
+    if (!userId) {
+      return null;
+    }
+    const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user'] });
+    if (!post) return null;
+    if (post.user.id === userId) {
+      delete post.likesCount;
+      delete post.commentCount;
+      post.text = text;
+      post.edited = true;
+
+      const savedPost = await getManager().transaction(async (transactionManager) => {
+        const savedPost = await transactionManager.save(Post, post);
+        log.info(`user with the id ${userId} edited the post ${postId}`);
+        return savedPost;
+      });
+      savedPost.liked = await checkLikeState(userId, postId);
+      savedPost.likesCount = await countLikes(postId);
+      savedPost.commentCount = await countComments(postId);
+      await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: savedPost, userId: userId });
+      return savedPost;
     }
     throw Error('youre not allowed to do that');
   }

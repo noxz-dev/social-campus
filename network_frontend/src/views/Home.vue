@@ -48,6 +48,7 @@ export default defineComponent({
             text
             likesCount
             createdAt
+            edited
           }
         }
       `,

@@ -9,12 +9,12 @@
       <span class="dark:text-gray-50 text-gray-900 p-2 text-center w-full" v-if="notifications?.length === 0"> Keine Mitteilungen vorhanden</span>
       <div
         id="card"
-        class="dark:bg-dark600 bg-white rounded darK:text-gray-50 text-gray-900 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-center w-full border-dark500 border"
+        class="dark:bg-dark600 bg-white rounded dark:text-gray-50 text-gray-900 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-center w-full border-dark500 border"
         v-for="notify of notifications"
         :key="notify.id"
         @click="handleNotificationClick(notify)"
       >
-        <span class="flex-1 ml-2">{{ notify.message }}</span>
+        <span class="flex-1 ml-2 dark:text-gray-50 text-gray-900">{{ notify.message }}</span>
         <div class="rounded" @click.stop="deleteNotification(notify.id)">
           <svg
             width="24px"

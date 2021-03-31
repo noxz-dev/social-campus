@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { countComments, countLikes } from '../resolvers/post.resolver';
 import { log } from '../utils/services/logger';
 import { minioClient } from '../utils/services/minio';
@@ -7,6 +7,7 @@ import { Base } from './base';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
 import { Like } from './like.entity';
+import { Tag } from './tag.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -31,6 +32,11 @@ export class Post extends Base {
   @Field(() => [Like])
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
+
+  @Field(() => [Tag])
+  @ManyToMany(() => Tag, (tag) => tag.posts)
+  @JoinTable()
+  tags: Tag[];
 
   @Field(() => Number)
   likesCount: number;

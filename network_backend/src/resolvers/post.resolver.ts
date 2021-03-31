@@ -1,11 +1,8 @@
-import { createWriteStream, unlink } from 'fs';
+import { Tag } from '../entity/tag.entity';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import _ from 'lodash';
-import os from 'os';
-import path from 'path';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
+import _, { find } from 'lodash';
+import { Arg, Authorized, Ctx, Field, InputType, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getManager, getRepository, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -13,12 +10,13 @@ import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
-import { minioClient } from '../utils/services/minio';
 import { SUB_TOPICS } from './notification.resolver';
+import { uploadFileGraphql } from './user.resolver';
 
 export interface newPostPayload {
   post?: Post;
 }
+
 @Resolver(() => Post)
 export class PostResolver {
   @Authorized()
@@ -54,6 +52,53 @@ export class PostResolver {
     });
     if (!posts) {
       return null;
+    }
+
+    for await (const post of posts) {
+      const likeState = await checkLikeState(userId, post.id);
+      post.liked = likeState;
+    }
+
+    return posts;
+  }
+
+  @Authorized()
+  @Query(() => [Post], {
+    nullable: true,
+    description: 'getPosts returns all posts from a given array of tags',
+  })
+  public async getPostsByTags(
+    @Ctx() ctx: MyContext,
+    @Arg('skip') skip: number,
+    @Arg('take') take: number,
+    @Arg('tags', () => [String], { nullable: true }) tags: string[],
+  ): Promise<Post[]> {
+    const userId = ctx.req.user.id;
+    if (!userId) throw new Error('no user found');
+
+    const posts = await getRepository(Post)
+      .createQueryBuilder('posts')
+      .leftJoinAndSelect('posts.user', 'user')
+      .leftJoinAndSelect('posts.tags', 'tags')
+      .where('tags.name IN (:...tags)', { tags: tags })
+      .orderBy('posts.createdAt', 'DESC')
+      .skip(skip)
+      .take(take)
+      .getMany();
+
+    if (!posts) {
+      return [];
+    }
+
+    //add all tags to the post.. its need based on the restriction of left join
+    for await (const post of posts) {
+      const tagsFromPost = await getRepository(Tag)
+        .createQueryBuilder('tags')
+        .leftJoin('tags.posts', 'post')
+        .where('post.id = :id', { id: post.id })
+        .getMany();
+
+      post.tags = tagsFromPost;
     }
 
     for await (const post of posts) {
@@ -162,10 +207,11 @@ export class PostResolver {
     @Arg('text') text: string,
     @Arg('file', () => GraphQLUpload, { nullable: true }) file: FileUpload,
     @Arg('groupID', { nullable: true }) groupID: string,
-  ): Promise<Post | null> {
+    @Arg('tags', () => [String], { nullable: true }) tags: string[],
+  ): Promise<Post> {
     const id = ctx.req.user.id;
     if (!id) {
-      return null;
+      throw new Error('not authenticated');
     }
 
     const user = await getRepository(User).findOne({
@@ -173,7 +219,7 @@ export class PostResolver {
       where: { id: ctx.req.user.id },
     });
     if (!user) {
-      return null;
+      throw new Error('no user found');
     }
 
     let group;
@@ -185,44 +231,41 @@ export class PostResolver {
     post.text = text;
     post.user = user;
     post.likes = [];
+    post.tags = [];
     post.group = group;
     user.posts.push(post);
 
+    if (tags) {
+      const tagsFromDB = await getRepository(Tag).find({
+        where: {
+          name: In(tags),
+        },
+      });
+      const tagNamesFromDb = tagsFromDB.map((tag) => tag.name);
+      for await (const name of tags) {
+        let newTag;
+        if (!tagNamesFromDb.includes(name)) {
+          newTag = new Tag({ name: name, createdBy: user });
+          newTag.posts = [];
+        } else {
+          newTag = await getRepository(Tag).findOne({
+            where: {
+              name: name,
+            },
+            relations: ['posts'],
+          });
+        }
+
+        const dbTag = await getRepository(Tag).save(newTag);
+        post.tags.push(dbTag);
+      }
+    }
     if (file) {
-      const metaData = {
-        'Content-Type': 'application/octet-stream',
-        'X-Amz-Meta-Testing': 1234,
-        example: 5678,
-      };
-      const filenameUUID = uuidv4();
-      const { createReadStream, filename } = await file;
-
-      const fileEnding = filename.split('.')[1];
-      const newFileName = filenameUUID + '.' + fileEnding;
-      const destinationPath = path.join(os.tmpdir(), filename);
-      await new Promise((res, rej) =>
-        createReadStream()
-          .pipe(createWriteStream(destinationPath))
-          .on('error', rej)
-          .on('finish', () => {
-            minioClient.fPutObject('post-images', newFileName, destinationPath, metaData, (err, etag) => {
-              if (err) {
-                log.error(err.stack);
-                throw Error('image upload failed');
-              }
-              log.info('File uploaded successfully.');
-
-              //Delete the tmp file uploaded
-              unlink(destinationPath, () => {
-                res('file upload complete');
-              });
-            });
-          }),
-      );
+      const newFileName = await uploadFileGraphql(file, 'post-images');
       post.imageName = newFileName;
     }
     if (groupID && !group) {
-      return null;
+      throw new Error('group does not exist');
     }
 
     const dbPost = await getRepository(Post).save(post);

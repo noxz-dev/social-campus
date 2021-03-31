@@ -321,7 +321,7 @@ export class UserResolver {
   }
 }
 
-const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
+export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
     'X-Amz-Meta-Testing': 1234,
@@ -355,7 +355,7 @@ const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<
   return newFileName;
 };
 
-const uploadFile = async (file: Buffer, bucketName: string): Promise<string> => {
+export const uploadFile = async (file: Buffer, bucketName: string): Promise<string> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
     'X-Amz-Meta-Testing': 1234,

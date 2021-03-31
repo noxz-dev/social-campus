@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div
-      class="bg-gray-50 dark:text-white shadow-xl rounded-lg mb-6 tracking-wide border border-gray-200 dark:border-dark600"
+      class="bg-gray-50 dark:text-white dark:shadow-xl shadow-lg  rounded-lg mb-6 tracking-wide border border-gray-200 dark:border-dark600"
       :class="'dark:' + bgColorDark"
     >
       <slot />

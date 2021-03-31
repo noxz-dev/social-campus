@@ -122,7 +122,7 @@
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                    class="stroke-white h-6 ml-2"
+                    class="dark:stroke-white stroke-black h-6 ml-2"
                   >
                     <g id="Iconly/Light/Profile" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
                       <g id="Profile" transform="translate(4.814286, 2.814476)">
@@ -160,7 +160,7 @@
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                    class="h-6 ml-1.5 stroke-white"
+                    class="h-6 ml-1.5 dark:stroke-white stroke-black"
                   >
                     <g id="Iconly/Light/Setting" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
                       <g id="Setting" transform="translate(2.500000, 1.500000)" stroke-width="1.5">
@@ -183,7 +183,7 @@
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                    class="h-6 ml-2 stroke-white"
+                    class="h-6 ml-2 dark:stroke-white stroke-black"
                   >
                     <g id="Iconly/Light/Logout" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
                       <g id="Logout" transform="translate(2.000000, 2.000000)" stroke-width="1.5">

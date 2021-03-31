@@ -1,6 +1,7 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import cors from 'cors';
 import 'dotenv/config';
+import '../ormconfig';
 import express from 'express';
 import 'express-async-errors';
 import { GraphQLSchema } from 'graphql';

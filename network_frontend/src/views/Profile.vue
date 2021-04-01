@@ -3,55 +3,13 @@
     <div class="dark:bg-dark600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
       <div>
         <div>
-          <img
-            class="h-32 w-full object-cover lg:h-64 rounded-xl"
-            src="https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
-            alt=""
-          />
+          <img class="h-32 w-full object-cover lg:h-64 rounded-xl" src="https://wallpapercave.com/wp/wp5406324.jpg" alt="" />
         </div>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col">
-            <div class="flex">
-              <img class="h-24 w-24 rounded-full border-3 sm:h-36 sm:w-36 bg-black" :src="profileImage" alt="profile image" />
-            </div>
-            <div class="mt-6 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
-              <div class="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
-                <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
-                  {{ user?.firstname + ' ' + user?.lastname }}
-                </h1>
-              </div>
-              <div class="mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                <div class="hidden sm:block 2xl:hidden min-w-0 flex-1 pb-4">
-                  <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50 text-center">
-                    {{ user?.firstname + ' ' + user?.lastname }}
-                    <br />
-                    <span class="text-lg">Fakt4 Angewandte Informatik</span>
-                  </h1>
-                </div>
-              </div>
-            </div>
-            <div class="flex self-start flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-4 justify-between w-full items-center">
-              <div class="flex sm:space-x-10 space-x-0 space-y-5 sm:space-y-0 flex-col sm:flex-row">
-                <router-link :to="{ name: 'ProfilePosts' }">
-                  <div class="p-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Posts</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
-                  </div>
-                </router-link>
-                <router-link :to="{ name: 'ProfileFollowers' }">
-                  <div class="p-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Followers</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
-                  </div>
-                </router-link>
-                <router-link :to="{ name: 'ProfileFollowing' }">
-                  <div class="p-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Following</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
-                  </div>
-                </router-link>
-              </div>
-              <div>
+            <div class="flex w-full">
+              <img class="h-24 w-24 rounded-full border-3 sm:h-36 sm:w-36 bg-black self-center border-2" :src="profileImage" alt="profile image" />
+              <div class="flex w-full justify-end items-center mt-14">
                 <button
                   v-if="showEditProfile"
                   class="ml-6 cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
@@ -84,6 +42,50 @@
                 </button>
               </div>
             </div>
+            <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
+              <div class="sm:hidden md:block mt-6 min-w-0 flex-1">
+                <h1 v-if="user?.firstname" class="md:text-2xl font-bold text-gray-900 truncate dark:text-gray-50 text-lg">
+                  {{ user?.firstname + ' ' + user?.lastname }}
+                </h1>
+                <h1 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
+                  {{ user.bio }}
+                </h1>
+              </div>
+              <div class="w-full mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <div class="hidden sm:block min-w-0 flex-1 pb-4 w-full">
+                  <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
+                    {{ user?.firstname + ' ' + user?.lastname }}
+                  </h1>
+                  <h1 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
+                    {{ user.bio }}
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex self-start flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-2 md:pb-4 justify-between w-full items-center"
+            >
+              <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all dura">
+                <router-link :to="{ name: 'ProfilePosts' }">
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Posts</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'ProfileFollowers' }">
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Followers</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'ProfileFollowing' }">
+                  <div class="p-2 rounded-lg">
+                    <span class="dark:text-gray-50 text-gray-900">Following</span>
+                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
+                  </div>
+                </router-link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -96,16 +98,9 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, watchEffect } from 'vue';
 import PostList from '@/components/PostList.vue';
-import {
-  useAddFollowerMutation,
-  useRemoveFollowerMutation,
-  UserStatsQueryCompositionFunctionResult,
-  useUserByUsernameQuery,
-  useUserStatsQuery,
-} from '../graphql/generated/graphqlOperations';
+import { useAddFollowerMutation, useRemoveFollowerMutation, useUserByUsernameQuery, useUserStatsQuery } from '../graphql/generated/graphqlOperations';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { userById } from '../graphql/queries/userById';
 import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
 import { userByUsername } from '../graphql/queries/userByUsername';
 
@@ -225,21 +220,40 @@ a.router-link-exact-active path {
 a:hover path {
   @apply fill-indigo;
 }
+
 @screen md {
   @media (prefers-color-scheme: dark) {
     a.router-link-exact-active div {
       @apply bg-highlight-500;
       @apply relative;
       @apply border-b-0;
+      @apply rounded-lg !important;
     }
   }
 
   @media (prefers-color-scheme: light) {
     a.router-link-exact-active div {
-      @apply bg-gray-200;
+      @apply bg-highlight-500;
       @apply relative;
-      @apply border-b-0;
+      @apply border-b-0 !important;
+      @apply rounded-lg !important;
     }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  a.router-link-exact-active div {
+    @apply relative;
+    @apply border-b-4;
+    @apply rounded-none;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  a.router-link-exact-active div {
+    @apply relative;
+    @apply border-b-4;
+    @apply rounded-none;
   }
 }
 </style>

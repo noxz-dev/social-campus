@@ -11,6 +11,10 @@ import router from './router';
 // auth interceptor
 const errorLink = onError((error) => {
   console.log(error);
+  if (error.networkError?.name === 'ServerParseError') {
+    localStorage.removeItem('apollo-token');
+    router.push('login');
+  }
   error.graphQLErrors?.forEach((err) => {
     if (err.message.includes('Access denied!')) {
       localStorage.removeItem('apollo-token');

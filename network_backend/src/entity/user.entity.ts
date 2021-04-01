@@ -36,7 +36,7 @@ export class User extends Base {
   @Field(() => String, { nullable: true })
   profilePicLink: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })
   bio: string;
 

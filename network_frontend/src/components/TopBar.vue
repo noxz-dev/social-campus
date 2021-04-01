@@ -203,8 +203,7 @@
           </div>
 
           <button
-            v-if="$route.name !== 'DetailPost'"
-            href="#"
+            v-if="$route.name !== 'DetailPost' && !$route.path.includes('/user')"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
           >
@@ -266,7 +265,7 @@
                 $router.push({
                   name: 'Profile',
                   params: {
-                    id: user.id,
+                    id: user.username,
                   },
                 });
                 showMobileMenu = false;
@@ -288,12 +287,19 @@
             class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
           >
             Ausloggen
+            {{ $route.path }}
           </div>
         </div>
       </div>
     </nav>
   </header>
-  <floating-button v-if="$route.name !== 'DetailPost'" class="lg:hidden sm:block" text="Neuer Post" @click="eventbus.emit('open-modal')" />
+
+  <floating-button
+    v-if="$route.name !== 'DetailPost' && !$route.path.includes('/user')"
+    class="lg:hidden sm:block"
+    text="Neuer Post"
+    @click="eventbus.emit('open-modal')"
+  />
   <modal ref="modal" content-text="" header-text="Neuer Post">
     <new-post />
   </modal>

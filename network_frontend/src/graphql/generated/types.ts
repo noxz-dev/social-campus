@@ -126,7 +126,7 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   profilePicLink?: Maybe<Scalars['String']>;
-  bio: Scalars['String'];
+  bio?: Maybe<Scalars['String']>;
   roles: Array<Role>;
   posts: Array<Post>;
   followers: Array<User>;
@@ -683,7 +683,7 @@ export type UserByUsernameQuery = (
   { __typename?: 'Query' }
   & { userByUsername: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
+    & Pick<User, 'id' | 'bio' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
   ) }
 );
 

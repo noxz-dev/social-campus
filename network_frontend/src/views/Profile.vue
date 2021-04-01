@@ -36,7 +36,7 @@
                   @mouseout="followButtonText = 'Folge ich'"
                   @click="unfollowUser"
                   v-else
-                  class="ml-6 w-[6.5rem] text-center inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500 duration-200"
+                  class="w-[6.5rem] text-center inline-flex justify-center cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500 duration-200"
                 >
                   {{ followButtonText }}
                 </button>
@@ -62,24 +62,24 @@
                 </div>
               </div>
             </div>
-            <div
-              class="flex self-start flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-2 md:pb-4 justify-between w-full items-center"
-            >
-              <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all dura">
+            <div class="flex flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-2 md:pb-4 justify-center w-full items-center">
+              <div
+                class="flex items-center md:justify-center justify-evenly sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all duration-1000 w-full"
+              >
                 <router-link :to="{ name: 'ProfilePosts' }">
-                  <div class="p-2 rounded-lg">
+                  <div class="py-1 px-2 rounded-lg">
                     <span class="dark:text-gray-50 text-gray-900">Posts</span>
                     <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
                   </div>
                 </router-link>
                 <router-link :to="{ name: 'ProfileFollowers' }">
-                  <div class="p-2 rounded-lg">
+                  <div class="py-1 px-2 rounded-lg">
                     <span class="dark:text-gray-50 text-gray-900">Followers</span>
                     <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
                   </div>
                 </router-link>
                 <router-link :to="{ name: 'ProfileFollowing' }">
-                  <div class="p-2 rounded-lg">
+                  <div class="py-1 px-2 rounded-lg">
                     <span class="dark:text-gray-50 text-gray-900">Following</span>
                     <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
                   </div>

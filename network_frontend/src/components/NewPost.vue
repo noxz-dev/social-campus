@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
+import { computed, defineComponent, getCurrentInstance, ref, unref } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
@@ -92,6 +92,7 @@ export default defineComponent({
     const route = useRoute();
     const file = ref<File>();
     const previewUrl = ref();
+    const tags = ref<string[]>();
     const showImageUpload = ref(false);
 
     const toggle = () => {
@@ -117,6 +118,7 @@ export default defineComponent({
       variables: <AddPostMutationVariables>{
         text: message.value,
         file: file.value,
+        tags: tags.value,
       },
       context: {
         hasUpload: true,
@@ -160,6 +162,14 @@ export default defineComponent({
     const post = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
+
+      let foundTags = message.value.match(/#\w*/g);
+      if (foundTags) {
+        console.log(foundTags);
+        foundTags = foundTags?.map((tag) => tag.replace('#', ''));
+        tags.value = [...foundTags];
+      }
+
       newPost();
       eventbus.emit('close-modal');
     };

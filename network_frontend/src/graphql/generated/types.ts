@@ -18,13 +18,6 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
-  /** getPosts returns all posts from a given userID */
-  getPostsFromUser?: Maybe<Array<Post>>;
-  /** getPosts returns all posts from a given groupID */
-  getPostsFromGroup?: Maybe<Array<Post>>;
-  getFeed: Array<Post>;
-  postById: Post;
-  getRoles: Array<Role>;
   getUsers: Array<User>;
   /** Me returns User info when logged in. */
   me?: Maybe<User>;
@@ -34,23 +27,16 @@ export type Query = {
   following: Array<User>;
   followers: Array<User>;
   userStats: UserStats;
-};
-
-
-export type QueryGetPostsFromUserArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userID: Scalars['String'];
-};
-
-
-export type QueryGetPostsFromGroupArgs = {
-  groupID: Scalars['String'];
-};
-
-
-export type QueryPostByIdArgs = {
-  postId: Scalars['String'];
+  /** getPosts returns all posts from a given userID */
+  getPostsFromUser?: Maybe<Array<Post>>;
+  /** getPosts returns all posts from a given array of tags */
+  getPostsByTags?: Maybe<Array<Post>>;
+  /** getPosts returns all posts from a given groupID */
+  getPostsFromGroup?: Maybe<Array<Post>>;
+  getFeed: Array<Post>;
+  postById: Post;
+  groupById: Group;
+  getRoles: Array<Role>;
 };
 
 
@@ -85,6 +71,35 @@ export type QueryFollowersArgs = {
 
 export type QueryUserStatsArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QueryGetPostsFromUserArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userID: Scalars['String'];
+};
+
+
+export type QueryGetPostsByTagsArgs = {
+  tags?: Maybe<Array<Scalars['String']>>;
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+};
+
+
+export type QueryGetPostsFromGroupArgs = {
+  groupID: Scalars['String'];
+};
+
+
+export type QueryPostByIdArgs = {
+  postId: Scalars['String'];
+};
+
+
+export type QueryGroupByIdArgs = {
+  groupId: Scalars['String'];
 };
 
 export type Notification = {
@@ -138,6 +153,7 @@ export type Post = {
   text: Scalars['String'];
   comments: Array<Comment>;
   likes: Array<Like>;
+  tags: Array<Tag>;
   likesCount: Scalars['Float'];
   commentCount: Scalars['Float'];
   liked: Scalars['Boolean'];
@@ -172,6 +188,15 @@ export type Like = {
   user: User;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  createdBy: User;
+  posts: Array<Post>;
+};
+
 export type UserStats = {
   __typename?: 'UserStats';
   postCount: Scalars['Float'];
@@ -182,6 +207,13 @@ export type UserStats = {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteNotification: Scalars['Boolean'];
+  register: Scalars['Boolean'];
+  logout: Scalars['Boolean'];
+  login: JwtResponse;
+  uploadProfileImage: User;
+  addFollower: User;
+  removeFollower: User;
+  setBio: User;
   addPost: Post;
   likePost: Post;
   unlikePost: Post;
@@ -196,13 +228,6 @@ export type Mutation = {
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
   removeRoleFromUser: User;
-  register: Scalars['Boolean'];
-  logout: Scalars['Boolean'];
-  login: JwtResponse;
-  uploadProfileImage: User;
-  addFollower: User;
-  removeFollower: User;
-  setBio: User;
 };
 
 
@@ -211,7 +236,44 @@ export type MutationDeleteNotificationArgs = {
 };
 
 
+export type MutationRegisterArgs = {
+  input: UserValidator;
+};
+
+
+export type MutationLogoutArgs = {
+  refreshToken: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  email: Scalars['String'];
+};
+
+
+export type MutationUploadProfileImageArgs = {
+  file: Scalars['Upload'];
+};
+
+
+export type MutationAddFollowerArgs = {
+  userID: Scalars['String'];
+};
+
+
+export type MutationRemoveFollowerArgs = {
+  userID: Scalars['String'];
+};
+
+
+export type MutationSetBioArgs = {
+  bio: Scalars['String'];
+};
+
+
 export type MutationAddPostArgs = {
+  tags?: Maybe<Array<Scalars['String']>>;
   groupID?: Maybe<Scalars['String']>;
   file?: Maybe<Scalars['Upload']>;
   text: Scalars['String'];
@@ -256,7 +318,7 @@ export type MutationUnlikeCommentArgs = {
 
 
 export type MutationJoinGroupArgs = {
-  groupID: Scalars['String'];
+  groupId: Scalars['String'];
 };
 
 
@@ -281,48 +343,6 @@ export type MutationRemoveRoleFromUserArgs = {
   roleName: Scalars['String'];
 };
 
-
-export type MutationRegisterArgs = {
-  input: UserValidator;
-};
-
-
-export type MutationLogoutArgs = {
-  refreshToken: Scalars['String'];
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  email: Scalars['String'];
-};
-
-
-export type MutationUploadProfileImageArgs = {
-  file: Scalars['Upload'];
-};
-
-
-export type MutationAddFollowerArgs = {
-  userID: Scalars['String'];
-};
-
-
-export type MutationRemoveFollowerArgs = {
-  userID: Scalars['String'];
-};
-
-
-export type MutationSetBioArgs = {
-  bio: Scalars['String'];
-};
-
-
-export type RoleValidator = {
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-};
-
 export type UserValidator = {
   firstName: Scalars['String'];
   lastname: Scalars['String'];
@@ -335,6 +355,12 @@ export type JwtResponse = {
   __typename?: 'JwtResponse';
   accessToken: Scalars['String'];
   refreshToken: Scalars['String'];
+};
+
+
+export type RoleValidator = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
@@ -369,6 +395,7 @@ export type AddFollowerMutation = (
 export type AddPostMutationVariables = Exact<{
   text: Scalars['String'];
   file?: Maybe<Scalars['Upload']>;
+  tags?: Maybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 

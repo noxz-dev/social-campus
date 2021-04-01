@@ -91,7 +91,15 @@ export default defineComponent({
     });
 
     const parseMarkdown = (value: string) => {
-      return DOMPurify.sanitize(marked(value));
+      const content = parseTags(value);
+      return DOMPurify.sanitize(marked(content));
+    };
+
+    const parseTags = (content: string): string => {
+      return content.replaceAll(
+        /#\w*/g,
+        (val) => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`
+      );
     };
 
     const { mutate: unlike } = useUnlikePostMutation({

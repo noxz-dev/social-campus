@@ -163,7 +163,7 @@ export default defineComponent({
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
 
-      let foundTags = message.value.match(/#\w*/g);
+      let foundTags = message.value.match(/#\w\w*/g);
       if (foundTags) {
         console.log(foundTags);
         foundTags = foundTags?.map((tag) => tag.replace('#', ''));

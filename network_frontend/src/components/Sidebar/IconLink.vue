@@ -1,7 +1,7 @@
 <template>
   <router-link :to="to" class="w-full xl:ml-0 hover:text-highlight-500">
     <div
-      class="flex xl:mx-3 border-b-4 md:rounded-xl px-6 border-transparent items-center h-14 justify-center md:border-b-0 md:border-l-6 md:justify-center xl:justify-start xl:pl-4"
+      class="flex xl:mx-3 border-b-4 md:rounded-xl px-6 border-transparent items-center h-16 justify-center md:border-b-0 md:border-l-6 md:justify-center xl:justify-start xl:pl-4"
     >
       <slot />
       <span class="hidden text-bold font-semibold xl:block md:ml-4 dark:text-gray-50 text-gray-900">{{ name }}</span>

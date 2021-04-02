@@ -356,6 +356,53 @@ export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.UnlikePostMutation, graphqlOperations.ts.UnlikePostMutationVariables>;
+export const BrowsePostsDocument = gql`
+    query browsePosts($take: Float!, $skip: Float!, $tags: [String!]) {
+  browsePosts(take: $take, skip: $skip, tags: $tags) {
+    id
+    liked
+    imageLink
+    user {
+      id
+      firstname
+      lastname
+      username
+      profilePicLink
+    }
+    text
+    likesCount
+    commentCount
+    createdAt
+    edited
+    tags {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useBrowsePostsQuery__
+ *
+ * To run a query within a Vue component, call `useBrowsePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBrowsePostsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useBrowsePostsQuery({
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
+ *   tags: // value for 'tags'
+ * });
+ */
+export function useBrowsePostsQuery(variables: graphqlOperations.ts.BrowsePostsQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.BrowsePostsQueryVariables> | ReactiveFunction<graphqlOperations.ts.BrowsePostsQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>(BrowsePostsDocument, variables, options);
+}
+export type BrowsePostsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>;
 export const FollowersDocument = gql`
     query followers($userId: String!, $take: Float!, $skip: Float!) {
   followers(userId: $userId, take: $take, skip: $skip) {

@@ -5,10 +5,12 @@ import { Field, InputType } from 'type-graphql';
 export class UserValidator {
   @Field()
   @IsString()
+  @MinLength(2)
   firstName: string;
 
   @Field()
   @IsString()
+  @MinLength(2)
   lastname: string;
 
   @Field()

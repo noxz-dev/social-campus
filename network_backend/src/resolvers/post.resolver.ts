@@ -65,9 +65,9 @@ export class PostResolver {
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
-    description: 'getPosts returns all posts from a given array of tags',
+    description: 'all posts with filter options',
   })
-  public async getPostsByTags(
+  public async browsePosts(
     @Ctx() ctx: MyContext,
     @Arg('skip') skip: number,
     @Arg('take') take: number,
@@ -75,16 +75,29 @@ export class PostResolver {
   ): Promise<Post[]> {
     const userId = ctx.req.user.id;
     if (!userId) throw new Error('no user found');
-
-    const posts = await getRepository(Post)
-      .createQueryBuilder('posts')
-      .leftJoinAndSelect('posts.user', 'user')
-      .leftJoinAndSelect('posts.tags', 'tags')
-      .where('tags.name IN (:...tags)', { tags: tags })
-      .orderBy('posts.createdAt', 'DESC')
-      .skip(skip)
-      .take(take)
-      .getMany();
+    let posts: Post[];
+    if (tags && tags.length > 0) {
+      posts = await getRepository(Post)
+        .createQueryBuilder('posts')
+        .where('posts.group = :group', { group: null })
+        .leftJoinAndSelect('posts.user', 'user')
+        .leftJoinAndSelect('posts.tags', 'tags')
+        .where('tags.name IN (:...tags)', { tags: tags })
+        .orderBy('posts.createdAt', 'DESC')
+        .skip(skip)
+        .take(take)
+        .getMany();
+    } else {
+      posts = await getRepository(Post).find({
+        where: {
+          group: null,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+        relations: ['user', 'tags'],
+      });
+    }
 
     if (!posts) {
       return [];

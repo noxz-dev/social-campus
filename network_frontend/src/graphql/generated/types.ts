@@ -29,8 +29,8 @@ export type Query = {
   userStats: UserStats;
   /** getPosts returns all posts from a given userID */
   getPostsFromUser?: Maybe<Array<Post>>;
-  /** getPosts returns all posts from a given array of tags */
-  getPostsByTags?: Maybe<Array<Post>>;
+  /** all posts with filter options */
+  browsePosts?: Maybe<Array<Post>>;
   /** getPosts returns all posts from a given groupID */
   getPostsFromGroup?: Maybe<Array<Post>>;
   getFeed: Array<Post>;
@@ -81,7 +81,7 @@ export type QueryGetPostsFromUserArgs = {
 };
 
 
-export type QueryGetPostsByTagsArgs = {
+export type QueryBrowsePostsArgs = {
   tags?: Maybe<Array<Scalars['String']>>;
   take: Scalars['Float'];
   skip: Scalars['Float'];
@@ -522,6 +522,28 @@ export type UnlikePostMutation = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   ) }
+);
+
+export type BrowsePostsQueryVariables = Exact<{
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  tags?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type BrowsePostsQuery = (
+  { __typename?: 'Query' }
+  & { browsePosts?: Maybe<Array<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    ), tags: Array<(
+      { __typename?: 'Tag' }
+      & Pick<Tag, 'id' | 'name'>
+    )> }
+  )>> }
 );
 
 export type FollowersQueryVariables = Exact<{

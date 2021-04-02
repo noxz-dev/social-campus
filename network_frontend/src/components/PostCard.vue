@@ -49,14 +49,14 @@
             <span class="px-2 font-mono">{{ post.commentCount }}</span>
           </div>
         </div>
-        <div v-if="post.edited" class="text-xs dark:text-gray-400 italic">edited</div>
+        <div v-if="post.edited" class="text-xs dark:text-gray-400 italic">bearbeitet</div>
       </div>
     </div>
   </card>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs } from 'vue';
+import { defineComponent, onMounted, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
@@ -80,6 +80,7 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
+    const tagsIds: string[] = [];
 
     const { mutate: like } = useLikePostMutation({
       variables: <UnlikePostMutationVariables>{ postID: props.post.id },
@@ -90,16 +91,28 @@ export default defineComponent({
       ],
     });
 
+    //little bit hacky there has to be a better way
+    onMounted(() => {
+      for (const id of tagsIds) {
+        document.getElementById(id)?.addEventListener('click', (e: MouseEvent) => {
+          const { id } = e.target;
+          handleTagClick(id.replace('#', ''));
+          e.stopPropagation();
+        });
+      }
+    });
+
     const parseMarkdown = (value: string) => {
       const content = parseTags(value);
       return DOMPurify.sanitize(marked(content));
     };
 
     const parseTags = (content: string): string => {
-      return content.replaceAll(
-        /#\w\w*/g,
-        (val) => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`
-      );
+      return content.replaceAll(/#\w\w*/g, (val) => {
+        const tag = `<span id="${val}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`;
+        tagsIds.push(val);
+        return tag;
+      });
     };
 
     const { mutate: unlike } = useUnlikePostMutation({
@@ -122,6 +135,11 @@ export default defineComponent({
         console.log(err);
         console.log('couldnt like/unlike the post');
       }
+    };
+
+    const handleTagClick = (tag: string) => {
+      console.log(tag);
+      router.push({ name: 'Browse', query: { tag } });
     };
 
     const handleNavigation = () => {

@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="to" class="w-full xl:ml-0 hover:text-highlight-500">
+  <router-link :to="to" class="w-full ml-1 xl:ml-0 hover:text-highlight-500">
     <div
       class="flex xl:mx-3 border-b-4 md:rounded-xl px-6 border-transparent items-center h-16 justify-center md:border-b-0 md:border-l-6 md:justify-center xl:justify-start xl:pl-4"
     >
@@ -31,11 +31,17 @@ a.router-link-exact-active div {
   @apply text-gray-100;
   @apply border-indigo-500;
 }
-a.router-link-exact-active path {
+a.router-link-exact-active path,
+a.router-link-exact-active polyline,
+a.router-link-exact-active polygon {
   @apply fill-indigo;
+  @apply stroke-indigo;
 }
-a:hover path {
+a:hover path,
+a:hover polyline,
+a:hover polygon {
   @apply fill-indigo;
+  @apply stroke-indigo;
 }
 @screen md {
   @media (prefers-color-scheme: dark) {

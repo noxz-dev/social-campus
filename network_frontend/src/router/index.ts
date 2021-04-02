@@ -22,6 +22,16 @@ const routes = [
     component: () => import('@/views/Post.vue'),
   },
   {
+    path: '/browse',
+    name: 'Browse',
+    component: () => import('@/views/Browse.vue'),
+  },
+  {
+    path: '/chats',
+    name: 'Chats',
+    component: () => import('@/views/Chat.vue'),
+  },
+  {
     path: '/login',
     name: 'Login',
     meta: {

@@ -96,6 +96,8 @@ export class PostResolver {
           createdAt: 'DESC',
         },
         relations: ['user', 'tags'],
+        skip: skip,
+        take: take,
       });
     }
 

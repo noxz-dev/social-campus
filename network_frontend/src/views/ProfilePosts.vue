@@ -1,5 +1,5 @@
 <template>
-  <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
+  <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
     <post-list :posts="posts" />
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script lang="ts">
 import { useGetPostsFromUserQuery } from '../graphql/generated/graphqlOperations';
 import { GetPostsFromUserQueryVariables, Post } from '../graphql/generated/types';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import PostList from '../components/PostList.vue';
 
 export default defineComponent({

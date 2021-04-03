@@ -30,7 +30,7 @@ export default defineComponent({
     );
 
     onResultPosts((postData) => {
-      const postsResult = postData?.data?.getPostsFromUser;
+      const postsResult: Post[] = postData?.data?.getPostsFromUser;
       posts.value = [...postsResult];
 
       console.log(posts.value);

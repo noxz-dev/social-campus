@@ -36,8 +36,6 @@ export default defineComponent({
     const user = computed(() => store.state.userData.user);
     const home = ref<HTMLElement>();
     const route = useRoute();
-    const scrollContainer = ref<HTMLElement>();
-    const loadStarted = ref(false);
 
     const { result, error, subscribeToMore, fetchMore, loading } = useBrowsePostsQuery(
       () =>
@@ -72,22 +70,6 @@ export default defineComponent({
         },
       });
     };
-
-    // const handleScroll = (e) => {
-    //   if (scrollContainer.value) {
-    //     const element: HTMLElement = scrollContainer.value;
-    //     if (element?.scrollTop > element.scrollHeight - 1000) {
-    //       if (!loadStarted.value) {
-    //         loadStarted.value = true;
-    //         loadMore();
-    //       }
-    //     }
-    //   }
-    // };
-
-    // onMounted(() => {
-    //   document.querySelector('#browse')?.addEventListener('scroll', handleScroll);
-    // });
 
     // subscribeToMore(() => ({
     //   document: gql`

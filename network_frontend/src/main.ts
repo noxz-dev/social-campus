@@ -1,6 +1,6 @@
 import { DefaultApolloClient, provideApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
-import Viewer from 'v-viewer-vue3/dist/vue-viewer-vue3.es';
+import Viewer from 'v-viewer-vue3/dist/vue-viewer-vue3.umd.js';
 import 'viewerjs/dist/viewer.css';
 import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';

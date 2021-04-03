@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
 
-export const scrollState = reactive({
-  top: 0,
+export const navHighlight = reactive({
+  last: 'Feed',
 });

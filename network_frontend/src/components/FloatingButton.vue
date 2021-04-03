@@ -51,7 +51,7 @@ export default defineComponent({
       () => {
         scrolledDown.value = false;
         let lastScrollTop = window.pageYOffset;
-        const container = document.querySelector('#home');
+        const container = document.querySelector('#scrollContainer');
         if (!container) return;
         container.addEventListener(
           'scroll',
@@ -72,7 +72,7 @@ export default defineComponent({
 
     onMounted(() => {
       let lastScrollTop = window.pageYOffset;
-      const container = document.querySelector('#home');
+      const container = document.querySelector('#scrollContainer');
       if (!container) return;
       container.addEventListener(
         'scroll',

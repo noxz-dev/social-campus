@@ -1,11 +1,11 @@
 <template>
   <card id="postcard">
     <card-header :post="post" />
-    <div class="px-4 cursor-pointer" @click="handleNavigation">
+    <div class="px-4">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown" v-html="parseMarkdown(post.text)"></div>
       </div>
-      <div v-if="post.imageLink" class="flex justify-center">
+      <div v-if="post.imageLink" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <img class="object-cover h-96 w-full rounded-xl m-2" :src="post.imageLink" alt="" />
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
@@ -147,10 +147,26 @@ export default defineComponent({
       router.push({ name: 'DetailPost', params: { id: props.post.id } });
     };
 
+    const viewerOptions = {
+      inline: false,
+      button: false,
+      navbar: false,
+      title: false,
+      toolbar: false,
+      tooltip: false,
+      movable: false,
+      zoomable: false,
+      rotatable: false,
+      scalable: false,
+      transition: true,
+      fullscreen: true,
+    };
+
     return {
       likePost,
       handleNavigation,
       parseMarkdown,
+      viewerOptions,
     };
   },
 });

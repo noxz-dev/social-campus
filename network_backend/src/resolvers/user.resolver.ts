@@ -2,10 +2,12 @@
 import argon2 from 'argon2';
 import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import os from 'os';
 import path from 'path';
+import ternaryStream from 'ternary-stream';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -332,9 +334,23 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
 
   const fileEnding = filename.split('.')[1];
   const newFileName = filenameUUID + '.' + fileEnding;
+
+  console.log(fileEnding);
   const destinationPath = path.join(os.tmpdir(), filename);
+  let compress;
+  if (fileEnding === 'png') {
+    compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
+  } else {
+    compress = new MozJPEG();
+  }
+
+  const condition = function (data) {
+    if (compress) return true;
+    return false;
+  };
   await new Promise((res, rej) =>
     createReadStream()
+      .pipe(ternaryStream(condition, compress))
       .pipe(createWriteStream(destinationPath))
       .on('error', rej)
       .on('finish', () => {

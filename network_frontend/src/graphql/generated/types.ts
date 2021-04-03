@@ -93,6 +93,12 @@ export type QueryGetPostsFromGroupArgs = {
 };
 
 
+export type QueryGetFeedArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+};
+
+
 export type QueryPostByIdArgs = {
   postId: Scalars['String'];
 };
@@ -576,7 +582,10 @@ export type FollowingQuery = (
   )> }
 );
 
-export type GetFeedQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetFeedQueryVariables = Exact<{
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+}>;
 
 
 export type GetFeedQuery = (

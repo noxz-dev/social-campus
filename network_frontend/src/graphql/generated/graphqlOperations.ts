@@ -470,8 +470,8 @@ export function useFollowingQuery(variables: graphqlOperations.ts.FollowingQuery
 }
 export type FollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.FollowingQuery, graphqlOperations.ts.FollowingQueryVariables>;
 export const GetFeedDocument = gql`
-    query getFeed {
-  getFeed {
+    query getFeed($take: Float!, $skip: Float!) {
+  getFeed(take: $take, skip: $skip) {
     id
     liked
     imageLink
@@ -498,13 +498,17 @@ export const GetFeedDocument = gql`
  * When your component renders, `useGetFeedQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetFeedQuery();
+ * const { result, loading, error } = useGetFeedQuery({
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
+ * });
  */
-export function useGetFeedQuery(options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>(GetFeedDocument, {}, options);
+export function useGetFeedQuery(variables: graphqlOperations.ts.GetFeedQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GetFeedQueryVariables> | ReactiveFunction<graphqlOperations.ts.GetFeedQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>(GetFeedDocument, variables, options);
 }
 export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>;
 export const MeDocument = gql`

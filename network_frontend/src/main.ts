@@ -1,14 +1,16 @@
 import { DefaultApolloClient, provideApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
+import Viewer from 'v-viewer-vue3/dist/vue-viewer-vue3.es';
+import 'viewerjs/dist/viewer.css';
 import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';
-// import 'windi.css';
 import { defaultClient } from './apollo';
 import App from './App.vue';
 import './index.css';
 import './markdown.css';
 import router from './router';
 import store from './store';
+
 //create event bus
 const eventbus = mitt();
 
@@ -28,6 +30,7 @@ const app = createApp({
   },
 })
   .use(DKToast, notificationConfig)
+  .use(Viewer)
   .use(router)
   .use(store);
 

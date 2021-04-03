@@ -161,7 +161,11 @@ export class PostResolver {
 
   @Authorized()
   @Query(() => [Post])
-  public async getFeed(@Ctx() ctx: MyContext): Promise<Post[] | null> {
+  public async getFeed(
+    @Ctx() ctx: MyContext,
+    @Arg('skip') skip: number,
+    @Arg('take') take: number,
+  ): Promise<Post[] | null> {
     const userID = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({
@@ -179,6 +183,8 @@ export class PostResolver {
       where: { user: In(following) },
       order: { createdAt: 'DESC' },
       relations: ['user', 'comments'],
+      skip,
+      take,
     });
 
     if (!posts) return null;
@@ -429,15 +435,49 @@ export class PostResolver {
     if (!userId) {
       return null;
     }
-    const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user'] });
+
+    const user = await getRepository(User).findOne({
+      where: {
+        id: userId,
+      },
+    });
+    const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user', 'tags'] });
     if (!post) return null;
     if (post.user.id === userId) {
       delete post.likesCount;
       delete post.commentCount;
       post.text = text;
       post.edited = true;
-
       const savedPost = await getManager().transaction(async (transactionManager) => {
+        const foundTagNames = extractTags(text);
+        post.tags = [];
+
+        const tagsFromDB = await getRepository(Tag).find({
+          where: {
+            name: In(foundTagNames),
+          },
+        });
+        const tagNamesFromDb = tagsFromDB.map((tag) => tag.name);
+
+        for await (const name of foundTagNames) {
+          let newTag;
+          if (!tagNamesFromDb.includes(name)) {
+            newTag = new Tag({ name: name, createdBy: user });
+            newTag.posts = [];
+          } else {
+            newTag = await getRepository(Tag).findOne({
+              where: {
+                name: name,
+              },
+              relations: ['posts'],
+            });
+          }
+
+          const dbTag = await getRepository(Tag).save(newTag);
+
+          post.tags.push(dbTag);
+        }
+
         const savedPost = await transactionManager.save(Post, post);
         log.info(`user with the id ${userId} edited the post ${postId}`);
         return savedPost;
@@ -476,4 +516,13 @@ export const countComments = async (postId: string): Promise<number> => {
     .getRawOne();
 
   return count;
+};
+
+const extractTags = (text: string): string[] => {
+  let tags = text.match(/#\w\w*/g);
+  if (tags) {
+    tags = tags?.map((tag) => tag.replace('#', ''));
+    return tags;
+  }
+  return [];
 };

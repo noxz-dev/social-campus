@@ -295,7 +295,7 @@
   </header>
 
   <floating-button
-    v-if="$route.name !== 'DetailPost' && !$route.path.includes('/user')"
+    v-if="['Home', 'Browse'].includes($route.name)"
     class="lg:hidden sm:block"
     text="Neuer Post"
     @click="eventbus.emit('open-modal')"

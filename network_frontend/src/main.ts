@@ -1,6 +1,6 @@
 import { DefaultApolloClient, provideApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
-import Viewer from 'v-viewer-vue3/dist/vue-viewer-vue3.umd.js';
+import Viewer from './_helpers/v-viewer';
 import 'viewerjs/dist/viewer.css';
 import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';
@@ -30,7 +30,7 @@ const app = createApp({
   },
 })
   .use(DKToast, notificationConfig)
-  .use(Viewer)
+  .use(Viewer, "viewer")
   .use(router)
   .use(store);
 

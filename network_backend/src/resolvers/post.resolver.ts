@@ -8,10 +8,10 @@ import { Like } from '../entity/like.entity';
 import { Post } from '../entity/post.entity';
 import { Tag } from '../entity/tag.entity';
 import { User } from '../entity/user.entity';
+import { uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { SUB_TOPICS } from './notification.resolver';
-import { uploadFileGraphql } from './user.resolver';
 
 export interface newPostPayload {
   post?: Post;

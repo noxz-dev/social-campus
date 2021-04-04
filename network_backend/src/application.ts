@@ -1,7 +1,6 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import cors from 'cors';
 import 'dotenv/config';
-import '../ormconfig';
 import express from 'express';
 import 'express-async-errors';
 import { GraphQLSchema } from 'graphql';
@@ -10,11 +9,13 @@ import http, { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
+import '../ormconfig';
 import { CommentResolver } from './resolvers/comment.resolver';
 import { GroupResolver } from './resolvers/group.resolver';
 import { NotificationResolver } from './resolvers/notification.resolver';
 import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
+import { SearchResolver } from './resolvers/search.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
@@ -48,7 +49,15 @@ export class Application {
     try {
       // initialize schema and register resolvers
       const schema: GraphQLSchema = await buildSchema({
-        resolvers: [UserResolver, RoleResolver, PostResolver, CommentResolver, NotificationResolver, GroupResolver],
+        resolvers: [
+          UserResolver,
+          RoleResolver,
+          PostResolver,
+          CommentResolver,
+          NotificationResolver,
+          SearchResolver,
+          GroupResolver,
+        ],
         pubSub: this.pubsub,
         authChecker: customAuthChecker,
       });

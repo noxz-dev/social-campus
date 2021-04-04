@@ -671,11 +671,21 @@ export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable
 export const SearchDocument = gql`
     query search($searchString: String!) {
   search(searchString: $searchString) {
-    id
-    firstname
-    lastname
-    username
-    profilePicLink
+    users {
+      id
+      firstname
+      lastname
+      username
+      profilePicLink
+    }
+    groups {
+      id
+      name
+    }
+    tags {
+      id
+      name
+    }
   }
 }
     `;

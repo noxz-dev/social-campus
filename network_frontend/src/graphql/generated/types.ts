@@ -18,15 +18,6 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
-  getUsers: Array<User>;
-  /** Me returns User info when logged in. */
-  me?: Maybe<User>;
-  userById: User;
-  userByUsername: User;
-  search: Array<User>;
-  following: Array<User>;
-  followers: Array<User>;
-  userStats: UserStats;
   /** getPosts returns all posts from a given userID */
   getPostsFromUser?: Maybe<Array<Post>>;
   /** all posts with filter options */
@@ -37,40 +28,15 @@ export type Query = {
   postById: Post;
   groupById: Group;
   getRoles: Array<Role>;
-};
-
-
-export type QueryUserByIdArgs = {
-  userId: Scalars['String'];
-};
-
-
-export type QueryUserByUsernameArgs = {
-  username: Scalars['String'];
-};
-
-
-export type QuerySearchArgs = {
-  searchString: Scalars['String'];
-};
-
-
-export type QueryFollowingArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryFollowersArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryUserStatsArgs = {
-  userId: Scalars['String'];
+  search: Search;
+  getUsers: Array<User>;
+  /** Me returns User info when logged in. */
+  me?: Maybe<User>;
+  userById: User;
+  userByUsername: User;
+  following: Array<User>;
+  followers: Array<User>;
+  userStats: UserStats;
 };
 
 
@@ -106,6 +72,40 @@ export type QueryPostByIdArgs = {
 
 export type QueryGroupByIdArgs = {
   groupId: Scalars['String'];
+};
+
+
+export type QuerySearchArgs = {
+  searchString: Scalars['String'];
+};
+
+
+export type QueryUserByIdArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
+export type QueryFollowingArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryFollowersArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserStatsArgs = {
+  userId: Scalars['String'];
 };
 
 export type Notification = {
@@ -203,6 +203,13 @@ export type Tag = {
   posts: Array<Post>;
 };
 
+export type Search = {
+  __typename?: 'Search';
+  users: Array<User>;
+  groups: Array<Group>;
+  tags: Array<Tag>;
+};
+
 export type UserStats = {
   __typename?: 'UserStats';
   postCount: Scalars['Float'];
@@ -213,13 +220,6 @@ export type UserStats = {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteNotification: Scalars['Boolean'];
-  register: Scalars['Boolean'];
-  logout: Scalars['Boolean'];
-  login: JwtResponse;
-  uploadProfileImage: User;
-  addFollower: User;
-  removeFollower: User;
-  setBio: User;
   addPost: Post;
   likePost: Post;
   unlikePost: Post;
@@ -234,47 +234,18 @@ export type Mutation = {
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
   removeRoleFromUser: User;
+  register: Scalars['Boolean'];
+  logout: Scalars['Boolean'];
+  login: JwtResponse;
+  uploadProfileImage: User;
+  addFollower: User;
+  removeFollower: User;
+  setBio: User;
 };
 
 
 export type MutationDeleteNotificationArgs = {
   notificationId: Scalars['String'];
-};
-
-
-export type MutationRegisterArgs = {
-  input: UserValidator;
-};
-
-
-export type MutationLogoutArgs = {
-  refreshToken: Scalars['String'];
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  email: Scalars['String'];
-};
-
-
-export type MutationUploadProfileImageArgs = {
-  file: Scalars['Upload'];
-};
-
-
-export type MutationAddFollowerArgs = {
-  userID: Scalars['String'];
-};
-
-
-export type MutationRemoveFollowerArgs = {
-  userID: Scalars['String'];
-};
-
-
-export type MutationSetBioArgs = {
-  bio: Scalars['String'];
 };
 
 
@@ -349,6 +320,48 @@ export type MutationRemoveRoleFromUserArgs = {
   roleName: Scalars['String'];
 };
 
+
+export type MutationRegisterArgs = {
+  input: UserValidator;
+};
+
+
+export type MutationLogoutArgs = {
+  refreshToken: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  email: Scalars['String'];
+};
+
+
+export type MutationUploadProfileImageArgs = {
+  file: Scalars['Upload'];
+};
+
+
+export type MutationAddFollowerArgs = {
+  userID: Scalars['String'];
+};
+
+
+export type MutationRemoveFollowerArgs = {
+  userID: Scalars['String'];
+};
+
+
+export type MutationSetBioArgs = {
+  bio: Scalars['String'];
+};
+
+
+export type RoleValidator = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+};
+
 export type UserValidator = {
   firstName: Scalars['String'];
   lastname: Scalars['String'];
@@ -361,12 +374,6 @@ export type JwtResponse = {
   __typename?: 'JwtResponse';
   accessToken: Scalars['String'];
   refreshToken: Scalars['String'];
-};
-
-
-export type RoleValidator = {
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
@@ -679,10 +686,19 @@ export type SearchQueryVariables = Exact<{
 
 export type SearchQuery = (
   { __typename?: 'Query' }
-  & { search: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
-  )> }
+  & { search: (
+    { __typename?: 'Search' }
+    & { users: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    )>, groups: Array<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )>, tags: Array<(
+      { __typename?: 'Tag' }
+      & Pick<Tag, 'id' | 'name'>
+    )> }
+  ) }
 );
 
 export type UserByIdQueryVariables = Exact<{

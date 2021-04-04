@@ -5,7 +5,7 @@
       v-model="searchString"
       :iconPadding="2"
       inputClasses="text-sm md:text-md pl-10"
-      placeholder="Suche nach anderen Usern"
+      placeholder="Suche nach anderen Usern, Tags oder Gruppen"
     >
       <template v-slot:icon>
         <svg class="h-6 w-6 dark:fill-white fill-dark700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,22 +43,53 @@
     </input-field>
 
     <div
-      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark400"
+      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark400 max-h-96 overflow-auto"
       v-if="searchString.length !== 0 && isFocus"
     >
-      <div v-if="searchResult.length === 0">Keine Nutzer gefunden</div>
-      <div
-        v-else
-        v-for="result in searchResult"
-        :key="result.id"
-        class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
-        @click="handleRouting(result.username)"
-      >
-        <div class="table-cell align-middle mr-4">
-          <img class="h-10 w-10 rounded-full bg-dark700" :src="result.profilePicLink" />
+      <div v-if="searchResult.users.length === 0 && searchResult.groups.length === 0 && searchResult.tags.length === 0">
+        Keine Nutzer, Tags oder Gruppen gefunden
+      </div>
+      <div v-else>
+        <div class="pb-2 font-semibold">Nutzer</div>
+        <div v-if="searchResult.users && searchResult.users.length > 0">
+          <div
+            v-for="result in searchResult.users"
+            :key="result.id"
+            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            @click="handleRouting('USERS', result.username)"
+          >
+            <div class="table-cell align-middle mr-4">
+              <img class="h-10 w-10 rounded-full bg-dark700" :src="result.profilePicLink" />
+            </div>
+            <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
+            <div class="flex flex-row align-middle ml-3">@{{ result.username }}</div>
+          </div>
         </div>
-        <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
-        <div class="flex flex-row align-middle ml-3">@{{ result.username }}</div>
+        <div class="mt-2 text-sm mb-4" v-else>Keine Nutzer gefunden</div>
+        <div class="pb-2 pt-2 font-semibold">tags</div>
+        <div v-if="searchResult.tags && searchResult.tags.length > 0">
+          <div
+            v-for="result in searchResult.tags"
+            :key="result.id"
+            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-2 p-3 rounded-md cursor-pointer"
+            @click="handleRouting('TAGS', result.name)"
+          >
+            <div class="flex flex-row align-middle">{{ result.name }}</div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm mb-2" v-else>Keine Tags gefunden</div>
+        <div class="pb-2 pt-2 font-semibold">Gruppen</div>
+        <div v-if="searchResult.groups && searchResult.groups.length > 0">
+          <div
+            v-for="result in searchResult.groups"
+            :key="result.id"
+            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            @click="handleRouting('GROUPS', result.id)"
+          >
+            <div class="flex flex-row align-middle">{{ result.name }}</div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm" v-else>Keine Gruppen gefunden</div>
       </div>
     </div>
   </div>
@@ -110,6 +141,7 @@ export default defineComponent({
     onResult(({ data }) => {
       if (data.search) {
         searchResult.value = data.search;
+        console.log(data.search);
       } else {
         searchResult.value = [];
       }
@@ -120,13 +152,34 @@ export default defineComponent({
       isFocus.value = false;
     });
 
-    const handleRouting = (id: string) => {
-      router.push({
-        name: 'Profile',
-        params: {
-          id,
-        },
-      });
+    const handleRouting = (type: string, payload: string) => {
+      switch (type) {
+        case 'USERS':
+          router.push({
+            name: 'Profile',
+            params: {
+              id: payload,
+            },
+          });
+          break;
+        case 'TAGS':
+          router.push({
+            name: 'Browse',
+            query: {
+              tag: payload,
+            },
+          });
+          break;
+        case 'GROUPS':
+          router.push({
+            name: 'Groups',
+            params: {
+              id: payload,
+            },
+          });
+          break;
+      }
+
       searchString.value = '';
       isFocus.value = false;
     };

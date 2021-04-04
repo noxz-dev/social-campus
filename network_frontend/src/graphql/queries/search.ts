@@ -3,11 +3,21 @@ import gql from 'graphql-tag';
 export const search = gql`
   query search($searchString: String!) {
     search(searchString: $searchString) {
-      id
-      firstname
-      lastname
-      username
-      profilePicLink
+      users {
+        id
+        firstname
+        lastname
+        username
+        profilePicLink
+      }
+      groups {
+        id
+        name
+      }
+      tags {
+        id
+        name
+      }
     }
   }
 `;

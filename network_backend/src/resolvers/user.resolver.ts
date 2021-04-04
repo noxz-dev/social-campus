@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import argon2 from 'argon2';
-import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
-import os from 'os';
-import path from 'path';
-import ternaryStream from 'ternary-stream';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository, ILike } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { getRepository } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
@@ -18,10 +12,10 @@ import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { UserStats } from '../graphql_types/userStats';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
+import { uploadFile, uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/jwtUser.interface';
 import { log } from '../utils/services/logger';
-import { minioClient } from '../utils/services/minio';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
 
@@ -251,16 +245,6 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => [User])
-  async search(@Arg('searchString') searchString: string): Promise<User[]> {
-    const users = await getRepository(User).find({
-      where: [{ firstname: ILike(`%${searchString}%`) }, { lastname: ILike(`%${searchString}%`) }],
-    });
-
-    return users;
-  }
-
-  @Authorized()
-  @Query(() => [User])
   async following(
     @Arg('userId') userId: string,
     @Arg('skip') skip: number,
@@ -322,76 +306,3 @@ export class UserResolver {
     return userStats;
   }
 }
-
-export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
-  const metaData = {
-    'Content-Type': 'application/octet-stream',
-    'X-Amz-Meta-Testing': 1234,
-    example: 5678,
-  };
-  const filenameUUID = uuidv4();
-  const { createReadStream, filename } = await file;
-
-  const fileEnding = filename.split('.')[1];
-  const newFileName = filenameUUID + '.' + fileEnding;
-
-  console.log(fileEnding);
-  const destinationPath = path.join(os.tmpdir(), filename);
-  let compress;
-  if (fileEnding === 'png') {
-    compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
-  } else {
-    compress = new MozJPEG();
-  }
-
-  const condition = function (data) {
-    if (compress) return true;
-    return false;
-  };
-  await new Promise((res, rej) =>
-    createReadStream()
-      .pipe(ternaryStream(condition, compress))
-      .pipe(createWriteStream(destinationPath))
-      .on('error', rej)
-      .on('finish', () => {
-        minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-          if (err) {
-            log.error(err.stack);
-            throw Error('image upload failed');
-          }
-          log.info('File uploaded successfully.');
-
-          //Delete the tmp file uploaded
-          unlink(destinationPath, () => {
-            res('file upload complete');
-          });
-        });
-      }),
-  );
-  return newFileName;
-};
-
-export const uploadFile = async (file: Buffer, bucketName: string): Promise<string> => {
-  const metaData = {
-    'Content-Type': 'application/octet-stream',
-    'X-Amz-Meta-Testing': 1234,
-    example: 5678,
-  };
-  const filenameUUID = uuidv4();
-
-  const fileEnding = 'png';
-  const newFileName = filenameUUID + '.' + fileEnding;
-  const destinationPath = path.join(os.tmpdir(), newFileName);
-  writeFileSync(destinationPath, file);
-  minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-    if (err) {
-      log.error(err.stack);
-      throw Error('image upload failed');
-    }
-    log.info('File uploaded successfully.');
-    unlink(destinationPath, () => {
-      log.debug('file upload complete');
-    });
-  });
-  return newFileName;
-};

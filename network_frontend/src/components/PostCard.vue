@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, toRefs } from 'vue';
+import { defineComponent, onMounted, onUpdated, ref, toRefs } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
@@ -93,6 +93,14 @@ export default defineComponent({
 
     //little bit hacky there has to be a better way
     onMounted(() => {
+      addTagHandle();
+    });
+
+    onUpdated(() => {
+      addTagHandle();
+    });
+
+    const addTagHandle = () => {
       for (const id of tagsIds) {
         document.getElementById(id)?.addEventListener('click', (e: MouseEvent) => {
           const { id } = e.target;
@@ -100,7 +108,7 @@ export default defineComponent({
           e.stopPropagation();
         });
       }
-    });
+    };
 
     const parseMarkdown = (value: string) => {
       const content = parseTags(value);
@@ -109,7 +117,7 @@ export default defineComponent({
 
     const parseTags = (content: string): string => {
       return content.replaceAll(/#\w\w*/g, (val) => {
-        const tag = `<span id="${val}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`;
+        const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`;
         tagsIds.push(val);
         return tag;
       });

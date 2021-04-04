@@ -6,6 +6,9 @@
       placeholder="Hey, was gibt's Neues ?"
       @blur="v.message.$touch"
     />
+    <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
+      <span class="m">Markdown wird unterstützt</span></span
+    >
     <div class="h-8">
       <div v-if="v.message.$error" class="text-red-400">Du musst schon was eingeben...</div>
     </div>
@@ -174,6 +177,10 @@ export default defineComponent({
       eventbus.emit('close-modal');
     };
 
+    const openMarkdownDoku = () => {
+      window.open('https://guides.github.com/features/mastering-markdown/');
+    };
+
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
     return {
@@ -185,6 +192,7 @@ export default defineComponent({
       toggle,
       getRootProps,
       getInputProps,
+      openMarkdownDoku,
       ...rest,
     };
   },

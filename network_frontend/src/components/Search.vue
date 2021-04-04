@@ -134,6 +134,7 @@ export default defineComponent({
     const searchResult = ref([]);
     const isFocus = ref(false);
 
+    //CALLS ON INIT .. could be not the best idea
     const { onResult } = useSearchQuery(() => ({
       searchString: searchString.value,
     }));
@@ -141,7 +142,6 @@ export default defineComponent({
     onResult(({ data }) => {
       if (data.search) {
         searchResult.value = data.search;
-        console.log(data.search);
       } else {
         searchResult.value = [];
       }

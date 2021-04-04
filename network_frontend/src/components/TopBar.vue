@@ -203,7 +203,7 @@
           </div>
 
           <button
-            v-if="$route.name !== 'DetailPost' && !$route.path.includes('/user')"
+            v-if="['Home', 'Browse'].includes($route.name)"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
           >

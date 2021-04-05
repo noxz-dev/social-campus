@@ -1,5 +1,5 @@
 <template>
-  <card class="xl:w-80 lg:w-1/3 md:w-1/2 sm:w-full flex flex-col justify-center" bgColorDark="bg-dark-500">
+  <card class="xl:w-80 lg:w-1/3 md:w-1/2 sm:w-full flex flex-col justify-center" bgColorDark="bg-dark500">
     <div class="p-1 pb-2 pt-2">
       <div class="p-2">
         <img class="rounded-xl object-cover h-52 w-full" src="https://picsum.photos/300/300" alt="" />

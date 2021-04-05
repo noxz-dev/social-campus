@@ -43,7 +43,6 @@ export default defineComponent({
           take: 10,
           skip: 0,
           tags: route.query.tag,
-          pollInterval: 60000,
         }
     );
     const posts = useResult(result);

@@ -12,6 +12,7 @@ export const getNotifications = gql`
       }
       fromUser {
         id
+        profilePicLink
       }
     }
   }

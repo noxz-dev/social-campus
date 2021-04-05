@@ -25,7 +25,6 @@ export default defineComponent({
           userID: props.userId,
           take: 100,
           skip: 0,
-          pollInterval: 60000,
         }
     );
 

@@ -214,10 +214,11 @@ export const LikePostDocument = gql`
     liked
     imageLink
     user {
+      id
       firstname
       lastname
-      profilePicLink
       username
+      profilePicLink
     }
     text
     likesCount
@@ -551,6 +552,7 @@ export const GetNotificationsDocument = gql`
     }
     fromUser {
       id
+      profilePicLink
     }
   }
 }

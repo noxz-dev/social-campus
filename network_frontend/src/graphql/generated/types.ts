@@ -488,7 +488,7 @@ export type LikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   ) }
 );
@@ -631,7 +631,7 @@ export type GetNotificationsQuery = (
       & Pick<User, 'id'>
     ), fromUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id'>
+      & Pick<User, 'id' | 'profilePicLink'>
     ) }
   )> }
 );

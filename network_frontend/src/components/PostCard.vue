@@ -62,11 +62,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
 import { getFeed } from '../graphql/queries/getFeed';
 import CardHeader from './CardHeader.vue';
-import { UnlikePostMutationVariables } from '../graphql/generated/types';
+import { GetFeedQueryVariables, LikePostMutationVariables, UnlikePostMutationVariables } from '../graphql/generated/types';
 import Card from './Card.vue';
 import { useRouter } from 'vue-router';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
+import { getFeedState } from '../_helpers/QueryState';
 
 dayjs.extend(relativeTime);
 
@@ -82,15 +83,7 @@ export default defineComponent({
     const router = useRouter();
     const tagsIds: string[] = [];
 
-    const { mutate: like } = useLikePostMutation({
-      variables: <UnlikePostMutationVariables>{ postID: props.post.id },
-      refetchQueries: [
-        {
-          query: getFeed,
-        },
-      ],
-    });
-
+    
     //little bit hacky there has to be a better way
     onMounted(() => {
       addTagHandle();
@@ -123,13 +116,69 @@ export default defineComponent({
       });
     };
 
+    const { mutate: like } = useLikePostMutation({
+      variables: <LikePostMutationVariables>{ postID: props.post.id },
+      update: (cache, { data: { likePost } }) => {
+        try {
+          console.log(likePost)
+          const dataInStore: any = cache.readQuery({ query: getFeed, variables: {
+            skip: 0,
+            take: 10
+          } });
+          const getFeedData = [...dataInStore.getFeed]
+          getFeedData.forEach(post => {
+            if(post.id === likePost.id) {
+              post = likePost
+            }
+          })
+          cache.writeQuery({
+            query: getFeed,
+            variables: {
+            skip: 0,
+            take: 10
+          },
+            data: {
+              ...dataInStore,
+              getFeed: [...getFeedData],
+            },
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+
+
     const { mutate: unlike } = useUnlikePostMutation({
-      variables: <UnlikePostMutationVariables>{ postID: props.post?.value },
-      refetchQueries: [
-        {
-          query: getFeed,
-        },
-      ],
+      variables: <UnlikePostMutationVariables>{ postID: props.post.id },
+      update: (cache, { data: { unlikePost } }) => {
+        try {
+          console.log(unlikePost)
+          const dataInStore: any = cache.readQuery({ query: getFeed, variables: {
+            skip: 0,
+            take: 10
+          } });
+          const getFeedData = [...dataInStore.getFeed]
+          getFeedData.forEach(post => {
+            if(post.id === unlikePost.id) {
+              post = unlikePost
+            }
+          })
+          cache.writeQuery({
+            query: getFeed,
+            variables: {
+            skip: 0,
+            take: 10
+          },
+            data: {
+              ...dataInStore,
+              getFeed: [...getFeedData],
+            },
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
     });
 
     const likePost = async () => {

@@ -14,6 +14,9 @@
         :key="notify.id"
         @click="handleNotificationClick(notify)"
       >
+        <div class="h-8 w-8 mx-2">
+          <img :src="notify.fromUser.profilePicLink" alt="">
+        </div>
         <span class="flex-1 ml-2 dark:text-gray-50 text-gray-900">{{ notify.message }}</span>
         <div class="rounded" @click.stop="deleteNotification(notify.id)">
           <svg

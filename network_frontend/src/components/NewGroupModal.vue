@@ -31,7 +31,7 @@
                 </div>
                 <textarea
                   class="dark:bg-[#3C3F48] border-2 mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Hey, was gibt's Neues ?"
+                  placeholder="Gruppenbeschreibung"
                 />
               </div>
               <div class="flex flex-row-reverse">

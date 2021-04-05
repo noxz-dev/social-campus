@@ -357,6 +357,7 @@ export class PostResolver {
     const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;
     log.info(`user with the id ${userId} liked the post ${postID}`);
+    post.likesCount = await countLikes(post.id);
     return post;
   }
 
@@ -402,6 +403,7 @@ export class PostResolver {
     const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;
     log.info(`user with the id ${userId} unliked the post ${postID}`);
+    post.likesCount = await countLikes(post.id);
     return post;
   }
 

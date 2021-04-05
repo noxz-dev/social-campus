@@ -1,11 +1,15 @@
 <template>
   <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
-    <textarea
-      v-model="message"
-      class="dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-      placeholder="Hey, was gibt's Neues ?"
-      @blur="v.message.$touch"
-    />
+    <vue-tribute :options="autoCompleteOptions" elementId="newPostTextArea">
+      <textarea
+        id="newPostTextArea"
+        v-model="message"
+        class="dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="Hey, was gibt's Neues ?"
+        @blur="v.message.$touch"
+      />
+    </vue-tribute>
+    <vue-tribute :options="autoCompleteOptions2" elementId="newPostTextArea"></vue-tribute>
     <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
       <span class="m">Markdown wird unterstützt</span></span
     >
@@ -88,8 +92,9 @@ import { useAddPostMutation } from '../graphql/generated/graphqlOperations';
 import ToggleButton from '../components/ToggleButton.vue';
 import { useRoute } from 'vue-router';
 import { AddPostMutationVariables } from 'src/graphql/generated/types';
+import VueTribute from './VueTribute.vue';
 export default defineComponent({
-  components: { ToggleButton },
+  components: { ToggleButton, VueTribute },
   setup() {
     const message = ref('');
     const route = useRoute();
@@ -183,6 +188,27 @@ export default defineComponent({
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
+    const autoCompleteOptions = {
+      trigger: '@',
+      values: [
+        { key: 'Collin Henderson', value: 'syropian' },
+        { key: 'Sarah Drasner', value: 'sarah_edo' },
+        { key: 'Evan You', value: 'youyuxi' },
+        { key: 'Adam Wathan', value: 'adamwathan' },
+      ],
+      positionMenu: true,
+    };
+    const autoCompleteOptions2 = {
+      trigger: '#',
+      values: [
+        { key: 'AAAAAAollin Henderson', value: 'syropian' },
+        { key: 'Sarah Drasner', value: 'sarah_edo' },
+        { key: 'Evan You', value: 'youyuxi' },
+        { key: 'Adam Wathan', value: 'adamwathan' },
+      ],
+      positionMenu: true,
+    };
+
     return {
       message,
       post,
@@ -192,6 +218,8 @@ export default defineComponent({
       toggle,
       getRootProps,
       getInputProps,
+      autoCompleteOptions,
+      autoCompleteOptions2,
       openMarkdownDoku,
       ...rest,
     };
@@ -199,4 +227,50 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.tribute-container {
+  z-index: 50;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+  display: block;
+  z-index: 999999;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(#000, 0.13);
+}
+.tribute-container ul {
+  margin: 0;
+  margin-top: 2px;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid rgba(#000, 0.13);
+  background-clip: padding-box;
+  overflow: hidden;
+}
+.tribute-container li {
+  color: #3f5efb;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.tribute-container li.highlight,
+.tribute-container li:hover {
+  background: #3f5efb;
+  color: #fff;
+}
+.tribute-container li span {
+  font-weight: bold;
+}
+.tribute-container li.no-match {
+  cursor: default;
+}
+.tribute-container .menu-highlighted {
+  font-weight: bold;
+}
+</style>

@@ -7,10 +7,11 @@ export const likePost = gql`
       liked
       imageLink
       user {
+        id
         firstname
         lastname
-        profilePicLink
         username
+        profilePicLink
       }
       text
       likesCount

@@ -19,6 +19,7 @@ import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import { GetFeedQueryVariables } from 'src/graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
+import { getFeedState } from "../_helpers/QueryState"
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper },
@@ -30,7 +31,6 @@ export default defineComponent({
     const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(<GetFeedQueryVariables>{
       take: 10,
       skip: 0,
-      pollInterval: 60000,
     });
     const posts = useResult(result);
 
@@ -58,15 +58,11 @@ export default defineComponent({
       variables: {
         userId: user.value.id,
       },
-      // updateQuery: (previousResult, { subscriptionData }) => {
-      //   console.log(previousResult);
-      //   // previousResult.messages.push(subscriptionData.data.messageAdded);
-      //   return previousResult;
-      // },
     }));
 
     const loadMore = () => {
       console.log('load triggerd');
+      getFeedState.skip = posts.value.length
       fetchMore({
         variables: {
           skip: posts.value.length,

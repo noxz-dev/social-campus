@@ -3,7 +3,7 @@
     <div id="groups" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto p-5">
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">
-          <div class="text-md font-semibold hidden md:block">Finde Gruppen</div>
+          <div class="text-md font-semibold hidden md:block text-lg">Finde Gruppen</div>
           <div class="w-full md:w-2/4">
             <input-field
               @click="isFocus = true"
@@ -111,10 +111,10 @@
           </div>
         </div>
       </div>
-      <div class="mt-10 p-4 dark:bg-dark-600 bg-gray-300 w-full rounded-xl dark:text-gray-50">
+      <div class="mt-10 p-4 w-full rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-4">
-            <span>Empfohlene Gruppen</span>
+            <span class="text-lg">Empfohlene Gruppen</span>
           </div>
         </div>
         <div class="pt-4 flex flex-wrap gap-3">

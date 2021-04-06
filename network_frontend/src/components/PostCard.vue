@@ -29,11 +29,11 @@
                 </g>
               </g>
             </svg>
-            <span class="px-2 font-mono">{{ post.likesCount }}</span>
+            <span class="px-2 font-mono dark:text-gray-50 text-gray-900">{{ post.likesCount }}</span>
           </div>
           <div class="flex cursor-pointer" @click="handleNavigation">
             <svg
-              class="duration-200 h-6 dark:stroke-grayLight hover:stroke-grayDark"
+              class="duration-200 h-6 dark:stroke-grayLight stroke-black hover:stroke-grayDark"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -46,28 +46,27 @@
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <span class="px-2 font-mono">{{ post.commentCount }}</span>
+            <span class="px-2 font-mono dark:text-gray-50 text-gray-900">{{ post.commentCount }}</span>
           </div>
         </div>
-        <div v-if="post.edited" class="text-xs dark:text-gray-400 italic">bearbeitet</div>
+        <div v-if="post.edited" class="text-xs dark:text-gray-400 text-gray-900 italic">bearbeitet</div>
       </div>
     </div>
   </card>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, ref, toRefs } from 'vue';
+import { defineComponent, onMounted, onUpdated } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../graphql/generated/graphqlOperations';
 import { getFeed } from '../graphql/queries/getFeed';
 import CardHeader from './CardHeader.vue';
-import { GetFeedQueryVariables, LikePostMutationVariables, UnlikePostMutationVariables } from '../graphql/generated/types';
+import { LikePostMutationVariables, UnlikePostMutationVariables } from '../graphql/generated/types';
 import Card from './Card.vue';
 import { useRouter } from 'vue-router';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
-import { getFeedState } from '../_helpers/QueryState';
 
 dayjs.extend(relativeTime);
 

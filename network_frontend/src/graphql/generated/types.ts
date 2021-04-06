@@ -628,10 +628,10 @@ export type GetNotificationsQuery = (
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
     & { toUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id'>
+      & Pick<User, 'id' | 'profilePicLink' | 'username'>
     ), fromUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'profilePicLink'>
+      & Pick<User, 'id' | 'profilePicLink' | 'username'>
     ) }
   )> }
 );

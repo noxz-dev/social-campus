@@ -15,7 +15,7 @@
         @click="handleNotificationClick(notify)"
       >
         <div class="h-8 w-8 mx-2">
-          <img :src="notify.fromUser.profilePicLink" alt="">
+          <img :src="notify.fromUser.profilePicLink" alt="" />
         </div>
         <span class="flex-1 ml-2 dark:text-gray-50 text-gray-900">{{ notify.message }}</span>
         <div class="rounded" @click.stop="deleteNotification(notify.id)">
@@ -61,7 +61,8 @@ import { getNotifications } from '../graphql/queries/notifications';
 import { notificationsSubscription } from '../graphql/subscriptions/notifications';
 import { useStore } from 'vuex';
 export default defineComponent({
-  setup() {
+  emits: ['closeNotify'],
+  setup(props, { emit }) {
     const notifications = ref<Notification[]>([]);
     const { onResult, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
     const store = useStore();
@@ -101,6 +102,7 @@ export default defineComponent({
             id: notify.fromUser.username,
           },
         });
+        emit('closeNotify');
       }
     };
 

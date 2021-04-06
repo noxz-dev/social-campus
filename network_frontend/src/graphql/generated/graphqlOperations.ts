@@ -549,10 +549,13 @@ export const GetNotificationsDocument = gql`
     createdAt
     toUser {
       id
+      profilePicLink
+      username
     }
     fromUser {
       id
       profilePicLink
+      username
     }
   }
 }

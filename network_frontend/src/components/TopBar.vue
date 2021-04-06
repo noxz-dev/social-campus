@@ -6,7 +6,7 @@
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
         <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
-          <div class="flex-shrink-0 flex items-center flex-row">
+          <div class="flex-shrink-0 flex items-center flex-row cursor-pointer" @click="$router.push('/home')">
             <img class="block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="Workflow" />
             <div v-if="breakpoints.is != 'md' && breakpoints.is != 'sm'" class="text-gray-900 dark:text-gray-50 ml-5 text-xl font-semibold">
               SocialCampus
@@ -61,7 +61,7 @@
             </svg>
           </button>
         </div>
-        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
+        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4" id="notify-button">
           <div
             @click="notifyOpen = !notifyOpen"
             class="hover:opacity-70 cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -86,9 +86,9 @@
             </svg>
           </div>
 
-          <div class="relative">
+          <div class="relative" ref="notifyTarget">
             <transition name="fade">
-              <notifications v-if="notifyOpen" @click.prevent />
+              <notifications v-if="notifyOpen" @click.prevent @closeNotify="notifyOpen = false" />
             </transition>
           </div>
 
@@ -141,12 +141,15 @@
                   </svg>
                   <a
                     @click="
-                      $router.push({
-                        name: 'Profile',
-                        params: {
-                          id: user.username,
-                        },
-                      })
+                      () => {
+                        $router.push({
+                          name: 'Profile',
+                          params: {
+                            id: user.username,
+                          },
+                        });
+                        showProfileMenu = false;
+                      }
                     "
                     class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700 cursor-pointer"
                     role="menuitem"
@@ -343,12 +346,25 @@ export default defineComponent({
     const target = ref(null);
     const router = useRouter();
     const notifyOpen = ref(false);
+    const notifyTarget = ref(null);
 
     const store = useStore();
 
     onClickOutside(target, (event) => {
       if (event.path[1].id !== 'user-menu') {
         showProfileMenu.value = false;
+      }
+    });
+
+    onClickOutside(notifyTarget, (event) => {
+      let flag = false;
+      event.path.forEach((element) => {
+        if (element.id === 'notify-button') {
+          flag = true;
+        }
+      });
+      if (!flag) {
+        notifyOpen.value = false;
       }
     });
 
@@ -384,6 +400,7 @@ export default defineComponent({
       showMobileMenu,
       profileImage,
       notifyOpen,
+      notifyTarget,
     };
   },
 });

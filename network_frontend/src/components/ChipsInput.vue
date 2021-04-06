@@ -21,7 +21,7 @@
       v-model="currentInput"
       @keypress.enter="saveChip"
       @keydown.delete="backspaceDelete"
-      class="bg-dark-700 dark:text-gray-50"
+      class="dark:bg-dark-700 bg-white dark:text-gray-50"
       :placeholder="inputPlaceholder"
     />
   </div>
@@ -84,15 +84,14 @@ export default defineComponent({
 
 <style>
 .chip-container {
-  @apply bg-dark-700;
+  @apply bg-white border-b-2 dark:border-white border-black;
+  @apply dark:bg-dark-700;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 34px;
   display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid white;
-  /* align-content: space-between; */
 }
 
 .chip-container input {

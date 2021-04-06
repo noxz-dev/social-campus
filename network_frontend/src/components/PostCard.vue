@@ -1,7 +1,7 @@
 <template>
   <card id="postcard">
     <card-header :post="post" />
-    <div class="px-4">
+    <div class="px-4" @click.self="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown" v-html="parseMarkdown(post.text)"></div>
       </div>
@@ -83,7 +83,6 @@ export default defineComponent({
     const router = useRouter();
     const tagsIds: string[] = [];
 
-    
     //little bit hacky there has to be a better way
     onMounted(() => {
       addTagHandle();
@@ -120,23 +119,26 @@ export default defineComponent({
       variables: <LikePostMutationVariables>{ postID: props.post.id },
       update: (cache, { data: { likePost } }) => {
         try {
-          console.log(likePost)
-          const dataInStore: any = cache.readQuery({ query: getFeed, variables: {
-            skip: 0,
-            take: 10
-          } });
-          const getFeedData = [...dataInStore.getFeed]
-          getFeedData.forEach(post => {
-            if(post.id === likePost.id) {
-              post = likePost
+          console.log(likePost);
+          const dataInStore: any = cache.readQuery({
+            query: getFeed,
+            variables: {
+              skip: 0,
+              take: 10,
+            },
+          });
+          const getFeedData = [...dataInStore.getFeed];
+          getFeedData.forEach((post) => {
+            if (post.id === likePost.id) {
+              post = likePost;
             }
-          })
+          });
           cache.writeQuery({
             query: getFeed,
             variables: {
-            skip: 0,
-            take: 10
-          },
+              skip: 0,
+              take: 10,
+            },
             data: {
               ...dataInStore,
               getFeed: [...getFeedData],
@@ -145,31 +147,33 @@ export default defineComponent({
         } catch (err) {
           console.log(err);
         }
-      }
+      },
     });
-
 
     const { mutate: unlike } = useUnlikePostMutation({
       variables: <UnlikePostMutationVariables>{ postID: props.post.id },
       update: (cache, { data: { unlikePost } }) => {
         try {
-          console.log(unlikePost)
-          const dataInStore: any = cache.readQuery({ query: getFeed, variables: {
-            skip: 0,
-            take: 10
-          } });
-          const getFeedData = [...dataInStore.getFeed]
-          getFeedData.forEach(post => {
-            if(post.id === unlikePost.id) {
-              post = unlikePost
+          console.log(unlikePost);
+          const dataInStore: any = cache.readQuery({
+            query: getFeed,
+            variables: {
+              skip: 0,
+              take: 10,
+            },
+          });
+          const getFeedData = [...dataInStore.getFeed];
+          getFeedData.forEach((post) => {
+            if (post.id === unlikePost.id) {
+              post = unlikePost;
             }
-          })
+          });
           cache.writeQuery({
             query: getFeed,
             variables: {
-            skip: 0,
-            take: 10
-          },
+              skip: 0,
+              take: 10,
+            },
             data: {
               ...dataInStore,
               getFeed: [...getFeedData],
@@ -178,7 +182,7 @@ export default defineComponent({
         } catch (err) {
           console.log(err);
         }
-      }
+      },
     });
 
     const likePost = async () => {
@@ -195,7 +199,6 @@ export default defineComponent({
     };
 
     const handleTagClick = (tag: string) => {
-      console.log(tag);
       router.push({ name: 'Browse', query: { tag } });
     };
 

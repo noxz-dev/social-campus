@@ -22,13 +22,13 @@
       @keypress.enter="saveChip"
       @keydown.delete="backspaceDelete"
       class="bg-dark-700 dark:text-gray-50"
-      placeholder="tag name ... z.B. hsh"
+      :placeholder="inputPlaceholder"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
   props: {
@@ -40,10 +40,21 @@ export default defineComponent({
       type: Array,
       default: [],
     },
+    inputPlaceholder: {
+      type: String,
+      default: '',
+    },
   },
   setup(props) {
     const chips = ref(props.startTags);
     const currentInput = ref('');
+
+    watch(
+      () => props.startTags,
+      () => {
+        chips.value = props.startTags;
+      }
+    );
 
     const saveChip = () => {
       ((props.set && chips.value.indexOf(currentInput.value) === -1) || !props.set) &&

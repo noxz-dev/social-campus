@@ -5,16 +5,8 @@
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
           <div class="h-10 w-full flex items-center mb-10">
             <span class="text-xl font-semibold dark:text-gray-50 text-gray-900 mr-4"> Filter nach Tags:</span>
-            <chips-input class="flex-1" ref="chipInput" :startTags="tags"></chips-input>
+            <chips-input class="flex-1" ref="chipInput" :startTags="inputTags" inputPlaceholder="z.B. #hsh, #socialnetwork"></chips-input>
           </div>
-          <!-- <div class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mb-10 text-center">
-            <span class="flex justify-center items-center pt-10" v-if="$route.query.tag">
-              Posts mit den Tags
-              <span class="ml-2 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                #{{ $route.query.tag }}
-              </span>
-            </span>
-          </div> -->
           <post-list :posts="posts" />
         </div>
       </infinite-scroll-wrapper>
@@ -43,8 +35,12 @@ export default defineComponent({
     const route = useRoute();
     const chipInput = ref(null);
     const tags = ref<string[]>([]);
+    const inputTags = ref<string[]>([]);
 
-    if (route.query.tag) tags.value.push(route.query.tag);
+    if (route.query.tag) {
+      inputTags.value.push(route.query.tag);
+      tags.value.push(route.query.tag);
+    }
 
     const { result, error, subscribeToMore, fetchMore, loading } = useBrowsePostsQuery(
       () =>
@@ -64,10 +60,18 @@ export default defineComponent({
       () => chipInput.value?.chips,
       () => {
         tags.value = chipInput.value?.chips;
-        console.log(tags.value);
+        console.log('called');
       },
       {
         deep: true,
+      }
+    );
+
+    watch(
+      () => route.query.tag,
+      () => {
+        inputTags.value = [route.query.tag];
+        console.log(inputTags.value);
       }
     );
 
@@ -117,7 +121,7 @@ export default defineComponent({
     //   },
     // }));
 
-    return { posts, error, home, loadMore, loading, chipInput, tags };
+    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags };
   },
 });
 </script>

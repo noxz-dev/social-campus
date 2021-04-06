@@ -29,7 +29,7 @@ export class Post extends Base {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @Field(() => [Like])
+  @Field(() => [Like], { nullable: true })
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
 
@@ -38,13 +38,13 @@ export class Post extends Base {
   @JoinTable()
   tags: Tag[];
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   likesCount: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   commentCount: number;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   liked: boolean;
 
   @Column({ nullable: true })
@@ -53,7 +53,7 @@ export class Post extends Base {
   @Field(() => String, { nullable: true })
   imageLink: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   @Column({ default: false })
   edited: boolean;
 

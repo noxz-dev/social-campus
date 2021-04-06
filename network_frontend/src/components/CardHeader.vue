@@ -157,6 +157,10 @@ export default defineComponent({
       refetchQueries: [
         {
           query: getFeed,
+          variables: {
+            skip: 0,
+            take: 10,
+          },
         },
       ],
     }));

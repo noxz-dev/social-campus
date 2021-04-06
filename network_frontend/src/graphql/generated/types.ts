@@ -15,157 +15,16 @@ export type Scalars = {
   Upload: any;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  getNotifications: Array<Notification>;
-  /** getPosts returns all posts from a given userID */
-  getPostsFromUser?: Maybe<Array<Post>>;
-  /** all posts with filter options */
-  browsePosts?: Maybe<Array<Post>>;
-  /** getPosts returns all posts from a given groupID */
-  getPostsFromGroup?: Maybe<Array<Post>>;
-  getFeed: Array<Post>;
-  postById: Post;
-  groupById: Group;
-  getRoles: Array<Role>;
-  search: Search;
-  getUsers: Array<User>;
-  /** Me returns User info when logged in. */
-  me?: Maybe<User>;
-  userById: User;
-  userByUsername: User;
-  following: Array<User>;
-  followers: Array<User>;
-  userStats: UserStats;
-};
-
-
-export type QueryGetPostsFromUserArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userID: Scalars['String'];
-};
-
-
-export type QueryBrowsePostsArgs = {
-  tags?: Maybe<Array<Scalars['String']>>;
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-};
-
-
-export type QueryGetPostsFromGroupArgs = {
-  groupID: Scalars['String'];
-};
-
-
-export type QueryGetFeedArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-};
-
-
-export type QueryPostByIdArgs = {
-  postId: Scalars['String'];
-};
-
-
-export type QueryGroupByIdArgs = {
-  groupId: Scalars['String'];
-};
-
-
-export type QuerySearchArgs = {
-  searchString: Scalars['String'];
-};
-
-
-export type QueryUserByIdArgs = {
-  userId: Scalars['String'];
-};
-
-
-export type QueryUserByUsernameArgs = {
-  username: Scalars['String'];
-};
-
-
-export type QueryFollowingArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryFollowersArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryUserStatsArgs = {
-  userId: Scalars['String'];
-};
-
-export type Notification = {
-  __typename?: 'Notification';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  type: NotificationType;
-  message: Scalars['String'];
-  fromUser: User;
-  toUser: User;
-};
-
-
-export enum NotificationType {
-  NewFollower = 'NEW_FOLLOWER'
-}
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  firstname: Scalars['String'];
-  lastname: Scalars['String'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  profilePicLink?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  roles: Array<Role>;
-  posts: Array<Post>;
-  followers: Array<User>;
-  following: Array<User>;
-  groups: Array<Group>;
-  meFollowing: Scalars['Boolean'];
-};
-
-export type Role = {
-  __typename?: 'Role';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  users: Array<User>;
-};
-
-export type Post = {
-  __typename?: 'Post';
+export type Comment = {
+  __typename?: 'Comment';
   id: Scalars['String'];
   createdAt: Scalars['DateTime'];
   user: User;
-  group?: Maybe<Group>;
   text: Scalars['String'];
-  comments: Array<Comment>;
   likes: Array<Like>;
-  tags: Array<Tag>;
   likesCount: Scalars['Float'];
-  commentCount: Scalars['Float'];
-  liked: Scalars['Boolean'];
-  imageLink?: Maybe<Scalars['String']>;
-  edited: Scalars['Boolean'];
 };
+
 
 export type Group = {
   __typename?: 'Group';
@@ -177,14 +36,10 @@ export type Group = {
   members: Array<User>;
 };
 
-export type Comment = {
-  __typename?: 'Comment';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  user: User;
-  text: Scalars['String'];
-  likes: Array<Like>;
-  likesCount: Scalars['Float'];
+export type JwtResponse = {
+  __typename?: 'JwtResponse';
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
 };
 
 export type Like = {
@@ -192,29 +47,6 @@ export type Like = {
   id: Scalars['String'];
   createdAt: Scalars['DateTime'];
   user: User;
-};
-
-export type Tag = {
-  __typename?: 'Tag';
-  id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  createdBy: User;
-  posts: Array<Post>;
-};
-
-export type Search = {
-  __typename?: 'Search';
-  users: Array<User>;
-  groups: Array<Group>;
-  tags: Array<Tag>;
-};
-
-export type UserStats = {
-  __typename?: 'UserStats';
-  postCount: Scalars['Float'];
-  followerCount: Scalars['Float'];
-  followingCount: Scalars['Float'];
 };
 
 export type Mutation = {
@@ -356,24 +188,149 @@ export type MutationSetBioArgs = {
   bio: Scalars['String'];
 };
 
+export type Notification = {
+  __typename?: 'Notification';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  type: NotificationType;
+  message: Scalars['String'];
+  fromUser: User;
+  toUser: User;
+};
+
+export enum NotificationType {
+  NewFollower = 'NEW_FOLLOWER'
+}
+
+export type Post = {
+  __typename?: 'Post';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  user: User;
+  group?: Maybe<Group>;
+  text: Scalars['String'];
+  comments: Array<Comment>;
+  likes?: Maybe<Array<Like>>;
+  tags: Array<Tag>;
+  likesCount?: Maybe<Scalars['Float']>;
+  commentCount?: Maybe<Scalars['Float']>;
+  liked?: Maybe<Scalars['Boolean']>;
+  imageLink?: Maybe<Scalars['String']>;
+  edited?: Maybe<Scalars['Boolean']>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  getNotifications: Array<Notification>;
+  /** getPosts returns all posts from a given userID */
+  getPostsFromUser?: Maybe<Array<Post>>;
+  /** all posts with filter options */
+  browsePosts?: Maybe<Array<Post>>;
+  /** getPosts returns all posts from a given groupID */
+  getPostsFromGroup?: Maybe<Array<Post>>;
+  getFeed: Array<Post>;
+  postById: Post;
+  groupById: Group;
+  getRoles: Array<Role>;
+  search: Search;
+  getUsers: Array<User>;
+  /** Me returns User info when logged in. */
+  me?: Maybe<User>;
+  userById: User;
+  userByUsername: User;
+  following: Array<User>;
+  followers: Array<User>;
+  userStats: UserStats;
+};
+
+
+export type QueryGetPostsFromUserArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userID: Scalars['String'];
+};
+
+
+export type QueryBrowsePostsArgs = {
+  tags?: Maybe<Array<Scalars['String']>>;
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+};
+
+
+export type QueryGetPostsFromGroupArgs = {
+  groupID: Scalars['String'];
+};
+
+
+export type QueryGetFeedArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+};
+
+
+export type QueryPostByIdArgs = {
+  postId: Scalars['String'];
+};
+
+
+export type QueryGroupByIdArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type QuerySearchArgs = {
+  searchString: Scalars['String'];
+};
+
+
+export type QueryUserByIdArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
+export type QueryFollowingArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryFollowersArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryUserStatsArgs = {
+  userId: Scalars['String'];
+};
+
+export type Role = {
+  __typename?: 'Role';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  users: Array<User>;
+};
 
 export type RoleValidator = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
 };
 
-export type UserValidator = {
-  firstName: Scalars['String'];
-  lastname: Scalars['String'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-export type JwtResponse = {
-  __typename?: 'JwtResponse';
-  accessToken: Scalars['String'];
-  refreshToken: Scalars['String'];
+export type Search = {
+  __typename?: 'Search';
+  users: Array<User>;
+  groups: Array<Group>;
+  tags: Array<Tag>;
 };
 
 export type Subscription = {
@@ -390,6 +347,49 @@ export type SubscriptionNotificationsArgs = {
 
 export type SubscriptionNewPostArgs = {
   userId: Scalars['String'];
+};
+
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  createdBy: User;
+  posts: Array<Post>;
+};
+
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  profilePicLink?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  roles: Array<Role>;
+  posts: Array<Post>;
+  followers: Array<User>;
+  following: Array<User>;
+  groups: Array<Group>;
+  meFollowing: Scalars['Boolean'];
+};
+
+export type UserStats = {
+  __typename?: 'UserStats';
+  postCount: Scalars['Float'];
+  followerCount: Scalars['Float'];
+  followingCount: Scalars['Float'];
+};
+
+export type UserValidator = {
+  firstName: Scalars['String'];
+  lastname: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type AddFollowerMutationVariables = Exact<{

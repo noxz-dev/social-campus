@@ -3,6 +3,9 @@
     <div id="browse" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
+        <div class="h-10 w-full flex">
+        <span class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mr-4">Tags:</span><chips-input class="w-full"></chips-input>
+      </div>
           <div class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mb-10 text-center">
             <span class="flex justify-center items-center" v-if="$route.query.tag">
               Posts mit dem Tag
@@ -28,9 +31,10 @@ import gql from 'graphql-tag';
 import { BrowsePostsQueryVariables } from '../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
+import ChipsInput from '../components/ChipsInput.vue';
 
 export default defineComponent({
-  components: { PostList, InfiniteScrollWrapper },
+  components: { PostList, InfiniteScrollWrapper, ChipsInput },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.userData.user);

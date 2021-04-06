@@ -4,7 +4,7 @@ module.exports = {
     enabled: true,
     content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
     options: {
-      savelist: ['bg-dark-500']
+      savelist: ['bg-dark-500', "pl-2"]
     }
   },
   theme: {

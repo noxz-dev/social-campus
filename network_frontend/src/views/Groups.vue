@@ -3,9 +3,9 @@
     <div id="groups" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto p-5">
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">
-          <div class="text-md font-semibold hidden md:block text-lg">Finde Gruppen</div>
-          <div class="w-full md:w-2/4">
-            <input-field
+          <div class="text-md font-semibold text-lg">Finde Gruppen</div>
+          <!-- <div class="w-full md:w-2/4"> -->
+            <!-- <input-field
               @click="isFocus = true"
               v-model="searchString"
               :iconPadding="2"
@@ -45,8 +45,8 @@
                   </g>
                 </svg>
               </template>
-            </input-field>
-          </div>
+            </input-field> -->
+          <!-- </div> -->
           <div>
             <div></div>
             <div>

@@ -134,9 +134,13 @@ export default defineComponent({
       update: (cache, { data: { addPost } }) => {
         try {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataInStore: any = cache.readQuery({ query: getFeed });
+          const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
           cache.writeQuery({
             query: getFeed,
+            variables: {
+              skip: 0,
+              take: 10,
+            },
             data: {
               ...dataInStore,
               getFeed: [...dataInStore.getFeed, addPost],

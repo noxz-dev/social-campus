@@ -4,6 +4,7 @@ import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import os from 'os';
 import path from 'path';
 import ternaryStream from 'ternary-stream';
+import { v4 as uuidv4 } from 'uuid';
 import { log } from '../services/logger';
 import { minioClient } from '../services/minio';
 export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
@@ -78,6 +79,3 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<stri
   });
   return newFileName;
 };
-function uuidv4() {
-  throw new Error('Function not implemented.');
-}

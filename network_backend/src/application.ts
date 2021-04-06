@@ -16,6 +16,7 @@ import { NotificationResolver } from './resolvers/notification.resolver';
 import { PostResolver } from './resolvers/post.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
 import { SearchResolver } from './resolvers/search.resolver';
+import { TagResolver } from './resolvers/tags.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
@@ -56,6 +57,7 @@ export class Application {
           CommentResolver,
           NotificationResolver,
           SearchResolver,
+          TagResolver,
           GroupResolver,
         ],
         pubSub: this.pubsub,

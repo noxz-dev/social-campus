@@ -1,11 +1,4 @@
-/**
-
-Original by https://github.com/syropian/vue-tribute license MIT
-
-Rewritten in Vue3 with some extras
-
-*/
-
+/** Original by https://github.com/syropian/vue-tribute license MIT Rewritten in Vue3 with some extras */
 
 <template>
   <slot></slot>
@@ -23,8 +16,8 @@ export default defineComponent({
     },
     elementId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
     options: {
@@ -32,12 +25,13 @@ export default defineComponent({
       deep: true,
       handler() {
         if (this.tribute) {
+          console.log('options changed');
           setTimeout(() => {
-            let $el = document.querySelector("#" + this.elementId);
+            let $el = document.querySelector('#' + this.elementId);
             this.tribute.detach($el);
 
             setTimeout(() => {
-              $el = document.querySelector("#" + this.elementId);
+              $el = document.querySelector('#' + this.elementId);
               this.tribute = new Tribute(this.options);
               this.tribute.attach($el);
               $el.tributeInstance = this.tribute;
@@ -51,7 +45,7 @@ export default defineComponent({
     if (typeof Tribute === 'undefined') {
       throw new Error('[vue-tribute] cannot locate tributejs!');
     }
-    const $el = document.querySelector("#" + this.elementId);
+    const $el = document.querySelector('#' + this.elementId);
     this.tribute = new Tribute(this.options);
 
     this.tribute.attach($el);
@@ -64,7 +58,7 @@ export default defineComponent({
   },
 
   beforeUnmount() {
-    const $el = document.querySelector("#" + this.elementId);
+    const $el = document.querySelector('#' + this.elementId);
 
     if (this.tribute) {
       this.tribute.detach($el);
@@ -73,5 +67,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-</style>
+<style></style>

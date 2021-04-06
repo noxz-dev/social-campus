@@ -9,7 +9,6 @@
         @blur="v.message.$touch"
       />
     </vue-tribute>
-    <vue-tribute :options="autoCompleteOptions2" elementId="newPostTextArea"></vue-tribute>
     <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
       <span class="m">Markdown wird unterstützt</span></span
     >
@@ -91,8 +90,10 @@ import { getPostsFromUser } from '../graphql/queries/postFromUser';
 import { useAddPostMutation } from '../graphql/generated/graphqlOperations';
 import ToggleButton from '../components/ToggleButton.vue';
 import { useRoute } from 'vue-router';
-import { AddPostMutationVariables } from 'src/graphql/generated/types';
+import { AddPostMutationVariables, Tag, User } from '../graphql/generated/types';
 import VueTribute from './VueTribute.vue';
+import { useQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
   setup() {
@@ -195,25 +196,53 @@ export default defineComponent({
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
     const autoCompleteOptions = {
-      trigger: '@',
-      values: [
-        { key: 'Collin Henderson', value: 'syropian' },
-        { key: 'Sarah Drasner', value: 'sarah_edo' },
-        { key: 'Evan You', value: 'youyuxi' },
-        { key: 'Adam Wathan', value: 'adamwathan' },
+      collection: [
+        {
+          trigger: '@',
+          values: [],
+          positionMenu: true,
+        },
+        {
+          trigger: '#',
+          values: [],
+          positionMenu: true,
+        },
       ],
-      positionMenu: true,
     };
-    const autoCompleteOptions2 = {
-      trigger: '#',
-      values: [
-        { key: 'AAAAAAollin Henderson', value: 'syropian' },
-        { key: 'Sarah Drasner', value: 'sarah_edo' },
-        { key: 'Evan You', value: 'youyuxi' },
-        { key: 'Adam Wathan', value: 'adamwathan' },
-      ],
-      positionMenu: true,
-    };
+
+    const { onResult: onTags } = useQuery(gql`
+      query {
+        getAllTags {
+          id
+          name
+        }
+      }
+    `);
+
+    onTags(({ data: { getAllTags } }) => {
+      const tags = getAllTags.map((tag: Tag) => {
+        return { key: tag.name, value: tag.name };
+      });
+      autoCompleteOptions.collection[1].values.push(...tags);
+    });
+
+    const { onResult: onUsers } = useQuery(gql`
+      query {
+        getUsers {
+          id
+          firstname
+          lastname
+          username
+        }
+      }
+    `);
+
+    onUsers(({ data: { getUsers } }) => {
+      const users = getUsers.map((user: User) => {
+        return { key: user.firstname + ' ' + user.lastname, value: user.username };
+      });
+      autoCompleteOptions.collection[0].values.push(...users);
+    });
 
     return {
       message,
@@ -225,7 +254,6 @@ export default defineComponent({
       getRootProps,
       getInputProps,
       autoCompleteOptions,
-      autoCompleteOptions2,
       openMarkdownDoku,
       ...rest,
     };

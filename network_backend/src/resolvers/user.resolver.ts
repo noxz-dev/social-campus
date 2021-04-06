@@ -21,10 +21,9 @@ import { notify } from './notification.resolver';
 
 @Resolver(() => User)
 export class UserResolver {
-  @Authorized('ADMIN')
   @Query(() => [User])
   public async getUsers(@Ctx() ctx: MyContext): Promise<User[]> {
-    return getRepository(User).find({ relations: ['roles'] });
+    return getRepository(User).find();
   }
 
   @Authorized()

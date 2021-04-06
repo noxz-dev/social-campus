@@ -19,7 +19,7 @@ export default defineComponent({
       console.log('sub', data);
       toast(data.notifications.message, {
         positionY: 'top',
-        slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="/profile-pics/f8d0783a-77b0-43bf-8e7e-b8aa3540e12f.png"/></div>`,
+        slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="${data.notifications.fromUser.profilePicLink}"/></div>`,
       });
     });
   },

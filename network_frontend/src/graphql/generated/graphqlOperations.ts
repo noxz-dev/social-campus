@@ -826,6 +826,7 @@ export const NotificationsDocument = gql`
     fromUser {
       id
       username
+      profilePicLink
     }
     toUser {
       id

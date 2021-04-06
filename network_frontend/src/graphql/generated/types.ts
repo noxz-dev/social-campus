@@ -759,7 +759,7 @@ export type NotificationsSubscription = (
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
     & { fromUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
+      & Pick<User, 'id' | 'username' | 'profilePicLink'>
     ), toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>

@@ -10,6 +10,7 @@ export const notificationsSubscription = gql`
       fromUser {
         id
         username
+        profilePicLink
       }
       toUser {
         id

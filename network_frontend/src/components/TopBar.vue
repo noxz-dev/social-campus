@@ -287,7 +287,6 @@
             class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
           >
             Ausloggen
-            {{ $route.path }}
           </div>
         </div>
       </div>

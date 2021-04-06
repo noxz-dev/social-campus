@@ -14,7 +14,6 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      mode: 'development',
       registerType: 'autoUpdate',
       manifest: {
         name: 'SocialCampus',

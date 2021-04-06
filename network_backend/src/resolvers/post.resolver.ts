@@ -82,7 +82,7 @@ export class PostResolver {
         .where('posts.group = :group', { group: null })
         .leftJoinAndSelect('posts.user', 'user')
         .leftJoinAndSelect('posts.tags', 'tags')
-        .where('tags.name IN (:...tags)', { tags: tags })
+        .where('lower(tags.name) IN (:...tags)', { tags: tags.map((t) => t.toLowerCase()) })
         .orderBy('posts.createdAt', 'DESC')
         .skip(skip)
         .take(take)

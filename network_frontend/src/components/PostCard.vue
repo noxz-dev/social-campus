@@ -81,7 +81,7 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    const tagsIds: string[] = [];
+    let tagsIds: string[] = [];
 
     //little bit hacky there has to be a better way
     onMounted(() => {
@@ -93,23 +93,26 @@ export default defineComponent({
     });
 
     const addTagHandle = () => {
-      for (const id of tagsIds) {
-        document.getElementById(id)?.addEventListener('click', (e: MouseEvent) => {
-          const { id } = e.target;
-          handleTagClick(id.replace('#', ''));
-          e.stopPropagation();
+      for (const tagId of tagsIds) {
+        document.querySelectorAll(`#${tagId}`).forEach((item) => {
+          item.addEventListener('click', (e) => {
+            const { id } = e.target;
+            handleTagClick(id);
+          });
         });
       }
     };
 
     const parseMarkdown = (value: string) => {
+      tagsIds = [];
       const content = parseTags(value);
       return DOMPurify.sanitize(marked(content));
     };
 
     const parseTags = (content: string): string => {
       return content.replaceAll(/#\w\w*/g, (val) => {
-        const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${val}</span>`;
+        val = val.replaceAll('#', '');
+        const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
         tagsIds.push(val);
         return tag;
       });
@@ -199,6 +202,7 @@ export default defineComponent({
     };
 
     const handleTagClick = (tag: string) => {
+      console.log(tag);
       router.push({ name: 'Browse', query: { tag } });
     };
 

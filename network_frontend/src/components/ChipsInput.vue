@@ -57,8 +57,9 @@ export default defineComponent({
     );
 
     const saveChip = () => {
-      ((props.set && chips.value.indexOf(currentInput.value) === -1) || !props.set) &&
-        chips.value.push(currentInput.value.replaceAll('#', '').replaceAll(' ', ''));
+      const input = currentInput.value.replaceAll('#', '').replaceAll(' ', '');
+      console.log(input);
+      ((props.set && chips.value.indexOf(currentInput.value) === -1) || !props.set) && chips.value.push(input);
       currentInput.value = '';
     };
     const deleteChip = (index: number) => {

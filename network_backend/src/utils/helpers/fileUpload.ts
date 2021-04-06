@@ -3,7 +3,6 @@ import { FileUpload } from 'graphql-upload';
 import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import os from 'os';
 import path from 'path';
-import ternaryStream from 'ternary-stream';
 import { v4 as uuidv4 } from 'uuid';
 import { log } from '../services/logger';
 import { minioClient } from '../services/minio';
@@ -24,34 +23,53 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   let compress;
   if (fileEnding === 'png') {
     compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
-  } else {
+  } else if (['jpg', 'jpeg', 'JPG', 'JPEG'].includes(fileEnding)) {
     compress = new MozJPEG();
   }
 
-  const condition = function (data) {
-    if (compress) return true;
-    return false;
-  };
-  await new Promise((res, rej) =>
-    createReadStream()
-      .pipe(ternaryStream(condition, compress))
-      .pipe(createWriteStream(destinationPath))
-      .on('error', rej)
-      .on('finish', () => {
-        minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-          if (err) {
-            log.error(err.stack);
-            throw Error('image upload failed');
-          }
-          log.info('File uploaded successfully.');
+  if (compress) {
+    await new Promise((res, rej) =>
+      createReadStream()
+        .pipe(compress)
+        .pipe(createWriteStream(destinationPath))
+        .on('error', rej)
+        .on('finish', () => {
+          minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
+            if (err) {
+              log.error(err.stack);
+              throw Error('image upload failed');
+            }
+            log.info('File uploaded successfully.');
 
-          //Delete the tmp file uploaded
-          unlink(destinationPath, () => {
-            res('file upload complete');
+            //Delete the tmp file uploaded
+            unlink(destinationPath, () => {
+              res('file upload complete');
+            });
           });
-        });
-      }),
-  );
+        }),
+    );
+  } else {
+    await new Promise((res, rej) =>
+      createReadStream()
+        .pipe(createWriteStream(destinationPath))
+        .on('error', rej)
+        .on('finish', () => {
+          minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
+            if (err) {
+              log.error(err.stack);
+              throw Error('image upload failed');
+            }
+            log.info('File uploaded successfully.');
+
+            //Delete the tmp file uploaded
+            unlink(destinationPath, () => {
+              res('file upload complete');
+            });
+          });
+        }),
+    );
+  }
+
   return newFileName;
 };
 

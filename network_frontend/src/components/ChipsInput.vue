@@ -59,6 +59,7 @@ export default defineComponent({
     const saveChip = () => {
       const input = currentInput.value.replaceAll('#', '').replaceAll(' ', '');
       console.log(input);
+      if (input === '') return;
       ((props.set && chips.value.indexOf(currentInput.value) === -1) || !props.set) && chips.value.push(input);
       currentInput.value = '';
     };

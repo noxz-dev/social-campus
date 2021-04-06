@@ -3,17 +3,18 @@
     <div id="browse" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
-        <div class="h-10 w-full flex">
-        <span class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mr-4">Tags:</span><chips-input class="w-full"></chips-input>
-      </div>
-          <div class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mb-10 text-center">
-            <span class="flex justify-center items-center" v-if="$route.query.tag">
-              Posts mit dem Tag
+          <div class="h-10 w-full flex items-center mb-10">
+            <span class="text-xl font-semibold dark:text-gray-50 text-gray-900 mr-4"> Filter nach Tags:</span>
+            <chips-input class="flex-1" ref="chipInput" :startTags="tags"></chips-input>
+          </div>
+          <!-- <div class="text-2xl font-semibold dark:text-gray-50 text-gray-900 mb-10 text-center">
+            <span class="flex justify-center items-center pt-10" v-if="$route.query.tag">
+              Posts mit den Tags
               <span class="ml-2 inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
                 #{{ $route.query.tag }}
               </span>
             </span>
-          </div>
+          </div> -->
           <post-list :posts="posts" />
         </div>
       </infinite-scroll-wrapper>
@@ -40,13 +41,17 @@ export default defineComponent({
     const user = computed(() => store.state.userData.user);
     const home = ref<HTMLElement>();
     const route = useRoute();
+    const chipInput = ref(null);
+    const tags = ref<string[]>([]);
+
+    if (route.query.tag) tags.value.push(route.query.tag);
 
     const { result, error, subscribeToMore, fetchMore, loading } = useBrowsePostsQuery(
       () =>
         <BrowsePostsQueryVariables>{
           take: 10,
           skip: 0,
-          tags: route.query.tag,
+          tags: tags.value,
         }
     );
     const posts = useResult(result);
@@ -54,6 +59,17 @@ export default defineComponent({
     watchEffect(() => {
       if (posts.value) console.log(posts.value.length);
     });
+
+    watch(
+      () => chipInput.value?.chips,
+      () => {
+        tags.value = chipInput.value?.chips;
+        console.log(tags.value);
+      },
+      {
+        deep: true,
+      }
+    );
 
     //TODO update query in fetchmore is deprecated .. needs a redo
     const loadMore = () => {
@@ -101,7 +117,7 @@ export default defineComponent({
     //   },
     // }));
 
-    return { posts, error, home, loadMore, loading };
+    return { posts, error, home, loadMore, loading, chipInput, tags };
   },
 });
 </script>

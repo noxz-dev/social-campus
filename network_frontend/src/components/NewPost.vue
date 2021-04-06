@@ -173,7 +173,9 @@ export default defineComponent({
 
     const post = () => {
       v.value.$touch();
-      if (v.value.$errors.length !== 0) return;
+      if (v.value.$errors.length !== 0) {
+        if (!file.value) return;
+      }
 
       let foundTags = message.value.match(/#\w\w*/g);
       if (foundTags) {

@@ -36,8 +36,8 @@ export default defineComponent({
 
     subscribeToMore(() => ({
       document: gql`
-        subscription newPost($userId: String!) {
-          newPost(userId: $userId) {
+        subscription newPost($userId: String!, $all: Boolean!) {
+          newPost(userId: $userId, all: $all) {
             id
             liked
             imageLink
@@ -57,6 +57,7 @@ export default defineComponent({
       `,
       variables: {
         userId: user.value.id,
+        all: false
       },
     }));
 

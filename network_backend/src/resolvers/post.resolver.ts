@@ -304,6 +304,7 @@ export class PostResolver {
   @Subscription(() => Post, {
     topics: SUB_TOPICS.NEW_POST,
     filter: async ({ payload, args }) => {
+      if (args.all) return true;
       const user = await getRepository(User).findOne({
         where: {
           id: payload.userId,
@@ -318,6 +319,7 @@ export class PostResolver {
     @Ctx() ctx: MyContext,
     @Root() payload: newPostPayload,
     @Arg('userId') userId: string,
+    @Arg('all') all: boolean,
   ): Promise<Post> {
     console.log('fired');
     return payload.post;

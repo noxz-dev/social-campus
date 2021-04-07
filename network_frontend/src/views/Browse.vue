@@ -95,31 +95,32 @@ export default defineComponent({
       });
     };
 
-    // subscribeToMore(() => ({
-    //   document: gql`
-    //     subscription newPost($userId: String!) {
-    //       newPost(userId: $userId) {
-    //         id
-    //         liked
-    //         imageLink
-    //         user {
-    //           id
-    //           firstname
-    //           lastname
-    //           username
-    //           profilePicLink
-    //         }
-    //         text
-    //         likesCount
-    //         createdAt
-    //         edited
-    //       }
-    //     }
-    //   `,
-    //   variables: {
-    //     userId: user.value.id,
-    //   },
-    // }));
+    subscribeToMore(() => ({
+      document: gql`
+        subscription newPost($userId: String!, $all: Boolean!) {
+          newPost(userId: $userId, all: $all) {
+            id
+            liked
+            imageLink
+            user {
+              id
+              firstname
+              lastname
+              username
+              profilePicLink
+            }
+            text
+            likesCount
+            createdAt
+            edited
+          }
+        }
+      `,
+      variables: {
+        userId: user.value.id,
+        all: true
+      },
+    }));
 
     return { posts, error, home, loadMore, loading, chipInput, tags, inputTags };
   },

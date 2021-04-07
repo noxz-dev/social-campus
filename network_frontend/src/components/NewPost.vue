@@ -94,6 +94,7 @@ import { AddPostMutationVariables, Tag, User } from '../graphql/generated/types'
 import VueTribute from './VueTribute.vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
+import { browsePosts } from '../graphql/queries/browsePosts';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
   setup() {
@@ -135,33 +136,48 @@ export default defineComponent({
       update: (cache, { data: { addPost } }) => {
         try {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
-          cache.writeQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-            data: {
-              ...dataInStore,
-              getFeed: [...dataInStore.getFeed, addPost],
-            },
-          });
+          if (route.path === '/home') {
+            const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
+            cache.writeQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+              data: {
+                ...dataInStore,
+                getFeed: [...dataInStore.getFeed, addPost],
+              },
+            });
+          } else if (route.params.id) {
+            const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
+            console.log(dataInStoreProfile);
+            cache.writeQuery({
+              query: getPostsFromUser,
+              variables: { userID: route.params.id },
+              data: {
+                ...dataInStoreProfile,
+                getPostsFromUser: [...dataInStoreProfile.getPostsFromUser, addPost],
+              },
+            });
+          } else if(route.path === "/browse") {
+            const dataInStore: any = cache.readQuery({ query: browsePosts, variables: { skip: 0, take: 10, tags: [] } });
+            console.log(dataInStore)
+            cache.writeQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: []
+              },
+              data: {
+                ...dataInStore,
+                browsePosts: [...dataInStore.browsePosts, addPost],
+              },
+            });
+          }
         } catch (err) {
           console.log(err);
-        }
-
-        if (route.params.id) {
-          const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
-          console.log(dataInStoreProfile);
-          cache.writeQuery({
-            query: getPostsFromUser,
-            variables: { userID: route.params.id },
-            data: {
-              ...dataInStoreProfile,
-              getPostsFromUser: [...dataInStoreProfile.getPostsFromUser, addPost],
-            },
-          });
         }
       },
     }));

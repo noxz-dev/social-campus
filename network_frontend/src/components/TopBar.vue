@@ -61,7 +61,7 @@
             </svg>
           </button>
         </div>
-        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4" id="notify-button">
+        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4" id="notify-button" ref="notifyTarget">
           <div
             @click="notifyOpen = !notifyOpen"
             class="hover:opacity-70 cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -86,14 +86,14 @@
             </svg>
           </div>
 
-          <div class="relative" ref="notifyTarget">
+          <div class="relative" @click.stop>
             <transition name="fade">
               <notifications v-if="notifyOpen" @click.prevent @closeNotify="notifyOpen = false" />
             </transition>
           </div>
 
           <!-- Profile dropdown -->
-          <div class="flex-shrink-0 relative ml-5">
+          <div class="flex-shrink-0 relative ml-5" ref="target">
             <div>
               <button
                 id="user-menu"
@@ -110,7 +110,7 @@
             <transition name="fade">
               <div
                 v-if="showProfileMenu"
-                ref="target"
+                @click.stop
                 class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 border-dark500 border"
                 role="menu"
                 aria-orientation="vertical"
@@ -351,21 +351,11 @@ export default defineComponent({
     const store = useStore();
 
     onClickOutside(target, (event) => {
-      if (event.path[1].id !== 'user-menu') {
-        showProfileMenu.value = false;
-      }
+      showProfileMenu.value = false;
     });
 
     onClickOutside(notifyTarget, (event) => {
-      let flag = false;
-      event.path.forEach((element) => {
-        if (element.id === 'notify-button') {
-          flag = true;
-        }
-      });
-      if (!flag) {
-        notifyOpen.value = false;
-      }
+      notifyOpen.value = false;
     });
 
     const { result, error, onResult } = useMeQuery();

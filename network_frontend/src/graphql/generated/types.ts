@@ -31,10 +31,17 @@ export type Group = {
   id: Scalars['String'];
   createdAt: Scalars['DateTime'];
   name: Scalars['String'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  type: GroupType;
+  createdBy: User;
   posts: Array<Post>;
   members: Array<User>;
 };
+
+export enum GroupType {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
 
 export type JwtResponse = {
   __typename?: 'JwtResponse';
@@ -123,6 +130,13 @@ export type MutationLikeCommentArgs = {
 
 export type MutationUnlikeCommentArgs = {
   commentID: Scalars['String'];
+};
+
+
+export type MutationCreateGroupArgs = {
+  groupType: GroupType;
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
 };
 
 
@@ -231,8 +245,10 @@ export type Query = {
   getFeed: Array<Post>;
   postById: Post;
   groupById: Group;
+  groups: Array<Group>;
   getRoles: Array<Role>;
   search: Search;
+  getAllTags: Array<Tag>;
   getUsers: Array<User>;
   /** Me returns User info when logged in. */
   me?: Maybe<User>;
@@ -276,6 +292,12 @@ export type QueryPostByIdArgs = {
 
 export type QueryGroupByIdArgs = {
   groupId: Scalars['String'];
+};
+
+
+export type QueryGroupsArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
 };
 
 
@@ -346,6 +368,7 @@ export type SubscriptionNotificationsArgs = {
 
 
 export type SubscriptionNewPostArgs = {
+  all: Scalars['Boolean'];
   userId: Scalars['String'];
 };
 
@@ -438,6 +461,21 @@ export type AddCommentMutation = (
   ) }
 );
 
+export type CreateGroupMutationVariables = Exact<{
+  name: Scalars['String'];
+  groupType: GroupType;
+  description?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreateGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { createGroup: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name'>
+  ) }
+);
+
 export type DeleteNotificationMutationVariables = Exact<{
   notificationId: Scalars['String'];
 }>;
@@ -473,6 +511,19 @@ export type EditPostMutation = (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
     ) }
+  ) }
+);
+
+export type JoinGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type JoinGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { joinGroup: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name'>
   ) }
 );
 
@@ -604,6 +655,20 @@ export type GetFeedQuery = (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
+  )> }
+);
+
+export type GroupsQueryVariables = Exact<{
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+}>;
+
+
+export type GroupsQuery = (
+  { __typename?: 'Query' }
+  & { groups: Array<(
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name' | 'description'>
   )> }
 );
 

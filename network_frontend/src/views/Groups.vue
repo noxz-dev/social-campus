@@ -4,49 +4,6 @@
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">
           <div class="text-md font-semibold text-lg">Finde Gruppen</div>
-          <!-- <div class="w-full md:w-2/4"> -->
-            <!-- <input-field
-              @click="isFocus = true"
-              v-model="searchString"
-              :iconPadding="2"
-              inputClasses="text-sm md:text-md pl-10 p-2"
-              placeholder="Suche nach Gruppen"
-            >
-              <template v-slot:icon>
-                <svg class="h-6 w-6 dark:fill-white fill-dark700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M11.6115 2C6.30323 2 2 6.20819 2 11.3993C2 16.5903 6.30323 20.7985 11.6115 20.7985C13.8819 20.7985 15.9684 20.0287 17.613 18.7415L20.7371 21.7886L20.8202 21.8586C21.1102 22.0685 21.5214 22.0446 21.7839 21.7873C22.0726 21.5043 22.072 21.0459 21.7825 20.7636L18.6952 17.7523C20.2649 16.0794 21.2231 13.8487 21.2231 11.3993C21.2231 6.20819 16.9198 2 11.6115 2ZM11.6115 3.44774C16.1022 3.44774 19.7426 7.00776 19.7426 11.3993C19.7426 15.7908 16.1022 19.3508 11.6115 19.3508C7.12086 19.3508 3.48044 15.7908 3.48044 11.3993C3.48044 7.00776 7.12086 3.44774 11.6115 3.44774Z"
-                  />
-                </svg>
-              </template>
-
-              <template v-slot:mobileIcon>
-                <svg
-                  viewBox="0 0 24 24"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  class="dark:fill-white fill-dark600 h-14 w-14"
-                >
-                  <g id="Iconly/Bulk/Plus" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="Plus" transform="translate(2.000000, 2.000000)" fill-rule="nonzero" class="fill-highlight-500">
-                      <path
-                        d="M14.6666667,0 L5.33333333,0 C1.92888889,0 0,1.92888889 0,5.33333333 L0,14.6666667 C0,18.0622222 1.92,20 5.33333333,20 L14.6666667,20 C18.0711111,20 20,18.0622222 20,14.6666667 L20,5.33333333 C20,1.92888889 18.0711111,0 14.6666667,0 Z"
-                        id="Path_34200"
-                        opacity="0.400000006"
-                      ></path>
-                      <path
-                        d="M13.3204549,10.7083369 L10.7495202,10.7083369 L10.7495202,13.256979 C10.7495202,13.6673381 10.4139486,14 10,14 C9.58605145,14 9.25047985,13.6673381 9.25047985,13.256979 L9.25047985,10.7083369 L6.67954513,10.7083369 C6.29342268,10.6686984 6,10.3461424 6,9.96132113 C6,9.57649984 6.29342268,9.25394382 6.67954513,9.21430535 L9.24242049,9.21430535 L9.24242049,6.67365277 C9.28240567,6.2908784 9.60778305,6 9.99597032,6 C10.3841576,6 10.709535,6.2908784 10.7495202,6.67365277 L10.7495202,9.21430535 L13.3204549,9.21430535 C13.7065773,9.25394382 14,9.57649984 14,9.96132113 C14,10.3461424 13.7065773,10.6686984 13.3204549,10.7083369 L13.3204549,10.7083369 Z"
-                        id="Path_34201"
-                      ></path>
-                    </g>
-                  </g>
-                </svg>
-              </template>
-            </input-field> -->
-          <!-- </div> -->
           <div>
             <div></div>
             <div>
@@ -117,12 +74,8 @@
             <span class="text-lg">Empfohlene Gruppen</span>
           </div>
         </div>
-        <div class="pt-4 flex flex-wrap gap-3 justify-center">
-          <group-card />
-          <group-card />
-          <group-card />
-          <group-card />
-          <group-card />
+        <div class="w-full">
+          <group-list :groups="groups"></group-list>
         </div>
       </div>
       <div class="mt-10 p-4 dark:bg-dark-600 w-full h-1/3 rounded-lg dark:text-gray-50">Gruppen von Leuten denen du folgst</div>
@@ -133,10 +86,14 @@
 
 <script lang="ts">
 import Card from '../components/Card.vue';
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import GroupCard from '../components/GroupCard.vue';
 import NewGroupModal from '../components/NewGroupModal.vue';
 import InputField from '../components/InputField.vue';
+import { Group, GroupsQueryVariables } from '../graphql/generated/types';
+import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
+import GroupList from '../components/GroupList.vue';
+import breakpoints from '../_helpers/breakpoints';
 
 export default defineComponent({
   components: {
@@ -144,6 +101,44 @@ export default defineComponent({
     GroupCard,
     NewGroupModal,
     InputField,
+    GroupList,
+  },
+  setup() {
+    const groups = ref<Partial<Group>[]>([]);
+    const take = ref(3);
+    const skip = ref(0);
+
+    const setTakeBasedOnLayout = () => {
+      if (breakpoints.is === 'sm') take.value = 4;
+      if (breakpoints.is === 'md') take.value = 2;
+      if (breakpoints.is === 'lg') take.value = 3;
+      if (breakpoints.is === 'xl') take.value = 5;
+    };
+    setTakeBasedOnLayout()
+
+    watch(
+      () => breakpoints.is,
+      () => {
+        console.log(breakpoints.is);
+        setTakeBasedOnLayout()
+      }
+    );
+
+    const { onResult } = useGroupsQuery(
+      () =>
+        <GroupsQueryVariables>{
+          take: take.value,
+          skip: skip.value,
+        }
+    );
+
+    onResult(({ data }) => {
+      console.log(data.groups);
+      groups.value = data.groups;
+    });
+    return {
+      groups,
+    };
   },
 });
 </script>

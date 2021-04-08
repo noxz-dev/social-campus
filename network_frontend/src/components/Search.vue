@@ -5,7 +5,7 @@
       v-model="searchString"
       :iconPadding="2"
       inputClasses="text-sm md:text-md pl-10"
-      placeholder="Suche nach anderen Usern, Tags oder Gruppen"
+      placeholder="Suche nach Usern, Tags oder Gruppen"
     >
       <template v-slot:icon>
         <svg class="h-6 w-6 dark:fill-white fill-dark700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

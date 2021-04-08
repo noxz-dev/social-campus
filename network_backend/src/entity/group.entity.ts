@@ -1,8 +1,17 @@
-import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Field, ObjectType, registerEnumType } from 'type-graphql';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from './base';
 import { Post } from './post.entity';
 import { User } from './user.entity';
+
+export enum GroupType {
+  PRIVATE = 'PRIVATE',
+  PUBLIC = 'PUBLIC',
+}
+
+registerEnumType(GroupType, {
+  name: 'GroupType',
+});
 
 @Entity()
 @ObjectType()
@@ -11,9 +20,17 @@ export class Group extends Base {
   @Column()
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'text', nullable: true })
   description: string;
+
+  @Field(() => GroupType)
+  @Column({ type: 'enum', enum: GroupType })
+  type: GroupType;
+
+  @Field()
+  @ManyToOne(() => User)
+  createdBy: User;
 
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)

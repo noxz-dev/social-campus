@@ -110,6 +110,38 @@ export function useAddCommentMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>(AddCommentDocument, options);
 }
 export type AddCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>;
+export const CreateGroupDocument = gql`
+    mutation createGroup($name: String!, $groupType: GroupType!, $description: String) {
+  createGroup(name: $name, groupType: $groupType, description: $description) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useCreateGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateGroupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateGroupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateGroupMutation({
+ *   variables: {
+ *     name: // value for 'name'
+ *     groupType: // value for 'groupType'
+ *     description: // value for 'description'
+ *   },
+ * });
+ */
+export function useCreateGroupMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.CreateGroupMutation, graphqlOperations.ts.CreateGroupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.CreateGroupMutation, graphqlOperations.ts.CreateGroupMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.CreateGroupMutation, graphqlOperations.ts.CreateGroupMutationVariables>(CreateGroupDocument, options);
+}
+export type CreateGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.CreateGroupMutation, graphqlOperations.ts.CreateGroupMutationVariables>;
 export const DeleteNotificationDocument = gql`
     mutation deleteNotification($notificationId: String!) {
   deleteNotification(notificationId: $notificationId)
@@ -207,6 +239,36 @@ export function useEditPostMutation(options: VueApolloComposable.UseMutationOpti
   return VueApolloComposable.useMutation<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>(EditPostDocument, options);
 }
 export type EditPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>;
+export const JoinGroupDocument = gql`
+    mutation joinGroup($groupId: String!) {
+  joinGroup(groupId: $groupId) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useJoinGroupMutation__
+ *
+ * To run a mutation, you first call `useJoinGroupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useJoinGroupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useJoinGroupMutation({
+ *   variables: {
+ *     groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useJoinGroupMutation(options: VueApolloComposable.UseMutationOptions<graphqlOperations.ts.JoinGroupMutation, graphqlOperations.ts.JoinGroupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<graphqlOperations.ts.JoinGroupMutation, graphqlOperations.ts.JoinGroupMutationVariables>>) {
+  return VueApolloComposable.useMutation<graphqlOperations.ts.JoinGroupMutation, graphqlOperations.ts.JoinGroupMutationVariables>(JoinGroupDocument, options);
+}
+export type JoinGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.JoinGroupMutation, graphqlOperations.ts.JoinGroupMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {
@@ -512,6 +574,36 @@ export function useGetFeedQuery(variables: graphqlOperations.ts.GetFeedQueryVari
   return VueApolloComposable.useQuery<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>(GetFeedDocument, variables, options);
 }
 export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>;
+export const GroupsDocument = gql`
+    query groups($take: Float!, $skip: Float!) {
+  groups(take: $take, skip: $skip) {
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useGroupsQuery__
+ *
+ * To run a query within a Vue component, call `useGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGroupsQuery({
+ *   take: // value for 'take'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useGroupsQuery(variables: graphqlOperations.ts.GroupsQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GroupsQueryVariables> | ReactiveFunction<graphqlOperations.ts.GroupsQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupsQuery, graphqlOperations.ts.GroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupsQuery, graphqlOperations.ts.GroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupsQuery, graphqlOperations.ts.GroupsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GroupsQuery, graphqlOperations.ts.GroupsQueryVariables>(GroupsDocument, variables, options);
+}
+export type GroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GroupsQuery, graphqlOperations.ts.GroupsQueryVariables>;
 export const MeDocument = gql`
     query me {
   me {

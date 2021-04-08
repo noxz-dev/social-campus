@@ -1,5 +1,4 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getManager, getRepository, In } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
@@ -388,18 +387,9 @@ export class PostResolver {
     if (!post) {
       return null;
     }
-    let like;
-    _.remove(post.likes, (currentObject) => {
-      if (currentObject.post.id === postID) {
-        like = currentObject;
-        return true;
-      }
-      return false;
-    });
 
-    if (like) {
-      await getRepository(Like).remove(like);
-    }
+    //TODO REWRITE
+    post.likes = post.likes.filter((like) => like.user.id !== userId);
 
     await getRepository(Post).save(post);
 

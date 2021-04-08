@@ -245,9 +245,10 @@ export class PostResolver {
 
     let group;
     if (groupID) {
-      group = getRepository(Group).findOne({ where: { id: groupID } });
+      group = await getRepository(Group).findOne({ where: { id: groupID } });
     }
-
+    console.log(group);
+    console.log(groupID);
     const post = new Post();
     post.text = text;
     post.user = user;

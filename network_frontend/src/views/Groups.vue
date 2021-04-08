@@ -39,7 +39,6 @@
                 <span class="hidden md:block">Gruppe erstellen</span>
                 <span class="sm:block md:hidden">
                   <svg class="h-6" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <title>Iconly/Bulk/2 User</title>
                     <g id="Iconly/Bulk/2-User" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <g id="2-User" transform="translate(2.000000, 3.000000)" fill="#fff" fill-rule="nonzero">
                         <path
@@ -114,13 +113,13 @@ export default defineComponent({
       if (breakpoints.is === 'lg') take.value = 3;
       if (breakpoints.is === 'xl') take.value = 5;
     };
-    setTakeBasedOnLayout()
+    setTakeBasedOnLayout();
 
     watch(
       () => breakpoints.is,
       () => {
         console.log(breakpoints.is);
-        setTakeBasedOnLayout()
+        setTakeBasedOnLayout();
       }
     );
 

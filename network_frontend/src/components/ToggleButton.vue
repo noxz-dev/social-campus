@@ -20,8 +20,14 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'InputField',
   emits: ['toggleStateUpdate'],
+  props: {
+    initalState: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup(props, { emit, slots }) {
-    const toggleState = ref(false);
+    const toggleState = ref(props.initalState);
     const toggle = () => {
       toggleState.value = !toggleState.value;
       emit('toggleStateUpdate', toggleState.value);

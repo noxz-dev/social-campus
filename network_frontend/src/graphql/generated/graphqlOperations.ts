@@ -37,8 +37,8 @@ export function useAddFollowerMutation(options: VueApolloComposable.UseMutationO
 }
 export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddFollowerMutation, graphqlOperations.ts.AddFollowerMutationVariables>;
 export const AddPostDocument = gql`
-    mutation addPost($text: String!, $file: Upload, $tags: [String!]) {
-  addPost(text: $text, file: $file, tags: $tags) {
+    mutation addPost($text: String!, $file: Upload, $tags: [String!], $groupID: String!) {
+  addPost(text: $text, file: $file, tags: $tags, groupID: $groupID) {
     id
     liked
     imageLink
@@ -73,6 +73,7 @@ export const AddPostDocument = gql`
  *     text: // value for 'text'
  *     file: // value for 'file'
  *     tags: // value for 'tags'
+ *     groupID: // value for 'groupID'
  *   },
  * });
  */

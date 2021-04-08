@@ -26,11 +26,11 @@
               <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
                 <span class="mb-2"></span>
                 <div class="flex">
-                  <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname"/>
-                  <custom-select :options="GroupType" class="w-1/3" @valueChosen="setType($event)"/>
+                  <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname" />
+                  <custom-select :options="GroupType" class="w-1/3" @valueChosen="setType($event)" />
                 </div>
                 <textarea
-                  class="dark:bg-[#3C3F48] border-2 mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                  class="dark:bg-[#3C3F48] border mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Gruppenbeschreibung"
                   v-model="description"
                 />
@@ -43,7 +43,7 @@
                   Gruppe erstellen
                 </button>
                 <button
-                  class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+                  class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-dark-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                   @click="closeModal"
                 >
                   Abbrechen
@@ -76,9 +76,9 @@ export default defineComponent({
   },
   setup() {
     const open = ref(false);
-    const groupname = ref("");
-    const description = ref("");
-    const groupType = ref<GroupType>(GroupType.Private)
+    const groupname = ref('');
+    const description = ref('');
+    const groupType = ref<GroupType>(GroupType.Private);
 
     const openModal = () => {
       open.value = true;
@@ -95,27 +95,27 @@ export default defineComponent({
       eventbus?.on('open-new-group-modal', () => openModal());
     }
 
-    const { mutate: createGrp} = useCreateGroupMutation(() => ({
-      variables: <CreateGroupMutationVariables> {
+    const { mutate: createGrp } = useCreateGroupMutation(() => ({
+      variables: <CreateGroupMutationVariables>{
         name: groupname.value,
         groupType: groupType.value,
-        description: description.value
-      }
-    }))
+        description: description.value,
+      },
+    }));
 
     const createGroup = async () => {
-      if(groupname.value.length > 3) await createGrp()
-      groupname.value = "";
-      description.value = "";
-      groupType.value = GroupType.Private
+      if (groupname.value.length > 3) await createGrp();
+      groupname.value = '';
+      description.value = '';
+      groupType.value = GroupType.Private;
 
-      closeModal()
-    }
+      closeModal();
+    };
 
     const setType = (val: string) => {
-      if(val == "PUBLIC") groupType.value = GroupType.Public
-      if(val == "PRIVATE") groupType.value = GroupType.Private
-    }
+      if (val == 'PUBLIC') groupType.value = GroupType.Public;
+      if (val == 'PRIVATE') groupType.value = GroupType.Private;
+    };
 
     return {
       open,

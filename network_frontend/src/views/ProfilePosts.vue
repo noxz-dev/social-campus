@@ -1,6 +1,6 @@
 <template>
   <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
-    <post-list :posts="posts" />
+    <post-list :posts="posts" emptyText="ganz schön leer hier, schreibe doch einen Post" />
   </div>
 </template>
 

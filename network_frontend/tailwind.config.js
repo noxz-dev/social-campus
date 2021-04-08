@@ -1,11 +1,11 @@
 module.exports = {
-  darkMode: 'media', // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   purge: {
     enabled: true,
     content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
     options: {
-      savelist: ['bg-dark-500', "pl-2"]
-    }
+      savelist: ['bg-dark-500', 'pl-2'],
+    },
   },
   theme: {
     fill: (theme) => ({

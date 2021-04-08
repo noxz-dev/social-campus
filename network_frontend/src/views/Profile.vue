@@ -2,13 +2,22 @@
   <div id="profile" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto text-gray-100">
     <div class="dark:bg-dark600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
       <div>
-        <div>
-          <img class="h-32 w-full object-cover lg:h-64 rounded-xl" src="https://wallpapercave.com/wp/wp5406324.jpg" alt="" />
+        <div class="h-32 w-full lg:h-64">
+          <lazy-image
+            class="object-cover h-32 w-full lg:h-64 rounded-xl"
+            src="https://wallpapercave.com/wp/wp5406324.jpg"
+            alt=""
+            blurhash="AePC3PmlGv{c"
+          />
         </div>
         <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col">
-            <div class="flex w-full">
-              <img class="h-24 w-24 rounded-full border-3 sm:h-36 sm:w-36 bg-black self-center border-2" :src="profileImage" alt="profile image" />
+          <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
+            <div class="flex w-full" v-if="profileImage">
+              <img
+                class="z-10 h-24 w-24 rounded-full border-3 sm:h-36 sm:w-36 bg-black self-center border-2"
+                :src="profileImage"
+                alt="profile image"
+              />
               <div class="flex w-full justify-end items-center mt-14">
                 <button
                   v-if="showEditProfile"
@@ -103,10 +112,12 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
 import { userByUsername } from '../graphql/queries/userByUsername';
+import LazyImage from '../components/blurhash/LazyImage.vue';
 
 export default defineComponent({
   components: {
     PostList,
+    LazyImage,
   },
   setup() {
     const route = useRoute();
@@ -222,38 +233,30 @@ a:hover path {
 }
 
 @screen md {
-  @media (prefers-color-scheme: dark) {
-    a.router-link-exact-active div {
-      @apply bg-highlight-500;
-      @apply relative;
-      @apply border-b-0;
-      @apply rounded-lg !important;
-    }
+  .dark a.router-link-exact-active div {
+    @apply bg-highlight-500;
+    @apply relative;
+    @apply border-b-0 !important;
+    @apply rounded-lg !important;
   }
 
-  @media (prefers-color-scheme: light) {
-    a.router-link-exact-active div {
-      @apply bg-highlight-500;
-      @apply relative;
-      @apply border-b-0 !important;
-      @apply rounded-lg !important;
-    }
+  a.router-link-exact-active div {
+    @apply bg-highlight-500;
+    @apply relative;
+    @apply border-b-0 !important;
+    @apply rounded-lg !important;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  a.router-link-exact-active div {
-    @apply relative;
-    @apply border-b-4;
-    @apply rounded-none;
-  }
+.dark a.router-link-exact-active div {
+  @apply relative;
+  @apply border-b-4;
+  @apply rounded-none;
 }
 
-@media (prefers-color-scheme: light) {
-  a.router-link-exact-active div {
-    @apply relative;
-    @apply border-b-4;
-    @apply rounded-none;
-  }
+a.router-link-exact-active div {
+  @apply relative;
+  @apply border-b-4;
+  @apply rounded-none;
 }
 </style>

@@ -432,6 +432,7 @@ export type AddPostMutationVariables = Exact<{
   text: Scalars['String'];
   file?: Maybe<Scalars['Upload']>;
   tags?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  groupID: Scalars['String'];
 }>;
 
 

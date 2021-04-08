@@ -1,6 +1,5 @@
 import { DefaultApolloClient, provideApolloClient } from '@vue/apollo-composable';
 import mitt from 'mitt';
-import Viewer from './_helpers/v-viewer';
 import 'viewerjs/dist/viewer.css';
 import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';
@@ -10,6 +9,7 @@ import './index.css';
 import './markdown.css';
 import router from './router';
 import store from './store';
+import vViewer from './_helpers/vViewer';
 
 //create event bus
 const eventbus = mitt();
@@ -30,7 +30,7 @@ const app = createApp({
   },
 })
   .use(DKToast, notificationConfig)
-  .use(Viewer, "viewer")
+  .use(vViewer, 'viewer')
   .use(router)
   .use(store);
 

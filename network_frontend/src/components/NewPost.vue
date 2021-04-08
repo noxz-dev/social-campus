@@ -104,6 +104,7 @@ export default defineComponent({
     const previewUrl = ref();
     const tags = ref<string[]>();
     const showImageUpload = ref(false);
+    const groupId = ref();
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -129,13 +130,13 @@ export default defineComponent({
         text: message.value,
         file: file.value,
         tags: tags.value,
+        groupID: groupId.value,
       },
       context: {
         hasUpload: true,
       },
       update: (cache, { data: { addPost } }) => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (route.path === '/home') {
             const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
             cache.writeQuery({
@@ -160,15 +161,15 @@ export default defineComponent({
                 getPostsFromUser: [...dataInStoreProfile.getPostsFromUser, addPost],
               },
             });
-          } else if(route.path === "/browse") {
+          } else if (route.path === '/browse') {
             const dataInStore: any = cache.readQuery({ query: browsePosts, variables: { skip: 0, take: 10, tags: [] } });
-            console.log(dataInStore)
+            console.log(dataInStore);
             cache.writeQuery({
               query: browsePosts,
               variables: {
                 skip: 0,
                 take: 10,
-                tags: []
+                tags: [],
               },
               data: {
                 ...dataInStore,
@@ -196,13 +197,13 @@ export default defineComponent({
 
       let foundTags = message.value.match(/#\w\w*/g);
       if (foundTags) {
-        console.log(foundTags);
         foundTags = foundTags?.map((tag) => tag.replace('#', ''));
         tags.value = [...foundTags];
       }
-
+      if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
+      console.log(groupId.value);
       newPost();
-      eventbus.emit('close-modal');
+      // eventbus.emit('close-modal');
     };
 
     const openMarkdownDoku = () => {

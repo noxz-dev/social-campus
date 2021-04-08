@@ -34,30 +34,26 @@ a.router-link-exact-active div {
 a.router-link-exact-active path,
 a.router-link-exact-active polyline,
 a.router-link-exact-active polygon {
-  @apply fill-indigo;
+  @apply fill-indigo !important;
   @apply stroke-indigo;
 }
 a:hover path,
 a:hover polyline,
 a:hover polygon {
-  @apply fill-indigo;
+  @apply fill-indigo !important;
   @apply stroke-indigo;
 }
 @screen md {
-  @media (prefers-color-scheme: dark) {
-    a.router-link-exact-active div {
-      @apply bg-dark600;
-      @apply relative;
-      @apply border-b-0;
-    }
+  .dark a.router-link-exact-active div {
+    @apply bg-dark600;
+    @apply relative;
+    @apply border-b-0;
   }
 
-  @media (prefers-color-scheme: light) {
-    a.router-link-exact-active div {
-      @apply bg-gray-200;
-      @apply relative;
-      @apply border-b-0;
-    }
+  a.router-link-exact-active div {
+    @apply bg-gray-200;
+    @apply relative;
+    @apply border-b-0;
   }
 }
 </style>

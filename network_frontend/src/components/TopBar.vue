@@ -178,6 +178,7 @@
 
                   <a href="#" class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem">Einstellungen</a>
                 </div>
+                <div class="flex items-center justify-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100"></div>
                 <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
                   <svg
                     width="24px"
@@ -206,7 +207,7 @@
           </div>
 
           <button
-            v-if="['Home', 'Browse'].includes($route.name)"
+            v-if="['Home', 'Browse', 'Group'].includes($route.name)"
             class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
             @click="eventbus.emit('open-modal')"
           >
@@ -297,7 +298,7 @@
   </header>
 
   <floating-button
-    v-if="['Home', 'Browse'].includes($route.name)"
+    v-if="['Home', 'Browse', 'Group'].includes($route.name)"
     class="lg:hidden sm:block"
     text="Neuer Post"
     @click="eventbus.emit('open-modal')"
@@ -328,6 +329,7 @@ import PostDetailCard from './PostDetailCard.vue';
 import Search from './Search.vue';
 import Notifications from './Notifications.vue';
 import EditModal from './EditModal.vue';
+import ToggleButton from './ToggleButton.vue';
 export default defineComponent({
   components: {
     Modal,
@@ -338,6 +340,7 @@ export default defineComponent({
     Notifications,
     EditModal,
     EditPost,
+    ToggleButton,
   },
   setup(props) {
     const showProfileMenu = ref(false);

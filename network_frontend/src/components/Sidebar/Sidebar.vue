@@ -7,6 +7,31 @@
       <IconLink v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>
       </IconLink>
+      <div class="h-full w-full flex xl:justify-center items-end">
+        <div class="flex mb-32 flex-col xl:flex-row items-center">
+          <span class="">
+            <svg class="h-6 w-6" fill="none" :class="isDarkMode ? 'text-gray-500' : 'text-gray-800'" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+          </span>
+          <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="isDarkMode" />
+          <span class="">
+            <svg class="h-6 w-6" :class="isDarkMode ? 'text-gray-200' : 'text-gray-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
   <div v-else class="fixed h-16 w-full z-20 bottom-0 bg-gray-300 dark:bg-dark600">
@@ -23,20 +48,22 @@ import breakpoints from '../../_helpers/breakpoints';
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import IconLink from './IconLink.vue';
+import ToggleButton from '../ToggleButton.vue';
 
 export default defineComponent({
-  components: { IconLink },
+  components: { IconLink, ToggleButton },
   setup() {
     const router = useRouter();
     const show = ref(true);
     const homeActive = ref(true);
     const groupsActive = ref(false);
+    const isDarkMode = ref(false);
 
     const routes = [
       {
         to: '/home',
         name: 'Home',
-        icon: `<svg width="24" height="24"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        icon: `<svg width="24" height="24"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path class="dark:fill-gray100 fill-gray-500" opacity="0.4" d="M16.0755 2H19.4615C20.8637 2 22 3.14585 22 4.55996V7.97452C22 9.38864 20.8637 10.5345 19.4615 10.5345H16.0755C14.6732 10.5345 13.537 9.38864 13.537 7.97452V4.55996C13.537 3.14585 14.6732 2 16.0755 2Z" fill="#200E32"/>
                 <path class="dark:fill-gray100 fill-gray-500" fill-rule="evenodd" clip-rule="evenodd" d="M4.53852 2H7.92449C9.32676 2 10.463 3.14585 10.463 4.55996V7.97452C10.463 9.38864 9.32676 10.5345 7.92449 10.5345H4.53852C3.13626 10.5345 2 9.38864 2 7.97452V4.55996C2 3.14585 3.13626 2 4.53852 2ZM4.53852 13.4655H7.92449C9.32676 13.4655 10.463 14.6114 10.463 16.0255V19.44C10.463 20.8532 9.32676 22 7.92449 22H4.53852C3.13626 22 2 20.8532 2 19.44V16.0255C2 14.6114 3.13626 13.4655 4.53852 13.4655ZM19.4615 13.4655H16.0755C14.6732 13.4655 13.537 14.6114 13.537 16.0255V19.44C13.537 20.8532 14.6732 22 16.0755 22H19.4615C20.8637 22 22 20.8532 22 19.44V16.0255C22 14.6114 20.8637 13.4655 19.4615 13.4655Z" fill="#200E32"/>
               </svg>
@@ -73,6 +100,24 @@ export default defineComponent({
       console.log(breakpoints.is);
     });
 
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (localStorage.theme !== 'light') isDarkMode.value = true;
+      console.log(localStorage.theme);
+    } else {
+      if (localStorage.theme !== 'dark') isDarkMode.value = false;
+    }
+
+    const toggle = () => {
+      isDarkMode.value = !isDarkMode.value;
+      if (isDarkMode.value) localStorage.theme = 'dark';
+      else localStorage.theme = 'light';
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
     const handleRouting = (state: string) => {
       switch (state) {
         case 'home':
@@ -87,7 +132,7 @@ export default defineComponent({
           break;
       }
     };
-    return { show, homeActive, groupsActive, handleRouting, breakpoints, routes };
+    return { show, homeActive, groupsActive, handleRouting, breakpoints, routes, toggle, isDarkMode };
   },
 });
 </script>

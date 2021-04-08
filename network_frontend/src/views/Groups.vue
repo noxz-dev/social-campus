@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-10 p-4 w-full dark:bg-dark-600 rounded-xl dark:text-gray-50">
+      <div class="mt-10 p-4 w-full dark:bg-dark-600 bg-gray-100 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-4">
             <span class="text-lg">Empfohlene Gruppen</span>

@@ -3,7 +3,7 @@
     <div id="home" ref="home" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
-          <post-list :posts="posts" />
+          <post-list :posts="posts" emptyText="ganz schön leer hier, schreibe doch einen Post oder folge anderen!" />
         </div>
       </infinite-scroll-wrapper>
     </div>
@@ -19,7 +19,7 @@ import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import { GetFeedQueryVariables } from 'src/graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
-import { getFeedState } from "../_helpers/QueryState"
+import { getFeedState } from '../_helpers/QueryState';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper },
@@ -57,13 +57,13 @@ export default defineComponent({
       `,
       variables: {
         userId: user.value.id,
-        all: false
+        all: false,
       },
     }));
 
     const loadMore = () => {
       console.log('load triggerd');
-      getFeedState.skip = posts.value.length
+      getFeedState.skip = posts.value.length;
       fetchMore({
         variables: {
           skip: posts.value.length,

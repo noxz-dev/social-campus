@@ -7,7 +7,7 @@
             <span class="text-xl font-semibold dark:text-gray-50 text-gray-900 mr-4 pb-4 md:pb-0"> Filter nach Tags:</span>
             <chips-input class="w-full md:flex-1" ref="chipInput" :startTags="inputTags" inputPlaceholder="z.B. #hsh, #socialnetwork"></chips-input>
           </div>
-          <post-list :posts="posts" class="pt-10 md:pt-0" />
+          <post-list :posts="posts" class="pt-10 md:pt-0" emptyText="ganz schön leer hier, schreibe doch einen Post" />
         </div>
       </infinite-scroll-wrapper>
     </div>
@@ -118,7 +118,7 @@ export default defineComponent({
       `,
       variables: {
         userId: user.value.id,
-        all: true
+        all: true,
       },
     }));
 

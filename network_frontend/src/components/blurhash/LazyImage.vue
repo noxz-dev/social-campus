@@ -70,7 +70,7 @@ export default defineComponent({
     const onEnter = async () => {
       isVisible.value = true;
       const imageData = props.src;
-      image.value.src = imageData;
+      //   image.value.src = imageData;
       image.value.onload = () => {
         isLoaded.value = true;
       };

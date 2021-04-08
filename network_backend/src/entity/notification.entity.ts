@@ -8,6 +8,8 @@ import { User } from './user.entity';
 
 export enum NotificationType {
   NEW_FOLLOWER = 'NEW_FOLLOWER',
+  NEW_COMMENT = 'NEW_COMMENT',
+  POST_LIKE = 'POST_LIKE',
 }
 
 registerEnumType(NotificationType, {

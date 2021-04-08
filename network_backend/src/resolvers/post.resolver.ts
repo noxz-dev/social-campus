@@ -129,7 +129,7 @@ export class PostResolver {
     nullable: true,
     description: 'getPosts returns all posts from a given groupID',
   })
-  public async getPostsFromGroup(@Ctx() ctx: MyContext, @Arg('groupID') groupID: string): Promise<Post[] | null> {
+  public async getPostsFromGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
     if (!userId) return null;
     const posts = await getRepository(Post).find({
@@ -144,7 +144,7 @@ export class PostResolver {
         'comments.likes',
         'comments.likes.user',
       ],
-      where: { group: { id: groupID } },
+      where: { group: { id: groupId } },
       order: { createdAt: 'DESC' },
     });
     if (!posts) {

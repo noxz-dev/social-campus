@@ -11,7 +11,9 @@
       <div class="mt-4 mb-4 px-2">
         <button
           class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white dark:bg-dark-600 bg-gray-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-          @click="post"
+          @click="$router.push({name: 'Group', params: {
+            id: group.id
+          }})"
         >
           <span>beitreten</span>
         </button>
@@ -21,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Group } from 'src/graphql/generated/types';
+import { Group } from '../graphql/generated/types';
 import { defineComponent, PropType } from 'vue';
 import Card from './Card.vue';
 export default defineComponent({

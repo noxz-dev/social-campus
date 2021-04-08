@@ -574,6 +574,47 @@ export function useGetFeedQuery(variables: graphqlOperations.ts.GetFeedQueryVari
   return VueApolloComposable.useQuery<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>(GetFeedDocument, variables, options);
 }
 export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetFeedQuery, graphqlOperations.ts.GetFeedQueryVariables>;
+export const GetPostsFromGroupDocument = gql`
+    query getPostsFromGroup($groupId: String!) {
+  getPostsFromGroup(groupId: $groupId) {
+    id
+    liked
+    imageLink
+    user {
+      id
+      firstname
+      lastname
+      username
+      profilePicLink
+    }
+    text
+    likesCount
+    commentCount
+    createdAt
+    edited
+  }
+}
+    `;
+
+/**
+ * __useGetPostsFromGroupQuery__
+ *
+ * To run a query within a Vue component, call `useGetPostsFromGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsFromGroupQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetPostsFromGroupQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useGetPostsFromGroupQuery(variables: graphqlOperations.ts.GetPostsFromGroupQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GetPostsFromGroupQueryVariables> | ReactiveFunction<graphqlOperations.ts.GetPostsFromGroupQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>(GetPostsFromGroupDocument, variables, options);
+}
+export type GetPostsFromGroupQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>;
 export const GroupsDocument = gql`
     query groups($take: Float!, $skip: Float!) {
   groups(take: $take, skip: $skip) {

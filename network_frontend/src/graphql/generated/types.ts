@@ -275,7 +275,7 @@ export type QueryBrowsePostsArgs = {
 
 
 export type QueryGetPostsFromGroupArgs = {
-  groupID: Scalars['String'];
+  groupId: Scalars['String'];
 };
 
 
@@ -656,6 +656,23 @@ export type GetFeedQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   )> }
+);
+
+export type GetPostsFromGroupQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GetPostsFromGroupQuery = (
+  { __typename?: 'Query' }
+  & { getPostsFromGroup?: Maybe<Array<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    ) }
+  )>> }
 );
 
 export type GroupsQueryVariables = Exact<{

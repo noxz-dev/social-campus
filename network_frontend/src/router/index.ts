@@ -17,6 +17,11 @@ const routes = [
     component: () => import('@/views/Groups.vue'),
   },
   {
+    path: '/groups/:id',
+    name: 'Group',
+    component: () => import('@/views/Group.vue'),
+  },
+  {
     path: '/post/:id',
     name: 'DetailPost',
     component: () => import('@/views/Post.vue'),

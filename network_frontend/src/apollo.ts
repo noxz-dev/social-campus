@@ -4,13 +4,12 @@ import { split } from '@apollo/client/link/core/split';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { logErrorMessages } from '@vue/apollo-util';
 import { createUploadLink } from 'apollo-upload-client';
 import router from './router';
 
 // auth interceptor
 const errorLink = onError((error) => {
-  console.log(error);
+  // logErrorMessages(error);
   if (error.networkError?.name === 'ServerParseError') {
     localStorage.removeItem('apollo-token');
     router.push('login');
@@ -21,7 +20,6 @@ const errorLink = onError((error) => {
       router.push('login');
     }
   });
-  logErrorMessages(error);
 });
 
 //subscriptions

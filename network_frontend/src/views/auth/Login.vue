@@ -61,7 +61,7 @@
             </div>
           </form>
         </div>
-        <div v-if="error" class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 left-1/2 transform -translate-x-1/2">
+        <div v-if="error" class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 mt-5 left-1/2 transform -translate-x-1/2">
           Falsche E-Mail oder Passwort!
         </div>
       </div>

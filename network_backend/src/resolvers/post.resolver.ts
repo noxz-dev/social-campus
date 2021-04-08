@@ -390,7 +390,8 @@ export class PostResolver {
 
     //TODO REWRITE
     post.likes = post.likes.filter((like) => like.user.id !== userId);
-
+    const like = await getRepository(Like).findOne({ where: { post: postID, user: userId } });
+    await getRepository(Like).delete(like);
     await getRepository(Post).save(post);
 
     const likeState = await checkLikeState(userId, post.id);

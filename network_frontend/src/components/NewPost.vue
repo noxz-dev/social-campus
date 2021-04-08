@@ -152,7 +152,6 @@ export default defineComponent({
             });
           } else if (route.params.id) {
             const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
-            console.log(dataInStoreProfile);
             cache.writeQuery({
               query: getPostsFromUser,
               variables: { userID: route.params.id },
@@ -163,7 +162,6 @@ export default defineComponent({
             });
           } else if (route.path === '/browse') {
             const dataInStore: any = cache.readQuery({ query: browsePosts, variables: { skip: 0, take: 10, tags: [] } });
-            console.log(dataInStore);
             cache.writeQuery({
               query: browsePosts,
               variables: {
@@ -201,9 +199,8 @@ export default defineComponent({
         tags.value = [...foundTags];
       }
       if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
-      console.log(groupId.value);
       newPost();
-      // eventbus.emit('close-modal');
+      eventbus.emit('close-modal');
     };
 
     const openMarkdownDoku = () => {

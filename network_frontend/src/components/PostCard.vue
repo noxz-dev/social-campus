@@ -121,7 +121,6 @@ export default defineComponent({
       variables: <LikePostMutationVariables>{ postID: props.post.id },
       update: (cache, { data: { likePost } }) => {
         try {
-          console.log(likePost);
           const dataInStore: any = cache.readQuery({
             query: getFeed,
             variables: {
@@ -156,7 +155,6 @@ export default defineComponent({
       variables: <UnlikePostMutationVariables>{ postID: props.post.id },
       update: (cache, { data: { unlikePost } }) => {
         try {
-          console.log(unlikePost);
           const dataInStore: any = cache.readQuery({
             query: getFeed,
             variables: {
@@ -201,7 +199,6 @@ export default defineComponent({
     };
 
     const handleTagClick = (tag: string) => {
-      console.log(tag);
       router.push({ name: 'Browse', query: { tag } });
     };
 

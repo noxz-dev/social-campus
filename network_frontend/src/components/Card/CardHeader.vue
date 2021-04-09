@@ -120,10 +120,10 @@
 import { computed, defineComponent, PropType, ref } from 'vue';
 import dayjs from 'dayjs';
 import { onClickOutside } from '@vueuse/core';
-import PermissionContainer from './PermissionContainer.vue';
-import { useDeletePostMutation } from '../graphql/generated/graphqlOperations';
-import { DeletePostMutationVariables, Post } from '../graphql/generated/types';
-import { getFeed } from '../graphql/queries/getFeed';
+import PermissionContainer from '../PermissionContainer.vue';
+import { useDeletePostMutation } from '../../graphql/generated/graphqlOperations';
+import { DeletePostMutationVariables, Post } from '../../graphql/generated/types';
+import { getFeed } from '../../graphql/queries/getFeed';
 
 export default defineComponent({
   components: { PermissionContainer },

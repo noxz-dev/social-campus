@@ -2,10 +2,16 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
       <div
-        class="z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark700 hover:text-highlight-500 dark:stroke-white stroke-black hover:stroke-indigo"
+        class="group z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark700 dark:stroke-white stroke-black hover:stroke-indigo"
         @click="$router.back()"
       >
-        <svg class="h-8" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg
+          class="h-8 group-hover:stroke-indigo"
+          viewBox="0 0 24 24"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
           <g id="Iconly/Light/Arrow---Left" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
             <g
               id="Arrow---Left"
@@ -17,10 +23,10 @@
             </g>
           </g>
         </svg>
-        <span class="font-semibold text-lg ml-2">Zurück zum Feed</span>
+        <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück zum Feed</span>
       </div>
       <div v-if="postData" class="w-full mt-10 flex items-center flex-col">
-        <post-card v-if="postData" :post="postData.postById" />
+        <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark600" />
         <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-6" />
         <card>
           <div class="p-5 flex flex-col">
@@ -66,13 +72,13 @@
 </template>
 
 <script lang="ts">
-import PostCard from '../components/PostCard.vue';
+import PostCard from '../components/Post/PostCard.vue';
 import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/graphqlOperations';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
 import { computed, defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import Card from '../components/Card.vue';
-import CardHeader from '../components/CardHeader.vue';
+import Card from '../components/Card/Card.vue';
+import CardHeader from '../components/Card/CardHeader.vue';
 import { postById } from '../graphql/queries/postById';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';

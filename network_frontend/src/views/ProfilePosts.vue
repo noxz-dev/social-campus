@@ -8,7 +8,7 @@
 import { useGetPostsFromUserQuery } from '../graphql/generated/graphqlOperations';
 import { GetPostsFromUserQueryVariables, Post } from '../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
-import PostList from '../components/PostList.vue';
+import PostList from '../components/Post/PostList.vue';
 
 export default defineComponent({
   components: { PostList },

@@ -47,10 +47,7 @@
     </div>
   </div>
   <div class="flex flex-row-reverse">
-    <button
-      class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-      @click="post"
-    >
+    <app-button class="ml-3" @click="post">
       Posten
       <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ml-2 h-6 w-6">
         <g id="Iconly/Bulk/Send" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -69,33 +66,28 @@
           </g>
         </g>
       </svg>
-    </button>
-    <button
-      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-dark400 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-      @click="eventbus.emit('close-modal')"
-    >
-      Abbrechen
-    </button>
+    </app-button>
+    <app-button class="!bg-dark400 hover:!bg-red-700" @click="eventbus.emit('close-modal')"> Abbrechen </app-button>
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, getCurrentInstance, ref, unref } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
-import { getFeed } from '../graphql/queries/getFeed';
+import { getFeed } from '../../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
-import { getPostsFromUser } from '../graphql/queries/postFromUser';
-import { useAddPostMutation } from '../graphql/generated/graphqlOperations';
-import ToggleButton from '../components/ToggleButton.vue';
+import { getPostsFromUser } from '../../graphql/queries/postFromUser';
+import { useAddPostMutation } from '../../graphql/generated/graphqlOperations';
+import ToggleButton from '../Form/ToggleButton.vue';
 import { useRoute } from 'vue-router';
-import { AddPostMutationVariables, Tag, User } from '../graphql/generated/types';
-import VueTribute from './VueTribute.vue';
+import { AddPostMutationVariables, Tag, User } from '../../graphql/generated/types';
+import VueTribute from '../VueTribute.vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
-import { browsePosts } from '../graphql/queries/browsePosts';
-import { getPostsFromGroup } from '../graphql/queries/getPostsFromGroup';
+import { browsePosts } from '../../graphql/queries/browsePosts';
+import { getPostsFromGroup } from '../../graphql/queries/getPostsFromGroup';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
   setup() {

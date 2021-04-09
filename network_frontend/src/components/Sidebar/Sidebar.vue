@@ -48,7 +48,7 @@ import breakpoints from '../../utils/breakpoints';
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import IconLink from './IconLink.vue';
-import ToggleButton from '../ToggleButton.vue';
+import ToggleButton from '../Form/ToggleButton.vue';
 
 export default defineComponent({
   components: { IconLink, ToggleButton },

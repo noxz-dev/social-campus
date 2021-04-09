@@ -57,11 +57,11 @@
   </div>
 </template>
 <script lang="ts">
-import { useCreateGroupMutation } from '../graphql/generated/graphqlOperations';
-import { CreateGroupMutationVariables, GroupType } from '../graphql/generated/types';
+import { useCreateGroupMutation } from '../../graphql/generated/graphqlOperations';
+import { CreateGroupMutationVariables, GroupType } from '../../graphql/generated/types';
 import { defineComponent, getCurrentInstance, ref } from 'vue';
-import CustomSelect from './CustomSelect.vue';
-import InputField from './InputField.vue';
+import CustomSelect from '../Form/CustomSelect.vue';
+import InputField from '../Form/InputField.vue';
 export default defineComponent({
   components: { InputField, CustomSelect },
   props: {

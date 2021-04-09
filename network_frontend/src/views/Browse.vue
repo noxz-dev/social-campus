@@ -16,15 +16,15 @@
 
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
-import { computed, defineComponent, onMounted, ref, watch, watchEffect } from 'vue';
-import { useBrowsePostsQuery, useGetFeedQuery } from '../graphql/generated/graphqlOperations';
-import PostList from '@/components/PostList.vue';
+import { computed, defineComponent, ref, watch, watchEffect } from 'vue';
+import { useBrowsePostsQuery } from '../graphql/generated/graphqlOperations';
+import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import { BrowsePostsQueryVariables } from '../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
-import ChipsInput from '../components/ChipsInput.vue';
+import ChipsInput from '../components/Form/ChipsInput.vue';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper, ChipsInput },

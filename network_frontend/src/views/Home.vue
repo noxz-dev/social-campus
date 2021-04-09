@@ -14,10 +14,10 @@
 import { useResult } from '@vue/apollo-composable';
 import { computed, defineComponent, onMounted, ref, watch, watchEffect } from 'vue';
 import { useGetFeedQuery } from '../graphql/generated/graphqlOperations';
-import PostList from '@/components/PostList.vue';
+import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
-import { GetFeedQueryVariables } from 'src/graphql/generated/types';
+import { GetFeedQueryVariables } from '../graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import { getFeedState } from '../utils/QueryState';
 

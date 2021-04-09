@@ -5,6 +5,7 @@ import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';
 import { defaultClient } from './apollo';
 import App from './App.vue';
+import AppButton from './components/Form/AppButton.vue';
 import './index.css';
 import './markdown.css';
 import router from './router';
@@ -33,6 +34,8 @@ const app = createApp({
   .use(vViewer, 'viewer')
   .use(router)
   .use(store);
+
+app.component('app-button', AppButton);
 
 app.config.globalProperties.eventbus = eventbus;
 

@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts">
-import Card from '../components/Card.vue';
+import Card from '../components/Card/Card.vue';
 import { defineComponent, ref } from 'vue';
-import PostList from '../components/PostList.vue';
+import PostList from '../components/Post/PostList.vue';
 import { useFollowersQuery } from '../graphql/generated/graphqlOperations';
 import { FollowersQueryVariables } from '../graphql/generated/types';
 

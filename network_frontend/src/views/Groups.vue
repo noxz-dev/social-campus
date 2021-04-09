@@ -7,10 +7,7 @@
           <div>
             <div></div>
             <div>
-              <button
-                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-                @click="eventbus.emit('open-new-group-modal')"
-              >
+              <app-button @click="eventbus.emit('open-new-group-modal')">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
                   <rect width="256" height="256" fill="none"></rect>
                   <line
@@ -62,12 +59,12 @@
                       </g>
                     </g></svg
                 ></span>
-              </button>
+              </app-button>
             </div>
           </div>
         </div>
       </div>
-      <div class="mt-10 p-4 w-full dark:bg-dark-600 bg-gray-100 rounded-xl dark:text-gray-50">
+      <div class="mt-10 p-4 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-4">
             <span class="text-lg">Empfohlene Gruppen</span>
@@ -77,21 +74,23 @@
           <group-list :groups="groups"></group-list>
         </div>
       </div>
-      <div class="mt-10 p-4 dark:bg-dark-600 w-full h-1/3 rounded-lg dark:text-gray-50">Gruppen von Leuten denen du folgst</div>
+      <div class="mt-10 p-4 dark:bg-dark-600 bg-gray-200 w-full h-1/3 rounded-lg dark:text-gray-50 pb-20 mb-32">
+        Gruppen von Leuten denen du folgst
+      </div>
     </div>
     <new-group-modal contentText="" headerText="Erstelle eine Gruppe" />
   </div>
 </template>
 
 <script lang="ts">
-import Card from '../components/Card.vue';
+import Card from '../components/Card/Card.vue';
 import { defineComponent, ref, watch } from 'vue';
-import GroupCard from '../components/GroupCard.vue';
-import NewGroupModal from '../components/NewGroupModal.vue';
-import InputField from '../components/InputField.vue';
+import GroupCard from '../components/Group/GroupCard.vue';
+import NewGroupModal from '../components/Group/NewGroupModal.vue';
+import InputField from '../components/Form/InputField.vue';
 import { Group, GroupsQueryVariables } from '../graphql/generated/types';
 import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
-import GroupList from '../components/GroupList.vue';
+import GroupList from '../components/Group/GroupList.vue';
 import breakpoints from '../utils/breakpoints';
 
 export default defineComponent({

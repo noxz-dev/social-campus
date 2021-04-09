@@ -33,8 +33,8 @@ import { useDropzone } from 'vue3-dropzone';
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
-import { useEditPostMutation } from '../graphql/generated/graphqlOperations';
-import ToggleButton from '../components/ToggleButton.vue';
+import { useEditPostMutation } from '../../graphql/generated/graphqlOperations';
+import ToggleButton from '../Form/ToggleButton.vue';
 import { EditPostMutationVariables, Post } from 'src/graphql/generated/types';
 export default defineComponent({
   components: { ToggleButton },

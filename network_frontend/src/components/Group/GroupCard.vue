@@ -30,10 +30,10 @@
 </template>
 
 <script lang="ts">
-import { Group } from '../graphql/generated/types';
+import { Group } from '../../graphql/generated/types';
 import { defineComponent, PropType } from 'vue';
-import Card from './Card.vue';
-import LazyImage from './blurhash/LazyImage.vue';
+import Card from '../Card/Card.vue';
+import LazyImage from '../Blurhash/LazyImage.vue';
 export default defineComponent({
   props: {
     group: {

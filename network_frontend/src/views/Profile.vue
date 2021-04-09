@@ -75,24 +75,18 @@
               <div
                 class="flex items-center md:justify-center justify-evenly sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all duration-1000 w-full"
               >
-                <router-link :to="{ name: 'ProfilePosts', params: { id: $route.params.id } }">
-                  <div class="py-1 px-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Posts</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
-                  </div>
-                </router-link>
-                <router-link :to="{ name: 'ProfileFollowers', params: { id: $route.params.id } }">
-                  <div class="py-1 px-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Followers</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
-                  </div>
-                </router-link>
-                <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
-                  <div class="py-1 px-2 rounded-lg">
-                    <span class="dark:text-gray-50 text-gray-900">Following</span>
-                    <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
-                  </div>
-                </router-link>
+                <div class="py-1 px-2 rounded-lg">
+                  <span class="dark:text-gray-50 text-gray-900">Posts</span>
+                  <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.postCount }}</span>
+                </div>
+                <div class="py-1 px-2 rounded-lg">
+                  <span class="dark:text-gray-50 text-gray-900">Followers</span>
+                  <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followerCount }}</span>
+                </div>
+                <div class="py-1 px-2 rounded-lg">
+                  <span class="dark:text-gray-50 text-gray-900">Following</span>
+                  <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.userStats?.followingCount }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -106,13 +100,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, watchEffect } from 'vue';
-import PostList from '@/components/PostList.vue';
+import PostList from '../components/Post/PostList.vue';
 import { useAddFollowerMutation, useRemoveFollowerMutation, useUserByUsernameQuery, useUserStatsQuery } from '../graphql/generated/graphqlOperations';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
 import { userByUsername } from '../graphql/queries/userByUsername';
-import LazyImage from '../components/blurhash/LazyImage.vue';
+import LazyImage from '../components/Blurhash/LazyImage.vue';
 
 export default defineComponent({
   components: {
@@ -251,7 +245,7 @@ a:hover path {
 .dark a.router-link-exact-active div {
   @apply relative;
   @apply border-b-4;
-  @apply rounded-none; 
+  @apply rounded-none;
 }
 
 a.router-link-exact-active div {

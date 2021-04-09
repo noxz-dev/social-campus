@@ -74,42 +74,38 @@ body::-webkit-scrollbar {
   -moz-osx-font-smoothing: grayscale;
 }
 @screen md {
-  @media (prefers-color-scheme: light) {
-    *::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.897);
-      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.719);
-      border-radius: 10px;
-      background-color: #d3cece;
-    }
-    *::-webkit-scrollbar {
-      width: 12px;
-      background-color: #cacaca;
-    }
-    *::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
-      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
-      background-color: #d8d8d8;
-    }
+  *::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.897);
+    box-shadow: inset 0 0 6px #ffffff;
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+  *::-webkit-scrollbar {
+    width: 12px;
+    background-color: #ffffff;
+  }
+  *::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
+    background-color: #d8d8d8;
   }
 
-  @media (prefers-color-scheme: dark) {
-    *::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      background-color: #272b2f;
-    }
-    *::-webkit-scrollbar {
-      width: 12px;
-      background-color: #272b2f;
-    }
-    *::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      background-color: #363b41;
-    }
+  .dark *::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px #181a20;
+    box-shadow: inset 0 0 6px #181a20;
+    background-color: #181a20;
+  }
+  .dark *::-webkit-scrollbar {
+    width: 12px;
+    background-color: #181a20;
+  }
+  .dark *::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #363b41;
   }
 }
 </style>

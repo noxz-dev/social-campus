@@ -206,11 +206,7 @@
             </transition>
           </div>
 
-          <button
-            v-if="['Home', 'Browse', 'Group'].includes($route.name)"
-            class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-            @click="eventbus.emit('open-modal')"
-          >
+          <app-button v-if="['Home', 'Browse', 'Group'].includes($route.name)" class="ml-6" @click="eventbus.emit('open-modal')">
             Neuer Post
             <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ml-2 h-6 w-6">
               <g id="Iconly/Bulk/Send" stroke="none" stroke-width="1" fill-rule="evenodd">
@@ -229,7 +225,7 @@
                 </g>
               </g>
             </svg>
-          </button>
+          </app-button>
         </div>
       </div>
     </div>
@@ -307,16 +303,13 @@
     <new-post />
   </modal>
   <edit-modal content-text="" header-text="Edit Post" />
-  <transition name="fade">
-    <post-detail-card></post-detail-card>
-  </transition>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Modal from '@/components/Modal.vue';
-import NewPost from './NewPost.vue';
-import EditPost from './EditPost.vue';
+import NewPost from './Post/NewPost.vue';
+import EditPost from './Post/EditPost.vue';
 import breakpoints from '../utils/breakpoints';
 import { useMeQuery } from '../graphql/generated/graphqlOperations';
 import { useResult } from '@vue/apollo-composable';
@@ -324,18 +317,16 @@ import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import FloatingButton from './FloatingButton.vue';
-import PostDetailCard from './PostDetailCard.vue';
+import FloatingButton from './Form/FloatingButton.vue';
 import Search from './Search.vue';
 import Notifications from './Notifications.vue';
-import EditModal from './EditModal.vue';
-import ToggleButton from './ToggleButton.vue';
+import EditModal from './Post/EditModal.vue';
+import ToggleButton from './Form/ToggleButton.vue';
 export default defineComponent({
   components: {
     Modal,
     NewPost,
     FloatingButton,
-    PostDetailCard,
     Search,
     Notifications,
     EditModal,

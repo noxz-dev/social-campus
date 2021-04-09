@@ -21,30 +21,22 @@
     </div>
     <div class="w-full mt-6 py-4 text-lg font-semibold dark:text-gray-50 text-gray-900">
       <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all duration-1000 w-full">
-        <router-link :to="{ name: 'ProfilePosts', params: { id: $route.params.id } }">
-          <div class="py-1 px-2 rounded-lg">
-            <span class="dark:text-gray-50 text-gray-900">Feed</span>
-            <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ numberFormatter(9800) }}</span>
-          </div>
-        </router-link>
-        <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
-          <div class="py-1 px-2 rounded-lg">
-            <span class="dark:text-gray-50 text-gray-900">Wiki</span>
-            <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
-          </div>
-        </router-link>
-        <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
-          <div class="py-1 px-2 rounded-lg">
-            <span class="dark:text-gray-50 text-gray-900">Files</span>
-            <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
-          </div>
-        </router-link>
-        <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
-          <div class="py-1 px-2 rounded-lg">
-            <span class="dark:text-gray-50 text-gray-900">Everything is possible...</span>
-            <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
-          </div>
-        </router-link>
+        <div class="py-1 px-2 rounded-lg">
+          <span class="dark:text-gray-50 text-gray-900">Feed</span>
+          <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ numberFormatter(9800) }}</span>
+        </div>
+        <div class="py-1 px-2 rounded-lg">
+          <span class="dark:text-gray-50 text-gray-900">Wiki</span>
+          <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
+        </div>
+        <div class="py-1 px-2 rounded-lg">
+          <span class="dark:text-gray-50 text-gray-900">Files</span>
+          <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
+        </div>
+        <div class="py-1 px-2 rounded-lg">
+          <span class="dark:text-gray-50 text-gray-900">Everything is possible...</span>
+          <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
+        </div>
       </div>
     </div>
   </div>

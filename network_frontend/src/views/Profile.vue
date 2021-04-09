@@ -251,12 +251,16 @@ a:hover path {
 .dark a.router-link-exact-active div {
   @apply relative;
   @apply border-b-4;
-  @apply rounded-none;
+  @apply rounded-none; 
 }
 
 a.router-link-exact-active div {
   @apply relative;
   @apply border-b-4;
   @apply rounded-none;
+}
+
+a.router-link-exact-active span {
+  @apply text-white !important;
 }
 </style>

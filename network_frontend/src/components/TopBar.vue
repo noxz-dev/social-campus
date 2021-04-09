@@ -317,7 +317,7 @@ import { defineComponent, ref } from 'vue';
 import Modal from '@/components/Modal.vue';
 import NewPost from './NewPost.vue';
 import EditPost from './EditPost.vue';
-import breakpoints from '../_helpers/breakpoints';
+import breakpoints from '../utils/breakpoints';
 import { useMeQuery } from '../graphql/generated/graphqlOperations';
 import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';

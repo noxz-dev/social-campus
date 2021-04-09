@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import breakpoints from '../../_helpers/breakpoints';
+import breakpoints from '../../utils/breakpoints';
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import IconLink from './IconLink.vue';

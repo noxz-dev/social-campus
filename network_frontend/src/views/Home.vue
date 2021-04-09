@@ -19,7 +19,7 @@ import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import { GetFeedQueryVariables } from 'src/graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
-import { getFeedState } from '../_helpers/QueryState';
+import { getFeedState } from '../utils/QueryState';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper },

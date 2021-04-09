@@ -92,7 +92,7 @@ import InputField from '../components/InputField.vue';
 import { Group, GroupsQueryVariables } from '../graphql/generated/types';
 import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
 import GroupList from '../components/GroupList.vue';
-import breakpoints from '../_helpers/breakpoints';
+import breakpoints from '../utils/breakpoints';
 
 export default defineComponent({
   components: {

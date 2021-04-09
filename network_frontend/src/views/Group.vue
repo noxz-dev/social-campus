@@ -7,14 +7,14 @@
           <div class="w-full flex justify-center">
             <component :is="'GroupFeed'" />
           </div>
-          <div class="dark:bg-dark-600 bg-gray-100 dark:text-gray-50 mt-4 w-1/3 rounded-xl flex items-center justify-center h-96">
+          <div class="dark:bg-dark-600 bg-gray-100 dark:text-gray-50 mt-4 w-1/3 rounded-xl items-center justify-center h-96 hidden lg:flex">
             <div class="">SIDEPANEL RIGHT</div>
           </div>
         </div>
       </infinite-scroll-wrapper>
     </div>
 
-    <div class="h-full sm:hidden lg:flex w-80">
+    <div class="h-full hidden lg:flex w-80">
       <div class="p-5 w-full">
         <div class="mb-5">
           <span class="dark:text-red-400 text-red-500 dark:text-opacity-60 text-opacity-75 tracking-wider">ADMIN</span>

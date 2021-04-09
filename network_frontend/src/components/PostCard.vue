@@ -1,6 +1,6 @@
 <template>
-  <card id="postcard">
-    <card-header :post="post" />
+  <card id="postcard" :bgColorDark="cardBgColor">
+    <card-header :post="post" :bgColorDark="cardBgColor" />
     <div class="px-4" @click.self="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown" v-html="parseMarkdown(post.text)"></div>
@@ -76,6 +76,10 @@ export default defineComponent({
     post: {
       type: Object,
       required: true,
+    },
+    cardBgColor: {
+      type: String,
+      default: 'bg-dark500',
     },
   },
   setup(props) {

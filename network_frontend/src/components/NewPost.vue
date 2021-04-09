@@ -95,6 +95,7 @@ import VueTribute from './VueTribute.vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { browsePosts } from '../graphql/queries/browsePosts';
+import { getPostsFromGroup } from '../graphql/queries/getPostsFromGroup';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
   setup() {
@@ -150,7 +151,7 @@ export default defineComponent({
                 getFeed: [...dataInStore.getFeed, addPost],
               },
             });
-          } else if (route.params.id) {
+          } else if (route.path.includes('/user')) {
             const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
             cache.writeQuery({
               query: getPostsFromUser,
@@ -172,6 +173,18 @@ export default defineComponent({
               data: {
                 ...dataInStore,
                 browsePosts: [...dataInStore.browsePosts, addPost],
+              },
+            });
+          } else if (route.name === 'Group') {
+            const dataInStore: any = cache.readQuery({ query: getPostsFromGroup, variables: { groupId: groupId.value } });
+            cache.writeQuery({
+              query: getPostsFromGroup,
+              variables: {
+                groupId: groupId.value,
+              },
+              data: {
+                ...dataInStore,
+                browsePosts: [...dataInStore.getPostsFromGroup, addPost],
               },
             });
           }

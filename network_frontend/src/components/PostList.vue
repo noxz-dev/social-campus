@@ -3,7 +3,7 @@
     <div class="dark:text-gray-50 text-gray-900 mt-20 font-semibold text-xl" v-if="posts?.length === 0">
       {{ emptyText }}
     </div>
-    <post-card v-for="post in posts" :key="post.id" :post="post" />
+    <post-card v-for="post in posts" :key="post.id" :post="post" :cardBgColor="cardBgColor" />
   </div>
 </template>
 
@@ -20,6 +20,10 @@ export default defineComponent({
     emptyText: {
       type: String,
       default: 'ganz schön leer hier, schreibe doch einen Post',
+    },
+    cardBgColor: {
+      type: String,
+      default: 'bg-dark600',
     },
   },
 });

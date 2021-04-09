@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col dark:bg-dark-700 bg-gray-100 p-6 items-center w-full rounded-xl">
+  <div class="flex flex-col dark:bg-dark-600 bg-gray-100 p-6 items-center w-full rounded-xl">
     <div class="bg-pink-300 w-full rounded-xl h-72">
-      <lazy-image src="" blurhash="AePC3PmlGv{c" />
+      <lazy-image src="" blurhash="AIDSCO0y_OL0" />
     </div>
     <div class="w-full mt-6 py-10 flex justify-between">
       <div class="flex flex-col">
@@ -9,13 +9,42 @@
         <div class="flex">
           <div></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">Private Gruppe</div>
-          <div>·</div>
+          <div class="w-1"></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">· 1k Mitglieder</div>
         </div>
       </div>
-      <div class="flex">
-        <div></div>
-        <div></div>
+      <div class="flex h-full items-center">
+        <div class="h-full">
+          <div class="flex -space-x-2 relative z-0 overflow-hidden h-full items-center py-1 px-2">
+            <img
+              class="relative z-30 inline-block h-14 w-14 rounded-full ring-2 ring-white"
+              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixqx=Q6mry6py7k&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+            <img
+              class="relative z-20 inline-block h-14 w-14 rounded-full ring-2 ring-white"
+              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+            <img
+              class="relative z-10 inline-block h-14 w-14 rounded-full ring-2 ring-white"
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixqx=Q6mry6py7k&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
+              alt=""
+            />
+            <img
+              class="relative z-0 inline-block h-14 w-14 rounded-full ring-2 ring-white"
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=Q6mry6py7k&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="ml-10">
+          <button
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-highlight-600 hover:bg-highlight-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+          >
+            Einladen
+          </button>
+        </div>
       </div>
     </div>
     <div class="w-full mt-6 py-4 text-lg font-semibold dark:text-gray-50 text-gray-900">
@@ -53,7 +82,7 @@
 import { Group } from 'src/graphql/generated/types';
 import { defineComponent, PropType, ref, watch } from 'vue';
 import LazyImage from './blurhash/LazyImage.vue';
-import {numberFormatter} from "../utils/numberFormatter"
+import { numberFormatter } from '../utils/numberFormatter';
 
 export default defineComponent({
   components: { LazyImage },
@@ -64,10 +93,9 @@ export default defineComponent({
     },
   },
   setup() {
-
     return {
-      numberFormatter
-    }
+      numberFormatter,
+    };
   },
 });
 </script>
@@ -116,4 +144,3 @@ a.router-link-exact-active span {
   @apply text-white !important;
 }
 </style>
-

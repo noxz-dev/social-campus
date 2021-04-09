@@ -62,7 +62,6 @@ export default defineComponent({
     });
     onMounted(() => {
       const imageBoundingBox = image.value.getBoundingClientRect();
-      console.log(image.value.getBoundingClientRect());
       if (imageBoundingBox.bottom > window.innerHeight) {
         isVisible.value = false;
       }

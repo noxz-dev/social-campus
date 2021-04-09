@@ -88,7 +88,7 @@
 
           <div class="relative" @click.stop>
             <transition name="fade">
-              <notifications v-if="notifyOpen" @click.prevent @closeNotify="notifyOpen = false" />
+              <notifications v-if="notifyOpen" @click.prevent @closeNotify="notifyOpen = false" :notifications="notifications"/>
             </transition>
           </div>
 
@@ -311,7 +311,7 @@ import Modal from '@/components/Modal.vue';
 import NewPost from './Post/NewPost.vue';
 import EditPost from './Post/EditPost.vue';
 import breakpoints from '../utils/breakpoints';
-import { useMeQuery } from '../graphql/generated/graphqlOperations';
+import { useGetNotificationsQuery, useMeQuery } from '../graphql/generated/graphqlOperations';
 import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';
@@ -322,6 +322,7 @@ import Search from './Search.vue';
 import Notifications from './Notifications.vue';
 import EditModal from './Post/EditModal.vue';
 import ToggleButton from './Form/ToggleButton.vue';
+import { notificationsSubscription } from '../graphql/subscriptions/notifications';
 export default defineComponent({
   components: {
     Modal,
@@ -341,7 +342,7 @@ export default defineComponent({
     const router = useRouter();
     const notifyOpen = ref(false);
     const notifyTarget = ref(null);
-
+    const notifications = ref<Notification[]>([]);
     const store = useStore();
 
     onClickOutside(target, (event) => {
@@ -360,6 +361,18 @@ export default defineComponent({
       const userData = userResult.data.me;
       store.dispatch('userData/setUser', userData);
       profileImage.value = userData.profilePicLink;
+
+      const { onResult: onNotifications, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
+      subscribeToMore(() => ({
+        document: notificationsSubscription,
+        variables: {
+          userId: userData.id,
+        },
+      }));
+
+      onNotifications(({ data }) => {
+        notifications.value = data.getNotifications;
+      });
     });
 
     profileImage.value = user?.value?.profilePicLink || '';
@@ -385,6 +398,7 @@ export default defineComponent({
       profileImage,
       notifyOpen,
       notifyTarget,
+      notifications,
     };
   },
 });

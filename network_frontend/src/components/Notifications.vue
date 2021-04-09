@@ -53,33 +53,27 @@
 </template>
 
 <script lang="ts">
-import { useDeleteNotificationMutation, useGetNotificationsQuery } from '../graphql/generated/graphqlOperations';
-import { computed, defineComponent, ref, watchEffect } from 'vue';
+import { useDeleteNotificationMutation } from '../graphql/generated/graphqlOperations';
+import { defineComponent, PropType, ref, toRefs } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';
-import { getNotifications } from '../graphql/queries/notifications';
-import { notificationsSubscription } from '../graphql/subscriptions/notifications';
-import { useStore } from 'vuex';
 export default defineComponent({
   emits: ['closeNotify'],
+  props: {
+    notifications: {
+      type: Array as PropType<Notification[]>,
+      required: true
+    }
+  },
   setup(props, { emit }) {
-    const notifications = ref<Notification[]>([]);
-    const { onResult, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
-    const store = useStore();
-    const user = computed(() => store.state.userData.user);
+    // const notifications = ref<Notification[]>([]);
 
-    subscribeToMore(() => ({
-      document: notificationsSubscription,
-      variables: {
-        userId: user.value.id,
-      },
-    }));
+    //TODO DELETE NOT WORKING
+    const { notifications } = toRefs(props)
     const tobeDeleted = ref('');
     const router = useRouter();
-
-    onResult(({ data }) => {
-      notifications.value = data.getNotifications;
-    });
+    const notificationsLoading = ref(false);
+    
 
     const { mutate: deleteNotify } = useDeleteNotificationMutation(() => ({
       variables: {
@@ -90,7 +84,7 @@ export default defineComponent({
     const deleteNotification = async (id: string) => {
       tobeDeleted.value = id;
       await deleteNotify();
-      notifications.value = notifications.value.filter((n) => n.id != id);
+      notifications.value = props.notifications.filter((n) => n.id != id);
       tobeDeleted.value = '';
     };
 

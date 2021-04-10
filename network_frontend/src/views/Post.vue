@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto">
-    <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
+    <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10">
       <div
         class="group z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark700 dark:stroke-white stroke-black hover:stroke-indigo"
         @click="$router.back()"

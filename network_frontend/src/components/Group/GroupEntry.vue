@@ -4,8 +4,8 @@
       <div class="pb-28 p-10">
         <div class="pb-10 font-semibold text-2xl">Du bist kein Teil dieser Gruppe</div>
         <div class="pb-4">Gruppen Passwort</div>
-        <input-field class="pb-4" />
-        <app-button>Beitreten</app-button>
+        <input-field class="pb-8" />
+        <app-button @click="joinGroup">Beitreten</app-button>
       </div>
     </card>
   </div>
@@ -13,12 +13,20 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import Card from '../Card/Card.vue';
 import InputField from '../Form/InputField.vue';
 
 export default defineComponent({
   components: { Card, InputField },
-  setup() {},
+  setup() {
+    const route = useRoute();
+    const joinGroup = () => {};
+
+    return {
+      joinGroup,
+    };
+  },
 });
 </script>
 

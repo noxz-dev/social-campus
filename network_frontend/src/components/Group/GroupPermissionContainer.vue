@@ -13,12 +13,16 @@ export default defineComponent({
   setup(props) {
     const isAllowed = ref(false);
 
-    const { onResult, onError } = useCheckGroupAccessQuery(
+    const { onResult, onError, refetch } = useCheckGroupAccessQuery(
       () =>
         <CheckGroupAccessQueryVariables>{
           groupId: props.groupId,
         }
     );
+
+    const update = () => {
+      refetch();
+    };
 
     onResult(({ data }) => {
       if (data) {
@@ -30,7 +34,7 @@ export default defineComponent({
       console.log('error');
     });
 
-    return { isAllowed };
+    return { isAllowed, update };
   },
 });
 </script>

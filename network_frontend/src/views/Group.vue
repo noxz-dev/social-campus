@@ -31,7 +31,7 @@
 import PostList from '../components/Post/PostList.vue';
 import { useGetPostsFromGroupQuery } from '../graphql/generated/graphqlOperations';
 import { GetPostsFromGroupQueryVariables } from '../graphql/generated/types';
-import { defineComponent, ref, defineAsyncComponent, onMounted, watchEffect, watch } from 'vue';
+import { defineComponent, ref, defineAsyncComponent, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import GroupHeader from '../components/Group/GroupHeader.vue';

@@ -19,7 +19,6 @@ import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import { GetFeedQueryVariables } from '../graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
-import { getFeedState } from '../utils/QueryState';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper },
@@ -63,7 +62,6 @@ export default defineComponent({
 
     const loadMore = () => {
       console.log('load triggerd');
-      getFeedState.skip = posts.value.length;
       fetchMore({
         variables: {
           skip: posts.value.length,

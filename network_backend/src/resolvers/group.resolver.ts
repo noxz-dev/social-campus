@@ -78,4 +78,31 @@ export class GroupResolver {
     }
     return groups;
   }
+
+  @Authorized()
+  @Query(() => [Group])
+  public async myGroups(@Ctx() ctx: MyContext): Promise<Group[]> {
+    const userId = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({
+      where: { id: userId },
+      relations: ['groups', 'groups.members'],
+    });
+    if (!user.groups) {
+      return [];
+    }
+    return user.groups;
+  }
+
+  @Authorized()
+  @Query(() => Boolean)
+  public async checkGroupAccess(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<boolean> {
+    const userId = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['groups'] });
+
+    const found = user.groups.find((grp) => grp.id === groupId);
+    if (found) return true;
+    return false;
+  }
 }

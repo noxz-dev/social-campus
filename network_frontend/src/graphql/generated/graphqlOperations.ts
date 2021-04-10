@@ -467,6 +467,31 @@ export function useBrowsePostsQuery(variables: graphqlOperations.ts.BrowsePostsQ
   return VueApolloComposable.useQuery<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>(BrowsePostsDocument, variables, options);
 }
 export type BrowsePostsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>;
+export const CheckGroupAccessDocument = gql`
+    query checkGroupAccess($groupId: String!) {
+  checkGroupAccess(groupId: $groupId)
+}
+    `;
+
+/**
+ * __useCheckGroupAccessQuery__
+ *
+ * To run a query within a Vue component, call `useCheckGroupAccessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckGroupAccessQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useCheckGroupAccessQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useCheckGroupAccessQuery(variables: graphqlOperations.ts.CheckGroupAccessQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.CheckGroupAccessQueryVariables> | ReactiveFunction<graphqlOperations.ts.CheckGroupAccessQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.CheckGroupAccessQuery, graphqlOperations.ts.CheckGroupAccessQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.CheckGroupAccessQuery, graphqlOperations.ts.CheckGroupAccessQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.CheckGroupAccessQuery, graphqlOperations.ts.CheckGroupAccessQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.CheckGroupAccessQuery, graphqlOperations.ts.CheckGroupAccessQueryVariables>(CheckGroupAccessDocument, variables, options);
+}
+export type CheckGroupAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.CheckGroupAccessQuery, graphqlOperations.ts.CheckGroupAccessQueryVariables>;
 export const FollowersDocument = gql`
     query followers($userId: String!, $take: Float!, $skip: Float!) {
   followers(userId: $userId, take: $take, skip: $skip) {
@@ -616,6 +641,35 @@ export function useGetPostsFromGroupQuery(variables: graphqlOperations.ts.GetPos
   return VueApolloComposable.useQuery<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>(GetPostsFromGroupDocument, variables, options);
 }
 export type GetPostsFromGroupQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GetPostsFromGroupQuery, graphqlOperations.ts.GetPostsFromGroupQueryVariables>;
+export const GroupByIdDocument = gql`
+    query groupById($groupId: String!) {
+  groupById(groupId: $groupId) {
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useGroupByIdQuery__
+ *
+ * To run a query within a Vue component, call `useGroupByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupByIdQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGroupByIdQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useGroupByIdQuery(variables: graphqlOperations.ts.GroupByIdQueryVariables | VueCompositionApi.Ref<graphqlOperations.ts.GroupByIdQueryVariables> | ReactiveFunction<graphqlOperations.ts.GroupByIdQueryVariables>, options: VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupByIdQuery, graphqlOperations.ts.GroupByIdQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupByIdQuery, graphqlOperations.ts.GroupByIdQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<graphqlOperations.ts.GroupByIdQuery, graphqlOperations.ts.GroupByIdQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<graphqlOperations.ts.GroupByIdQuery, graphqlOperations.ts.GroupByIdQueryVariables>(GroupByIdDocument, variables, options);
+}
+export type GroupByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.GroupByIdQuery, graphqlOperations.ts.GroupByIdQueryVariables>;
 export const GroupsDocument = gql`
     query groups($take: Float!, $skip: Float!) {
   groups(take: $take, skip: $skip) {

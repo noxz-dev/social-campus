@@ -213,7 +213,9 @@ export type Notification = {
 };
 
 export enum NotificationType {
-  NewFollower = 'NEW_FOLLOWER'
+  NewFollower = 'NEW_FOLLOWER',
+  NewComment = 'NEW_COMMENT',
+  PostLike = 'POST_LIKE'
 }
 
 export type Post = {
@@ -246,6 +248,8 @@ export type Query = {
   postById: Post;
   groupById: Group;
   groups: Array<Group>;
+  myGroups: Array<Group>;
+  checkGroupAccess: Scalars['Boolean'];
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -298,6 +302,11 @@ export type QueryGroupByIdArgs = {
 export type QueryGroupsArgs = {
   take: Scalars['Float'];
   skip: Scalars['Float'];
+};
+
+
+export type QueryCheckGroupAccessArgs = {
+  groupId: Scalars['String'];
 };
 
 
@@ -611,6 +620,16 @@ export type BrowsePostsQuery = (
   )>> }
 );
 
+export type CheckGroupAccessQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type CheckGroupAccessQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'checkGroupAccess'>
+);
+
 export type FollowersQueryVariables = Exact<{
   userId: Scalars['String'];
   take: Scalars['Float'];
@@ -674,6 +693,19 @@ export type GetPostsFromGroupQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     ) }
   )>> }
+);
+
+export type GroupByIdQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GroupByIdQuery = (
+  { __typename?: 'Query' }
+  & { groupById: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name' | 'description'>
+  ) }
 );
 
 export type GroupsQueryVariables = Exact<{

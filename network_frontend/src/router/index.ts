@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { navState } from '../utils/NavState';
 
 const routes = [
   {
@@ -80,7 +81,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/home',
-  }
+  },
 ];
 
 const router = createRouter({
@@ -96,6 +97,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to.name);
+  if (['Home', 'Groups', 'Chats', 'Browse'].includes(to.name as string)) {
+    navState.lastView = to.path as string;
+    localStorage.setItem('lastView', to.path);
+  }
   const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some((record) => record.meta.onlyWhenLoggedOut);
   const loggedIn = !!localStorage.getItem('apollo-token');

@@ -86,7 +86,7 @@
             </svg>
             <span
               v-if="notifications && notifications.length > 0"
-              class="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-green-400"
+              class="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-dark-700 bg-green-400"
             />
           </div>
 
@@ -364,7 +364,7 @@ import EditModal from './Post/EditModal.vue';
 import ToggleButton from './Form/ToggleButton.vue';
 import { notificationsSubscription } from '../graphql/subscriptions/notifications';
 import { Notification } from '../graphql/generated/types';
-import GroupPermissionContainer from './GroupPermissionContainer.vue';
+import GroupPermissionContainer from './Group/GroupPermissionContainer.vue';
 export default defineComponent({
   components: {
     Modal,

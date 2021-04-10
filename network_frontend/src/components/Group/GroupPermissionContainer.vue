@@ -3,8 +3,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useCheckGroupAccessQuery } from '../graphql/generated/graphqlOperations';
-import { CheckGroupAccessQueryVariables } from '../graphql/generated/types';
+import { useCheckGroupAccessQuery } from '../../graphql/generated/graphqlOperations';
+import { CheckGroupAccessQueryVariables } from '../../graphql/generated/types';
 
 export default defineComponent({
   props: {
@@ -13,7 +13,7 @@ export default defineComponent({
   setup(props) {
     const isAllowed = ref(false);
 
-    const { onResult } = useCheckGroupAccessQuery(
+    const { onResult, onError } = useCheckGroupAccessQuery(
       () =>
         <CheckGroupAccessQueryVariables>{
           groupId: props.groupId,
@@ -21,7 +21,13 @@ export default defineComponent({
     );
 
     onResult(({ data }) => {
-      isAllowed.value = data.checkGroupAccess;
+      if (data) {
+        isAllowed.value = data.checkGroupAccess;
+      }
+    });
+
+    onError(() => {
+      console.log('error');
     });
 
     return { isAllowed };

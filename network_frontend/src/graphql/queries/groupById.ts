@@ -6,6 +6,7 @@ export const groupById = gql`
       id
       name
       description
+      numberOfPosts
     }
   }
 `;

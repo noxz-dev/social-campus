@@ -1,6 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
+import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
 
@@ -13,6 +14,7 @@ export class GroupResolver {
     @Arg('name') name: string,
     @Arg('description', { nullable: true }) description: string,
     @Arg('groupType', () => GroupType) groupType: GroupType,
+    @Arg('password', { nullable: true }) password: string,
   ): Promise<Group | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -29,6 +31,7 @@ export class GroupResolver {
     group.createdBy = user;
     group.name = name;
     group.type = groupType;
+    if (groupType === GroupType.PRIVATE && password) group.password = password;
     if (description) group.description = description;
     group.members.push(user);
 
@@ -38,7 +41,11 @@ export class GroupResolver {
 
   @Authorized()
   @Mutation(() => Group)
-  public async joinGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Group | null> {
+  public async joinGroup(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId') groupId: string,
+    @Arg('password', { nullable: true }) password: string,
+  ): Promise<Group | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;
@@ -50,13 +57,21 @@ export class GroupResolver {
     }
 
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+
     if (!group) {
       throw new Error('group not found');
     }
 
-    group.members.push(user);
-    await getRepository(Group).save(group);
-    return group;
+    if (group.type === GroupType.PRIVATE && group.password === password) {
+      group.members.push(user);
+      await getRepository(Group).save(group);
+      return group;
+    } else if (group.type === GroupType.PUBLIC) {
+      group.members.push(user);
+      await getRepository(Group).save(group);
+      return group;
+    }
+    throw Error('could not join the group');
   }
 
   @Authorized()
@@ -66,6 +81,7 @@ export class GroupResolver {
     if (!group) {
       throw new Error('group not found');
     }
+    group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     return group;
   }
 

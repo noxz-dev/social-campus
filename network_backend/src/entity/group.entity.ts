@@ -32,6 +32,9 @@ export class Group extends Base {
   @ManyToOne(() => User)
   createdBy: User;
 
+  @Column({ nullable: true })
+  password: string;
+
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
@@ -40,4 +43,7 @@ export class Group extends Base {
   @ManyToMany(() => User, (user) => user.groups)
   @JoinTable()
   members: User[];
+
+  @Field(() => Number, { nullable: true })
+  numberOfPosts: number;
 }

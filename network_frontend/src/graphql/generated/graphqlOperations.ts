@@ -647,6 +647,7 @@ export const GroupByIdDocument = gql`
     id
     name
     description
+    numberOfPosts
   }
 }
     `;

@@ -36,6 +36,7 @@ export type Group = {
   createdBy: User;
   posts: Array<Post>;
   members: Array<User>;
+  numberOfPosts?: Maybe<Scalars['Float']>;
 };
 
 export enum GroupType {
@@ -704,7 +705,7 @@ export type GroupByIdQuery = (
   { __typename?: 'Query' }
   & { groupById: (
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description'>
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfPosts'>
   ) }
 );
 

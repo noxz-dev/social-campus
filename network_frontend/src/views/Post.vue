@@ -57,7 +57,7 @@
             <p>Noch keine Kommentare vorhanden</p>
           </div>
           <card v-for="comment in postData.postById.comments" :key="comment.id">
-            <card-header :comment="comment" />
+            <card-header :comment="comment" bg-color-dark="bg-dark-600" />
             <div class="p-5 pt-0">
               {{ comment.text }}
             </div>

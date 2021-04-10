@@ -54,26 +54,31 @@
 
 <script lang="ts">
 import { useDeleteNotificationMutation } from '../graphql/generated/graphqlOperations';
-import { defineComponent, PropType, ref, toRefs } from 'vue';
+import { defineComponent, PropType, ref, toRefs, watch } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';
 export default defineComponent({
-  emits: ['closeNotify'],
+  emits: ['closeNotify', 'deleteNotification'],
   props: {
     notifications: {
       type: Array as PropType<Notification[]>,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props, { emit }) {
-    // const notifications = ref<Notification[]>([]);
+    const notifications = ref<Notification[]>(props.notifications);
 
     //TODO DELETE NOT WORKING
-    const { notifications } = toRefs(props)
-    const tobeDeleted = ref('');
+
     const router = useRouter();
     const notificationsLoading = ref(false);
-    
+    const tobeDeleted = ref('');
+    watch(
+      () => props.notifications,
+      () => {
+        notifications.value = props.notifications;
+      }
+    );
 
     const { mutate: deleteNotify } = useDeleteNotificationMutation(() => ({
       variables: {
@@ -84,7 +89,7 @@ export default defineComponent({
     const deleteNotification = async (id: string) => {
       tobeDeleted.value = id;
       await deleteNotify();
-      notifications.value = props.notifications.filter((n) => n.id != id);
+      emit('deleteNotification', id);
       tobeDeleted.value = '';
     };
 

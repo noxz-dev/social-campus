@@ -64,7 +64,7 @@
         <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4" id="notify-button" ref="notifyTarget">
           <div
             @click="notifyOpen = !notifyOpen"
-            class="hover:opacity-70 cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="hover:opacity-70 relative cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 py-2 px-2 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <svg
@@ -84,11 +84,21 @@
                 </g>
               </g>
             </svg>
+            <span
+              v-if="notifications && notifications.length > 0"
+              class="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-green-400"
+            />
           </div>
 
           <div class="relative" @click.stop>
             <transition name="fade">
-              <notifications v-if="notifyOpen" @click.prevent @closeNotify="notifyOpen = false" :notifications="notifications"/>
+              <notifications
+                v-if="notifyOpen"
+                @click.prevent
+                @closeNotify="notifyOpen = false"
+                @deleteNotification="deleteNotification($event)"
+                :notifications="notifications"
+              />
             </transition>
           </div>
 
@@ -323,6 +333,7 @@ import Notifications from './Notifications.vue';
 import EditModal from './Post/EditModal.vue';
 import ToggleButton from './Form/ToggleButton.vue';
 import { notificationsSubscription } from '../graphql/subscriptions/notifications';
+import { Notification } from '../graphql/generated/types';
 export default defineComponent({
   components: {
     Modal,
@@ -375,6 +386,10 @@ export default defineComponent({
       });
     });
 
+    const deleteNotification = (id) => {
+      notifications.value = notifications.value.filter((n: Notification) => n.id != id);
+    };
+
     profileImage.value = user?.value?.profilePicLink || '';
 
     const openMobileMenu = () => {
@@ -399,6 +414,7 @@ export default defineComponent({
       notifyOpen,
       notifyTarget,
       notifications,
+      deleteNotification,
     };
   },
 });

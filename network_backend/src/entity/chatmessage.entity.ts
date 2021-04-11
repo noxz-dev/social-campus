@@ -18,4 +18,11 @@ export class ChatMessage extends Base {
   @Field()
   @Column()
   content: string;
+
+  constructor(sendBy: User, chat: Chat, content: string) {
+    super();
+    this.sendBy = sendBy;
+    this.chat = chat;
+    this.content = content;
+  }
 }

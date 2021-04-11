@@ -10,14 +10,17 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import '../ormconfig';
-import { CommentResolver } from './resolvers/comment.resolver';
-import { GroupResolver } from './resolvers/group.resolver';
-import { NotificationResolver } from './resolvers/notification.resolver';
-import { PostResolver } from './resolvers/post.resolver';
-import { RoleResolver } from './resolvers/role.resolver';
-import { SearchResolver } from './resolvers/search.resolver';
-import { TagResolver } from './resolvers/tags.resolver';
-import { UserResolver } from './resolvers/user.resolver';
+import {
+  UserResolver,
+  TagResolver,
+  SearchResolver,
+  RoleResolver,
+  PostResolver,
+  CommentResolver,
+  NotificationResolver,
+  GroupResolver,
+  ChatResolver,
+} from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
 import { MyContext } from './utils/interfaces/context.interface';
@@ -58,6 +61,7 @@ export class Application {
           NotificationResolver,
           SearchResolver,
           TagResolver,
+          ChatResolver,
           GroupResolver,
         ],
         pubSub: this.pubsub,

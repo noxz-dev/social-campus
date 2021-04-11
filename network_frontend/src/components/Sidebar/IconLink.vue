@@ -9,7 +9,7 @@
   </router-link>
 </template>
 
-<script>
+<script lang="ts">
 import { navState } from '../../utils/NavState';
 import { defineComponent } from 'vue';
 export default defineComponent({

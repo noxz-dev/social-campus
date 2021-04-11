@@ -1,24 +1,12 @@
-import { User } from 'src/graphql/generated/types';
+import { User } from '../graphql/generated/types';
 import { Commit } from 'vuex';
 
 interface State {
-  user: User;
+  user: Partial<User>;
 }
 
 const state: State = {
-  user: {
-    id: '',
-    firstname: '',
-    lastname: '',
-    email: '',
-    bio: '',
-    groups: [],
-    posts: [],
-    followers: [],
-    following: [],
-    roles: [],
-    createdAt: '',
-  },
+  user: {},
 };
 
 const getters = {

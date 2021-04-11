@@ -28,7 +28,7 @@ export class Group extends Base {
   @Column({ type: 'enum', enum: GroupType })
   type: GroupType;
 
-  @Field()
+  @Field(() => User)
   @ManyToOne(() => User)
   createdBy: User;
 

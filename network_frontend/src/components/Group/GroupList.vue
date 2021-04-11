@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full pt-4 flex flex-wrap gap-3">
-    <div v-for="group in groups" :key="group.id" class="xl:w-80 md:w-80 w-full">
+  <div class="w-full pt-4 flex flex-wrap gap-3 justify-center">
+    <div v-for="group in groups" :key="group.id" class="xl:w-64 md:w-72 w-full">
       <group-card :group="group"></group-card>
     </div>
   </div>

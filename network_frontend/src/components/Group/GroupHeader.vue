@@ -53,7 +53,7 @@
         <div
           class="py-1 px-8 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_FEED)"
-          :class="{ 'bg-indigo-500 !text-gray-50 px-8': activeComponent == GroupComponents.GROUP_FEED }"
+          :class="{ 'bg-indigo-500 !text-gray-50 px-8 ': activeComponent == GroupComponents.GROUP_FEED }"
         >
           <span class="dark:text-gray-50">Feed</span>
           <span class="ml-2 font-medium">{{ numberFormatter(numberOfPosts) }}</span>

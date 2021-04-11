@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="['xl', 'lg', 'md'].includes(breakpoints.is)"
+    v-if="['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
     class="flex fixed top-14 h-screen shadow-right transition-all w-14 xl:w-44 bg-white dark:bg-dark700"
   >
     <div id="navContent" class="w-full flex flex-col items-start pl-0 mt-12 h-full">
-      <IconLink v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
+      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>
-      </IconLink>
+      </nav-link>
       <div class="h-full w-full flex xl:justify-center items-end">
         <div class="flex mb-32 flex-col xl:flex-row items-center">
           <span class="">
@@ -36,9 +36,9 @@
   </div>
   <div v-else class="fixed h-16 w-full z-20 bottom-0 bg-gray-300 dark:bg-dark600">
     <div id="navContent" class="h-16 w-full flex flex-row items-center">
-      <IconLink v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
+      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>
-      </IconLink>
+      </nav-link>
     </div>
   </div>
 </template>
@@ -47,11 +47,11 @@
 import breakpoints from '../../utils/breakpoints';
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import IconLink from './IconLink.vue';
+import NavLink from './NavLink.vue';
 import ToggleButton from '../Form/ToggleButton.vue';
 
 export default defineComponent({
-  components: { IconLink, ToggleButton },
+  components: { NavLink, ToggleButton },
   setup() {
     const router = useRouter();
     const show = ref(true);

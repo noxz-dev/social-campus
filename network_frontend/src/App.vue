@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-white dark:bg-dark700">
+  <div id="app" class="">
     <div v-if="showLogin" class="h-screen">
       <router-view></router-view>
     </div>

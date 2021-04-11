@@ -311,8 +311,10 @@ export class PostResolver {
         },
         relations: ['followers'],
       });
+      //add user to auto update also the same user screen
+      user.followers.push(user);
       const ids = user.followers.map((u) => u.id);
-      return args.userId, ids.includes(args.userId);
+      return ids.includes(args.userId);
     },
   })
   public async newPost(

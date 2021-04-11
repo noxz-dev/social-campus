@@ -64,13 +64,13 @@
           </div>
         </div>
       </div>
-      <div class="mt-10 p-4 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
+      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
-          <div class="pb-4">
+          <div class="pb-2">
             <span class="text-lg">Empfohlene Gruppen</span>
           </div>
         </div>
-        <div class="w-full">
+        <div class="w-full p-1">
           <group-list :groups="groups"></group-list>
         </div>
       </div>
@@ -110,7 +110,8 @@ export default defineComponent({
       if (breakpoints.is === 'sm') take.value = 4;
       if (breakpoints.is === 'md') take.value = 2;
       if (breakpoints.is === 'lg') take.value = 3;
-      if (breakpoints.is === 'xl') take.value = 5;
+      if (breakpoints.is === 'xl') take.value = 7;
+      if (breakpoints.is === '2xl') take.value = 6;
     };
     setTakeBasedOnLayout();
 

@@ -1,7 +1,7 @@
 <template>
   <card class="flex flex-col justify-center" bgColorDark="bg-dark500">
     <div class="p-1 pb-2 pt-2">
-      <div class="p-2 h-80">
+      <div class="p-2 h-64">
         <lazy-image class="rounded-xl object-cover w-full" src="https://picsum.photos/300/300" blurhash="AePC3PmlGv{c" />
       </div>
       <div class="p-3">

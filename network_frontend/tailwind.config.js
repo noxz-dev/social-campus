@@ -1,5 +1,6 @@
 module.exports = {
   darkMode: 'class', // or 'media' or 'class'
+  mode: 'jit',
   purge: {
     enabled: true,
     content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],

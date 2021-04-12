@@ -1,17 +1,20 @@
 <template>
-  <slot v-if="isAllowed"></slot>
+  <slot v-if="groupState?.isMember || groupState?.type === GroupType.Public" name="isMemberAndPublic"></slot>
+  <slot v-else name="isNoMember"></slot>
+  <slot name="onlyMember" v-if="groupState?.isMember"></slot>
+  <slot name="public" v-if="groupState?.type === GroupType.Public && !groupState.isMember"></slot>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useCheckGroupAccessQuery } from '../../graphql/generated/graphqlOperations';
-import { CheckGroupAccessQueryVariables } from '../../graphql/generated/types';
+import { CheckGroupAccessQueryVariables, GroupState, GroupType } from '../../graphql/generated/types';
 
 export default defineComponent({
   props: {
     groupId: String,
   },
   setup(props) {
-    const isAllowed = ref(false);
+    const groupState = ref<GroupState>();
 
     const { onResult, onError, refetch } = useCheckGroupAccessQuery(
       () =>
@@ -26,7 +29,7 @@ export default defineComponent({
 
     onResult(({ data }) => {
       if (data) {
-        isAllowed.value = data.checkGroupAccess;
+        groupState.value = data.checkGroupAccess;
       }
     });
 
@@ -34,7 +37,7 @@ export default defineComponent({
       console.log('error');
     });
 
-    return { isAllowed, update };
+    return { groupState, update, GroupType };
   },
 });
 </script>

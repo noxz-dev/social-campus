@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
+import { GroupState } from '../graphql_types/groupState';
 import { MyContext } from '../utils/interfaces/context.interface';
 
 @Resolver(() => Group)
@@ -111,14 +112,25 @@ export class GroupResolver {
   }
 
   @Authorized()
-  @Query(() => Boolean)
-  public async checkGroupAccess(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<boolean> {
+  @Query(() => GroupState)
+  public async checkGroupAccess(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<GroupState> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['groups'] });
 
     const found = user.groups.find((grp) => grp.id === groupId);
-    if (found) return true;
-    return false;
+    const state = new GroupState();
+    if (found) {
+      state.id = found.id;
+      state.isMember = true;
+      state.type = found.type;
+    } else {
+      const group = await getRepository(Group).findOne({ where: { id: groupId } });
+      state.id = group.id;
+      state.type = group.type;
+      state.isMember = false;
+    }
+
+    return state;
   }
 }

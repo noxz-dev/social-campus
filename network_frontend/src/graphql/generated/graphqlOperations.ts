@@ -241,8 +241,8 @@ export function useEditPostMutation(options: VueApolloComposable.UseMutationOpti
 }
 export type EditPostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.EditPostMutation, graphqlOperations.ts.EditPostMutationVariables>;
 export const JoinGroupDocument = gql`
-    mutation joinGroup($groupId: String!) {
-  joinGroup(groupId: $groupId) {
+    mutation joinGroup($groupId: String!, $password: String) {
+  joinGroup(groupId: $groupId, password: $password) {
     id
     name
   }
@@ -263,6 +263,7 @@ export const JoinGroupDocument = gql`
  * const { mutate, loading, error, onDone } = useJoinGroupMutation({
  *   variables: {
  *     groupId: // value for 'groupId'
+ *     password: // value for 'password'
  *   },
  * });
  */
@@ -469,7 +470,11 @@ export function useBrowsePostsQuery(variables: graphqlOperations.ts.BrowsePostsQ
 export type BrowsePostsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<graphqlOperations.ts.BrowsePostsQuery, graphqlOperations.ts.BrowsePostsQueryVariables>;
 export const CheckGroupAccessDocument = gql`
     query checkGroupAccess($groupId: String!) {
-  checkGroupAccess(groupId: $groupId)
+  checkGroupAccess(groupId: $groupId) {
+    id
+    type
+    isMember
+  }
 }
     `;
 

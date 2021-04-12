@@ -7,7 +7,7 @@
         aria-expanded="true"
         aria-labelledby="listbox-label"
         @click="open = !open"
-        class="dark:bg-[#3C3F48] border border-black relative w-full rounded-md shadow-sm pl-3 pr-10 py-[0.62rem] text-left cursor-default focus:outline-none focus:ring-1 focus:ring-highlight-500 focus:border-highlight-500 sm:text-sm"
+        class="dark:bg-dark-600 border border-dark-500 relative w-full rounded-md shadow-sm pl-3 pr-10 py-[0.62rem] text-left cursor-default focus:outline-none focus:ring-1 focus:ring-highlight-500 focus:border-highlight-500 sm:text-sm"
       >
         <span class="block truncate"> {{ selected }} </span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">

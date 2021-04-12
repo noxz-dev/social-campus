@@ -27,10 +27,11 @@
                 <span class="mb-2"></span>
                 <div class="flex">
                   <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname" />
-                  <custom-select :options="GroupType" class="w-1/3" @valueChosen="setType($event)" />
+                  <custom-select :options="Object.values(GroupType)" class="w-1/3" @valueChosen="setType($event)" />
                 </div>
+                <input-field v-if="groupType === GroupType.Private" placeholder="Gruppen Passwort" class="mt-5" v-model="groupPassword" />
                 <textarea
-                  class="dark:bg-[#3C3F48] border mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                  class="dark:bg-dark-600 border mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Gruppenbeschreibung"
                   v-model="description"
                 />
@@ -78,6 +79,7 @@ export default defineComponent({
     const open = ref(false);
     const groupname = ref('');
     const description = ref('');
+    const groupPassword = ref('');
     const groupType = ref<GroupType>(GroupType.Private);
 
     const openModal = () => {
@@ -107,6 +109,7 @@ export default defineComponent({
       if (groupname.value.length > 3) await createGrp();
       groupname.value = '';
       description.value = '';
+      groupPassword.value = '';
       groupType.value = GroupType.Private;
 
       closeModal();
@@ -124,8 +127,10 @@ export default defineComponent({
       createGroup,
       groupname,
       description,
+      groupPassword,
       setType,
-      GroupType: Object.values(GroupType),
+      groupType,
+      GroupType,
     };
   },
 });

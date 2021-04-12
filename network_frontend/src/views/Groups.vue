@@ -70,7 +70,7 @@
             <span class="text-lg">Empfohlene Gruppen</span>
           </div>
         </div>
-        <div class="w-full p-1">
+        <div class="w-full p-1 flex justify-center">
           <group-list :groups="groups"></group-list>
         </div>
       </div>

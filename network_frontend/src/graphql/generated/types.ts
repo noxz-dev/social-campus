@@ -15,6 +15,23 @@ export type Scalars = {
   Upload: any;
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  members: Array<User>;
+  messages: Array<ChatMessage>;
+};
+
+export type ChatMessage = {
+  __typename?: 'ChatMessage';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  sendBy: User;
+  chat: Chat;
+  content: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['String'];
@@ -37,6 +54,13 @@ export type Group = {
   posts: Array<Post>;
   members: Array<User>;
   numberOfPosts?: Maybe<Scalars['Float']>;
+};
+
+export type GroupState = {
+  __typename?: 'GroupState';
+  id: Scalars['String'];
+  type: GroupType;
+  isMember: Scalars['Boolean'];
 };
 
 export enum GroupType {
@@ -65,6 +89,8 @@ export type Mutation = {
   unlikePost: Post;
   deletePost: Scalars['Boolean'];
   editPost: Post;
+  sendMessage: Chat;
+  createChat: Chat;
   addComment: Comment;
   likeComment: Comment;
   unlikeComment: Comment;
@@ -118,6 +144,12 @@ export type MutationEditPostArgs = {
 };
 
 
+export type MutationSendMessageArgs = {
+  message: Scalars['String'];
+  chatId: Scalars['String'];
+};
+
+
 export type MutationAddCommentArgs = {
   postID: Scalars['String'];
   text: Scalars['String'];
@@ -135,6 +167,7 @@ export type MutationUnlikeCommentArgs = {
 
 
 export type MutationCreateGroupArgs = {
+  password?: Maybe<Scalars['String']>;
   groupType: GroupType;
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
@@ -142,6 +175,7 @@ export type MutationCreateGroupArgs = {
 
 
 export type MutationJoinGroupArgs = {
+  password?: Maybe<Scalars['String']>;
   groupId: Scalars['String'];
 };
 
@@ -247,10 +281,12 @@ export type Query = {
   getPostsFromGroup?: Maybe<Array<Post>>;
   getFeed: Array<Post>;
   postById: Post;
+  myChats: Array<Chat>;
+  chatById: Chat;
   groupById: Group;
   groups: Array<Group>;
   myGroups: Array<Group>;
-  checkGroupAccess: Scalars['Boolean'];
+  checkGroupAccess: GroupState;
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -292,6 +328,11 @@ export type QueryGetFeedArgs = {
 
 export type QueryPostByIdArgs = {
   postId: Scalars['String'];
+};
+
+
+export type QueryChatByIdArgs = {
+  chatId: Scalars['String'];
 };
 
 
@@ -527,6 +568,7 @@ export type EditPostMutation = (
 
 export type JoinGroupMutationVariables = Exact<{
   groupId: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -628,7 +670,10 @@ export type CheckGroupAccessQueryVariables = Exact<{
 
 export type CheckGroupAccessQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'checkGroupAccess'>
+  & { checkGroupAccess: (
+    { __typename?: 'GroupState' }
+    & Pick<GroupState, 'id' | 'type' | 'isMember'>
+  ) }
 );
 
 export type FollowersQueryVariables = Exact<{

@@ -1,3 +1,4 @@
+import GraphQLDatabaseLoader from '@mando75/typeorm-graphql-loader';
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import cors from 'cors';
 import 'dotenv/config';
@@ -32,11 +33,12 @@ export class Application {
   public host: express.Application;
   public server: Server;
   public pubsub: PubSub;
+  public connection: any;
 
   public connect = async (): Promise<void> => {
     try {
-      const connection = await createConnection();
-      await connection.synchronize();
+      this.connection = await createConnection();
+      await this.connection.synchronize();
     } catch (error) {
       console.error('🚨  Could not connect to the database', error);
       throw Error(error);
@@ -87,6 +89,7 @@ export class Application {
           const context: MyContext = {
             req,
             res,
+            loader: new GraphQLDatabaseLoader(this.connection),
           };
           return context;
         },

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import argon2 from 'argon2';
+import { GraphQLResolveInfo } from 'graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Info, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -21,6 +22,7 @@ import { notify } from './notification.resolver';
 
 @Resolver(() => User)
 export class UserResolver {
+  @Authorized()
   @Query(() => [User])
   public async getUsers(@Ctx() ctx: MyContext): Promise<User[]> {
     return getRepository(User).find();
@@ -31,13 +33,18 @@ export class UserResolver {
     nullable: true,
     description: 'Me returns User info when logged in.',
   })
-  public async me(@Ctx() ctx: MyContext): Promise<User | null> {
+  public async me(@Ctx() ctx: MyContext, @Info() info: GraphQLResolveInfo): Promise<User | null> {
     const id = ctx.req.user.id;
     if (!id) {
       return null;
     }
 
-    const user = getRepository(User).findOne({ relations: ['roles', 'following', 'followers'], where: { id } });
+    //NORMAL WAY
+    // const user = getRepository(User).findOne({ relations: ['roles', 'following', 'followers'], where: { id } });
+
+    //DATA LOADERS FOR N+1 PROBLEM FIX
+    // const user = await PerchQueryBuilder.findOne<User>(getRepository(User), info);
+    const user = await ctx.loader.loadEntity<any>(User, 'user').where('user.id = :id', { id }).info(info).loadOne();
     if (!user) {
       return null;
     }

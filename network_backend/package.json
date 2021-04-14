@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@boost/log": "^2.2.3",
+    "@mando75/typeorm-graphql-loader": "^1.7.2",
     "apollo-server-express": "^2.21.0",
     "argon2": "^0.27.1",
     "body-parser": "^1.19.0",
@@ -61,6 +62,7 @@
     "lodash-es": "^4.17.20",
     "minio": "^7.0.18",
     "nodemailer": "^6.4.18",
+    "perch-query-builder": "^1.1.15",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "ternary-stream": "^3.0.0",

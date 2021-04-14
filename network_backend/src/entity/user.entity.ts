@@ -1,7 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { log } from '../utils/services/logger';
-import { minioClient } from '../utils/services/minio';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
 import { Chat } from './chat.entity';
@@ -69,17 +67,17 @@ export class User extends Base {
   @Field(() => Boolean)
   meFollowing: boolean;
 
-  @AfterLoad()
-  async generatePictureLink(): Promise<void> {
-    if (this.profilePicName !== null) {
-      minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
-        if (err) return log.error('link generation failed');
+  // @AfterLoad()
+  // async generatePictureLink(): Promise<void> {
+  //   if (this.profilePicName !== null) {
+  //     minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
+  //       if (err) return log.error('link generation failed');
 
-        const editUrl = url.split('?')[0].replace('http://minio:9000', '');
-        this.profilePicLink = editUrl;
-      });
-    }
-  }
+  //       const editUrl = url.split('?')[0].replace('http://minio:9000', '');
+  //       this.profilePicLink = editUrl;
+  //     });
+  //   }
+  // }
 
   constructor(body: UserValidator, hashedPassword: string) {
     super();

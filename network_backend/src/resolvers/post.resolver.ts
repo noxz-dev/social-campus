@@ -256,12 +256,12 @@ export class PostResolver {
       throw new Error('no user found');
     }
 
-    let group;
+    let group: Group;
     if (groupID) {
-      group = await getRepository(Group).findOne({ where: { id: groupID } });
+      group = await getRepository(Group).findOne({ where: { id: groupID }, relations: ['members'] });
+      const user = group.members.find((member) => member.id === id);
+      if (!user) throw Error('youre not allowed to create content for this group');
     }
-    console.log(group);
-    console.log(groupID);
     const post = new Post();
     post.text = text;
     post.user = user;
@@ -319,14 +319,21 @@ export class PostResolver {
     topics: SUB_TOPICS.NEW_POST,
     filter: async ({ payload, args }) => {
       if (args.all) return true;
+      if (args.groupId) {
+        const group = await getRepository(Group).findOne({ where: { id: args.groupId }, relations: ['members'] });
+        const ids = group.members.map((m) => m.id);
+
+        return ids.includes(args.userId);
+      }
       const user = await getRepository(User).findOne({
         where: {
           id: payload.userId,
         },
         relations: ['followers'],
       });
-      //add user to auto update also the same user screen
+      //add user to auto update also the same user on two devices
       user.followers.push(user);
+
       const ids = user.followers.map((u) => u.id);
       return ids.includes(args.userId);
     },
@@ -336,6 +343,7 @@ export class PostResolver {
     @Root() payload: newPostPayload,
     @Arg('userId') userId: string,
     @Arg('all') all: boolean,
+    @Arg('groupId', { nullable: true }) groupId: string,
   ): Promise<Post> {
     console.log('fired');
     return payload.post;

@@ -520,6 +520,7 @@ export type CreateGroupMutationVariables = Exact<{
   name: Scalars['String'];
   groupType: GroupType;
   description?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
 }>;
 
 

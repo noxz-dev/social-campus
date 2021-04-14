@@ -22,7 +22,7 @@
             })
           "
         >
-          <span>beitreten</span>
+          <span>Beitreten</span>
         </button>
       </div>
     </div>

@@ -89,7 +89,12 @@ export class GroupResolver {
   @Authorized()
   @Query(() => [Group])
   public async groups(@Arg('skip') skip: number, @Arg('take') take: number): Promise<Group[]> {
-    const groups = await getRepository(Group).find({ skip, take, relations: ['members'] });
+    const groups = await getRepository(Group).find({
+      skip,
+      take,
+      relations: ['members'],
+      order: { createdAt: 'DESC' },
+    });
     if (!groups) {
       return [];
     }

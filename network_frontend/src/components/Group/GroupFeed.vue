@@ -5,8 +5,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import gql from 'graphql-tag';
+import { computed, defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import { useGetPostsFromGroupQuery } from '../../graphql/generated/graphqlOperations';
 import { GetPostsFromGroupQueryVariables } from '../../graphql/generated/types';
 import PostList from '../Post/PostList.vue';
@@ -20,13 +22,44 @@ export default defineComponent({
     const take = ref(3);
     const route = useRoute();
     const skip = ref(0);
+    const store = useStore();
 
-    const { onResult } = useGetPostsFromGroupQuery(
+    const user = computed(() => store.state.userData.user);
+
+    const { onResult, subscribeToMore } = useGetPostsFromGroupQuery(
       () =>
         <GetPostsFromGroupQueryVariables>{
           groupId: route.params.id,
         }
     );
+
+    subscribeToMore(() => ({
+      document: gql`
+        subscription newPost($userId: String!, $all: Boolean!, $groupId: String) {
+          newPost(userId: $userId, all: $all, groupId: $groupId) {
+            id
+            liked
+            imageLink
+            user {
+              id
+              firstname
+              lastname
+              username
+              profilePicLink
+            }
+            text
+            likesCount
+            createdAt
+            edited
+          }
+        }
+      `,
+      variables: {
+        userId: user.value.id,
+        groupId: route.params.id,
+        all: false,
+      },
+    }));
 
     onResult(({ data }) => {
       posts.value = data.getPostsFromGroup;

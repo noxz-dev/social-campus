@@ -63,6 +63,8 @@ import { CreateGroupMutationVariables, GroupType } from '../../graphql/generated
 import { defineComponent, getCurrentInstance, ref } from 'vue';
 import CustomSelect from '../Form/CustomSelect.vue';
 import InputField from '../Form/InputField.vue';
+import { groups } from '../../graphql/queries/groups';
+import { takeStateGroups } from '../../utils/groupsTake';
 export default defineComponent({
   components: { InputField, CustomSelect },
   props: {
@@ -102,17 +104,28 @@ export default defineComponent({
         name: groupname.value,
         groupType: groupType.value,
         description: description.value,
+        password: groupPassword.value,
       },
+      refetchQueries: [
+        {
+          query: groups,
+          variables: {
+            take: takeStateGroups.take,
+            skip: 0,
+          },
+        },
+      ],
     }));
 
     const createGroup = async () => {
-      if (groupname.value.length > 3) await createGrp();
-      groupname.value = '';
-      description.value = '';
-      groupPassword.value = '';
-      groupType.value = GroupType.Private;
-
-      closeModal();
+      if (groupname.value.length > 3) {
+        await createGrp();
+        groupname.value = '';
+        description.value = '';
+        groupPassword.value = '';
+        groupType.value = GroupType.Private;
+        closeModal();
+      }
     };
 
     const setType = (val: string) => {

@@ -66,8 +66,10 @@
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
-          <div class="pb-2">
+          <div class="pb-2 flex justify-between px-4">
             <span class="text-lg">Empfohlene Gruppen</span>
+
+            <span class="text-lg cursor-pointer hover:text-highlight-500" @click="toggleGroups">Zeige alle</span>
           </div>
         </div>
         <div class="w-full p-1 flex justify-center">
@@ -92,6 +94,7 @@ import { Group, GroupsQueryVariables } from '../graphql/generated/types';
 import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
 import GroupList from '../components/Group/GroupList.vue';
 import breakpoints from '../utils/breakpoints';
+import { takeStateGroups } from '../utils/groupsTake';
 
 export default defineComponent({
   components: {
@@ -103,15 +106,16 @@ export default defineComponent({
   },
   setup() {
     const groups = ref<Partial<Group>[]>([]);
-    const take = ref(3);
+    // const take = ref(3);
     const skip = ref(0);
+    const allGroups = ref(false);
 
     const setTakeBasedOnLayout = () => {
-      if (breakpoints.is === 'sm') take.value = 4;
-      if (breakpoints.is === 'md') take.value = 2;
-      if (breakpoints.is === 'lg') take.value = 3;
-      if (breakpoints.is === 'xl') take.value = 7;
-      if (breakpoints.is === '2xl') take.value = 6;
+      if (breakpoints.is === 'sm') takeStateGroups.take = 4;
+      if (breakpoints.is === 'md') takeStateGroups.take = 2;
+      if (breakpoints.is === 'lg') takeStateGroups.take = 3;
+      if (breakpoints.is === 'xl') takeStateGroups.take = 6;
+      if (breakpoints.is === '2xl') takeStateGroups.take = 6;
     };
     setTakeBasedOnLayout();
 
@@ -126,16 +130,27 @@ export default defineComponent({
     const { onResult } = useGroupsQuery(
       () =>
         <GroupsQueryVariables>{
-          take: take.value,
+          take: takeStateGroups.take,
           skip: skip.value,
         }
     );
+
+    function toggleGroups(): void {
+      if (!allGroups.value) {
+        takeStateGroups.take = 200;
+        allGroups.value = !allGroups.value;
+      } else {
+        setTakeBasedOnLayout();
+        allGroups.value = !allGroups.value;
+      }
+    }
 
     onResult(({ data }) => {
       groups.value = data.groups;
     });
     return {
       groups,
+      toggleGroups,
     };
   },
 });

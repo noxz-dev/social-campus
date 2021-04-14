@@ -116,8 +116,13 @@ export function useAddCommentMutation(options: VueApolloComposable.UseMutationOp
 }
 export type AddCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<graphqlOperations.ts.AddCommentMutation, graphqlOperations.ts.AddCommentMutationVariables>;
 export const CreateGroupDocument = gql`
-    mutation createGroup($name: String!, $groupType: GroupType!, $description: String) {
-  createGroup(name: $name, groupType: $groupType, description: $description) {
+    mutation createGroup($name: String!, $groupType: GroupType!, $description: String, $password: String) {
+  createGroup(
+    name: $name
+    groupType: $groupType
+    description: $description
+    password: $password
+  ) {
     id
     name
   }
@@ -140,6 +145,7 @@ export const CreateGroupDocument = gql`
  *     name: // value for 'name'
  *     groupType: // value for 'groupType'
  *     description: // value for 'description'
+ *     password: // value for 'password'
  *   },
  * });
  */

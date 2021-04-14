@@ -1,6 +1,6 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
-import { getManager, getRepository, In } from 'typeorm';
+import { getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -169,31 +169,45 @@ export class PostResolver {
 
     const user = await getRepository(User).findOne({
       where: { id: userID },
-      relations: ['following'],
+      relations: ['following', 'groups'],
     });
 
     const following = user.following.map((user: User) => user.id);
+    const userGroups = user.groups.map((group) => group.id);
 
     // push own user id to see also your own posts
     following.push(userID);
 
     //fetch all posts from the users you follow
     const posts = await getRepository(Post).find({
-      where: { user: In(following) },
+      where: [
+        { user: In(following), group: In(userGroups) },
+        { user: In(following), group: IsNull() },
+      ],
       order: { createdAt: 'DESC' },
-      relations: ['user', 'comments'],
+      relations: ['user', 'comments', 'group'],
       skip,
       take,
     });
 
-    if (!posts) return null;
+    if (!posts) return [];
 
-    for await (const post of posts) {
+    const feedPosts = posts.filter((p) => {
+      if (p.group) {
+        if (userGroups.includes(p.group.id)) {
+          return p;
+        }
+      } else {
+        return p;
+      }
+    });
+
+    for await (const post of feedPosts) {
       const likeState = await checkLikeState(userID, post.id);
       post.liked = likeState;
     }
-
-    return posts;
+    console.log(feedPosts.length);
+    return feedPosts;
   }
 
   @Authorized()

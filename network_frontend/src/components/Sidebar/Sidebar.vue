@@ -102,7 +102,6 @@ export default defineComponent({
 
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       if (localStorage.theme !== 'light') isDarkMode.value = true;
-      console.log(localStorage.theme);
     } else {
       if (localStorage.theme !== 'dark') isDarkMode.value = false;
     }

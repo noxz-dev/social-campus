@@ -1,5 +1,5 @@
 <template>
-  <div v-if="true" class="fixed w-full z-50 overflow-y-auto rounded-xl pt-0.5 backdrop-filter backdrop-blur-[2px]">
+  <div v-if="true" class="fixed w-full z-30 overflow-y-auto rounded-xl pt-0.5 backdrop-filter backdrop-blur-[2px]">
     <div class="flex min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed h-full w-full rounded-xl transition-opacity" aria-hidden="true">
         <div class="absolute inset-0 dark:bg-dark-800 bg-white opacity-75 rounded-xl" />
@@ -14,11 +14,11 @@
       >
         <div class="bg-white dark:bg-dark700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
-            <div class="mt-3 sm:mt-0 sm:text-left w-full">
-              <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">Privater Gruppe Beitreten</h3>
-              <div class="mt-6">
+            <div class="mt-3 sm:mt-0 sm:text-left w-full py-10">
+              <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">Gruppe 1 Beitreten</h3>
+              <div class="mt-10">
                 <div class="dark:text-gray-50 text-gray-900 mb-4">Gruppen Passwort</div>
-                <input-field placeholder="password1234" v-model="groupPassword" />
+                <input-field placeholder="passwort1234" v-model="groupPassword" />
                 <div class="flex justify-end">
                   <app-button @click="joinGroup" class="mt-4">Beitreten</app-button>
                 </div>
@@ -34,7 +34,7 @@
 <script lang="ts">
 import { useJoinGroupMutation } from '../../graphql/generated/graphqlOperations';
 import { JoinGroupMutationVariables } from '../../graphql/generated/types';
-import { defineComponent, getCurrentInstance, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';
 import { useRouter } from 'vue-router';
 export default defineComponent({

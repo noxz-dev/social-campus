@@ -111,9 +111,6 @@ export default defineComponent({
     const group = ref<Group>();
     const numberOfPosts = ref(0);
     const router = useRouter();
-    const switchComponent = (comp: GroupComponents) => {
-      console.log(comp);
-    };
 
     const { onResult } = useGroupByIdQuery(
       () =>
@@ -124,9 +121,7 @@ export default defineComponent({
 
     onResult(({ data }) => {
       group.value = data.groupById;
-      console.log(data);
       numberOfPosts.value = data.groupById.numberOfPosts || 0;
-      console.log(data);
     });
 
     const { mutate: joinGrp } = useJoinGroupMutation(() => ({
@@ -151,7 +146,6 @@ export default defineComponent({
       numberFormatter,
       GroupComponents,
       numberOfPosts,
-      switchComponent,
       group,
       joinGroup,
     };

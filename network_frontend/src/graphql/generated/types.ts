@@ -495,7 +495,10 @@ export type AddPostMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
-    ) }
+    ), group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -562,7 +565,10 @@ export type EditPostMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
-    ) }
+    ), group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -593,7 +599,10 @@ export type LikePostMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
-    ) }
+    ), group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -637,7 +646,10 @@ export type UnlikePostMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
-    ) }
+    ), group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -720,7 +732,10 @@ export type GetFeedQuery = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
-    ) }
+    ), group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )> }
   )> }
 );
 
@@ -817,6 +832,9 @@ export type PostByIdQuery = (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
       ) }
+    )>, group?: Maybe<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
     )> }
   ) }
 );

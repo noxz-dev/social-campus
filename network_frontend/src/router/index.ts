@@ -97,7 +97,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to.name);
   if (['Home', 'Groups', 'Chats', 'Browse'].includes(to.name as string)) {
     navState.lastView = to.path as string;
     localStorage.setItem('lastView', to.path);

@@ -132,7 +132,6 @@ export default defineComponent({
     );
 
     onResult(({ data }) => {
-      console.log(data.groups);
       groups.value = data.groups;
     });
     return {

@@ -17,6 +17,10 @@ export const addPost = gql`
       commentCount
       createdAt
       edited
+      group {
+        id
+        name
+      }
     }
   }
 `;

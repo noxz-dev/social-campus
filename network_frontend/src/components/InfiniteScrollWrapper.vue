@@ -11,25 +11,25 @@ export default defineComponent({
   props: {
     queryLoading: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['loadMore'],
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     const scrollContainer = ref<HTMLElement>();
     const loadStarted = ref(false);
 
     watchEffect(() => {
-      loadStarted.value = props.queryLoading
-    })
+      loadStarted.value = props.queryLoading;
+    });
 
     const handleScroll = () => {
       if (scrollContainer.value) {
         const element: HTMLElement = scrollContainer.value;
-        if (element?.scrollTop > element.scrollHeight - 1000) {
+        if (element?.scrollTop > element.scrollHeight - 1500) {
           if (!loadStarted.value) {
             loadStarted.value = true;
-            emit("loadMore")
+            emit('loadMore');
           }
         }
       }
@@ -45,5 +45,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-</style>
+<style></style>

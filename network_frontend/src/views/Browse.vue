@@ -52,10 +52,6 @@ export default defineComponent({
     );
     const posts = useResult(result);
 
-    watchEffect(() => {
-      if (posts.value) console.log(posts.value.length);
-    });
-
     watch(
       () => chipInput.value?.chips,
       () => {
@@ -71,7 +67,6 @@ export default defineComponent({
       () => route.query.tag,
       () => {
         inputTags.value = [route.query.tag];
-        console.log(inputTags.value);
       }
     );
 

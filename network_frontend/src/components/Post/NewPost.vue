@@ -169,7 +169,6 @@ export default defineComponent({
             });
           } else if (route.name === 'Group') {
             const dataInStore: any = cache.readQuery({ query: getPostsFromGroup, variables: { groupId: groupId.value } });
-            console.log(dataInStore);
             cache.writeQuery({
               query: getPostsFromGroup,
               variables: {

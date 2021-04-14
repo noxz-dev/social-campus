@@ -53,6 +53,10 @@ export const AddPostDocument = gql`
     commentCount
     createdAt
     edited
+    group {
+      id
+      name
+    }
   }
 }
     `;
@@ -214,6 +218,10 @@ export const EditPostDocument = gql`
     commentCount
     createdAt
     edited
+    group {
+      id
+      name
+    }
   }
 }
     `;
@@ -289,6 +297,10 @@ export const LikePostDocument = gql`
     commentCount
     createdAt
     edited
+    group {
+      id
+      name
+    }
   }
 }
     `;
@@ -396,6 +408,10 @@ export const UnlikePostDocument = gql`
     commentCount
     createdAt
     edited
+    group {
+      id
+      name
+    }
   }
 }
     `;
@@ -581,6 +597,10 @@ export const GetFeedDocument = gql`
     commentCount
     createdAt
     edited
+    group {
+      id
+      name
+    }
   }
 }
     `;
@@ -800,6 +820,10 @@ export const PostByIdDocument = gql`
         username
         profilePicLink
       }
+    }
+    group {
+      id
+      name
     }
   }
 }

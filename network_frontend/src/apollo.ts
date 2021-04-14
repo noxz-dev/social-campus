@@ -9,7 +9,10 @@ import router from './router';
 
 // auth interceptor
 const errorLink = onError((error) => {
-  // logErrorMessages(error);
+  if (process.env.NODE_ENV !== 'production') {
+    // logErrorMessages(error);
+    console.log(error);
+  }
   if (error.networkError?.name === 'ServerParseError') {
     localStorage.removeItem('apollo-token');
     router.push('login');

@@ -11,15 +11,15 @@ import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import '../ormconfig';
 import {
-  UserResolver,
-  TagResolver,
-  SearchResolver,
-  RoleResolver,
-  PostResolver,
-  CommentResolver,
-  NotificationResolver,
-  GroupResolver,
   ChatResolver,
+  CommentResolver,
+  GroupResolver,
+  NotificationResolver,
+  PostResolver,
+  RoleResolver,
+  SearchResolver,
+  TagResolver,
+  UserResolver,
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
@@ -92,7 +92,8 @@ export class Application {
         },
         uploads: false,
         formatError: (error) => {
-          log.error('GRAPHQL ERROR', error);
+          log.error('GRAPHQL ERROR', JSON.stringify(error));
+          // console.log(error.extensions.exception.stacktrace);
           const response = { message: error.message };
           return response;
         },

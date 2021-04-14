@@ -172,7 +172,7 @@ export default defineComponent({
           break;
         case 'GROUPS':
           router.push({
-            name: 'Groups',
+            name: 'Group',
             params: {
               id: payload,
             },

@@ -18,6 +18,10 @@ export const getFeed = gql`
       commentCount
       createdAt
       edited
+      group {
+        id
+        name
+      }
     }
   }
 `;

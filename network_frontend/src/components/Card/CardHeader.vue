@@ -5,9 +5,26 @@
         <img class="h-10 w-10 rounded-full" :src="profilePicLink" alt="" />
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-sm font-medium text-gray-900 dark:text-gray-50">
+        <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex">
           <span>{{ firstname + ' ' + lastname }}</span>
-        </p>
+          <div v-if="group" class="flex items-center">
+            <svg class="transform rotate-90 mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 256 256">
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                class="dark:fill-white fill-dark800"
+                d="M236.74219,187.96875,148.77344,35.97656a24.00413,24.00413,0,0,0-41.54688,0h.00781L19.25781,187.96875a23.9925,23.9925,0,0,0,20.76563,36.02344H215.97656a23.9925,23.9925,0,0,0,20.76563-36.02344Z"
+              ></path>
+            </svg>
+
+            <span
+              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700"
+              @click="$router.push({ name: 'Group', params: { id: group.id } })"
+            >
+              {{ group.name }}</span
+            >
+          </div>
+        </div>
+
         <p class="text-sm text-gray-500">
           <a
             class="mr-2 text-gray-400 cursor-pointer hover:underline"
@@ -77,7 +94,7 @@
                       </g>
                     </g>
                   </svg>
-                  <span>Edit</span>
+                  <span>Bearbeiten</span>
                 </button>
                 <button
                   class="w-full transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 hover:text-gray-900 stroke-grayLight hover:stroke-black rounded-b-lg"
@@ -148,6 +165,7 @@ export default defineComponent({
     const userId = computed(() => props.post?.user.id || props.comment?.user.id);
     const username = computed(() => props.post?.user.username || props.comment?.user.username);
     const profilePicLink = computed(() => props.post?.user.profilePicLink || props.comment?.user.profilePicLink);
+    const group = computed(() => props.post?.group);
 
     onClickOutside(target, (event) => {
       optionsOpen.value = false;
@@ -178,7 +196,7 @@ export default defineComponent({
       }
     };
 
-    return { dayjs, optionsOpen, target, deleteContent, firstname, lastname, creationDate, userId, username, profilePicLink };
+    return { dayjs, optionsOpen, target, deleteContent, firstname, lastname, creationDate, userId, username, profilePicLink, group };
   },
 });
 </script>

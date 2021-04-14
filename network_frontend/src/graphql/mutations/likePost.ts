@@ -18,6 +18,10 @@ export const likePost = gql`
       commentCount
       createdAt
       edited
+      group {
+        id
+        name
+      }
     }
   }
 `;

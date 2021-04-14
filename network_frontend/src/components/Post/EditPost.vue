@@ -42,7 +42,6 @@ export default defineComponent({
     post: Object as PropType<Post>,
   },
   setup(props) {
-    console.log(props.post);
     const message = ref(props.post?.text);
     const file = ref<File>();
     const previewUrl = ref();

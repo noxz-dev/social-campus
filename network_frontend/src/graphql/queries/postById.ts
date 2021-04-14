@@ -30,6 +30,10 @@ export const postById = gql`
           profilePicLink
         }
       }
+      group {
+        id
+        name
+      }
     }
   }
 `;

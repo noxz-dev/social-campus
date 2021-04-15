@@ -7,7 +7,7 @@
           <div>
             <div></div>
             <div>
-              <app-button @click="eventbus.emit('open-new-group-modal')">
+              <app-button @click="newGroupModal?.openModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
                   <rect width="256" height="256" fill="none"></rect>
                   <line
@@ -80,7 +80,7 @@
         Gruppen von Leuten denen du folgst
       </div>
     </div>
-    <new-group-modal contentText="" headerText="Erstelle eine Gruppe" />
+    <new-group-modal ref="newGroupModal" />
   </div>
 </template>
 
@@ -109,6 +109,7 @@ export default defineComponent({
     // const take = ref(3);
     const skip = ref(0);
     const allGroups = ref(false);
+    const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
 
     const setTakeBasedOnLayout = () => {
       if (breakpoints.is === 'sm') takeStateGroups.take = 4;
@@ -151,6 +152,7 @@ export default defineComponent({
     return {
       groups,
       toggleGroups,
+      newGroupModal,
     };
   },
 });

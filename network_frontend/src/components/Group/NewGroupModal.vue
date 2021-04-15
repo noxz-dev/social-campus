@@ -1,61 +1,73 @@
 <template>
-  <div v-if="open" class="fixed z-50 inset-0 overflow-y-auto">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div class="absolute inset-0 bg-dark-900 opacity-75" />
-      </div>
+  <TransitionRoot as="template" :show="isOpen">
+    <Dialog as="div" static class="fixed z-40 inset-0 overflow-y-auto" @close="isOpen = false" :open="isOpen">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <DialogOverlay class="fixed inset-0 bg-gray-500 dark:bg-dark-700 !bg-opacity-75 transition-opacity" />
+        </TransitionChild>
 
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-      <div
-        class="inline-block align-bottom bg-white dark:bg-dark-600 rounded-lg text-left overflow-hidden shadow-xl transform transition-all my-8 md:align-middle sm:max-w-xl w-full"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-headline"
-      >
-        <div class="bg-white dark:bg-dark-700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div class="mt-3 sm:mt-0 sm:text-left w-full">
-              <h3 v-if="headerText" id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">
-                {{ headerText }}
-              </h3>
-              <div class="mt-6">
-                <p v-if="contentText" class="text-sm dark:text-gray-200 text-gray-900">
-                  {{ contentText }}
-                </p>
-              </div>
-              <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
-                <span class="mb-2"></span>
-                <div class="flex">
-                  <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname" />
-                  <custom-select :options="Object.values(GroupType)" class="w-1/3" @valueChosen="setType($event)" />
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          enter-to="opacity-100 translate-y-0 sm:scale-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100 translate-y-0 sm:scale-100"
+          leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        >
+          <div
+            class="inline-block align-bottom bg-white dark:bg-dark700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+          >
+            <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                  <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-50"> Neue Gruppe erstellen </DialogTitle>
+                  <div class="mt-2 w-full">
+                    <div class="flex">
+                      <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname" />
+                      <custom-select
+                        :options="Object.values(GroupType)"
+                        class="w-1/3 dark:text-gray-50 text-gray-900"
+                        @valueChosen="setType($event)"
+                      />
+                    </div>
+
+                    <input-field v-if="groupType === GroupType.Private" placeholder="Gruppen Passwort" class="mt-5" v-model="groupPassword" />
+                    <textarea
+                      class="dark:bg-dark-600 border placeholder-gray-400 dark:text-gray-50 text-gray-900 w-full mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Gruppenbeschreibung"
+                      v-model="description"
+                    />
+                  </div>
                 </div>
-                <input-field v-if="groupType === GroupType.Private" placeholder="Gruppen Passwort" class="mt-5" v-model="groupPassword" />
-                <textarea
-                  class="dark:bg-dark-600 border mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Gruppenbeschreibung"
-                  v-model="description"
-                />
-              </div>
-              <div class="flex flex-row-reverse">
-                <button
-                  class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-                  @click="createGroup"
-                >
-                  Gruppe erstellen
-                </button>
-                <button
-                  class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-dark-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-                  @click="closeModal"
-                >
-                  Abbrechen
-                </button>
               </div>
             </div>
+            <div class="bg-gray-50 dark:bg-dark-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <app-button @click="createGroup"> Gruppe erstellen </app-button>
+              <app-button
+                type="button"
+                class="!border-gray-300 border-gray-300 !bg-white dark:!border-dark-500 dark:!bg-dark-500 hover:!bg-gray-200 dark:hover:!bg-dark-600 !text-gray-900 dark:!text-gray-50 mx-2"
+                @click="closeModal"
+                ref="cancelButtonRef"
+              >
+                Abbrechen
+              </app-button>
+            </div>
           </div>
-        </div>
+        </TransitionChild>
       </div>
-    </div>
-  </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
 <script lang="ts">
 import { useCreateGroupMutation } from '../../graphql/generated/graphqlOperations';
@@ -65,8 +77,9 @@ import CustomSelect from '../Form/CustomSelect.vue';
 import InputField from '../Form/InputField.vue';
 import { groups } from '../../graphql/queries/groups';
 import { takeStateGroups } from '../../utils/groupsTake';
+import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue';
 export default defineComponent({
-  components: { InputField, CustomSelect },
+  components: { InputField, CustomSelect, TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle },
   props: {
     headerText: {
       type: String,
@@ -78,26 +91,19 @@ export default defineComponent({
     },
   },
   setup() {
-    const open = ref(false);
+    let isOpen = ref(false);
     const groupname = ref('');
     const description = ref('');
     const groupPassword = ref('');
     const groupType = ref<GroupType>(GroupType.Private);
 
     const openModal = () => {
-      open.value = true;
+      isOpen.value = true;
     };
 
     const closeModal = () => {
-      open.value = false;
+      isOpen.value = false;
     };
-
-    const internalInstance = getCurrentInstance();
-    if (internalInstance) {
-      const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
-      eventbus?.on('close-new-group-modal', () => closeModal());
-      eventbus?.on('open-new-group-modal', () => openModal());
-    }
 
     const { mutate: createGrp } = useCreateGroupMutation(() => ({
       variables: <CreateGroupMutationVariables>{
@@ -134,7 +140,6 @@ export default defineComponent({
     };
 
     return {
-      open,
       openModal,
       closeModal,
       createGroup,
@@ -144,6 +149,7 @@ export default defineComponent({
       setType,
       groupType,
       GroupType,
+      isOpen,
     };
   },
 });

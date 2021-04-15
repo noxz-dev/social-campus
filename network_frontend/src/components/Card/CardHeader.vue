@@ -70,7 +70,7 @@
               <div class="">
                 <button
                   @click="eventbus.emit('open-edit-modal', post)"
-                  class="w-full stroke-grayLight hover:stroke-black transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg dark:text-gray-50 hover:text-gray-900"
+                  class="w-full stroke-grayLight transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-dark-500 rounded-t-lg dark:text-gray-50 hover:text-gray-900"
                   role="menuitem"
                 >
                   <svg
@@ -97,7 +97,7 @@
                   <span>Bearbeiten</span>
                 </button>
                 <button
-                  class="w-full transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 hover:text-gray-900 stroke-grayLight hover:stroke-black rounded-b-lg"
+                  class="w-full transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-dark-500 stroke-grayLight rounded-b-lg"
                   role="menuitem"
                   @click="deleteContent()"
                 >
@@ -175,15 +175,32 @@ export default defineComponent({
       variables: <DeletePostMutationVariables>{
         postId: props.post?.id,
       },
-      refetchQueries: [
-        {
-          query: getFeed,
-          variables: {
-            skip: 0,
-            take: 10,
-          },
-        },
-      ],
+      update: (cache, { data: { deletePost } }) => {
+        try {
+          const dataInStore: any = cache.readQuery({
+            query: getFeed,
+            variables: {
+              skip: 0,
+              take: 10,
+            },
+          });
+          let getFeedData = [...dataInStore.getFeed];
+          getFeedData = getFeedData.filter((post) => post.id != props.post?.id);
+          cache.writeQuery({
+            query: getFeed,
+            variables: {
+              skip: 0,
+              take: 10,
+            },
+            data: {
+              ...dataInStore,
+              getFeed: [...getFeedData],
+            },
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }));
 
     const deleteContent = () => {

@@ -67,7 +67,7 @@
         </g>
       </svg>
     </app-button>
-    <app-button class="!bg-dark400 hover:!bg-red-700" @click="eventbus.emit('close-modal')"> Abbrechen </app-button>
+    <app-button class="!bg-dark400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
   </div>
 </template>
 
@@ -90,6 +90,7 @@ import { browsePosts } from '../../graphql/queries/browsePosts';
 import { getPostsFromGroup } from '../../graphql/queries/getPostsFromGroup';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
+  emits: ['close'],
   setup() {
     const message = ref('');
     const route = useRoute();

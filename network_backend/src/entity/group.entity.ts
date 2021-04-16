@@ -46,4 +46,7 @@ export class Group extends Base {
 
   @Field(() => Number, { nullable: true })
   numberOfPosts: number;
+
+  @Field(() => Number, { nullable: true })
+  numberOfMembers: number;
 }

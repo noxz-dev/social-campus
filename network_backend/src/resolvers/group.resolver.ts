@@ -77,11 +77,13 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => Group)
-  public async groupById(@Arg('groupId') groupId: string): Promise<Group> {
+  public async groupById(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Group> {
+    const userId = ctx.req.user.id;
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
     if (!group) {
       throw new Error('group not found');
     }
+    group.numberOfMembers = group.members.length;
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     return group;
   }

@@ -4,7 +4,7 @@
     "name": "Finn Beer"
   },
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite --force",
     "build": "vite build",

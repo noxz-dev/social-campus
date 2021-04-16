@@ -225,12 +225,12 @@ export default defineComponent({
       collection: [
         {
           trigger: '@',
-          values: [],
+          values: [] as string[],
           positionMenu: true,
         },
         {
           trigger: '#',
-          values: [],
+          values: [] as string[],
           positionMenu: true,
         },
       ],
@@ -265,7 +265,7 @@ export default defineComponent({
 
     onUsers(({ data: { getUsers } }) => {
       const users = getUsers.map((user: User) => {
-        return { key: user.firstname + ' ' + user.lastname, value: user.username };
+        return { key: user.firstname + ' ' + user.lastname + ' @' + user.username, value: user.username };
       });
       autoCompleteOptions.collection[0].values.push(...users);
     });

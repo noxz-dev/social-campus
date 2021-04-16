@@ -10,6 +10,7 @@ export enum NotificationType {
   NEW_FOLLOWER = 'NEW_FOLLOWER',
   NEW_COMMENT = 'NEW_COMMENT',
   POST_LIKE = 'POST_LIKE',
+  MENTION = 'MENTION',
 }
 
 registerEnumType(NotificationType, {
@@ -35,6 +36,7 @@ export class Notification extends Base {
   @ManyToOne(() => User)
   toUser: User;
 
+  @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, { onDelete: 'CASCADE', nullable: true })
   post: Post;
 

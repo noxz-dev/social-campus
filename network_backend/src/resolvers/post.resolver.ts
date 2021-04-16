@@ -4,13 +4,14 @@ import { getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
+import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { Tag } from '../entity/tag.entity';
 import { User } from '../entity/user.entity';
 import { uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
-import { SUB_TOPICS } from './notification.resolver';
+import { notify, SUB_TOPICS } from './notification.resolver';
 
 export interface NewPostPayload {
   post?: Post;
@@ -295,6 +296,7 @@ export class PostResolver {
         post.tags.push(dbTag);
       }
     }
+
     if (file) {
       const newFileName = await uploadFileGraphql(file, 'post-images');
       post.imageName = newFileName;
@@ -309,6 +311,22 @@ export class PostResolver {
     dbPost.likesCount = 0;
     dbPost.commentCount = 0;
     dbPost.liked = false;
+
+    for await (const mention of text.match(/@\w\w*/g)) {
+      console.log(mention);
+      const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
+      if (!toUser) return;
+      await notify(
+        {
+          type: NotificationType.MENTION,
+          message: `${user.firstname} hat dich in einem Post erwähnt`,
+          toUser: toUser,
+          fromUser: user,
+          post: dbPost,
+        },
+        ctx,
+      );
+    }
 
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
     log.info(`'User with the id: ${id} added a new post'`);

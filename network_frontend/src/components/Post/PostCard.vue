@@ -33,7 +33,7 @@
           </div>
           <div class="flex cursor-pointer" @click="handleNavigation">
             <svg
-              class="duration-200 h-6 dark:stroke-grayLight stroke-black hover:stroke-grayDark"
+              class="duration-200 h-6 dark:stroke-grayLight stroke-black hover:!stroke-grayDark"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -84,19 +84,20 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    let tagsIds: string[] = [];
+    let tagIds: string[] = [];
+    let mentions: string[] = [];
 
     //little bit hacky there has to be a better way
     onMounted(() => {
-      addTagHandle();
+      addTagAndMentionHandle();
     });
 
     onUpdated(() => {
-      addTagHandle();
+      addTagAndMentionHandle();
     });
 
-    const addTagHandle = () => {
-      for (const tagId of tagsIds) {
+    const addTagAndMentionHandle = () => {
+      for (const tagId of tagIds) {
         document.querySelectorAll(`#${tagId}`).forEach((item) => {
           item.addEventListener('click', (e) => {
             const { id } = e.target;
@@ -104,21 +105,44 @@ export default defineComponent({
           });
         });
       }
+      for (const mention of mentions) {
+        document.querySelectorAll(`#${mention}`).forEach((item) => {
+          item.addEventListener('click', (e) => {
+            const { id } = e.target;
+            handleMentionClick(id);
+          });
+        });
+      }
     };
 
     const parseMarkdown = (value: string) => {
-      tagsIds = [];
+      tagIds = [];
       const content = parseTags(value);
       return DOMPurify.sanitize(marked(content));
     };
 
     const parseTags = (content: string): string => {
-      return content.replaceAll(/#\w\w*/g, (val) => {
-        val = val.replaceAll('#', '');
-        const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
-        tagsIds.push(val);
-        return tag;
-      });
+      return content
+        .replaceAll(/#\w\w*/g, (val) => {
+          val = val.replaceAll('#', '');
+          const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
+          tagIds.push(val);
+          return tag;
+        })
+        .replaceAll(/@\w\w*/g, (val: string) => {
+          val = val.replaceAll('@', '');
+          const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;
+          mentions.push(val);
+          return mention;
+        });
+    };
+
+    const handleTagClick = (tag: string) => {
+      router.push({ name: 'Browse', query: { tag } });
+    };
+
+    const handleMentionClick = (mention: string) => {
+      router.push({ name: 'Profile', params: { id: mention } });
     };
 
     const { mutate: like } = useLikePostMutation({
@@ -200,10 +224,6 @@ export default defineComponent({
         console.log(err);
         console.log('couldnt like/unlike the post');
       }
-    };
-
-    const handleTagClick = (tag: string) => {
-      router.push({ name: 'Browse', query: { tag } });
     };
 
     const handleNavigation = () => {

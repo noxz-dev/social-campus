@@ -17,6 +17,9 @@ export const getNotifications = gql`
         profilePicLink
         username
       }
+      post {
+        id
+      }
     }
   }
 `;

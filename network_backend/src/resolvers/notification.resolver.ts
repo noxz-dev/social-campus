@@ -37,7 +37,7 @@ export class NotificationResolver {
       where: {
         toUser: userId,
       },
-      relations: ['toUser', 'fromUser'],
+      relations: ['toUser', 'fromUser', 'post'],
     });
     return notifys;
   }
@@ -85,11 +85,9 @@ export class NotificationResolver {
 }
 
 export const notify = async (payload: NotificationPayload, context: MyContext): Promise<void> => {
-  log.info('Notifcation send');
-
   const notify = new Notification(payload);
-
-  await getRepository(Notification).save(notify);
-
-  context.req.pubsub.publish(SUB_TOPICS.NEW_NOTIFICATION, notify);
+  if (payload.post) notify.post = payload.post;
+  const savedNotification = await getRepository(Notification).save(notify);
+  context.req.pubsub.publish(SUB_TOPICS.NEW_NOTIFICATION, savedNotification);
+  log.info('Notifcation send');
 };

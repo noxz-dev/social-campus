@@ -54,6 +54,7 @@ export type Group = {
   posts: Array<Post>;
   members: Array<User>;
   numberOfPosts?: Maybe<Scalars['Float']>;
+  numberOfMembers?: Maybe<Scalars['Float']>;
 };
 
 export type GroupState = {
@@ -89,8 +90,9 @@ export type Mutation = {
   unlikePost: Post;
   deletePost: Scalars['Boolean'];
   editPost: Post;
-  sendMessage: Chat;
+  sendMessage: ChatMessage;
   createChat: Chat;
+  deleteChatMessage: Scalars['Boolean'];
   addComment: Comment;
   likeComment: Comment;
   unlikeComment: Comment;
@@ -147,6 +149,16 @@ export type MutationEditPostArgs = {
 export type MutationSendMessageArgs = {
   message: Scalars['String'];
   chatId: Scalars['String'];
+};
+
+
+export type MutationCreateChatArgs = {
+  memberId: Scalars['String'];
+};
+
+
+export type MutationDeleteChatMessageArgs = {
+  messageId: Scalars['String'];
 };
 
 
@@ -245,12 +257,14 @@ export type Notification = {
   message: Scalars['String'];
   fromUser: User;
   toUser: User;
+  post: Post;
 };
 
 export enum NotificationType {
   NewFollower = 'NEW_FOLLOWER',
   NewComment = 'NEW_COMMENT',
-  PostLike = 'POST_LIKE'
+  PostLike = 'POST_LIKE',
+  Mention = 'MENTION'
 }
 
 export type Post = {
@@ -410,6 +424,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   notifications: Notification;
   newPost: Post;
+  newMessage: ChatMessage;
 };
 
 
@@ -419,8 +434,14 @@ export type SubscriptionNotificationsArgs = {
 
 
 export type SubscriptionNewPostArgs = {
+  groupId?: Maybe<Scalars['String']>;
   all: Scalars['Boolean'];
   userId: Scalars['String'];
+};
+
+
+export type SubscriptionNewMessageArgs = {
+  chatId: Scalars['String'];
 };
 
 export type Tag = {
@@ -809,6 +830,9 @@ export type GetNotificationsQuery = (
     ), fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'profilePicLink' | 'username'>
+    ), post: (
+      { __typename?: 'Post' }
+      & Pick<Post, 'id'>
     ) }
   )> }
 );

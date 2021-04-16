@@ -777,6 +777,9 @@ export const GetNotificationsDocument = gql`
       profilePicLink
       username
     }
+    post {
+      id
+    }
   }
 }
     `;

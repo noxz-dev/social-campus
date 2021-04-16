@@ -99,6 +99,14 @@ export default defineComponent({
           },
         });
         emit('closeNotify');
+      } else if (notify.type === NotificationType.Mention) {
+        router.push({
+          name: 'DetailPost',
+          params: {
+            id: notify.post.id,
+          },
+        });
+        emit('closeNotify');
       }
     };
 
@@ -112,5 +120,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

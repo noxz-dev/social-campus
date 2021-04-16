@@ -11,6 +11,7 @@ import { log } from '../utils/services/logger';
 export enum SUB_TOPICS {
   NEW_NOTIFICATION = 'NEW_NOTIFICATION',
   NEW_POST = 'NEW_POST',
+  NEW_CHAT_MESSAGE = 'NEW_CHAT_MESSAGE',
 }
 
 export interface NotificationPayload {

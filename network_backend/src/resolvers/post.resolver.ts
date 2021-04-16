@@ -12,7 +12,7 @@ import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { SUB_TOPICS } from './notification.resolver';
 
-export interface newPostPayload {
+export interface NewPostPayload {
   post?: Post;
 }
 
@@ -30,7 +30,7 @@ export class PostResolver {
     @Arg('take') take: number,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
-    if (!userId) return null;
+    if (!userId) throw Error('auth error');
 
     const posts = await getRepository(Post).find({
       relations: [
@@ -340,7 +340,7 @@ export class PostResolver {
   })
   public async newPost(
     @Ctx() ctx: MyContext,
-    @Root() payload: newPostPayload,
+    @Root() payload: NewPostPayload,
     @Arg('userId') userId: string,
     @Arg('all') all: boolean,
     @Arg('groupId', { nullable: true }) groupId: string,

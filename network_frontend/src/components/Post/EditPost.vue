@@ -1,9 +1,9 @@
 <template>
   <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
-    <span class="mb-2">Ändere den Text deines Posts</span>
+    <span class="my-4">Ändere den Text deines Posts</span>
     <textarea
       v-model="message"
-      class="dark:bg-dark700 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+      class="dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
       placeholder="Hey, was gibt's Neues ?"
       @blur="v.message.$touch"
     />
@@ -20,7 +20,7 @@
     </button>
     <button
       class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-      @click="eventbus.emit('close-edit-modal')"
+      @click="$emit('close')"
     >
       Abbrechen
     </button>
@@ -29,23 +29,27 @@
 
 <script lang="ts">
 import { computed, defineComponent, getCurrentInstance, PropType, ref } from 'vue';
-import { useDropzone } from 'vue3-dropzone';
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 import { useEditPostMutation } from '../../graphql/generated/graphqlOperations';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { EditPostMutationVariables, Post } from 'src/graphql/generated/types';
+import { getFeed } from '../../graphql/queries/getFeed';
+import { useRoute } from 'vue-router';
+import { browsePosts } from '../../graphql/queries/browsePosts';
 export default defineComponent({
+  emits: ['close'],
   components: { ToggleButton },
   props: {
     post: Object as PropType<Post>,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const message = ref(props.post?.text);
     const file = ref<File>();
     const previewUrl = ref();
     const showImageUpload = ref(false);
+    const route = useRoute();
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -74,22 +78,77 @@ export default defineComponent({
       context: {
         hasUpload: true,
       },
+      update: (cache, { data: { editPost } }) => {
+        if (route.name === 'Home') {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+            });
+            const getFeedData = [...dataInStore.getFeed];
+            getFeedData.forEach((post) => {
+              if (post.id === editPost.id) {
+                post = editPost;
+              }
+            });
+            cache.writeQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+              data: {
+                ...dataInStore,
+                getFeed: [...getFeedData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } else if (route.name === 'Browse') {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+            });
+            const getBrowseData = [...dataInStore.browsePosts];
+            getBrowseData.forEach((post) => {
+              if (post.id === editPost.id) {
+                post = editPost;
+              }
+            });
+            cache.writeQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+              data: {
+                ...dataInStore,
+                browsePosts: [...getBrowseData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      },
     }));
-
-    const onDrop = (acceptFiles: any[], rejectReasons: any[]) => {
-      previewUrl.value = URL.createObjectURL(acceptFiles[0]);
-      file.value = acceptFiles[0];
-      showImageUpload.value = false;
-    };
 
     const updatePost = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
       editPost();
-      eventbus.emit('close-edit-modal');
+      emit('close');
     };
-
-    const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
     return {
       message,
@@ -98,9 +157,6 @@ export default defineComponent({
       showImageUpload,
       previewUrl,
       toggle,
-      getRootProps,
-      getInputProps,
-      ...rest,
     };
   },
 });

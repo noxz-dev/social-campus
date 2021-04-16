@@ -216,7 +216,7 @@
             </transition>
           </div>
 
-          <app-button v-if="['Home', 'Browse'].includes($route.name)" class="ml-6" @click="eventbus.emit('open-modal')">
+          <app-button v-if="['Home', 'Browse'].includes($route.name)" class="ml-6" @click="modal.openModal()">
             Neuer Post
             <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ml-2 h-6 w-6">
               <g id="Iconly/Bulk/Send" stroke="none" stroke-width="1" fill-rule="evenodd">
@@ -339,7 +339,7 @@
     v-if="['Home', 'Browse'].includes($route.name)"
     class="lg:hidden sm:block"
     text="Neuer Post"
-    @click="eventbus.emit('open-modal')"
+    @click="modal.openModal()"
   />
   <div v-if="$route.name === 'Group'">
     <group-permission-container :groupId="$route.params.id">
@@ -349,7 +349,7 @@
     </group-permission-container>
   </div>
   <modal ref="modal" content-text="" header-text="Neuer Post">
-    <new-post />
+    <new-post @close="modal.closeModal()" />
   </modal>
   <edit-modal content-text="" header-text="Edit Post" />
 </template>
@@ -396,6 +396,7 @@ export default defineComponent({
     const notifyTarget = ref(null);
     const notifications = ref<Notification[]>([]);
     const store = useStore();
+    const modal = ref<InstanceType<typeof Modal>>();
 
     onClickOutside(target, (event) => {
       showProfileMenu.value = false;
@@ -456,6 +457,7 @@ export default defineComponent({
       notifyTarget,
       notifications,
       deleteNotification,
+      modal,
     };
   },
 });

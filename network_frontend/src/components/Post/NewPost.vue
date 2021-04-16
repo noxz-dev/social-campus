@@ -67,12 +67,12 @@
         </g>
       </svg>
     </app-button>
-    <app-button class="!bg-dark400 hover:!bg-red-700" @click="eventbus.emit('close-modal')"> Abbrechen </app-button>
+    <app-button class="!bg-dark400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, ref, unref } from 'vue';
+import { computed, defineComponent, getCurrentInstance, ref, watch, watchEffect } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
@@ -88,9 +88,11 @@ import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { browsePosts } from '../../graphql/queries/browsePosts';
 import { getPostsFromGroup } from '../../graphql/queries/getPostsFromGroup';
+import { useMagicKeys } from '@vueuse/core';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
-  setup() {
+  emits: ['close'],
+  setup(props, { emit }) {
     const message = ref('');
     const route = useRoute();
     const file = ref<File>();
@@ -98,6 +100,11 @@ export default defineComponent({
     const tags = ref<string[]>();
     const showImageUpload = ref(false);
     const groupId = ref();
+    const { control_enter } = useMagicKeys();
+
+    watch(control_enter, (v) => {
+      if (v) post();
+    });
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -205,7 +212,7 @@ export default defineComponent({
       }
       if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
       newPost();
-      eventbus.emit('close-modal');
+      emit('close');
     };
 
     const openMarkdownDoku = () => {

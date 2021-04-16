@@ -75,13 +75,14 @@
 import PostCard from '../components/Post/PostCard.vue';
 import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/graphqlOperations';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Card from '../components/Card/Card.vue';
 import CardHeader from '../components/Card/CardHeader.vue';
 import { postById } from '../graphql/queries/postById';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
+import { useMagicKeys } from '@vueuse/core';
 
 export default defineComponent({
   components: { PostCard, Card, CardHeader },
@@ -89,6 +90,12 @@ export default defineComponent({
     const commentText = ref('');
     const postData = ref<PostByIdQuery>();
     const route = useRoute();
+    const { control_enter } = useMagicKeys();
+
+    watch(control_enter, (v) => {
+      if (v) newComment();
+    });
+
     const { onResult, loading } = usePostByIdQuery(
       () =>
         <PostByIdQueryVariables>{

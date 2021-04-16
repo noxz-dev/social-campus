@@ -432,10 +432,11 @@ export class PostResolver {
       return null;
     }
     const post = await getRepository(Post).findOne({ where: { id: postId }, relations: ['user'] });
-    if (!post) return null;
+    if (!post) throw Error('post not found');
     if (post.user.id === userId) {
       delete post.likesCount;
       delete post.commentCount;
+      if (post.imageLink) delete post.imageLink;
       await getRepository(Post).delete(post);
       log.info(`user with the id ${userId} deleted the post ${postId}`);
       return true;

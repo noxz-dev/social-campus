@@ -3,9 +3,11 @@ import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Like } from '../entity/like.entity';
+import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
+import { notify } from './notification.resolver';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -21,12 +23,12 @@ export class CommentResolver {
       return null;
     }
 
-    const user = await getRepository(User).findOne({ where: { id: ctx.req.user.id } });
+    const user = await getRepository(User).findOne({ where: { id: id } });
     if (!user) {
       return null;
     }
 
-    const post = await getRepository(Post).findOne({ where: { id: postID } });
+    const post = await getRepository(Post).findOne({ where: { id: postID }, relations: ['user'] });
     if (!post) {
       return null;
     }
@@ -35,8 +37,19 @@ export class CommentResolver {
     comment.user = user;
     comment.post = post;
     comment.likes = [];
-    await getRepository(Comment).save(comment);
-    return comment;
+    const savedComment = await getRepository(Comment).save(comment);
+    await notify(
+      {
+        type: NotificationType.NEW_COMMENT,
+        message: `${user.firstname} hat einen Kommentar geschrieben`,
+        fromUser: user,
+        toUser: post.user,
+        post: post,
+        comment: savedComment,
+      },
+      ctx,
+    );
+    return savedComment;
   }
 
   @Authorized()

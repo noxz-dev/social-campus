@@ -402,6 +402,16 @@ export class PostResolver {
     post.liked = likeState;
     log.info(`user with the id ${userId} liked the post ${postID}`);
     post.likesCount = await countLikes(post.id);
+    await notify(
+      {
+        type: NotificationType.POST_LIKE,
+        message: `${user.firstname} gefällt dein Post`,
+        toUser: post.user,
+        fromUser: user,
+        post: post,
+      },
+      ctx,
+    );
     return post;
   }
 

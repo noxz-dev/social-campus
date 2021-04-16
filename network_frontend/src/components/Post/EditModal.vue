@@ -34,7 +34,6 @@ export default defineComponent({
       eventbus?.on('close-edit-modal', () => modal.value?.openModal());
       eventbus?.on('open-edit-modal', (data: Post) => {
         post.value = data;
-        console.log(post.value);
         modal.value?.openModal();
       });
     }

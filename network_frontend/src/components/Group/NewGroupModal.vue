@@ -134,9 +134,9 @@ export default defineComponent({
       }
     };
 
-    const setType = (val: string) => {
-      if (val == 'PUBLIC') groupType.value = GroupType.Public;
-      if (val == 'PRIVATE') groupType.value = GroupType.Private;
+    const setType = (val: GroupType) => {
+      if (val == GroupType.Public) groupType.value = GroupType.Public;
+      if (val == GroupType.Private) groupType.value = GroupType.Private;
     };
 
     return {

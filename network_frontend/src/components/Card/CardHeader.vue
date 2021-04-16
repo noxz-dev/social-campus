@@ -141,6 +141,8 @@ import PermissionContainer from '../PermissionContainer.vue';
 import { useDeletePostMutation } from '../../graphql/generated/graphqlOperations';
 import { DeletePostMutationVariables, Post } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
+import { useRoute } from 'vue-router';
+import { browsePosts } from '../../graphql/queries/browsePosts';
 
 export default defineComponent({
   components: { PermissionContainer },
@@ -158,6 +160,7 @@ export default defineComponent({
   setup(props) {
     const optionsOpen = ref(false);
     const target = ref(null);
+    const route = useRoute();
 
     const firstname = computed(() => props.post?.user.firstname || props.comment?.user.firstname);
     const lastname = computed(() => props.post?.user.lastname || props.comment?.user.lastname);
@@ -176,29 +179,58 @@ export default defineComponent({
         postId: props.post?.id,
       },
       update: (cache, { data: { deletePost } }) => {
-        try {
-          const dataInStore: any = cache.readQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-          });
-          let getFeedData = [...dataInStore.getFeed];
-          getFeedData = getFeedData.filter((post) => post.id != props.post?.id);
-          cache.writeQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-            data: {
-              ...dataInStore,
-              getFeed: [...getFeedData],
-            },
-          });
-        } catch (err) {
-          console.log(err);
+        if (route.name === 'Home') {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+            });
+            let getFeedData = [...dataInStore.getFeed];
+            getFeedData = getFeedData.filter((post) => post.id != props.post?.id);
+            cache.writeQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+              data: {
+                ...dataInStore,
+                getFeed: [...getFeedData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } else {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+            });
+            let getBrowseData = [...dataInStore.browsePosts];
+            getBrowseData = getBrowseData.filter((post) => post.id != props.post?.id);
+            cache.writeQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+              data: {
+                ...dataInStore,
+                browsePosts: [...getBrowseData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
         }
       },
     }));

@@ -36,6 +36,8 @@ import { useEditPostMutation } from '../../graphql/generated/graphqlOperations';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { EditPostMutationVariables, Post } from 'src/graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
+import { useRoute } from 'vue-router';
+import { browsePosts } from '../../graphql/queries/browsePosts';
 export default defineComponent({
   emits: ['close'],
   components: { ToggleButton },
@@ -47,6 +49,7 @@ export default defineComponent({
     const file = ref<File>();
     const previewUrl = ref();
     const showImageUpload = ref(false);
+    const route = useRoute();
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -76,33 +79,66 @@ export default defineComponent({
         hasUpload: true,
       },
       update: (cache, { data: { editPost } }) => {
-        try {
-          const dataInStore: any = cache.readQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-          });
-          const getFeedData = [...dataInStore.getFeed];
-          getFeedData.forEach((post) => {
-            if (post.id === editPost.id) {
-              post = editPost;
-            }
-          });
-          cache.writeQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-            data: {
-              ...dataInStore,
-              getFeed: [...getFeedData],
-            },
-          });
-        } catch (err) {
-          console.log(err);
+        if (route.name === 'Home') {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+            });
+            const getFeedData = [...dataInStore.getFeed];
+            getFeedData.forEach((post) => {
+              if (post.id === editPost.id) {
+                post = editPost;
+              }
+            });
+            cache.writeQuery({
+              query: getFeed,
+              variables: {
+                skip: 0,
+                take: 10,
+              },
+              data: {
+                ...dataInStore,
+                getFeed: [...getFeedData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } else if (route.name === 'Browse') {
+          try {
+            const dataInStore: any = cache.readQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+            });
+            const getBrowseData = [...dataInStore.browsePosts];
+            getBrowseData.forEach((post) => {
+              if (post.id === editPost.id) {
+                post = editPost;
+              }
+            });
+            cache.writeQuery({
+              query: browsePosts,
+              variables: {
+                skip: 0,
+                take: 10,
+                tags: [],
+              },
+              data: {
+                ...dataInStore,
+                browsePosts: [...getBrowseData],
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
         }
       },
     }));

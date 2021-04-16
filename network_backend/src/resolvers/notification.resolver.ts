@@ -85,6 +85,7 @@ export class NotificationResolver {
 }
 
 export const notify = async (payload: NotificationPayload, context: MyContext): Promise<void> => {
+  if (context.req.user.id === payload.toUser.id) return;
   const notify = new Notification(payload);
   if (payload.post) notify.post = payload.post;
   const savedNotification = await getRepository(Notification).save(notify);

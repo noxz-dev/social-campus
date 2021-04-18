@@ -442,7 +442,7 @@ import Notifications from './Notifications.vue';
 import EditModal from './Post/EditModal.vue';
 import ToggleButton from './Form/ToggleButton.vue';
 import { notificationsSubscription } from '../graphql/subscriptions/notifications';
-import { GetNotificationsQuery, Notification } from '../graphql/generated/types';
+import { Notification } from '../graphql/generated/types';
 import GroupPermissionContainer from './Group/GroupPermissionContainer.vue';
 import { RecursivePartial } from '../utils/typeUtils';
 

@@ -78,7 +78,7 @@
             <span class="text-lg cursor-pointer hover:text-highlight-500" @click="toggleGroups">Zeige alle</span>
           </div>
         </div>
-        <div class="w-full p-1 flex justify-center min-h-[26rem]">
+        <div class="w-full p-1 flex justify-center min-h-[26rem]" ref="groupListContainer">
           <group-list :groups="groups"></group-list>
         </div>
       </div>
@@ -101,6 +101,7 @@ import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
 import GroupList from '../components/Group/GroupList.vue';
 import breakpoints from '../utils/breakpoints';
 import { takeStateGroups } from '../utils/groupsTake';
+import { useResizeObserver } from '@vueuse/core';
 
 export default defineComponent({
   components: {
@@ -113,41 +114,31 @@ export default defineComponent({
   setup() {
     const groups = ref<Partial<Group>[]>([]);
     // const take = ref(3);
+    const groupListContainer = ref<HTMLDivElement>();
     const skip = ref(0);
     const allGroups = ref(false);
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
 
-    const setTakeBasedOnLayout = () => {
-      if (breakpoints.is === 'sm') takeStateGroups.take = 4;
-      if (breakpoints.is === 'md') takeStateGroups.take = 2;
-      if (breakpoints.is === 'lg') takeStateGroups.take = 3;
-      if (breakpoints.is === 'xl') takeStateGroups.take = 6;
-      if (breakpoints.is === '2xl') takeStateGroups.take = 6;
-    };
-    setTakeBasedOnLayout();
-
-    watch(
-      () => breakpoints.is,
-      () => {
-        console.log(breakpoints.is);
-        setTakeBasedOnLayout();
+    useResizeObserver(groupListContainer, (entries) => {
+      if (takeStateGroups.take < 200) {
+        const entry = entries[0];
+        const { width, height } = entry.contentRect;
+        console.log(width, height);
+        takeStateGroups.take = Math.floor(width / 260);
       }
-    );
+    });
 
-    const { onResult } = useGroupsQuery(
-      () =>
-        <GroupsQueryVariables>{
-          take: takeStateGroups.take,
-          skip: skip.value,
-        }
-    );
+    const { onResult } = useGroupsQuery(() => ({
+      take: takeStateGroups.take,
+      skip: skip.value,
+    }));
 
     function toggleGroups(): void {
       if (!allGroups.value) {
         takeStateGroups.take = 200;
         allGroups.value = !allGroups.value;
       } else {
-        setTakeBasedOnLayout();
+        takeStateGroups.take = 1;
         allGroups.value = !allGroups.value;
       }
     }
@@ -155,10 +146,12 @@ export default defineComponent({
     onResult(({ data }) => {
       groups.value = data.groups;
     });
+
     return {
       groups,
       toggleGroups,
       newGroupModal,
+      groupListContainer,
     };
   },
 });

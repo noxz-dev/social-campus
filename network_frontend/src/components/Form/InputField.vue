@@ -4,7 +4,7 @@
       <slot name="icon"></slot>
     </div>
     <input
-      class="dark:text-gray-100 w-full border text-gray-900 dark:bg-dark600 border-dark500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-highlight-500 focus:ring-highlight-500"
+      class="dark:text-gray-100 w-full border pr-28 text-gray-900 dark:bg-dark600 border-dark500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-highlight-500 focus:ring-highlight-500"
       :type="type"
       :value="modelValue"
       @input="onChanged"
@@ -14,6 +14,19 @@
       :required="required"
       :disabled="disabled"
     />
+    <!-- <button
+      @click="emitClick"
+      class="inset-y-0 md:hidden cursor-pointer absolute text-center right-0 rounded-xl items-center justify-center font-medium duration-100"
+    >
+      <slot name="mobileIcon" />
+    </button> -->
+    <app-button
+      v-if="showButton"
+      class="hidden my-2 px-4 inset-y-0 md:flex cursor-pointer absolute right-3 rounded-xl"
+      @click=""
+    >
+      {{ buttonText }}
+    </app-button>
   </div>
 </template>
 
@@ -50,6 +63,12 @@ export default defineComponent({
     inputClasses: {
       type: String,
       default: '',
+    },
+    buttonText: {
+      type: String,
+    },
+    showButton: {
+      type: Boolean,
     },
   },
   setup(props, { emit, slots }) {

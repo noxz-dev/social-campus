@@ -3,10 +3,14 @@
     id="notificationContainer"
     class="absolute dark:bg-dark700 bg-white h-96 w-80 top-12 right-0 rounded-lg border border-dark500 shadow-xl overflow-auto"
   >
-    <div class="dark:text-gray-50 text-gray-900 text-lg border-b-2 w-full border-dark400 p-2 font-semibold">Mitteilungen</div>
+    <div class="dark:text-gray-50 text-gray-900 text-lg border-b-2 w-full border-dark400 p-2 font-semibold">
+      Mitteilungen
+    </div>
     <div v-if="notificationsLoading" class="dark:text-gray-50 text-gray-900">Loading...</div>
     <div v-else class="p-1 flex flex-col w-full">
-      <span class="dark:text-gray-50 text-gray-900 p-2 text-center w-full" v-if="notifications?.length === 0"> Keine Mitteilungen vorhanden</span>
+      <span class="dark:text-gray-50 text-gray-900 p-2 text-center w-full" v-if="notifications?.length === 0">
+        Keine Mitteilungen vorhanden</span
+      >
       <div
         id="card"
         class="dark:bg-dark600 bg-white rounded dark:text-gray-50 text-gray-900 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-center w-full border-dark500 border"
@@ -57,16 +61,17 @@ import { useDeleteNotificationMutation } from '../graphql/generated/graphqlOpera
 import { defineComponent, PropType, ref, toRefs, watch } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';
+import { RecursivePartial } from '../utils/typeUtils';
 export default defineComponent({
   emits: ['closeNotify', 'deleteNotification'],
   props: {
     notifications: {
-      type: Array as PropType<Notification[]>,
+      type: Object as PropType<RecursivePartial<Notification>[]>,
       required: true,
     },
   },
   setup(props, { emit }) {
-    const notifications = ref<Notification[]>(props.notifications);
+    const notifications = ref<RecursivePartial<Notification>[]>(props.notifications);
     const router = useRouter();
     const notificationsLoading = ref(false);
     const tobeDeleted = ref('');
@@ -100,12 +105,14 @@ export default defineComponent({
         });
         emit('closeNotify');
       } else if (notify.type === NotificationType.Mention) {
-        router.push({
-          name: 'DetailPost',
-          params: {
-            id: notify.post.id,
-          },
-        });
+        if (notify.post) {
+          router.push({
+            name: 'DetailPost',
+            params: {
+              id: notify.post.id,
+            },
+          });
+        }
         emit('closeNotify');
       }
     };

@@ -257,7 +257,7 @@ export type Notification = {
   message: Scalars['String'];
   fromUser: User;
   toUser: User;
-  post: Post;
+  post?: Maybe<Post>;
 };
 
 export enum NotificationType {
@@ -830,10 +830,10 @@ export type GetNotificationsQuery = (
     ), fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'profilePicLink' | 'username'>
-    ), post: (
+    ), post?: Maybe<(
       { __typename?: 'Post' }
       & Pick<Post, 'id'>
-    ) }
+    )> }
   )> }
 );
 
@@ -967,6 +967,9 @@ export type NotificationsSubscription = (
     ), toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    ) }
+    ), post?: Maybe<(
+      { __typename?: 'Post' }
+      & Pick<Post, 'id'>
+    )> }
   ) }
 );

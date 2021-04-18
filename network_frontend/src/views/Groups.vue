@@ -35,7 +35,13 @@
                 </svg>
                 <span class="hidden md:block">Gruppe erstellen</span>
                 <span class="sm:block md:hidden">
-                  <svg class="h-6" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <svg
+                    class="h-6"
+                    viewBox="0 0 24 24"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
                     <g id="Iconly/Bulk/2-User" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <g id="2-User" transform="translate(2.000000, 3.000000)" fill="#fff" fill-rule="nonzero">
                         <path
@@ -72,7 +78,7 @@
             <span class="text-lg cursor-pointer hover:text-highlight-500" @click="toggleGroups">Zeige alle</span>
           </div>
         </div>
-        <div class="w-full p-1 flex justify-center">
+        <div class="w-full p-1 flex justify-center min-h-[26rem]">
           <group-list :groups="groups"></group-list>
         </div>
       </div>

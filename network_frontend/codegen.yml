@@ -12,4 +12,3 @@ generates:
     config:
       withCompositionFunctions: true
       vueCompositionApiImportFrom: vue
-      importOperationTypesFrom: 'graphqlOperations.ts'

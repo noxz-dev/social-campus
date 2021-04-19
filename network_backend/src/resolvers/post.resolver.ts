@@ -312,20 +312,21 @@ export class PostResolver {
     dbPost.commentCount = 0;
     dbPost.liked = false;
 
-    for await (const mention of text.match(/@\w\w*/g)) {
-      console.log(mention);
-      const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
-      if (!toUser) return;
-      await notify(
-        {
-          type: NotificationType.MENTION,
-          message: `${user.firstname} hat dich in einem Post erwähnt`,
-          toUser: toUser,
-          fromUser: user,
-          post: dbPost,
-        },
-        ctx,
-      );
+    if (text.match(/@\w\w*/g) !== null) {
+      for await (const mention of text.match(/@\w\w*/g)) {
+        const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
+        if (!toUser) return;
+        await notify(
+          {
+            type: NotificationType.MENTION,
+            message: `${user.firstname} hat dich in einem Post erwähnt`,
+            toUser: toUser,
+            fromUser: user,
+            post: dbPost,
+          },
+          ctx,
+        );
+      }
     }
 
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });

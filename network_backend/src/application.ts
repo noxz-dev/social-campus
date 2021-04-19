@@ -83,7 +83,10 @@ export class Application {
             throw new Error('Missing auth token!');
           },
         },
-        context: ({ req, res }) => {
+        context: ({ req, res, connection }) => {
+          if (!req || !req.headers) {
+            return connection.context;
+          }
           const context: MyContext = {
             req,
             res,

@@ -1,9 +1,9 @@
-import { Chat } from '../entity/chat.entity';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getRepository } from 'typeorm';
+import { Chat } from '../entity/chat.entity';
+import { ChatMessage } from '../entity/chatmessage.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
-import { ChatMessage } from '../entity/chatmessage.entity';
 import { SUB_TOPICS } from './notification.resolver';
 
 export interface NewChatMessagePayload {
@@ -16,7 +16,7 @@ export class ChatResolver {
   @Query(() => [Chat])
   public async myChats(@Ctx() ctx: MyContext): Promise<Chat[]> {
     const userId = ctx.req.user.id;
-    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats'] });
+    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.members'] });
     if (!user.chats) return [];
     return user.chats;
   }
@@ -25,7 +25,10 @@ export class ChatResolver {
   @Query(() => Chat)
   public async chatById(@Ctx() ctx: MyContext, @Arg('chatId') chatId: string): Promise<Chat> {
     const userId = ctx.req.user.id;
-    const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members', 'messages'] });
+    const chat = await getRepository(Chat).findOne({
+      where: { id: chatId },
+      relations: ['members', 'messages', 'messages.sendBy'],
+    });
 
     if (!chat) throw Error('no chat found');
 
@@ -44,6 +47,7 @@ export class ChatResolver {
     const userId = ctx.req.user.id;
     const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members', 'messages'] });
 
+    if (!chat) throw Error('chat not found');
     if (!checkChatAccess(chat.members, userId)) {
       throw Error('youre not allowed to access this chat');
     }
@@ -52,19 +56,22 @@ export class ChatResolver {
     const chatMessage = new ChatMessage(user, chat, message);
     chat.messages = [...chat.messages, chatMessage];
 
-    ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: chatMessage });
-    return chatMessage;
+    const savedMessage = await getRepository(ChatMessage).save(chatMessage);
+
+    ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage });
+    return savedMessage;
   }
 
   @Authorized()
   @Mutation(() => Chat)
   public async createChat(@Ctx() ctx: MyContext, @Arg('memberId') memberId: string): Promise<Chat> {
     const userId = ctx.req.user.id;
-    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.member'] });
+    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.members'] });
     const member = await getRepository(User).findOne({ where: { id: memberId } });
 
-    const existingChat = user.chats.find((chat) => chat.members.includes(member));
-    console.log('existing chat', existingChat);
+    const existingChat = user.chats.find((chat) => chat.members.some((cmember) => cmember.id === member.id));
+    console.log(existingChat);
+    if (existingChat) return existingChat;
     const chat = new Chat();
     chat.messages = [];
     chat.members = [user, member];
@@ -78,10 +85,8 @@ export class ChatResolver {
     topics: SUB_TOPICS.NEW_CHAT_MESSAGE,
     filter: async ({ payload, args, context }) => {
       const chatId = args.chatId;
-
       const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members'] });
-      console.log('FILTER SUB CONTEXT', context);
-      const user = chat.members.find((user) => user.id === context.req.user.id);
+      const user = chat.members.find((user) => user.id === context.user.id);
       if (user) return true;
       return false;
     },

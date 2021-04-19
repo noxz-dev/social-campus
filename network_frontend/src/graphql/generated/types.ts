@@ -537,6 +537,19 @@ export type AddCommentMutation = (
   ) }
 );
 
+export type CreateChatMutationVariables = Exact<{
+  memberId: Scalars['String'];
+}>;
+
+
+export type CreateChatMutation = (
+  { __typename?: 'Mutation' }
+  & { createChat: (
+    { __typename?: 'Chat' }
+    & Pick<Chat, 'id'>
+  ) }
+);
+
 export type CreateGroupMutationVariables = Exact<{
   name: Scalars['String'];
   groupType: GroupType;
@@ -655,6 +668,20 @@ export type RemoveFollowerMutation = (
   ) }
 );
 
+export type SendMessageMutationVariables = Exact<{
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+}>;
+
+
+export type SendMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { sendMessage: (
+    { __typename?: 'ChatMessage' }
+    & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
+  ) }
+);
+
 export type UnlikePostMutationVariables = Exact<{
   postID: Scalars['String'];
 }>;
@@ -695,6 +722,27 @@ export type BrowsePostsQuery = (
       & Pick<Tag, 'id' | 'name'>
     )> }
   )>> }
+);
+
+export type ChatByIdQueryVariables = Exact<{
+  chatId: Scalars['String'];
+}>;
+
+
+export type ChatByIdQuery = (
+  { __typename?: 'Query' }
+  & { chatById: (
+    { __typename?: 'Chat' }
+    & Pick<Chat, 'id'>
+    & { messages: Array<(
+      { __typename?: 'ChatMessage' }
+      & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
+      & { sendBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
+      ) }
+    )> }
+  ) }
 );
 
 export type CheckGroupAccessQueryVariables = Exact<{
@@ -813,6 +861,21 @@ export type MeQuery = (
   & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'profilePicLink' | 'firstname' | 'lastname' | 'username'>
+  )> }
+);
+
+export type MyChatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyChatsQuery = (
+  { __typename?: 'Query' }
+  & { myChats: Array<(
+    { __typename?: 'Chat' }
+    & Pick<Chat, 'id'>
+    & { members: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    )> }
   )> }
 );
 

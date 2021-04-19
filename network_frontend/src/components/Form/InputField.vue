@@ -23,7 +23,7 @@
     <app-button
       v-if="showButton"
       class="hidden my-2 px-4 inset-y-0 md:flex cursor-pointer absolute right-3 rounded-xl"
-      @click=""
+      @click="emitClick"
     >
       {{ buttonText }}
     </app-button>
@@ -73,11 +73,16 @@ export default defineComponent({
   },
   setup(props, { emit, slots }) {
     const hasIconSlot = computed(() => slots['icon']);
+
+    const emitClick = () => emit('clicked');
+
     const condtionalClasses = computed(() => {
       return props.inputClasses + (hasIconSlot.value ? ' pl-' + props.inputInset : '');
     });
+
     const onChanged = (e) => emit('update:modelValue', e.currentTarget.value);
-    return { hasIconSlot, onChanged, condtionalClasses };
+
+    return { hasIconSlot, onChanged, condtionalClasses, emitClick };
   },
 });
 </script>

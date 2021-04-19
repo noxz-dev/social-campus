@@ -10,7 +10,13 @@
       <div class="h-full w-full flex xl:justify-center items-end">
         <div class="flex mb-32 flex-col xl:flex-row items-center">
           <span class="">
-            <svg class="h-6 w-6" fill="none" :class="isDarkMode ? 'text-gray-500' : 'text-gray-800'" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              :class="isDarkMode ? 'text-gray-500' : 'text-gray-800'"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -21,7 +27,13 @@
           </span>
           <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="isDarkMode" />
           <span class="">
-            <svg class="h-6 w-6" :class="isDarkMode ? 'text-gray-200' : 'text-gray-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              class="h-6 w-6"
+              :class="isDarkMode ? 'text-gray-200' : 'text-gray-400'"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -100,7 +112,10 @@ export default defineComponent({
       console.log(breakpoints.is);
     });
 
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
       if (localStorage.theme !== 'light') isDarkMode.value = true;
     } else {
       if (localStorage.theme !== 'dark') isDarkMode.value = false;
@@ -110,7 +125,10 @@ export default defineComponent({
       isDarkMode.value = !isDarkMode.value;
       if (isDarkMode.value) localStorage.theme = 'dark';
       else localStorage.theme = 'light';
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');

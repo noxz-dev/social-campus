@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Base } from './base';
 import { ChatMessage } from './chatmessage.entity';
 import { User } from './user.entity';
@@ -13,5 +13,6 @@ export class Chat extends Base {
   members: User[];
 
   @Field(() => [ChatMessage])
+  @OneToMany(() => ChatMessage, (message) => message.chat)
   messages: ChatMessage[];
 }

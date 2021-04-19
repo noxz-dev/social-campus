@@ -49,7 +49,13 @@
   <div class="flex flex-row-reverse">
     <app-button class="ml-3" @click="post">
       Posten
-      <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ml-2 h-6 w-6">
+      <svg
+        viewBox="0 0 24 24"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        class="ml-2 h-6 w-6"
+      >
         <g id="Iconly/Bulk/Send" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
           <g id="Send" transform="translate(2.000000, 2.000000)" fill-rule="nonzero">
             <path
@@ -151,7 +157,10 @@ export default defineComponent({
               },
             });
           } else if (route.path.includes('/user')) {
-            const dataInStoreProfile: any = cache.readQuery({ query: getPostsFromUser, variables: { userID: route.params.id } });
+            const dataInStoreProfile: any = cache.readQuery({
+              query: getPostsFromUser,
+              variables: { userID: route.params.id },
+            });
             cache.writeQuery({
               query: getPostsFromUser,
               variables: { userID: route.params.id },
@@ -161,7 +170,10 @@ export default defineComponent({
               },
             });
           } else if (route.path === '/browse') {
-            const dataInStore: any = cache.readQuery({ query: browsePosts, variables: { skip: 0, take: 10, tags: [] } });
+            const dataInStore: any = cache.readQuery({
+              query: browsePosts,
+              variables: { skip: 0, take: 10, tags: [] },
+            });
             cache.writeQuery({
               query: browsePosts,
               variables: {
@@ -175,7 +187,10 @@ export default defineComponent({
               },
             });
           } else if (route.name === 'Group') {
-            const dataInStore: any = cache.readQuery({ query: getPostsFromGroup, variables: { groupId: groupId.value } });
+            const dataInStore: any = cache.readQuery({
+              query: getPostsFromGroup,
+              variables: { groupId: groupId.value },
+            });
             cache.writeQuery({
               query: getPostsFromGroup,
               variables: {

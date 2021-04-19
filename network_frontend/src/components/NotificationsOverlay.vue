@@ -2,7 +2,7 @@
 
 <script lang="ts">
 import { useNotificationsSubscription } from '../graphql/generated/graphqlOperations';
-import { defineComponent, inject, computed } from 'vue';
+import { defineComponent, inject, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { Toast } from 'vue-dk-toast';
 
@@ -12,16 +12,33 @@ export default defineComponent({
     const toast = inject<Toast>('$toast');
     const user = computed(() => store.state.userData.user);
 
-    const { onResult } = useNotificationsSubscription(() => ({
-      userId: user.value.id,
-    }));
+    const subscriptionEnabled = ref(false);
+
+    watch(
+      () => store.state.userData.user,
+      () => {
+        if (user.value.id) {
+          subscriptionEnabled.value = true;
+        }
+      }
+    );
+
+    const { onResult } = useNotificationsSubscription(
+      () => ({
+        userId: user.value.id,
+      }),
+      () => ({
+        enabled: subscriptionEnabled.value,
+      })
+    );
 
     onResult(({ data }) => {
       console.log('sub', data);
-      if(toast) toast(data.notifications.message, {
-        positionY: 'top',
-        slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="${data.notifications.fromUser.profilePicLink}"/></div>`,
-      });
+      if (toast)
+        toast(data.notifications.message, {
+          positionY: 'top',
+          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="${data.notifications.fromUser.profilePicLink}"/></div>`,
+        });
     });
   },
 });

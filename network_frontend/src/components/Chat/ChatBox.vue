@@ -99,7 +99,7 @@ export default defineComponent({
 
     const { mutate: send } = useSendMessageMutation(() => ({
       variables: <SendMessageMutationVariables>{
-        chatId: '89cae01a-9600-4c3c-a07b-cc3c596b3610',
+        chatId: chatState.activeChat,
         message: newMessage.value,
       },
     }));

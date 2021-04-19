@@ -2,10 +2,17 @@
   <div>
     <div id="chats" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-2xl overflow-y-auto">
       <div class="w-full h-full flex">
-        <div id="userContainer" class="w-1/4 dark:bg-dark-700 h-full overflow-y-auto border-r border-dark-500">
-          <chat-users />
+        <div
+          v-show="(breakpoints.is == 'sm' && usersActive) || ['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
+          id="userContainer"
+          class="w-full md:w-1/4 dark:bg-dark-700 h-full overflow-y-auto border-r border-dark-500"
+        >
+          <chat-users @user-choosen="usersActive = false" />
         </div>
-        <div class="flex-1 dark:bg-dark-700 h-full">
+        <div
+          v-show="(breakpoints.is == 'sm' && !usersActive) || ['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
+          class="flex-1 dark:bg-dark-700 h-full"
+        >
           <chat-box></chat-box>
         </div>
       </div>
@@ -14,12 +21,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import ChatUsers from '../components/Chat/ChatUsers.vue';
+import breakpoints from '../utils/breakpoints';
 import ChatBox from '../components/Chat/ChatBox.vue';
 
 export default defineComponent({
   components: { ChatUsers, ChatBox },
+  setup() {
+    const usersActive = ref(true);
+    return {
+      usersActive,
+      breakpoints,
+    };
+  },
 });
 </script>
 

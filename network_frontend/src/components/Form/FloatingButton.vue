@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 

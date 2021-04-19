@@ -48,9 +48,10 @@ import NewChat from './NewChat.vue';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 export default defineComponent({
+  emits: ['user-choosen'],
   components: { NewChat, Modal },
   props: {},
-  setup() {
+  setup(props, { emit }) {
     const store = useStore();
     const user = computed(() => store.state.userData.user);
 
@@ -65,6 +66,7 @@ export default defineComponent({
 
     const setActiveChat = (chatId: string) => {
       chatState.activeChat = chatId;
+      emit('user-choosen');
       console.log(chatId);
     };
 

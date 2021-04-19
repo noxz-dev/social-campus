@@ -14,12 +14,13 @@
       :required="required"
       :disabled="disabled"
     />
-    <!-- <button
+    <button
+      v-if="showButton"
       @click="emitClick"
-      class="inset-y-0 md:hidden cursor-pointer absolute text-center right-0 rounded-xl items-center justify-center font-medium duration-100"
+      class="inset-y-0 md:hidden cursor-pointer px-6 bg-highlight-500 absolute text-center right-0 rounded-xl items-center justify-center font-medium duration-100"
     >
       <slot name="mobileIcon" />
-    </button> -->
+    </button>
     <app-button
       v-if="showButton"
       class="hidden my-2 px-4 inset-y-0 md:flex cursor-pointer absolute right-3 rounded-xl"

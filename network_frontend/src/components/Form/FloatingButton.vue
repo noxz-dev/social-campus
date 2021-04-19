@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed z-50 bottom-0 right-0 mr-5 mb-20 md:mb-10 md:mr-10 transition duration-700">
+  <div class="fixed z-40 bottom-0 right-0 mr-5 mb-20 md:mb-10 md:mr-10 transition duration-700">
     <button
       type="button"
       :class="scrolledDown ? 'px-3 py-3' : 'px-6 py-3'"

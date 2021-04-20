@@ -6,7 +6,7 @@
     <div v-for="chat in chats" :key="chat.id">
       <div class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5" @click="setActiveChat(chat.id)">
         <div
-          :class="chat.id === chatState.activeChat ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
+          :class="chat.id === $route.params.id ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
           class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
         >
           <div class="flex-shrink-0" v-if="chat">
@@ -47,12 +47,15 @@ import Modal from '../../components/Modal.vue';
 import NewChat from './NewChat.vue';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import breakpoints from '../../utils/breakpoints';
 export default defineComponent({
   emits: ['user-choosen'],
   components: { NewChat, Modal },
   props: {},
   setup(props, { emit }) {
     const store = useStore();
+    const router = useRouter();
     const user = computed(() => store.state.userData.user);
 
     const modal = ref<InstanceType<typeof Modal>>();
@@ -61,11 +64,13 @@ export default defineComponent({
     const chats = useResult(result, null, (data) => data.myChats);
 
     onResult(() => {
-      if (chats.value) chatState.activeChat = chats.value[0].id;
+      console.log('set active chat');
+      if (chats.value && breakpoints.is !== 'sm') router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
     });
 
     const setActiveChat = (chatId: string) => {
-      chatState.activeChat = chatId;
+      console.log('UPDATED CHAT');
+      router.push({ name: 'ChatBox', params: { id: chatId } });
       emit('user-choosen');
       console.log(chatId);
     };

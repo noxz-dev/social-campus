@@ -71,6 +71,7 @@ import { useMagicKeys } from '@vueuse/core';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 import { Howl } from 'howler';
+import { useRoute } from 'vue-router';
 export default defineComponent({
   props: {},
   components: { Message, InputField },
@@ -80,26 +81,28 @@ export default defineComponent({
     const newMessage = ref('');
     const chatContainer = ref();
     const { enter } = useMagicKeys();
+    const route = useRoute();
 
     watch(enter, (v) => {
       if (v) sendMessage();
     });
 
-    const chatQueryEnabled = ref(false);
+    const chatQueryEnabled = ref(true);
 
-    watch(
-      () => chatState.activeChat,
-      () => {
-        if (chatState.activeChat !== '') {
-          console.log('activeChat Updated', chatState.activeChat);
-          chatQueryEnabled.value = true;
-        }
-      }
-    );
+    // watch(
+    //   () => route.name === 'ChatBox',
+    //   () => {
+    //     console.log(route.params.id);
+    //     if (route.params.id !== '') {
+    //       console.log('activeChat Updated', route.params.id);
+    //       chatQueryEnabled.value = true;
+    //     }
+    //   }
+    // );
 
     const { result, subscribeToMore, onResult } = useChatByIdQuery(
       () => ({
-        chatId: chatState.activeChat,
+        chatId: route.params.id,
       }),
       () => ({ enabled: chatQueryEnabled.value })
     );
@@ -118,7 +121,7 @@ export default defineComponent({
         }
       `,
       variables: {
-        chatId: chatState.activeChat,
+        chatId: route.params.id,
       },
       updateQuery(result, { subscriptionData }) {
         if (subscriptionData.data.newMessage.sendBy.id !== user.value.id) {
@@ -137,7 +140,7 @@ export default defineComponent({
 
     const { mutate: send } = useSendMessageMutation(() => ({
       variables: <SendMessageMutationVariables>{
-        chatId: chatState.activeChat,
+        chatId: route.params.id,
         message: newMessage.value,
       },
     }));

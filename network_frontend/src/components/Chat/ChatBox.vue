@@ -9,6 +9,11 @@
         </div>
       </div>
     </div>
+    <unicode-emoji-picker
+      ref="emojiPicker"
+      class="absolute bottom-36 right-7 md:bottom-24 md:right-28"
+      v-show="emojiPickerOpen"
+    ></unicode-emoji-picker>
     <div class="w-full">
       <div class="py-5 p-2 w-full mb-14 md:mb-0">
         <input-field
@@ -20,15 +25,38 @@
           placeholder="Schreibe eine Nachricht"
           @clicked="sendMessage"
         >
-          <template v-slot:icon>
-            <svg class="h-6 w-6 fill-gray-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <template v-slot:extraButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="#fff"
+              viewBox="0 0 256 256"
+              class="hover:bg-dark-800 rounded-full transition"
+              @click="emojiPickerOpen = !emojiPickerOpen"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <circle
+                cx="128"
+                cy="128"
+                r="96"
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></circle>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M11.6115 2C6.30323 2 2 6.20819 2 11.3993C2 16.5903 6.30323 20.7985 11.6115 20.7985C13.8819 20.7985 15.9684 20.0287 17.613 18.7415L20.7371 21.7886L20.8202 21.8586C21.1102 22.0685 21.5214 22.0446 21.7839 21.7873C22.0726 21.5043 22.072 21.0459 21.7825 20.7636L18.6952 17.7523C20.2649 16.0794 21.2231 13.8487 21.2231 11.3993C21.2231 6.20819 16.9198 2 11.6115 2ZM11.6115 3.44774C16.1022 3.44774 19.7426 7.00776 19.7426 11.3993C19.7426 15.7908 16.1022 19.3508 11.6115 19.3508C7.12086 19.3508 3.48044 15.7908 3.48044 11.3993C3.48044 7.00776 7.12086 3.44774 11.6115 3.44774Z"
-              />
-            </svg>
-          </template>
+                d="M169.57812,151.99627a48.02731,48.02731,0,0,1-83.15624.00073"
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></path>
+              <circle cx="92" cy="108" r="12"></circle>
+              <circle cx="164" cy="108" r="12"></circle></svg
+          ></template>
           <template v-slot:mobileIcon>
             <svg
               viewBox="0 0 24 24"
@@ -71,6 +99,7 @@ import { useMagicKeys } from '@vueuse/core';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 import { Howl } from 'howler';
+import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
 export default defineComponent({
   props: {},
@@ -82,6 +111,8 @@ export default defineComponent({
     const chatContainer = ref();
     const { enter } = useMagicKeys();
     const route = useRoute();
+    const emojiPickerOpen = ref(false);
+    const emojiPicker = ref(null);
 
     watch(enter, (v) => {
       if (v) sendMessage();
@@ -89,20 +120,9 @@ export default defineComponent({
 
     const chatQueryEnabled = ref(true);
 
-    // watch(
-    //   () => route.name === 'ChatBox',
-    //   () => {
-    //     console.log(route.params.id);
-    //     if (route.params.id !== '') {
-    //       console.log('activeChat Updated', route.params.id);
-    //       chatQueryEnabled.value = true;
-    //     }
-    //   }
-    // );
-
     const { result, subscribeToMore, onResult } = useChatByIdQuery(
       () => ({
-        chatId: route.params.id,
+        chatId: route.params.id.toString(),
       }),
       () => ({ enabled: chatQueryEnabled.value })
     );
@@ -150,6 +170,7 @@ export default defineComponent({
       if (newMessage.value.length > 0) {
         send();
         newMessage.value = '';
+        emojiPickerOpen.value = false;
       }
     }
 
@@ -165,6 +186,10 @@ export default defineComponent({
 
     onMounted(() => {
       document.querySelector('body')?.click();
+      emojiPicker.value.addEventListener('emoji-pick', (event) => {
+        newMessage.value += event.detail.emoji;
+        emojiPickerOpen.value = false;
+      });
     });
 
     return {
@@ -174,8 +199,35 @@ export default defineComponent({
       chatContainer,
       scrollDown,
       user,
+      emojiPickerOpen,
+      emojiPicker,
     };
   },
 });
 </script>
-<style></style>
+<style>
+unicode-emoji-picker {
+  /* Because the component is built using the "em" unit, everything is scaled up from the font-size */
+  /* So you should probably only change this value if you want to resize the component */
+  /* It also directly reflects the font-size for the emoji font */
+  font-size: 15px;
+}
+
+.dark unicode-emoji-picker {
+  --fill-color: #393938;
+  --text-color: #fffffc;
+  --box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.35);
+  --filters-border-color: #30302a;
+  --filter-fill-color-hover: #454540;
+  --content-scrollbar-thumb-fill-color: #50504a;
+  --content-scrollbar-thumb-fill-color-hover: #76766f;
+  --filter-active-marker-border-color: #595955;
+  --title-bar-fill-color: rgba(57, 57, 55, 0.96);
+  --search-input-border-color: #50504a;
+  --search-input-border-color-hover: #eee;
+  --emoji-border-color-hover: #595955;
+  --variations-backdrop-fill-color: rgba(57, 57, 55, 0.8);
+  --emoji-variation-marker-border-color: #50504a;
+  --emoji-variation-marker-border-color-hover: #76766f;
+}
+</style>

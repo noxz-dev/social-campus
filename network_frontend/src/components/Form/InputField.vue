@@ -14,6 +14,13 @@
       :required="required"
       :disabled="disabled"
     />
+
+    <div
+      class="my-2 px-4 inset-y-0 flex cursor-pointer absolute md:right-24 right-16 rounded-xl text-white items-center"
+    >
+      <slot name="extraButton"></slot>
+    </div>
+
     <button
       v-if="showButton"
       @click="emitClick"

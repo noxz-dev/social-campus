@@ -295,7 +295,7 @@
           <div v-if="$route.name === 'Group'">
             <group-permission-container :groupId="$route.params.id">
               <template v-slot:onlyMember>
-                <app-button class="ml-6" @click="eventbus.emit('open-modal')">
+                <app-button class="ml-6" @click="modal.openModal()">
                   Neuer Post
                   <svg
                     viewBox="0 0 24 24"
@@ -413,7 +413,7 @@
           v-if="['Group'].includes($route.name)"
           class="lg:hidden sm:block"
           text="Neuer Post"
-          @click="eventbus.emit('open-modal')"
+          @click="modal.openModal()"
         />
       </template>
     </group-permission-container>

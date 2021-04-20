@@ -10,6 +10,7 @@
       </div>
     </div>
     <unicode-emoji-picker
+      filters-position="left"
       ref="emojiPicker"
       class="absolute bottom-36 right-7 md:bottom-24 md:right-28"
       v-show="emojiPickerOpen"
@@ -210,7 +211,8 @@ unicode-emoji-picker {
   /* Because the component is built using the "em" unit, everything is scaled up from the font-size */
   /* So you should probably only change this value if you want to resize the component */
   /* It also directly reflects the font-size for the emoji font */
-  font-size: 15px;
+  font-size: 18px;
+  max-width: 16em;
 }
 
 .dark unicode-emoji-picker {

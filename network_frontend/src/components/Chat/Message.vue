@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <div class="flex justify-end mb-2" :class="positionRight ? 'justify-end' : 'justify-start'">
+  <div class="w-full">
+    <div class="flex mb-2 w-full" :class="positionRight ? 'justify-end' : 'justify-start'">
       <div>
         <div
           v-if="positionRight"
-          class="mr-2 py-2 px-4 bg-highlight-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
+          class="mr-2 py-2 px-4 max-w-xs md:max-w-xl bg-highlight-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
         >
-          {{ message }}
+          <span class="break-words">{{ message }}</span>
         </div>
-        <div v-else class="mr-2 py-2 px-4 bg-gray-500 rounded-br-2xl rounded-tl-2xl rounded-tr-xl text-white">
-          {{ message }}
+        <div v-else class="mr-2 py-2 px-4 max-w-xl bg-gray-500 rounded-br-2xl rounded-tl-2xl rounded-tr-xl text-white">
+          <span class="break-words">{{ message }}</span>
         </div>
       </div>
     </div>

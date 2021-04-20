@@ -70,7 +70,7 @@ import gql from 'graphql-tag';
 import { useMagicKeys } from '@vueuse/core';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
-import { Howl, Howler } from 'howler';
+import { Howl } from 'howler';
 export default defineComponent({
   props: {},
   components: { Message, InputField },
@@ -91,6 +91,7 @@ export default defineComponent({
       () => chatState.activeChat,
       () => {
         if (chatState.activeChat !== '') {
+          console.log('activeChat Updated', chatState.activeChat);
           chatQueryEnabled.value = true;
         }
       }

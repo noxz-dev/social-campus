@@ -49,7 +49,7 @@ export default defineComponent({
     };
 
     const users = useResult(result, null, (data) => data.search.users);
-    console.log('uu', users);
+
     return { users, user, setUser, createChat };
   },
 });

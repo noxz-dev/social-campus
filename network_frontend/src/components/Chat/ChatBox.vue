@@ -70,6 +70,7 @@ import gql from 'graphql-tag';
 import { useMagicKeys } from '@vueuse/core';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
+import { Howl, Howler } from 'howler';
 export default defineComponent({
   props: {},
   components: { Message, InputField },
@@ -118,6 +119,17 @@ export default defineComponent({
       variables: {
         chatId: chatState.activeChat,
       },
+      updateQuery(result, { subscriptionData }) {
+        if (subscriptionData.data.newMessage.sendBy.id !== user.value.id) {
+          // new Audio('/notification.mp3').play();
+          var sound = new Howl({
+            src: ['/notification.mp3'],
+          });
+
+          sound.play();
+        }
+        return result;
+      },
     }));
 
     const chat = useResult(result, null, (data) => data.chatById);
@@ -145,6 +157,10 @@ export default defineComponent({
       setTimeout(() => {
         scrollDown();
       }, 0);
+    });
+
+    onMounted(() => {
+      document.querySelector('body')?.click();
     });
 
     return {

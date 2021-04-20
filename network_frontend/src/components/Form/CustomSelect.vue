@@ -26,7 +26,7 @@
           </svg>
         </span>
       </button>
-      <div class="absolute mt-1 w-full rounded-md dark:bg-dark-400 bg-gray-100 shadow-lg z-10">
+      <div class="absolute mt-1 w-full rounded-md dark:bg-dark-400 bg-gray-100 shadow-lg z-10 overflow-auto">
         <ul
           tabindex="-1"
           role="listbox"

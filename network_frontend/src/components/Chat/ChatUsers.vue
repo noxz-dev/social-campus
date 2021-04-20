@@ -62,10 +62,12 @@ export default defineComponent({
     const { result, refetch, onResult } = useMyChatsQuery();
 
     const chats = useResult(result, null, (data) => data.myChats);
-
+    let firstload = true;
     onResult(() => {
       console.log('set active chat');
-      if (chats.value && breakpoints.is !== 'sm') router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
+      if (chats.value && breakpoints.is !== 'sm' && firstload)
+        router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
+      firstload = false;
     });
 
     const setActiveChat = (chatId: string) => {

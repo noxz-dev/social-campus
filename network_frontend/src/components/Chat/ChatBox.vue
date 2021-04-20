@@ -122,7 +122,7 @@ export default defineComponent({
 
     const { result, subscribeToMore, onResult } = useChatByIdQuery(
       () => ({
-        chatId: route.params.id.toString(),
+        chatId: route.params.id,
       }),
       () => ({ enabled: chatQueryEnabled.value })
     );

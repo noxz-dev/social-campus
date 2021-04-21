@@ -335,18 +335,24 @@
           </div>
           <div class="ml-3">
             <div class="text-base font-medium dark:text-gray-50 text-gray-800">
-              <span v-if="user"> {{ user?.firstname }}</span>
+              <span v-if="user"> {{ user?.firstname + ' ' + user?.lastname }}</span>
             </div>
             <div class="text-sm font-medium dark:text-gray-400 text-gray-500">
-              <span v-if="user"> {{ user?.firstname }}</span>
+              <span v-if="user"> @{{ user?.username }}</span>
             </div>
           </div>
           <button
+            ref="notifyTarget"
             type="button"
-            class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+            class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-highlight-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
           >
             <span class="sr-only">View notifications</span>
             <svg
+              @click="
+                () => {
+                  notifyOpen = !notifyOpen;
+                }
+              "
               class="h-6 w-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -361,6 +367,16 @@
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
               />
             </svg>
+            <transition name="fade">
+              <notifications
+                class="!w-full mt-4 mobileNotify z-50"
+                v-if="notifyOpen"
+                @click.prevent
+                @closeNotify="notifyOpen = false"
+                @deleteNotification="deleteNotification($event)"
+                :notifications="notifications"
+              />
+            </transition>
           </button>
         </div>
         <div class="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4 block">
@@ -401,12 +417,12 @@
   </header>
 
   <floating-button
-    v-if="['Home', 'Browse'].includes($route.name)"
+    v-if="['Home', 'Browse'].includes($route.name) && !notifyOpen"
     class="lg:hidden sm:block"
     text="Neuer Post"
     @click="modal.openModal()"
   />
-  <div v-if="$route.name === 'Group'">
+  <div v-if="$route.name === 'Group' && !notifyOpen">
     <group-permission-container :groupId="$route.params.id">
       <template v-slot:onlyMember>
         <floating-button
@@ -475,7 +491,10 @@ export default defineComponent({
     });
 
     onClickOutside(notifyTarget, (event) => {
+      if (!notifyOpen.value) return;
+      console.log(notifyOpen.value);
       notifyOpen.value = false;
+      showMobileMenu.value = false;
     });
 
     const { result, error, onResult } = useMeQuery();
@@ -548,5 +567,9 @@ export default defineComponent({
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.mobileNotify {
+  height: calc(100vh - 125px) !important;
 }
 </style>

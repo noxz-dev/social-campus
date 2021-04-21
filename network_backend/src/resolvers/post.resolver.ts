@@ -1,3 +1,4 @@
+import { isUUID } from 'class-validator';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { EntityManager, getConnection, getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
@@ -218,6 +219,8 @@ export class PostResolver {
   @Query(() => Post, { description: 'returns a specific post' })
   public async postById(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
+
+    if (!isUUID(postId, 4)) throw new Error('given postId ist not a valid uuid');
 
     const post = await getRepository(Post)
       .createQueryBuilder('post')

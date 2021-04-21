@@ -4,7 +4,10 @@
       <app-button @click="modal?.openModal()">Erstelle einen neuen Chat</app-button>
     </div>
     <div v-for="chat in chats" :key="chat.id">
-      <div class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5" @click="setActiveChat(chat.id)">
+      <button
+        class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5 focus:outline-indigo-500"
+        @click="setActiveChat(chat.id)"
+      >
         <div
           :class="chat.id === $route.params.id ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
           class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
@@ -25,7 +28,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </button>
     </div>
     <modal ref="modal" content-text="" header-text="Neuer Chat">
       <new-chat

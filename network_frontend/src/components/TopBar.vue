@@ -342,7 +342,7 @@
             </div>
           </div>
           <button
-            ref="notifyTarget"
+            ref="mobileNotifyTarget"
             type="button"
             class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-highlight-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
           >
@@ -482,6 +482,7 @@ export default defineComponent({
     const router = useRouter();
     const notifyOpen = ref(false);
     const notifyTarget = ref(null);
+    const mobileNotifyTarget = ref(null);
     const notifications = ref<RecursivePartial<Notification>[]>([]);
     const store = useStore();
     const modal = ref<InstanceType<typeof Modal>>();
@@ -491,10 +492,17 @@ export default defineComponent({
     });
 
     onClickOutside(notifyTarget, (event) => {
-      if (!notifyOpen.value) return;
-      console.log(notifyOpen.value);
-      notifyOpen.value = false;
-      showMobileMenu.value = false;
+      if (notifyOpen.value && !showMobileMenu.value) {
+        notifyOpen.value = false;
+        showMobileMenu.value = false;
+      }
+    });
+
+    onClickOutside(mobileNotifyTarget, (event) => {
+      if (notifyOpen.value && showMobileMenu.value) {
+        notifyOpen.value = false;
+        showMobileMenu.value = false;
+      }
     });
 
     const { result, error, onResult } = useMeQuery();
@@ -546,6 +554,7 @@ export default defineComponent({
       profileImage,
       notifyOpen,
       notifyTarget,
+      mobileNotifyTarget,
       notifications,
       deleteNotification,
       modal,

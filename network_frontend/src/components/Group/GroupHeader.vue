@@ -10,7 +10,9 @@
           <div></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">Private Gruppe</div>
           <div class="w-1"></div>
-          <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">· {{ numberFormatter(1000) }} Mitglieder</div>
+          <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">
+            · {{ numberFormatter(1000) }} Mitglieder
+          </div>
         </div>
       </div>
       <div class="flex h-full items-center">
@@ -56,28 +58,28 @@
       </div>
     </div>
     <div class="w-full mt-6 py-4 text-lg font-semibold dark:text-gray-50 text-gray-900">
-      <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row w-full">
+      <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row w-full justify-between md:justify-start">
         <div
-          class="py-1 px-8 rounded-lg cursor-pointer"
+          class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_FEED)"
-          :class="{ 'bg-indigo-500 !text-gray-50 px-8 ': activeComponent == GroupComponents.GROUP_FEED }"
+          :class="{ 'bg-indigo-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_FEED }"
         >
           <span class="dark:text-gray-50">Feed</span>
           <span class="ml-2 font-medium">{{ numberFormatter(numberOfPosts) }}</span>
         </div>
         <div
-          class="py-1 px-8 rounded-lg cursor-pointer"
+          class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_WIKI)"
           :class="{ 'bg-indigo-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_WIKI }"
         >
           <span class="">Wiki</span>
         </div>
-        <div class="py-1 px-8 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
+        <div class="py-1 px-2 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
           <span class="dark:text-gray-50 text-gray-900">Files</span>
           <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
         </div>
-        <div class="py-1 px-8 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
-          <span class="dark:text-gray-50 text-gray-900">Everything is possible...</span>
+        <div class="py-1 px-2 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
+          <span class="dark:text-gray-50 text-gray-900">...</span>
           <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
         </div>
       </div>

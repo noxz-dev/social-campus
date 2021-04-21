@@ -17,7 +17,6 @@ import { useGetFeedQuery } from '../graphql/generated/graphqlOperations';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
-import { GetFeedQueryVariables } from '../graphql/generated/types';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 
 export default defineComponent({
@@ -32,11 +31,17 @@ export default defineComponent({
     watch(
       () => store.state.userData.user,
       () => {
+        console.log('Hey');
         if (store.state.userData.user.id) {
+          console.log('hey');
           feedQueryEnabled.value = true;
         }
       }
     );
+
+    if (user.value.id) {
+      feedQueryEnabled.value = true;
+    }
 
     const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(
       {

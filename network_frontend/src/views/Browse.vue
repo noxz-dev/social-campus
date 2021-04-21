@@ -40,15 +40,15 @@ export default defineComponent({
     const user = computed(() => store.state.userData.user);
     const home = ref<HTMLElement>();
     const route = useRoute();
-    const chipInput = ref(null);
+    const chipInput = ref<InstanceType<typeof ChipsInput>>();
     const tags = ref<string[]>([]);
     const inputTags = ref<string[]>([]);
 
     const browseQueryEnabled = ref(false);
 
     if (route.query.tag) {
-      inputTags.value.push(route.query.tag);
-      tags.value.push(route.query.tag);
+      inputTags.value.push(route.query.tag as string);
+      tags.value.push(route.query.tag as string);
     }
 
     watch(
@@ -59,6 +59,10 @@ export default defineComponent({
         }
       }
     );
+
+    if (user.value.id) {
+      browseQueryEnabled.value = true;
+    }
 
     const { result, error, subscribeToMore, fetchMore, loading } = useBrowsePostsQuery(
       () => ({
@@ -75,7 +79,7 @@ export default defineComponent({
     watch(
       () => chipInput.value?.chips,
       () => {
-        tags.value = chipInput.value?.chips;
+        tags.value = chipInput.value?.chips as string[];
         console.log('called');
       },
       {
@@ -86,7 +90,7 @@ export default defineComponent({
     watch(
       () => route.query.tag,
       () => {
-        inputTags.value = [route.query.tag];
+        inputTags.value = [route.query.tag as string];
       }
     );
 

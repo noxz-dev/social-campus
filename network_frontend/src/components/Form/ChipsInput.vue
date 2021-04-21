@@ -46,7 +46,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const chips = ref(props.startTags);
+    const chips = ref<string[]>(props.startTags);
     const currentInput = ref('');
 
     watch(

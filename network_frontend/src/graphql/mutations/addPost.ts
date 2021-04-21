@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const addPost = gql`
-  mutation addPost($text: String!, $file: Upload, $tags: [String!], $groupID: String) {
-    addPost(text: $text, file: $file, tags: $tags, groupID: $groupID) {
+  mutation addPost($input: AddPostInput!) {
+    addPost(input: $input) {
       id
       liked
       imageLink

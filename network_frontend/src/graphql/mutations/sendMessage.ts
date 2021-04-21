@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const sendMessage = gql`
-  mutation sendMessage($chatId: String!, $message: String!) {
-    sendMessage(chatId: $chatId, message: $message) {
+  mutation sendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
       id
       content
       createdAt

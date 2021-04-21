@@ -1,6 +1,5 @@
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
-import { getManager, getRepository, In, IsNull } from 'typeorm';
+import { EntityManager, getConnection, getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -11,6 +10,8 @@ import { User } from '../entity/user.entity';
 import { uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
+import { AddPostInput } from '../validators/addPost.validator';
+import { EditPostInput } from '../validators/editPost.validator';
 import { notify, SUB_TOPICS } from './notification.resolver';
 
 export interface NewPostPayload {
@@ -22,7 +23,7 @@ export class PostResolver {
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
-    description: 'getPosts returns all posts from a given userID',
+    description: 'getPosts returns all posts for a given userID',
   })
   public async getPostsFromUser(
     @Ctx() ctx: MyContext,
@@ -65,7 +66,7 @@ export class PostResolver {
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
-    description: 'all posts with filter options',
+    description: 'returns all posts that are not associated with groups, allows to be filterd via tags',
   })
   public async browsePosts(
     @Ctx() ctx: MyContext,
@@ -120,14 +121,14 @@ export class PostResolver {
       const likeState = await checkLikeState(userId, post.id);
       post.liked = likeState;
     }
-
+    log.info(`'User with the id: ${userId} called browsePosts'`);
     return posts;
   }
 
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
-    description: 'getPosts returns all posts from a given groupID',
+    description: 'getPostsFromGroup returns all posts from a group',
   })
   public async getPostsFromGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
@@ -156,20 +157,21 @@ export class PostResolver {
       post.liked = likeState;
     }
 
+    log.info(`'User with the id: ${userId} called getPostsFromGroup'`);
     return posts;
   }
 
   @Authorized()
-  @Query(() => [Post])
+  @Query(() => [Post], { description: 'returns the post feed of user' })
   public async getFeed(
     @Ctx() ctx: MyContext,
     @Arg('skip') skip: number,
     @Arg('take') take: number,
   ): Promise<Post[] | null> {
-    const userID = ctx.req.user.id;
+    const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({
-      where: { id: userID },
+      where: { id: userId },
       relations: ['following', 'groups'],
     });
 
@@ -177,7 +179,7 @@ export class PostResolver {
     const userGroups = user.groups.map((group) => group.id);
 
     // push own user id to see also your own posts
-    following.push(userID);
+    following.push(userId);
 
     //fetch all posts from the users you follow
     const posts = await getRepository(Post).find({
@@ -204,17 +206,18 @@ export class PostResolver {
     });
 
     for await (const post of feedPosts) {
-      const likeState = await checkLikeState(userID, post.id);
+      const likeState = await checkLikeState(userId, post.id);
       post.liked = likeState;
     }
-    console.log(feedPosts.length);
+
+    log.info(`'User with the id: ${userId} called getFeed'`);
     return feedPosts;
   }
 
   @Authorized()
-  @Query(() => Post)
+  @Query(() => Post, { description: 'returns a specific post' })
   public async postById(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<Post | null> {
-    const userID = ctx.req.user.id;
+    const userId = ctx.req.user.id;
 
     const post = await getRepository(Post)
       .createQueryBuilder('post')
@@ -229,20 +232,17 @@ export class PostResolver {
 
     if (!post) return null;
 
-    const likeState = await checkLikeState(userID, post.id);
+    const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;
-
+    log.info(`'User with the id: ${userId} called postById'`);
     return post;
   }
 
   @Authorized()
-  @Mutation(() => Post)
+  @Mutation(() => Post, { description: 'addPost creates a new Post and pushes updates to all followers' })
   public async addPost(
     @Ctx() ctx: MyContext,
-    @Arg('text') text: string,
-    @Arg('file', () => GraphQLUpload, { nullable: true }) file: FileUpload,
-    @Arg('groupID', { nullable: true }) groupID: string,
-    @Arg('tags', () => [String], { nullable: true }) tags: string[],
+    @Arg('input') { content, file, groupId, tags }: AddPostInput,
   ): Promise<Post> {
     const id = ctx.req.user.id;
     if (!id) {
@@ -258,13 +258,13 @@ export class PostResolver {
     }
 
     let group: Group;
-    if (groupID) {
-      group = await getRepository(Group).findOne({ where: { id: groupID }, relations: ['members'] });
+    if (groupId) {
+      group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
       const user = group.members.find((member) => member.id === id);
       if (!user) throw Error('youre not allowed to create content for this group');
     }
     const post = new Post();
-    post.text = text;
+    post.text = content;
     post.user = user;
     post.likes = [];
     post.tags = [];
@@ -272,36 +272,15 @@ export class PostResolver {
     user.posts.push(post);
 
     if (tags) {
-      const tagsFromDB = await getRepository(Tag).find({
-        where: {
-          name: In(tags),
-        },
-      });
-      const tagNamesFromDb = tagsFromDB.map((tag) => tag.name);
-      for await (const name of tags) {
-        let newTag;
-        if (!tagNamesFromDb.includes(name)) {
-          newTag = new Tag({ name: name, createdBy: user });
-          newTag.posts = [];
-        } else {
-          newTag = await getRepository(Tag).findOne({
-            where: {
-              name: name,
-            },
-            relations: ['posts'],
-          });
-        }
-
-        const dbTag = await getRepository(Tag).save(newTag);
-        post.tags.push(dbTag);
-      }
+      const postTags = await createTags(user, tags, getConnection().createEntityManager());
+      post.tags = [...postTags];
     }
 
     if (file) {
       const newFileName = await uploadFileGraphql(file, 'post-images');
       post.imageName = newFileName;
     }
-    if (groupID && !group) {
+    if (groupId && !group) {
       throw new Error('group does not exist');
     }
 
@@ -312,8 +291,8 @@ export class PostResolver {
     dbPost.commentCount = 0;
     dbPost.liked = false;
 
-    if (text.match(/@\w\w*/g) !== null) {
-      for await (const mention of text.match(/@\w\w*/g)) {
+    if (content.match(/@\w\w*/g) !== null) {
+      for await (const mention of content.match(/@\w\w*/g)) {
         const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
         if (!toUser) return;
         await notify(
@@ -336,6 +315,7 @@ export class PostResolver {
 
   @Subscription(() => Post, {
     topics: SUB_TOPICS.NEW_POST,
+    description: 'subscribe to new posts',
     filter: async ({ payload, args }) => {
       if (args.all) return true;
       if (args.groupId) {
@@ -364,12 +344,12 @@ export class PostResolver {
     @Arg('all') all: boolean,
     @Arg('groupId', { nullable: true }) groupId: string,
   ): Promise<Post> {
-    console.log('fired');
+    log.info('new post subscription fired');
     return payload.post;
   }
 
   @Authorized()
-  @Mutation(() => Post)
+  @Mutation(() => Post, { description: 'likes an post' })
   public async likePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -417,7 +397,7 @@ export class PostResolver {
   }
 
   @Authorized()
-  @Mutation(() => Post)
+  @Mutation(() => Post, { description: 'unlikes an post' })
   public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -454,7 +434,7 @@ export class PostResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'deletes an post' })
   public async deletePost(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<boolean | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -474,12 +454,8 @@ export class PostResolver {
   }
 
   @Authorized()
-  @Mutation(() => Post)
-  public async editPost(
-    @Ctx() ctx: MyContext,
-    @Arg('postId') postId: string,
-    @Arg('text') text: string,
-  ): Promise<Post> {
+  @Mutation(() => Post, { description: 'updates the content of a post' })
+  public async editPost(@Ctx() ctx: MyContext, @Arg('input') { content, postId }: EditPostInput): Promise<Post> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;
@@ -495,36 +471,13 @@ export class PostResolver {
     if (post.user.id === userId) {
       delete post.likesCount;
       delete post.commentCount;
-      post.text = text;
+      post.text = content;
       post.edited = true;
       const savedPost = await getManager().transaction(async (transactionManager) => {
-        const foundTagNames = extractTags(text);
-        post.tags = [];
-
-        const tagsFromDB = await getRepository(Tag).find({
-          where: {
-            name: In(foundTagNames),
-          },
-        });
-        const tagNamesFromDb = tagsFromDB.map((tag) => tag.name);
-
-        for await (const name of foundTagNames) {
-          let newTag;
-          if (!tagNamesFromDb.includes(name)) {
-            newTag = new Tag({ name: name, createdBy: user });
-            newTag.posts = [];
-          } else {
-            newTag = await getRepository(Tag).findOne({
-              where: {
-                name: name,
-              },
-              relations: ['posts'],
-            });
-          }
-
-          const dbTag = await getRepository(Tag).save(newTag);
-
-          post.tags.push(dbTag);
+        const foundTagNames = extractTags(content);
+        if (foundTagNames.length > 0) {
+          const postTags = await createTags(user, foundTagNames, transactionManager);
+          post.tags = [...postTags];
         }
 
         const savedPost = await transactionManager.save(Post, post);
@@ -541,12 +494,23 @@ export class PostResolver {
   }
 }
 
+/**
+ * helper function to check if the user liked the post
+ * @param userId string
+ * @param postId string
+ * @returns boolean
+ */
 const checkLikeState = async (userId: string, postId: string): Promise<boolean> => {
   const result = await getRepository(Like).findOne({ where: { user: userId, post: postId } });
   if (result) return true;
   return false;
 };
 
+/**
+ * helper function to count all likes of a post
+ * @param postId string
+ * @returns number
+ */
 export const countLikes = async (postId: string): Promise<number> => {
   const { count } = await getRepository(Like)
     .createQueryBuilder('like')
@@ -557,6 +521,11 @@ export const countLikes = async (postId: string): Promise<number> => {
   return count;
 };
 
+/**
+ * helper function to count all comments
+ * @param postId string
+ * @returns number
+ */
 export const countComments = async (postId: string): Promise<number> => {
   const { count } = await getRepository(Comment)
     .createQueryBuilder('comment')
@@ -567,6 +536,11 @@ export const countComments = async (postId: string): Promise<number> => {
   return count;
 };
 
+/**
+ * extracts all tags from a given text
+ * @param text string
+ * @returns string[]
+ */
 const extractTags = (text: string): string[] => {
   let tags = text.match(/#\w\w*/g);
   if (tags) {
@@ -574,4 +548,41 @@ const extractTags = (text: string): string[] => {
     return tags;
   }
   return [];
+};
+
+/**
+ *
+ * creates all missing tags from the db and returns a list of all tags
+ * @param user User
+ * @param tags string[]
+ * @param manager EntitiyManager
+ * @returns Tag[]
+ */
+const createTags = async (user: User, tags: string[], manager: EntityManager): Promise<Tag[]> => {
+  const postTags = [];
+  const tagsFromDB = await getRepository(Tag).find({
+    where: {
+      name: In(tags),
+    },
+  });
+  const tagNamesFromDb = tagsFromDB.map((tag) => tag.name);
+
+  for await (const name of tags) {
+    if (!tagNamesFromDb.includes(name)) {
+      const tag = new Tag({ name: name, createdBy: user });
+      tag.posts = [];
+      const dbTag = await manager.save(Tag, tag);
+      postTags.push(dbTag);
+    } else {
+      const tag = await getRepository(Tag).findOne({
+        where: {
+          name: name,
+        },
+        relations: ['posts'],
+      });
+      postTags.push(tag);
+    }
+  }
+
+  return postTags;
 };

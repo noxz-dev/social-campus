@@ -1,19 +1,13 @@
-import * as VueApolloComposable from '@vue/apollo-composable';
 import gql from 'graphql-tag';
+import * as VueApolloComposable from '@vue/apollo-composable';
 import * as VueCompositionApi from 'vue';
 import {
-  AddCommentMutation,
-  AddCommentMutationVariables,
   AddFollowerMutation,
   AddFollowerMutationVariables,
   AddPostMutation,
   AddPostMutationVariables,
-  BrowsePostsQuery,
-  BrowsePostsQueryVariables,
-  ChatByIdQuery,
-  ChatByIdQueryVariables,
-  CheckGroupAccessQuery,
-  CheckGroupAccessQueryVariables,
+  AddCommentMutation,
+  AddCommentMutationVariables,
   CreateChatMutation,
   CreateChatMutationVariables,
   CreateGroupMutation,
@@ -24,50 +18,56 @@ import {
   DeletePostMutationVariables,
   EditPostMutation,
   EditPostMutationVariables,
-  FollowersQuery,
-  FollowersQueryVariables,
-  FollowingQuery,
-  FollowingQueryVariables,
-  GetFeedQuery,
-  GetFeedQueryVariables,
-  GetNotificationsQuery,
-  GetNotificationsQueryVariables,
-  GetPostsFromGroupQuery,
-  GetPostsFromGroupQueryVariables,
-  GetPostsFromUserQuery,
-  GetPostsFromUserQueryVariables,
-  GroupByIdQuery,
-  GroupByIdQueryVariables,
-  GroupsQuery,
-  GroupsQueryVariables,
   JoinGroupMutation,
   JoinGroupMutationVariables,
   LikePostMutation,
   LikePostMutationVariables,
   LoginMutation,
   LoginMutationVariables,
-  MeQuery,
-  MeQueryVariables,
-  MyChatsQuery,
-  MyChatsQueryVariables,
-  NotificationsSubscription,
-  NotificationsSubscriptionVariables,
-  PostByIdQuery,
-  PostByIdQueryVariables,
   RemoveFollowerMutation,
   RemoveFollowerMutationVariables,
-  SearchQuery,
-  SearchQueryVariables,
   SendMessageMutation,
   SendMessageMutationVariables,
   UnlikePostMutation,
   UnlikePostMutationVariables,
-  UserByIdQuery,
+  BrowsePostsQueryVariables,
+  BrowsePostsQuery,
+  ChatByIdQueryVariables,
+  ChatByIdQuery,
+  CheckGroupAccessQueryVariables,
+  CheckGroupAccessQuery,
+  FollowersQueryVariables,
+  FollowersQuery,
+  FollowingQueryVariables,
+  FollowingQuery,
+  GetFeedQueryVariables,
+  GetFeedQuery,
+  GetPostsFromGroupQueryVariables,
+  GetPostsFromGroupQuery,
+  GroupByIdQueryVariables,
+  GroupByIdQuery,
+  GroupsQueryVariables,
+  GroupsQuery,
+  MeQuery,
+  MeQueryVariables,
+  MyChatsQuery,
+  MyChatsQueryVariables,
+  GetNotificationsQuery,
+  GetNotificationsQueryVariables,
+  PostByIdQueryVariables,
+  PostByIdQuery,
+  GetPostsFromUserQueryVariables,
+  GetPostsFromUserQuery,
+  SearchQueryVariables,
+  SearchQuery,
   UserByIdQueryVariables,
-  UserByUsernameQuery,
+  UserByIdQuery,
   UserByUsernameQueryVariables,
-  UserStatsQuery,
+  UserByUsernameQuery,
   UserStatsQueryVariables,
+  UserStatsQuery,
+  NotificationsSubscriptionVariables,
+  NotificationsSubscription,
 } from './types';
 export type ReactiveFunction<TParam> = () => TParam;
 
@@ -115,8 +115,8 @@ export type AddFollowerMutationCompositionFunctionResult = VueApolloComposable.U
   AddFollowerMutationVariables
 >;
 export const AddPostDocument = gql`
-  mutation addPost($text: String!, $file: Upload, $tags: [String!], $groupID: String) {
-    addPost(text: $text, file: $file, tags: $tags, groupID: $groupID) {
+  mutation addPost($input: AddPostInput!) {
+    addPost(input: $input) {
       id
       liked
       imageLink
@@ -152,10 +152,7 @@ export const AddPostDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useAddPostMutation({
  *   variables: {
- *     text: // value for 'text'
- *     file: // value for 'file'
- *     tags: // value for 'tags'
- *     groupID: // value for 'groupID'
+ *     input: // value for 'input'
  *   },
  * });
  */
@@ -360,8 +357,8 @@ export type DeletePostMutationCompositionFunctionResult = VueApolloComposable.Us
   DeletePostMutationVariables
 >;
 export const EditPostDocument = gql`
-  mutation editPost($postId: String!, $text: String!) {
-    editPost(text: $text, postId: $postId) {
+  mutation editPost($input: EditPostInput!) {
+    editPost(input: $input) {
       id
       liked
       imageLink
@@ -397,8 +394,7 @@ export const EditPostDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useEditPostMutation({
  *   variables: {
- *     postId: // value for 'postId'
- *     text: // value for 'text'
+ *     input: // value for 'input'
  *   },
  * });
  */
@@ -587,8 +583,8 @@ export type RemoveFollowerMutationCompositionFunctionResult = VueApolloComposabl
   RemoveFollowerMutationVariables
 >;
 export const SendMessageDocument = gql`
-  mutation sendMessage($chatId: String!, $message: String!) {
-    sendMessage(chatId: $chatId, message: $message) {
+  mutation sendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
       id
       content
       createdAt
@@ -609,8 +605,7 @@ export const SendMessageDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useSendMessageMutation({
  *   variables: {
- *     chatId: // value for 'chatId'
- *     message: // value for 'message'
+ *     input: // value for 'input'
  *   },
  * });
  */

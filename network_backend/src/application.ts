@@ -1,6 +1,7 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import cors from 'cors';
 import 'dotenv/config';
+import { EventEmitter } from 'events';
 import express from 'express';
 import 'express-async-errors';
 import { GraphQLSchema } from 'graphql';
@@ -46,7 +47,9 @@ export class Application {
   // initialize express
   public init = async (): Promise<void> => {
     const app = express();
-    this.pubsub = new PubSub();
+    const em = new EventEmitter();
+    em.setMaxListeners(30);
+    this.pubsub = new PubSub({ eventEmitter: em });
 
     initS3();
 

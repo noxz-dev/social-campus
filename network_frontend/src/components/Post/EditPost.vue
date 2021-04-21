@@ -42,7 +42,10 @@ export default defineComponent({
   emits: ['close'],
   components: { ToggleButton },
   props: {
-    post: Object as PropType<Post>,
+    post: {
+      type: Object as PropType<Post>,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const message = ref(props.post?.text);
@@ -71,9 +74,11 @@ export default defineComponent({
     const v = useVuelidate(rules, { message });
 
     const { mutate: editPost } = useEditPostMutation(() => ({
-      variables: <EditPostMutationVariables>{
-        text: message.value,
-        postId: props.post?.id,
+      variables: {
+        input: {
+          postId: props.post.id,
+          content: message.value as string,
+        },
       },
       context: {
         hasUpload: true,

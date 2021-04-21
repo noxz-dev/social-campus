@@ -4,6 +4,8 @@ import { Chat } from '../entity/chat.entity';
 import { ChatMessage } from '../entity/chatmessage.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
+import { log } from '../utils/services/logger';
+import { SendMessageInput } from '../validators/sendMessage.validator';
 import { SUB_TOPICS } from './notification.resolver';
 
 export interface NewChatMessagePayload {
@@ -18,6 +20,7 @@ export class ChatResolver {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.members'] });
     if (!user.chats) return [];
+    log.info(`'User with the id: ${userId} called myChats'`);
     return user.chats;
   }
 
@@ -39,13 +42,9 @@ export class ChatResolver {
 
   @Authorized()
   @Mutation(() => ChatMessage)
-  public async sendMessage(
-    @Ctx() ctx: MyContext,
-    @Arg('chatId') chatId: string,
-    @Arg('message') message: string,
-  ): Promise<ChatMessage> {
+  public async sendMessage(@Ctx() ctx: MyContext, @Arg('input') input: SendMessageInput): Promise<ChatMessage> {
     const userId = ctx.req.user.id;
-    const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members', 'messages'] });
+    const chat = await getRepository(Chat).findOne({ where: { id: input.chatId }, relations: ['members', 'messages'] });
 
     if (!chat) throw Error('chat not found');
     if (!checkChatAccess(chat.members, userId)) {
@@ -53,12 +52,13 @@ export class ChatResolver {
     }
 
     const user = await getRepository(User).findOne({ where: { id: userId } });
-    const chatMessage = new ChatMessage(user, chat, message);
+    const chatMessage = new ChatMessage(user, chat, input.message);
     chat.messages = [...chat.messages, chatMessage];
 
     const savedMessage = await getRepository(ChatMessage).save(chatMessage);
 
     ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage });
+    log.info(`'User with the id: ${userId} send a message'`);
     return savedMessage;
   }
 
@@ -70,14 +70,13 @@ export class ChatResolver {
     const member = await getRepository(User).findOne({ where: { id: memberId } });
 
     const existingChat = user.chats.find((chat) => chat.members.some((cmember) => cmember.id === member.id));
-    console.log(existingChat);
     if (existingChat) return existingChat;
     const chat = new Chat();
     chat.messages = [];
     chat.members = [user, member];
 
     const savedChat = await getRepository(Chat).save(chat);
-
+    log.info(`'User with the id: ${userId} created a chat'`);
     return savedChat;
   }
 
@@ -113,6 +112,7 @@ export class ChatResolver {
     // const chat = await getRepository(Chat).findOne()
 
     console.log('TODO');
+    log.info(`'User with the id: ${userId} deleted a message'`);
     return true;
   }
 }

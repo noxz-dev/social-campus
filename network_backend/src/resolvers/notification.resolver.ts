@@ -45,7 +45,6 @@ export class NotificationResolver {
   @Subscription(() => Notification, {
     topics: SUB_TOPICS.NEW_NOTIFICATION,
     filter: ({ args, payload }) => {
-      // console.log('SUBSCRIPTION USERID', args.userId);
       if (args.userId === payload.toUser.id) {
         return true;
       }

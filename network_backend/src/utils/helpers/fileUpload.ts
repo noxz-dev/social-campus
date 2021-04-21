@@ -18,7 +18,6 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   const fileEnding = filename.split('.')[1];
   const newFileName = filenameUUID + '.' + fileEnding;
 
-  console.log(fileEnding);
   const destinationPath = path.join(os.tmpdir(), filename);
   let compress;
   if (fileEnding === 'png') {

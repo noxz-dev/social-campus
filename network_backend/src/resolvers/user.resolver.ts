@@ -44,7 +44,7 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'Registers a new user' })
   public async register(@Arg('input') input: UserValidator, @Ctx() ctx: MyContext): Promise<boolean | null> {
     const hashedPassword = await argon2.hash(input.password);
     const result = await getRepository(User).findOne({
@@ -63,7 +63,7 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'logout an user to invalidate its refresh token' })
   async logout(@Ctx() ctx: MyContext, @Arg('refreshToken') refreshToken: string): Promise<boolean> {
     const jwtToken = await getRepository(JwtToken).findOne({ where: { token: refreshToken } });
     if (!jwtToken) {
@@ -74,7 +74,7 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => JwtResponse)
+  @Mutation(() => JwtResponse, { description: 'login to get a new auth token' })
   public async login(
     @Arg('email') email: string,
     @Arg('password') password: string,
@@ -93,7 +93,7 @@ export class UserResolver {
     const jwtUser: JwtUser = {
       id: user.id,
       email: user.email,
-      role: 'Admin',
+      role: 'User',
     };
 
     const refreshToken = generateRefreshToken(jwtUser);
@@ -109,7 +109,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User)
+  @Mutation(() => User, { description: 'upload a new profileimage' })
   async uploadProfileImage(@Ctx() ctx: MyContext, @Arg('file', () => GraphQLUpload) file: FileUpload): Promise<User> {
     const id = ctx.req.user.id;
     if (!id) {
@@ -129,22 +129,22 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User)
+  @Mutation(() => User, { description: 'follow a user' })
   async addFollower(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<User | null> {
     const id = ctx.req.user.id;
     if (!id) {
-      return null;
+      throw new Error('not authenticated');
     }
     const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
     if (!user) {
-      return null;
+      throw new Error('user not found');
     }
     const follower = await getRepository(User).findOne({
       where: { id: userID },
       relations: ['following', 'followers'],
     });
     if (!follower) {
-      return null;
+      throw new Error('to be followed user not found');
     }
 
     //check if user is already following
@@ -171,16 +171,16 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User)
+  @Mutation(() => User, { description: 'unfollow a user' })
   async removeFollower(@Ctx() ctx: MyContext, @Arg('userID') userID: string): Promise<User | null> {
     const id = ctx.req.user.id;
     if (!id) {
-      return null;
+      throw new Error('not authenticated');
     }
 
     const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
     if (!user) {
-      return null;
+      throw new Error('user not found');
     }
 
     _.remove(user.following, {
@@ -193,11 +193,13 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User)
+  @Mutation(() => User, { description: 'update the bio of the loggedin user' })
   async setBio(@Ctx() ctx: MyContext, @Arg('bio') bio: string): Promise<User | null> {
     const userID = ctx.req.user.id;
 
-    if (!userID) return null;
+    if (!userID) {
+      throw new Error('not authenticated');
+    }
     const userRepo = await getRepository(User);
     const user = await userRepo.findOne({ id: userID });
     user.bio = bio;
@@ -208,7 +210,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => User)
+  @Query(() => User, { description: 'UserById returns a user based on the given id' })
   async userById(@Ctx() ctx: MyContext, @Arg('userId') userId: string): Promise<User | null> {
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['following', 'followers'] });
     if (!user) {
@@ -223,7 +225,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => User)
+  @Query(() => User, { description: 'UserByUser returns a user based on the given user handle' })
   async userByUsername(@Ctx() ctx: MyContext, @Arg('username') username: string): Promise<User | null> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
@@ -243,7 +245,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User])
+  @Query(() => [User], { description: 'returns all users that the logged in user is following' })
   async following(
     @Arg('userId') userId: string,
     @Arg('skip') skip: number,
@@ -261,7 +263,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User])
+  @Query(() => [User], { description: 'returns all followers of the user' })
   async followers(
     @Arg('userId') userId: string,
     @Arg('skip') skip: number,
@@ -279,7 +281,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => UserStats)
+  @Query(() => UserStats, { description: 'UserStats are some stats like follower count, post count ...' })
   async userStats(@Arg('userId') userId: string): Promise<UserStats> {
     const followerCount = await getRepository(User)
       .createQueryBuilder('followers')

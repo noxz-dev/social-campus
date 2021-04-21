@@ -14,16 +14,17 @@ export const initS3 = async (): Promise<void> => {
   minioClient.bucketExists('profile-pics', async (err, exists) => {
     if (err) {
       log.error(err.stack);
+      return;
     }
     if (!exists) {
       minioClient.makeBucket('profile-pics', 'eu', async (err) => {
         if (err) log.error(err.stack);
-        console.log('Bucket created successfully');
+        log.info('✔ Bucket created successfully');
 
         const policy = await readFile(__dirname + '/../../../config/fetchonly_profilepic.json', 'utf8');
         minioClient.setBucketPolicy('profile-pics', policy, (err) => {
           if (err) throw err;
-          log.info('s3 bucket policy set');
+          log.info('✔ bucket s3 bucket policy set');
         });
       });
     }
@@ -32,16 +33,17 @@ export const initS3 = async (): Promise<void> => {
   minioClient.bucketExists('post-images', async (err, exists) => {
     if (err) {
       log.error(err.stack);
+      return;
     }
     if (!exists) {
       minioClient.makeBucket('post-images', 'eu', async (err) => {
         if (err) log.error(err.stack);
-        console.log('Bucket created successfully');
+        log.info('✔ Bucket created successfully');
 
         const policy = await readFile(__dirname + '/../../../config/fetchonly_postImages.json', 'utf8');
         minioClient.setBucketPolicy('post-images', policy, (err) => {
           if (err) throw err;
-          log.info('s3 bucket policy set');
+          log.info('✔ bucket s3 bucket policy set');
         });
       });
     }

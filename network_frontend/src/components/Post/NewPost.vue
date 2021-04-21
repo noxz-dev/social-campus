@@ -132,11 +132,13 @@ export default defineComponent({
     const v = useVuelidate(rules, { message });
 
     const { mutate: newPost } = useAddPostMutation(() => ({
-      variables: <AddPostMutationVariables>{
-        text: message.value,
-        file: file.value,
-        tags: tags.value,
-        groupID: groupId.value,
+      variables: {
+        input: {
+          content: message.value,
+          file: file.value,
+          groupId: groupId.value,
+          tags: tags.value,
+        },
       },
       context: {
         hasUpload: true,

@@ -123,7 +123,7 @@ export default defineComponent({
 
     const { result, subscribeToMore, onResult } = useChatByIdQuery(
       () => ({
-        chatId: route.params.id,
+        chatId: route.params.id as string,
       }),
       () => ({ enabled: chatQueryEnabled.value })
     );
@@ -160,9 +160,11 @@ export default defineComponent({
     const chat = useResult(result, null, (data) => data.chatById);
 
     const { mutate: send } = useSendMessageMutation(() => ({
-      variables: <SendMessageMutationVariables>{
-        chatId: route.params.id,
-        message: newMessage.value,
+      variables: {
+        input: {
+          chatId: route.params.id as string,
+          message: newMessage.value,
+        },
       },
     }));
 

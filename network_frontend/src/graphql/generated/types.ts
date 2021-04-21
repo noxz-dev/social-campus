@@ -15,6 +15,13 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AddPostInput = {
+  content: Scalars['String'];
+  file?: Maybe<Scalars['Upload']>;
+  groupId?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+};
+
 export type Chat = {
   __typename?: 'Chat';
   id: Scalars['String'];
@@ -42,6 +49,11 @@ export type Comment = {
   likesCount: Scalars['Float'];
 };
 
+
+export type EditPostInput = {
+  postId: Scalars['String'];
+  content: Scalars['String'];
+};
 
 export type Group = {
   __typename?: 'Group';
@@ -85,6 +97,7 @@ export type Like = {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteNotification: Scalars['Boolean'];
+  /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
   likePost: Post;
   unlikePost: Post;
@@ -118,10 +131,7 @@ export type MutationDeleteNotificationArgs = {
 
 
 export type MutationAddPostArgs = {
-  tags?: Maybe<Array<Scalars['String']>>;
-  groupID?: Maybe<Scalars['String']>;
-  file?: Maybe<Scalars['Upload']>;
-  text: Scalars['String'];
+  input: AddPostInput;
 };
 
 
@@ -141,14 +151,12 @@ export type MutationDeletePostArgs = {
 
 
 export type MutationEditPostArgs = {
-  text: Scalars['String'];
-  postId: Scalars['String'];
+  input: EditPostInput;
 };
 
 
 export type MutationSendMessageArgs = {
-  message: Scalars['String'];
-  chatId: Scalars['String'];
+  input: SendMessageInput;
 };
 
 
@@ -420,6 +428,11 @@ export type Search = {
   tags: Array<Tag>;
 };
 
+export type SendMessageInput = {
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   notifications: Notification;
@@ -501,10 +514,7 @@ export type AddFollowerMutation = (
 );
 
 export type AddPostMutationVariables = Exact<{
-  text: Scalars['String'];
-  file?: Maybe<Scalars['Upload']>;
-  tags?: Maybe<Array<Scalars['String']> | Scalars['String']>;
-  groupID?: Maybe<Scalars['String']>;
+  input: AddPostInput;
 }>;
 
 
@@ -587,8 +597,7 @@ export type DeletePostMutation = (
 );
 
 export type EditPostMutationVariables = Exact<{
-  postId: Scalars['String'];
-  text: Scalars['String'];
+  input: EditPostInput;
 }>;
 
 
@@ -669,8 +678,7 @@ export type RemoveFollowerMutation = (
 );
 
 export type SendMessageMutationVariables = Exact<{
-  chatId: Scalars['String'];
-  message: Scalars['String'];
+  input: SendMessageInput;
 }>;
 
 

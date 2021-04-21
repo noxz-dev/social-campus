@@ -27,10 +27,24 @@ export default defineComponent({
     const user = computed(() => store.state.userData.user);
     const home = ref<HTMLElement>();
 
-    const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(<GetFeedQueryVariables>{
-      take: 10,
-      skip: 0,
-    });
+    const feedQueryEnabled = ref(false);
+
+    watch(
+      () => store.state.userData.user,
+      () => {
+        if (store.state.userData.user.id) {
+          feedQueryEnabled.value = true;
+        }
+      }
+    );
+
+    const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(
+      {
+        take: 10,
+        skip: 0,
+      },
+      () => ({ enabled: feedQueryEnabled.value })
+    );
     const posts = useResult(result);
 
     subscribeToMore(() => ({

@@ -79,7 +79,7 @@ export class Application {
             if (connectionParams.campusToken) {
               const user = verifyAccessToken(connectionParams.campusToken);
               log.info('✨ user connected to the subscriptions server');
-              socket.user = user;
+              // socket.user = user;
               return {
                 user,
               };
@@ -87,7 +87,7 @@ export class Application {
             throw new Error('Missing auth token!');
           },
           onDisconnect(socket) {
-            console.log(socket.user);
+            // console.log(socket.user);
           },
         },
         context: ({ req, res, connection }) => {

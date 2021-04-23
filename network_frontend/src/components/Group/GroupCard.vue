@@ -2,11 +2,15 @@
   <card class="flex flex-col justify-center" bgColorDark="bg-dark500">
     <div class="p-1 pb-2 pt-2">
       <div class="p-2 h-64">
-        <lazy-image class="rounded-xl object-cover w-full" src="https://picsum.photos/300/300" blurhash="AePC3PmlGv{c" />
+        <lazy-image
+          class="rounded-xl object-cover w-full"
+          src="https://picsum.photos/300/300"
+          blurhash="AePC3PmlGv{c"
+        />
       </div>
       <div class="p-3">
-        <div>
-          <span class="text-md">{{ group.name }}</span>
+        <div class="h-16">
+          <span class="text-md break-words">{{ group.name }}</span>
         </div>
         <div><span class="text-sm text-gray-400">Gruppe - 1k Mitglieder</span></div>
       </div>

@@ -5,7 +5,9 @@
     </div>
     <div class="w-full mt-6 py-10 flex justify-between">
       <div class="flex flex-col">
-        <div v-if="group" class="text-xl font-semibold dark:text-gray-50 text-gray-900">{{ group.name }}</div>
+        <div v-if="group" class="w-40 md:w-full text-xl font-semibold dark:text-gray-50 text-gray-900 break-words">
+          {{ group.name }}
+        </div>
         <div class="flex">
           <div></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">Private Gruppe</div>

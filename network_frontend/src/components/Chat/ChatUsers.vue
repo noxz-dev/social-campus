@@ -5,7 +5,7 @@
     </div>
     <div v-for="chat in chats" :key="chat.id">
       <button
-        class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5 focus:outline-indigo-500"
+        class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5 focus:outline-indigo-500 text-left"
         @click="setActiveChat(chat.id)"
       >
         <div

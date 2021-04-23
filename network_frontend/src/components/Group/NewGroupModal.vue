@@ -31,10 +31,17 @@
             <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="sm:flex sm:items-start">
                 <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                  <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-50"> Neue Gruppe erstellen </DialogTitle>
+                  <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-50">
+                    Neue Gruppe erstellen
+                  </DialogTitle>
                   <div class="mt-2 w-full">
                     <div class="flex">
-                      <input-field placeholder="Gruppenname" class="w-2/3 mr-6" v-model="groupname" />
+                      <input-field
+                        placeholder="Gruppenname"
+                        class="w-2/3 mr-6"
+                        inputClasses="!pr-0"
+                        v-model="groupname"
+                      />
                       <custom-select
                         :options="Object.values(GroupType)"
                         class="w-1/3 dark:text-gray-50 text-gray-900"
@@ -42,7 +49,13 @@
                       />
                     </div>
 
-                    <input-field v-if="groupType === GroupType.Private" placeholder="Gruppen Passwort" class="mt-5" v-model="groupPassword" />
+                    <input-field
+                      v-if="groupType === GroupType.Private"
+                      placeholder="Gruppen Passwort"
+                      class="mt-5"
+                      inputClasses="!pr-0"
+                      v-model="groupPassword"
+                    />
                     <textarea
                       class="dark:bg-dark-600 border placeholder-gray-400 dark:text-gray-50 text-gray-900 w-full mt-5 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="Gruppenbeschreibung"

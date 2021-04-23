@@ -29,7 +29,14 @@
     </div>
 
     <div class="h-full hidden lg:flex w-80">
-      <group-user-sidebar />
+      <group-permission-container :groupId="$route.params.id">
+        <template v-slot:isMemberAndPublic>
+          <group-user-sidebar />
+        </template>
+        <template v-slot:isNoMember>
+          <group-user-sidebar-placeholder />
+        </template>
+      </group-permission-container>
     </div>
     <group-entry v-if="!groupState?.isMember && groupState?.type === GroupType.Private" :groupId="$route.params.id" />
   </div>
@@ -41,7 +48,6 @@ import { GroupType } from '../graphql/generated/types';
 import { defineComponent, ref, defineAsyncComponent, watch, computed, PropType } from 'vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import GroupHeader from '../components/Group/GroupHeader.vue';
-import GroupUserSidebar from '../components/Group/GroupUserSidebar.vue';
 import GroupPermissionContainer from '../components/Group/GroupPermissionContainer.vue';
 import GroupEntry from '../components/Group/GroupEntry.vue';
 
@@ -57,9 +63,12 @@ export default defineComponent({
     GroupHeader,
     GroupFeed: defineAsyncComponent(() => import('../components/Group/GroupFeed.vue')),
     GroupFeedPlaceholder: defineAsyncComponent(() => import('../components/Group/GroupFeedPlaceholder.vue')),
-    GroupUserSidebar,
+    GroupUserSidebar: defineAsyncComponent(() => import('../components/Group/GroupUserSidebar.vue')),
     GroupPermissionContainer,
     GroupEntry,
+    GroupUserSidebarPlaceholder: defineAsyncComponent(
+      () => import('../components/Group/GroupUserSidebarPlaceholder.vue')
+    ),
   },
   setup() {
     const activeComponent = ref<GroupComponents>(GroupComponents.GROUP_FEED);

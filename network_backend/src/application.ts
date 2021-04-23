@@ -75,15 +75,19 @@ export class Application {
       const server = new ApolloServer({
         schema,
         subscriptions: {
-          onConnect(connectionParams: { campusToken: string }) {
+          onConnect(connectionParams: { campusToken: string }, socket) {
             if (connectionParams.campusToken) {
               const user = verifyAccessToken(connectionParams.campusToken);
               log.info('✨ user connected to the subscriptions server');
+              socket.user = user;
               return {
                 user,
               };
             }
             throw new Error('Missing auth token!');
+          },
+          onDisconnect(socket) {
+            console.log(socket.user);
           },
         },
         context: ({ req, res, connection }) => {
@@ -129,7 +133,7 @@ export class Application {
       });
       server.applyMiddleware({ app });
 
-      // start server on default port 4000
+      // start server on default port 5000
       const port = process.env.PORT || 5000;
 
       const httpServer = http.createServer(app);

@@ -6,6 +6,7 @@ import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
 import { Chat } from './chat.entity';
 import { Group } from './group.entity';
+import { GroupRole } from './groupMemberRole.entity';
 import { Post } from './post.entity';
 import { Role } from './role.entity';
 
@@ -89,4 +90,10 @@ export class User extends Base {
     this.email = body?.email;
     this.password = hashedPassword;
   }
+}
+
+@ObjectType()
+export class GroupMember extends User {
+  @Field(() => GroupRole, { nullable: true })
+  groupRole: GroupRole;
 }

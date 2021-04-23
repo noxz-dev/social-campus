@@ -31,9 +31,8 @@
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
-              fill="#fff"
               viewBox="0 0 256 256"
-              class="hover:bg-dark-800 rounded-full transition"
+              class="hover:bg-dark-800 rounded-full transition fill-dark600 dark:fill-white stroke-black dark:stroke-white"
               @click="emojiPickerOpen = !emojiPickerOpen"
             >
               <rect width="256" height="256" fill="none"></rect>
@@ -42,7 +41,6 @@
                 cy="128"
                 r="96"
                 fill="none"
-                stroke="#fff"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="16"
@@ -50,7 +48,6 @@
               <path
                 d="M169.57812,151.99627a48.02731,48.02731,0,0,1-83.15624.00073"
                 fill="none"
-                stroke="#fff"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="16"

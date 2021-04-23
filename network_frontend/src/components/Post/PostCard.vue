@@ -13,13 +13,22 @@
           <div class="flex cursor-pointer" @click.stop="likePost">
             <svg
               class="h-6 hover:stroke-red duration-200 stroke-current"
-              :class="{ 'fill-red': post.liked, 'dark:stroke-white dark:hover:stroke-red stroke-black  dark:fill-dark600 fill-white': !post.liked }"
+              :class="{
+                'fill-red': post.liked,
+                'dark:stroke-white dark:hover:stroke-red stroke-black  dark:fill-dark600 fill-white': !post.liked,
+              }"
               viewBox="0 0 24 24"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
             >
-              <g id="Iconly/Light/Heart" stroke-width="1" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+              <g
+                id="Iconly/Light/Heart"
+                stroke-width="1"
+                fill-rule="evenodd"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <g id="Heart" transform="translate(2.500000, 3.000000)" stroke-width="1.5">
                   <path
                     d="M0.371865331,8.59832177 C-0.701134669,5.24832177 0.552865331,1.41932177 4.06986533,0.28632177 C5.91986533,-0.31067823 7.96186533,0.0413217701 9.49986533,1.19832177 C10.9548653,0.0733217701 13.0718653,-0.30667823 14.9198653,0.28632177 C18.4368653,1.41932177 19.6988653,5.24832177 18.6268653,8.59832177 C16.9568653,13.9083218 9.49986533,17.9983218 9.49986533,17.9983218 C9.49986533,17.9983218 2.09786533,13.9703218 0.371865331,8.59832177 Z"
@@ -118,7 +127,7 @@ export default defineComponent({
     const parseMarkdown = (value: string) => {
       tagIds = [];
       const content = parseTags(value);
-      return DOMPurify.sanitize(marked(content));
+      return parseTags(DOMPurify.sanitize(marked(content)));
     };
 
     const parseTags = (content: string): string => {

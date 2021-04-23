@@ -1,6 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
+import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { GroupState } from '../graphql_types/groupState';
@@ -116,6 +117,38 @@ export class GroupResolver {
       return [];
     }
     return user.groups;
+  }
+
+  @Authorized()
+  @Query(() => Group)
+  public async addGroupRole(@Ctx() ctx: MyContext, @Arg('userId') userId: string): Promise<Group> {
+    const userId = ctx.req.user.id;
+    const user = await getRepository(User).findOne({ where: { id: userId } });
+
+    const group = await getRepository(Group).findOne({ relations: ['members'] });
+
+    const role = new GroupMemberRole();
+    role.role = GroupRole.MEMBER;
+    role.group = group;
+    role.user = user;
+    // for await (const user of users) {
+
+    //   const saved = await getRepository(GroupMemberRole).save(role);
+    //   roles.push(saved);
+    // }
+
+    // group.memberRoles = [...group.memberRoles, ...roles];
+
+    const updatedGroup = await getRepository(Group).save(group);
+
+    const roles = await getRepository(GroupMemberRole).find({ where: { group: group }, relations: ['user'] });
+
+    updatedGroup.members = updatedGroup.members.map((member) => {
+      member.groupRole = roles.find((role) => role.user.id === member.id).role;
+      return member;
+    });
+
+    return updatedGroup;
   }
 
   @Authorized()

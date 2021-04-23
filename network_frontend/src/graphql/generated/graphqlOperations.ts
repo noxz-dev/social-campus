@@ -1,13 +1,19 @@
-import gql from 'graphql-tag';
 import * as VueApolloComposable from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 import * as VueCompositionApi from 'vue';
 import {
+  AddCommentMutation,
+  AddCommentMutationVariables,
   AddFollowerMutation,
   AddFollowerMutationVariables,
   AddPostMutation,
   AddPostMutationVariables,
-  AddCommentMutation,
-  AddCommentMutationVariables,
+  BrowsePostsQuery,
+  BrowsePostsQueryVariables,
+  ChatByIdQuery,
+  ChatByIdQueryVariables,
+  CheckGroupAccessQuery,
+  CheckGroupAccessQueryVariables,
   CreateChatMutation,
   CreateChatMutationVariables,
   CreateGroupMutation,
@@ -18,56 +24,52 @@ import {
   DeletePostMutationVariables,
   EditPostMutation,
   EditPostMutationVariables,
+  FollowersQuery,
+  FollowersQueryVariables,
+  FollowingQuery,
+  FollowingQueryVariables,
+  GetFeedQuery,
+  GetFeedQueryVariables,
+  GetNotificationsQuery,
+  GetNotificationsQueryVariables,
+  GetPostsFromGroupQuery,
+  GetPostsFromGroupQueryVariables,
+  GetPostsFromUserQuery,
+  GetPostsFromUserQueryVariables,
+  GroupByIdQuery,
+  GroupByIdQueryVariables,
+  GroupMembersQuery,
+  GroupMembersQueryVariables,
+  GroupsQuery,
+  GroupsQueryVariables,
   JoinGroupMutation,
   JoinGroupMutationVariables,
   LikePostMutation,
   LikePostMutationVariables,
   LoginMutation,
   LoginMutationVariables,
-  RemoveFollowerMutation,
-  RemoveFollowerMutationVariables,
-  SendMessageMutation,
-  SendMessageMutationVariables,
-  UnlikePostMutation,
-  UnlikePostMutationVariables,
-  BrowsePostsQueryVariables,
-  BrowsePostsQuery,
-  ChatByIdQueryVariables,
-  ChatByIdQuery,
-  CheckGroupAccessQueryVariables,
-  CheckGroupAccessQuery,
-  FollowersQueryVariables,
-  FollowersQuery,
-  FollowingQueryVariables,
-  FollowingQuery,
-  GetFeedQueryVariables,
-  GetFeedQuery,
-  GetPostsFromGroupQueryVariables,
-  GetPostsFromGroupQuery,
-  GroupByIdQueryVariables,
-  GroupByIdQuery,
-  GroupsQueryVariables,
-  GroupsQuery,
   MeQuery,
   MeQueryVariables,
   MyChatsQuery,
   MyChatsQueryVariables,
-  GetNotificationsQuery,
-  GetNotificationsQueryVariables,
-  PostByIdQueryVariables,
-  PostByIdQuery,
-  GetPostsFromUserQueryVariables,
-  GetPostsFromUserQuery,
-  SearchQueryVariables,
-  SearchQuery,
-  UserByIdQueryVariables,
-  UserByIdQuery,
-  UserByUsernameQueryVariables,
-  UserByUsernameQuery,
-  UserStatsQueryVariables,
-  UserStatsQuery,
-  NotificationsSubscriptionVariables,
   NotificationsSubscription,
+  NotificationsSubscriptionVariables,
+  PostByIdQuery,
+  PostByIdQueryVariables,
+  RemoveFollowerMutation,
+  RemoveFollowerMutationVariables,
+  SearchQuery,
+  SearchQueryVariables,
+  SendMessageMutation,
+  SendMessageMutationVariables,
+  UnlikePostMutation,
+  UnlikePostMutationVariables,
+  UserByIdQuery,
+  UserByIdQueryVariables,
+  UserByUsernameQuery,
+  UserByUsernameQueryVariables,
+  UserStatsQuery,
+  UserStatsQueryVariables,
 } from './types';
 export type ReactiveFunction<TParam> = () => TParam;
 
@@ -1082,6 +1084,56 @@ export function useGroupByIdQuery(
 export type GroupByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   GroupByIdQuery,
   GroupByIdQueryVariables
+>;
+export const GroupMembersDocument = gql`
+  query groupMembers($groupId: String!) {
+    groupById(groupId: $groupId) {
+      id
+      members {
+        id
+        firstname
+        lastname
+        username
+        profilePicLink
+      }
+    }
+  }
+`;
+
+/**
+ * __useGroupMembersQuery__
+ *
+ * To run a query within a Vue component, call `useGroupMembersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupMembersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGroupMembersQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useGroupMembersQuery(
+  variables:
+    | GroupMembersQueryVariables
+    | VueCompositionApi.Ref<GroupMembersQueryVariables>
+    | ReactiveFunction<GroupMembersQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<GroupMembersQuery, GroupMembersQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GroupMembersQuery, GroupMembersQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<GroupMembersQuery, GroupMembersQueryVariables>> = {}
+) {
+  return VueApolloComposable.useQuery<GroupMembersQuery, GroupMembersQueryVariables>(
+    GroupMembersDocument,
+    variables,
+    options
+  );
+}
+export type GroupMembersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  GroupMembersQuery,
+  GroupMembersQueryVariables
 >;
 export const GroupsDocument = gql`
   query groups($take: Float!, $skip: Float!) {

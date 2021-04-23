@@ -16,7 +16,7 @@ export type Scalars = {
 };
 
 export type AddPostInput = {
-  content: Scalars['String'];
+  content?: Maybe<Scalars['String']>;
   file?: Maybe<Scalars['Upload']>;
   groupId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -99,9 +99,13 @@ export type Mutation = {
   deleteNotification: Scalars['Boolean'];
   /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
+  /** likes an post */
   likePost: Post;
+  /** unlikes an post */
   unlikePost: Post;
+  /** deletes an post */
   deletePost: Scalars['Boolean'];
+  /** updates the content of a post */
   editPost: Post;
   sendMessage: ChatMessage;
   createChat: Chat;
@@ -115,12 +119,19 @@ export type Mutation = {
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
   removeRoleFromUser: User;
+  /** Registers a new user */
   register: Scalars['Boolean'];
+  /** logout an user to invalidate its refresh token */
   logout: Scalars['Boolean'];
+  /** login to get a new auth token */
   login: JwtResponse;
+  /** upload a new profileimage */
   uploadProfileImage: User;
+  /** follow a user */
   addFollower: User;
+  /** unfollow a user */
   removeFollower: User;
+  /** update the bio of the loggedin user */
   setBio: User;
 };
 
@@ -295,13 +306,15 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
-  /** getPosts returns all posts from a given userID */
+  /** getPosts returns all posts for a given userID */
   getPostsFromUser?: Maybe<Array<Post>>;
-  /** all posts with filter options */
+  /** returns all posts that are not associated with groups, allows to be filterd via tags */
   browsePosts?: Maybe<Array<Post>>;
-  /** getPosts returns all posts from a given groupID */
+  /** getPostsFromGroup returns all posts from a group */
   getPostsFromGroup?: Maybe<Array<Post>>;
+  /** returns the post feed of user */
   getFeed: Array<Post>;
+  /** returns a specific post */
   postById: Post;
   myChats: Array<Chat>;
   chatById: Chat;
@@ -315,10 +328,15 @@ export type Query = {
   getUsers: Array<User>;
   /** Me returns User info when logged in. */
   me?: Maybe<User>;
+  /** UserById returns a user based on the given id */
   userById: User;
+  /** UserByUser returns a user based on the given user handle */
   userByUsername: User;
+  /** returns all users that the logged in user is following */
   following: Array<User>;
+  /** returns all followers of the user */
   followers: Array<User>;
+  /** UserStats are some stats like follower count, post count ... */
   userStats: UserStats;
 };
 
@@ -436,6 +454,7 @@ export type SendMessageInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   notifications: Notification;
+  /** subscribe to new posts */
   newPost: Post;
   newMessage: ChatMessage;
 };
@@ -844,6 +863,23 @@ export type GroupByIdQuery = (
   & { groupById: (
     { __typename?: 'Group' }
     & Pick<Group, 'id' | 'name' | 'description' | 'numberOfPosts'>
+  ) }
+);
+
+export type GroupMembersQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GroupMembersQuery = (
+  { __typename?: 'Query' }
+  & { groupById: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id'>
+    & { members: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    )> }
   ) }
 );
 

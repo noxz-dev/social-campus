@@ -1,8 +1,9 @@
 import { Field, ObjectType, registerEnumType } from 'type-graphql';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from './base';
+import { GroupMemberRole } from './groupMemberRole.entity';
 import { Post } from './post.entity';
-import { User } from './user.entity';
+import { GroupMember, User } from './user.entity';
 
 export enum GroupType {
   PRIVATE = 'PRIVATE',
@@ -39,10 +40,13 @@ export class Group extends Base {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @Field(() => [User])
+  @Field(() => [GroupMember])
   @ManyToMany(() => User, (user) => user.groups)
   @JoinTable()
-  members: User[];
+  members: GroupMember[];
+
+  @OneToMany(() => GroupMemberRole, (groupRole) => groupRole.group)
+  memberRoles: GroupMemberRole[];
 
   @Field(() => Number, { nullable: true })
   numberOfPosts: number;

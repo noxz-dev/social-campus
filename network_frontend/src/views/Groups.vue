@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="mt-10 p-4 dark:bg-dark-600 bg-gray-200 w-full h-1/3 rounded-lg dark:text-gray-50 pb-20 mb-32">
-        Gruppen von Leuten denen du folgst
+        Gruppen von Leuten, denen du folgst
       </div>
     </div>
     <new-group-modal ref="newGroupModal" />

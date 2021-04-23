@@ -57,7 +57,7 @@ export class ChatResolver {
 
     const savedMessage = await getRepository(ChatMessage).save(chatMessage);
 
-    ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage });
+    ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
     log.info(`'User with the id: ${userId} send a message'`);
     return savedMessage;
   }
@@ -84,8 +84,8 @@ export class ChatResolver {
     topics: SUB_TOPICS.NEW_CHAT_MESSAGE,
     filter: async ({ payload, args, context }) => {
       const chatId = args.chatId;
-      const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members'] });
-      const user = chat.members.find((user) => user.id === context.user.id);
+      // const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members'] });
+      const user = payload.members.find((user) => user.id === context.user.id);
       if (user) return true;
       return false;
     },

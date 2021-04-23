@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
 import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
 import { Post } from '../entity/post.entity';
-import { User } from '../entity/user.entity';
+import { GroupMember, User } from '../entity/user.entity';
 import { GroupState } from '../graphql_types/groupState';
 import { MyContext } from '../utils/interfaces/context.interface';
 
@@ -35,7 +35,7 @@ export class GroupResolver {
     group.type = groupType;
     if (groupType === GroupType.PRIVATE && password) group.password = password;
     if (description) group.description = description;
-    group.members.push(user);
+    group.members.push(user as GroupMember);
 
     await getRepository(Group).save(group);
     return group;
@@ -65,11 +65,11 @@ export class GroupResolver {
     }
 
     if (group.type === GroupType.PRIVATE && group.password === password) {
-      group.members.push(user);
+      group.members.push(user as GroupMember);
       await getRepository(Group).save(group);
       return group;
     } else if (group.type === GroupType.PUBLIC) {
-      group.members.push(user);
+      group.members.push(user as GroupMember);
       await getRepository(Group).save(group);
       return group;
     }
@@ -122,7 +122,7 @@ export class GroupResolver {
   @Authorized()
   @Query(() => Group)
   public async addGroupRole(@Ctx() ctx: MyContext, @Arg('userId') userId: string): Promise<Group> {
-    const userId = ctx.req.user.id;
+    // const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({ where: { id: userId } });
 
     const group = await getRepository(Group).findOne({ relations: ['members'] });

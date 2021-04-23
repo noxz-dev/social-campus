@@ -9,7 +9,7 @@
         />
       </div>
       <div class="p-3">
-        <div class="h-16">
+        <div class="line-clamp-2 h-12">
           <span class="text-md break-words">{{ group.name }}</span>
         </div>
         <div><span class="text-sm text-gray-400">Gruppe - 1k Mitglieder</span></div>

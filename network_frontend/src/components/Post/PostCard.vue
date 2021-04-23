@@ -127,14 +127,14 @@ export default defineComponent({
     const parseMarkdown = (value: string) => {
       tagIds = [];
       const content = parseTags(value);
-      return parseTags(DOMPurify.sanitize(marked(content)));
+      return DOMPurify.sanitize(marked(content));
     };
 
     const parseTags = (content: string): string => {
       return content
         .replaceAll(/#\w\w*/g, (val) => {
           val = val.replaceAll('#', '');
-          const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
+          const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
           tagIds.push(val);
           return tag;
         })

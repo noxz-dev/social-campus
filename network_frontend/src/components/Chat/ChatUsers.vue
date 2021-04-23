@@ -3,33 +3,36 @@
     <div class="flex justify-center py-2">
       <app-button @click="modal?.openModal()">Erstelle einen neuen Chat</app-button>
     </div>
-    <div v-for="chat in chats" :key="chat.id">
-      <button
-        class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5 focus:outline-indigo-500 text-left"
-        @click="setActiveChat(chat.id)"
-      >
-        <div
-          :class="chat.id === $route.params.id ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
-          class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
+    <div class="pb-20">
+      <div v-for="chat in [...chats, ...chats, ...chats, ...chats, ...chats]" :key="chat.id">
+        <button
+          class="dark:bg-dark-700 w-full h-20 p-0.5 my-1.5 focus:outline-indigo-500 text-left"
+          @click="setActiveChat(chat.id)"
         >
-          <div class="flex-shrink-0" v-if="chat">
-            <img
-              class="h-10 w-10 rounded-full object-cover"
-              :src="chat.members.filter((m) => m.id !== user.id)[0].profilePicLink"
-              alt=""
-            />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="focus:outline-none">
-              <p class="text-sm font-medium dark:text-gray-50 text-gray-900">
-                {{ chat.members.filter((m) => m.id !== user.id)[0].firstname }}
-              </p>
-              <p class="text-sm text-gray-500 truncate">letzte nachricht</p>
+          <div
+            :class="chat.id === $route.params.id ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
+            class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
+          >
+            <div class="flex-shrink-0" v-if="chat">
+              <img
+                class="h-10 w-10 rounded-full object-cover"
+                :src="chat.members.filter((m) => m.id !== user.id)[0].profilePicLink"
+                alt=""
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="focus:outline-none">
+                <p class="text-sm font-medium dark:text-gray-50 text-gray-900">
+                  {{ chat.members.filter((m) => m.id !== user.id)[0].firstname }}
+                </p>
+                <p class="text-sm text-gray-500 truncate">letzte nachricht</p>
+              </div>
             </div>
           </div>
-        </div>
-      </button>
+        </button>
+      </div>
     </div>
+
     <modal ref="modal" content-text="" header-text="Neuer Chat">
       <new-chat
         @close="

@@ -1,14 +1,20 @@
 <template>
   <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
-      <div class="flex-shrink-0 bg-dark700 rounded-full">
-        <img class="h-10 w-10 rounded-full" :src="profilePicLink" alt="" />
+      <div class="flex-shrink-0">
+        <img class="h-10 w-10 rounded-full bg-dark700" :src="profilePicLink" alt="" />
       </div>
       <div class="min-w-0 flex-1">
         <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex">
           <span>{{ firstname + ' ' + lastname }}</span>
           <div v-if="group" class="flex items-center">
-            <svg class="transform rotate-90 mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 256 256">
+            <svg
+              class="transform rotate-90 mx-2"
+              xmlns="http://www.w3.org/2000/svg"
+              width="10"
+              height="10"
+              viewBox="0 0 256 256"
+            >
               <rect width="256" height="256" fill="none"></rect>
               <path
                 class="dark:fill-white fill-dark800"
@@ -17,7 +23,7 @@
             </svg>
 
             <span
-              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700"
+              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700 break-words w-8/12 md:w-full truncate"
               @click="$router.push({ name: 'Group', params: { id: group.id } })"
             >
               {{ group.name }}</span
@@ -54,8 +60,16 @@
                 @click="optionsOpen = !optionsOpen"
               >
                 <span class="sr-only">Open options</span>
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                <svg
+                  class="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+                  />
                 </svg>
               </button>
             </div>
@@ -80,7 +94,14 @@
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                   >
-                    <g id="Iconly/Light/Edit-Square" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                    <g
+                      id="Iconly/Light/Edit-Square"
+                      stroke-width="1"
+                      fill="none"
+                      fill-rule="evenodd"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <g id="Edit-Square" transform="translate(2.000000, 2.000000)" stroke-width="2">
                         <path
                           d="M9.4923,0.789 L5.7533,0.789 C2.6783,0.789 0.7503,2.966 0.7503,6.048 L0.7503,14.362 C0.7503,17.444 2.6693,19.621 5.7533,19.621 L14.5773,19.621 C17.6623,19.621 19.5813,17.444 19.5813,14.362 L19.5813,10.334"
@@ -108,7 +129,14 @@
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                   >
-                    <g id="Iconly/Light/Delete" stroke-width="1" fill-rule="evenodd" stroke-linecap="round" fill="none" stroke-linejoin="round">
+                    <g
+                      id="Iconly/Light/Delete"
+                      stroke-width="1"
+                      fill-rule="evenodd"
+                      stroke-linecap="round"
+                      fill="none"
+                      stroke-linejoin="round"
+                    >
                       <g id="Delete" transform="translate(3.000000, 2.000000)" stroke-width="2">
                         <path
                           d="M16.3249,7.4682 C16.3249,7.4682 15.7819,14.2032 15.4669,17.0402 C15.3169,18.3952 14.4799,19.1892 13.1089,19.2142 C10.4999,19.2612 7.8879,19.2642 5.2799,19.2092 C3.9609,19.1822 3.1379,18.3782 2.9909,17.0472 C2.6739,14.1852 2.1339,7.4682 2.1339,7.4682"
@@ -245,7 +273,19 @@ export default defineComponent({
       }
     };
 
-    return { dayjs, optionsOpen, target, deleteContent, firstname, lastname, creationDate, userId, username, profilePicLink, group };
+    return {
+      dayjs,
+      optionsOpen,
+      target,
+      deleteContent,
+      firstname,
+      lastname,
+      creationDate,
+      userId,
+      username,
+      profilePicLink,
+      group,
+    };
   },
 });
 </script>

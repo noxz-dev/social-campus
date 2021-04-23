@@ -24,7 +24,9 @@
           inputClasses="text-sm md:text-md p-4"
           buttonText="Senden"
           placeholder="Schreibe eine Nachricht"
+          @focus="emojiPickerOpen = false"
           @clicked="sendMessage"
+          ref="input"
         >
           <template v-slot:extraButton>
             <svg
@@ -99,6 +101,7 @@ import { useStore } from 'vuex';
 import { Howl } from 'howler';
 import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
+import { EmojiPickerElement } from 'unicode-emoji-picker';
 export default defineComponent({
   props: {},
   components: { Message, InputField },
@@ -110,7 +113,8 @@ export default defineComponent({
     const { enter } = useMagicKeys();
     const route = useRoute();
     const emojiPickerOpen = ref(false);
-    const emojiPicker = ref(null);
+    const emojiPicker = ref<EmojiPickerElement>();
+    const input = ref();
 
     watch(enter, (v) => {
       if (v) sendMessage();
@@ -179,18 +183,26 @@ export default defineComponent({
     }
 
     onResult((data) => {
+      console.log(data);
       setTimeout(() => {
         scrollDown();
       }, 0);
     });
 
     onMounted(() => {
-      document.querySelector('body')?.click();
-      emojiPicker.value.addEventListener('emoji-pick', (event) => {
+      input.value.focus();
+      console.log('hey');
+      emojiPicker.value?.addEventListener('emoji-pick', (event) => {
         newMessage.value += event.detail.emoji;
-        emojiPickerOpen.value = false;
       });
     });
+
+    watch(
+      () => route.params.id,
+      () => {
+        input.value.focus();
+      }
+    );
 
     return {
       chat,
@@ -201,6 +213,7 @@ export default defineComponent({
       user,
       emojiPickerOpen,
       emojiPicker,
+      input,
     };
   },
 });

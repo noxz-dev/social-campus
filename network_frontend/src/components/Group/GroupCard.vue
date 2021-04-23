@@ -26,7 +26,7 @@
             })
           "
         >
-          <span>Beitreten</span>
+          <span>Gruppe beitreten</span>
         </button>
       </div>
     </div>

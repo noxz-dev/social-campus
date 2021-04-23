@@ -12,7 +12,14 @@
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
         >
-          <g id="Iconly/Light/Arrow---Left" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+          <g
+            id="Iconly/Light/Arrow---Left"
+            stroke-width="1"
+            fill="none"
+            fill-rule="evenodd"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <g
               id="Arrow---Left"
               transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) translate(5.500000, 4.000000)"
@@ -23,9 +30,9 @@
             </g>
           </g>
         </svg>
-        <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück zum Feed</span>
+        <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück</span>
       </div>
-      <div v-if="postData" class="w-full mt-10 flex items-center flex-col">
+      <div class="w-full mt-10 flex items-center flex-col">
         <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark600" />
         <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-6" />
         <card>
@@ -33,6 +40,7 @@
             <span class="pb-3">Schreibe einen Kommentar</span>
             <div class="mb-2">
               <textarea
+                ref="commentInput"
                 v-model="commentText"
                 class="dark:bg-dark700 border-2 border-gray-700 h-24 resize-none rounded-lg w-full p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Kommentiere..."
@@ -64,7 +72,10 @@
           </card>
         </div>
       </div>
-      <div v-else-if="!loading && !postData" class="text-center font-semibold text-gray-900 dark:text-gray-50 text-3xl mt-40">
+      <div
+        v-if="!loading && !postData"
+        class="text-center font-semibold text-gray-900 dark:text-gray-50 text-3xl mt-40"
+      >
         Dieser Post existiert nicht!
       </div>
     </div>
@@ -75,7 +86,7 @@
 import PostCard from '../components/Post/PostCard.vue';
 import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/graphqlOperations';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
-import { computed, defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Card from '../components/Card/Card.vue';
 import CardHeader from '../components/Card/CardHeader.vue';
@@ -91,6 +102,7 @@ export default defineComponent({
     const postData = ref<PostByIdQuery>();
     const route = useRoute();
     const { control_enter } = useMagicKeys();
+    const commentInput = ref();
 
     watch(control_enter, (v) => {
       if (v) newComment();
@@ -105,6 +117,7 @@ export default defineComponent({
 
     onResult(({ data }) => {
       postData.value = data;
+      commentInput.value.focus();
     });
 
     const rules = computed(() => ({
@@ -139,7 +152,7 @@ export default defineComponent({
       commentText.value = '';
     };
 
-    return { postData, commentText, newComment, loading, v };
+    return { postData, commentText, newComment, loading, v, commentInput };
   },
 });
 </script>

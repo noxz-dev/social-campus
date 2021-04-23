@@ -4,6 +4,7 @@
       <slot name="icon"></slot>
     </div>
     <input
+      ref="input"
       class="dark:text-gray-100 w-full border pr-28 md:pr-36 text-gray-900 dark:bg-dark600 border-dark500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-highlight-500 focus:ring-highlight-500"
       :type="type"
       :value="modelValue"
@@ -13,6 +14,7 @@
       :autocomplete="autocomplete"
       :required="required"
       :disabled="disabled"
+      @focus="$emit('focus')"
     />
 
     <div
@@ -39,10 +41,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'InputField',
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'focus'],
   props: {
     modelValue: String | Number,
     placeholder: String,
@@ -81,6 +83,7 @@ export default defineComponent({
   },
   setup(props, { emit, slots }) {
     const hasIconSlot = computed(() => slots['icon']);
+    const input = ref();
 
     const emitClick = () => emit('clicked');
 
@@ -90,7 +93,11 @@ export default defineComponent({
 
     const onChanged = (e) => emit('update:modelValue', e.currentTarget.value);
 
-    return { hasIconSlot, onChanged, condtionalClasses, emitClick };
+    const focus = () => {
+      input.value.focus();
+    };
+
+    return { hasIconSlot, onChanged, condtionalClasses, emitClick, input, focus };
   },
 });
 </script>

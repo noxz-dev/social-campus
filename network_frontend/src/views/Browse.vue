@@ -14,7 +14,7 @@
               inputPlaceholder="z.B. #hsh, #socialnetwork"
             ></chips-input>
           </div>
-          <post-list :posts="posts" class="pt-10 md:pt-0" emptyText="ganz schön leer hier, schreibe doch einen Post" />
+          <post-list :posts="posts" class="pt-10 md:pt-0" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
         </div>
       </infinite-scroll-wrapper>
     </div>

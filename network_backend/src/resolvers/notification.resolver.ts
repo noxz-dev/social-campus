@@ -38,6 +38,7 @@ export class NotificationResolver {
         toUser: userId,
       },
       relations: ['toUser', 'fromUser', 'post'],
+      order: { createdAt: 'DESC' },
     });
     return notifys;
   }

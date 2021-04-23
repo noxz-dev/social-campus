@@ -19,7 +19,7 @@ export default defineComponent({
     },
     emptyText: {
       type: String,
-      default: 'ganz schön leer hier, schreibe doch einen Post',
+      default: 'Ganz schön leer hier, schreibe doch einen Post',
     },
     cardBgColor: {
       type: String,

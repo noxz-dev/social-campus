@@ -103,7 +103,6 @@ export default defineComponent({
             id: notify.fromUser.username,
           },
         });
-        emit('closeNotify');
       } else if (notify.type === NotificationType.Mention) {
         if (notify.post) {
           router.push({
@@ -113,8 +112,26 @@ export default defineComponent({
             },
           });
         }
-        emit('closeNotify');
+      } else if (notify.type === NotificationType.NewComment) {
+        if (notify.post) {
+          router.push({
+            name: 'DetailPost',
+            params: {
+              id: notify.post.id,
+            },
+          });
+        }
+      } else if (notify.type === NotificationType.PostLike) {
+        if (notify.post) {
+          router.push({
+            name: 'DetailPost',
+            params: {
+              id: notify.post.id,
+            },
+          });
+        }
       }
+      emit('closeNotify');
     };
 
     return {

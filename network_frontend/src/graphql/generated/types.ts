@@ -64,10 +64,34 @@ export type Group = {
   type: GroupType;
   createdBy: User;
   posts: Array<Post>;
-  members: Array<User>;
+  members: Array<GroupMember>;
   numberOfPosts?: Maybe<Scalars['Float']>;
   numberOfMembers?: Maybe<Scalars['Float']>;
 };
+
+export type GroupMember = {
+  __typename?: 'GroupMember';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  profilePicLink?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  roles: Array<Role>;
+  posts: Array<Post>;
+  followers: Array<User>;
+  following: Array<User>;
+  groups: Array<Group>;
+  meFollowing: Scalars['Boolean'];
+  groupRole?: Maybe<GroupRoles>;
+};
+
+export enum GroupRoles {
+  Member = 'MEMBER',
+  Admin = 'ADMIN'
+}
 
 export type GroupState = {
   __typename?: 'GroupState';
@@ -277,13 +301,15 @@ export type Notification = {
   fromUser: User;
   toUser: User;
   post?: Maybe<Post>;
+  chat?: Maybe<Chat>;
 };
 
 export enum NotificationType {
   NewFollower = 'NEW_FOLLOWER',
   NewComment = 'NEW_COMMENT',
   PostLike = 'POST_LIKE',
-  Mention = 'MENTION'
+  Mention = 'MENTION',
+  NewChatMessage = 'NEW_CHAT_MESSAGE'
 }
 
 export type Post = {
@@ -321,6 +347,7 @@ export type Query = {
   groupById: Group;
   groups: Array<Group>;
   myGroups: Array<Group>;
+  addGroupRole: Group;
   checkGroupAccess: GroupState;
   getRoles: Array<Role>;
   search: Search;
@@ -384,6 +411,11 @@ export type QueryGroupByIdArgs = {
 export type QueryGroupsArgs = {
   take: Scalars['Float'];
   skip: Scalars['Float'];
+};
+
+
+export type QueryAddGroupRoleArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -877,8 +909,8 @@ export type GroupMembersQuery = (
     { __typename?: 'Group' }
     & Pick<Group, 'id'>
     & { members: Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      { __typename?: 'GroupMember' }
+      & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     )> }
   ) }
 );
@@ -940,6 +972,9 @@ export type GetNotificationsQuery = (
     ), post?: Maybe<(
       { __typename?: 'Post' }
       & Pick<Post, 'id'>
+    )>, chat?: Maybe<(
+      { __typename?: 'Chat' }
+      & Pick<Chat, 'id'>
     )> }
   )> }
 );
@@ -1077,6 +1112,9 @@ export type NotificationsSubscription = (
     ), post?: Maybe<(
       { __typename?: 'Post' }
       & Pick<Post, 'id'>
+    )>, chat?: Maybe<(
+      { __typename?: 'Chat' }
+      & Pick<Chat, 'id'>
     )> }
   ) }
 );

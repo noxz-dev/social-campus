@@ -130,6 +130,16 @@ export default defineComponent({
             },
           });
         }
+      } else if (notify.type === NotificationType.NewChatMessage) {
+        console.log(notify);
+        if (notify.chat) {
+          router.push({
+            name: 'Chats',
+            params: {
+              id: notify.chat.id,
+            },
+          });
+        }
       }
       emit('closeNotify');
     };

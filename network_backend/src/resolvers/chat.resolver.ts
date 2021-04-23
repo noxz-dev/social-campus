@@ -2,11 +2,12 @@ import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } f
 import { getRepository } from 'typeorm';
 import { Chat } from '../entity/chat.entity';
 import { ChatMessage } from '../entity/chatmessage.entity';
+import { NotificationType } from '../entity/notification.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { SendMessageInput } from '../validators/sendMessage.validator';
-import { SUB_TOPICS } from './notification.resolver';
+import { notify, SUB_TOPICS } from './notification.resolver';
 
 export interface NewChatMessagePayload {
   message?: ChatMessage;
@@ -57,7 +58,19 @@ export class ChatResolver {
 
     const savedMessage = await getRepository(ChatMessage).save(chatMessage);
 
-    ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+    const toUser = chat.members.find((member) => member.id !== userId);
+
+    await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+    await notify(
+      {
+        fromUser: user,
+        toUser: toUser,
+        type: NotificationType.NEW_CHAT_MESSAGE,
+        message: user.firstname + ' hat dir eine Nachricht gesendet',
+        chat: chat,
+      },
+      ctx,
+    );
     log.info(`'User with the id: ${userId} send a message'`);
     return savedMessage;
   }
@@ -83,8 +96,6 @@ export class ChatResolver {
   @Subscription(() => ChatMessage, {
     topics: SUB_TOPICS.NEW_CHAT_MESSAGE,
     filter: async ({ payload, args, context }) => {
-      const chatId = args.chatId;
-      // const chat = await getRepository(Chat).findOne({ where: { id: chatId }, relations: ['members'] });
       const user = payload.members.find((user) => user.id === context.user.id);
       if (user) return true;
       return false;

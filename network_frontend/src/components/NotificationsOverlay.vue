@@ -50,11 +50,15 @@ export default defineComponent({
   width: 100% !important;
 }
 
+.dk__toast-section {
+  @apply mt-20 !important;
+}
+
 .dk__toast-top-right {
   align-items: flex-end;
 }
 
 .notification {
-  @apply sm:w-full bg-highlight-700 py-4 md:w-[20rem] text-gray-50 z-40 mt-20 !important;
+  @apply sm:w-full bg-highlight-700 py-4 md:w-[20rem] text-gray-50 z-40  !important;
 }
 </style>

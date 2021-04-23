@@ -20,6 +20,9 @@ export const getNotifications = gql`
       post {
         id
       }
+      chat {
+        id
+      }
     }
   }
 `;

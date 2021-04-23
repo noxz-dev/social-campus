@@ -1269,6 +1269,9 @@ export const GetNotificationsDocument = gql`
       post {
         id
       }
+      chat {
+        id
+      }
     }
   }
 `;
@@ -1644,6 +1647,9 @@ export const NotificationsDocument = gql`
         username
       }
       post {
+        id
+      }
+      chat {
         id
       }
     }

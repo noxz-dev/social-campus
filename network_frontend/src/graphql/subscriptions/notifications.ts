@@ -19,6 +19,9 @@ export const notificationsSubscription = gql`
       post {
         id
       }
+      chat {
+        id
+      }
     }
   }
 `;

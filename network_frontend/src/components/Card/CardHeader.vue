@@ -5,11 +5,11 @@
         <img class="h-10 w-10 rounded-full bg-dark700" :src="profilePicLink" alt="" />
       </div>
       <div class="min-w-0 flex-1">
-        <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex">
-          <span>{{ firstname + ' ' + lastname }}</span>
+        <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row">
+          <div class="flex-1">{{ firstname + ' ' + lastname }}</div>
           <div v-if="group" class="flex items-center">
             <svg
-              class="transform rotate-90 mx-2"
+              class="transform rotate-90 md:mx-2 mr-2"
               xmlns="http://www.w3.org/2000/svg"
               width="10"
               height="10"
@@ -23,7 +23,7 @@
             </svg>
 
             <span
-              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700 break-words w-8/12 md:w-full truncate"
+              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700 break-words md:w-full truncate"
               @click="$router.push({ name: 'Group', params: { id: group.id } })"
             >
               {{ group.name }}</span

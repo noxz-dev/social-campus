@@ -32,7 +32,7 @@
     </button>
     <app-button
       v-if="showButton"
-      class="hidden my-2 px-4 inset-y-0 md:flex cursor-pointer absolute right-3 rounded-xl"
+      class="hidden my-2 px-4 inset-y-0 md:flex cursor-pointer absolute right-3 rounded-lg"
       @click="emitClick"
     >
       {{ buttonText }}

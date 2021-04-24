@@ -15,4 +15,7 @@ export class Chat extends Base {
   @Field(() => [ChatMessage])
   @OneToMany(() => ChatMessage, (message) => message.chat)
   messages: ChatMessage[];
+
+  @Field(() => ChatMessage, { nullable: true })
+  lastMessage: ChatMessage;
 }

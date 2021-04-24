@@ -23,9 +23,13 @@
             <div class="flex-1 min-w-0">
               <div class="focus:outline-none">
                 <p class="text-sm font-medium dark:text-gray-50 text-gray-900">
-                  {{ chat.members.filter((m) => m.id !== user.id)[0].firstname }}
+                  {{
+                    chat.members.filter((m) => m.id !== user.id)[0].firstname +
+                    ' ' +
+                    chat.members.filter((m) => m.id !== user.id)[0].lastname
+                  }}
                 </p>
-                <p class="text-sm text-gray-500 truncate">letzte nachricht</p>
+                <p class="text-sm text-gray-400 truncate">{{ chat.lastMessage?.content }}</p>
               </div>
             </div>
           </div>

@@ -19,8 +19,24 @@ export class ChatResolver {
   @Query(() => [Chat])
   public async myChats(@Ctx() ctx: MyContext): Promise<Chat[]> {
     const userId = ctx.req.user.id;
-    const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.members'] });
+
+    //TODO Rewrite with querybuilder
+    const user = await getRepository(User).findOne({
+      where: { id: userId },
+      relations: ['chats', 'chats.members'],
+    });
     if (!user.chats) return [];
+
+    for await (const chat of user.chats) {
+      const messages = await getRepository(ChatMessage).find({
+        where: { chat: chat },
+        order: { createdAt: 'DESC' },
+        take: 1,
+      });
+      chat.lastMessage = messages[0];
+    }
+
+    user.chats.sort((a, b) => (a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1));
     log.info(`'User with the id: ${userId} called myChats'`);
     return user.chats;
   }

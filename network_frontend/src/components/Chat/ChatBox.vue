@@ -4,7 +4,11 @@
       <div class="w-full px-1 flex flex-col items-between">
         <div class="flex flex-col mt-5">
           <div v-for="message in chat?.messages" :key="message.id">
-            <message :message="message.content" :positionRight="message.sendBy.id === user.id"></message>
+            <message
+              :message="message.content"
+              :createdAt="new Date(message.createdAt)"
+              :positionRight="message.sendBy.id === user.id"
+            ></message>
           </div>
         </div>
       </div>
@@ -184,7 +188,6 @@ export default defineComponent({
     }
 
     onResult((data) => {
-      console.log(data);
       setTimeout(() => {
         scrollDown();
       }, 0);

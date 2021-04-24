@@ -28,6 +28,7 @@ export type Chat = {
   createdAt: Scalars['DateTime'];
   members: Array<User>;
   messages: Array<ChatMessage>;
+  lastMessage?: Maybe<ChatMessage>;
 };
 
 export type ChatMessage = {
@@ -951,7 +952,10 @@ export type MyChatsQuery = (
   & { myChats: Array<(
     { __typename?: 'Chat' }
     & Pick<Chat, 'id'>
-    & { members: Array<(
+    & { lastMessage?: Maybe<(
+      { __typename?: 'ChatMessage' }
+      & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
+    )>, members: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     )> }

@@ -1225,6 +1225,11 @@ export const MyChatsDocument = gql`
   query myChats {
     myChats {
       id
+      lastMessage {
+        id
+        content
+        createdAt
+      }
       members {
         id
         firstname

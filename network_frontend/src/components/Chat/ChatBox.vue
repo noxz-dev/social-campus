@@ -19,8 +19,8 @@
       class="absolute bottom-36 right-7 md:bottom-24 md:right-28"
       v-show="emojiPickerOpen"
     ></unicode-emoji-picker>
-    <div class="w-full">
-      <div class="py-5 p-2 w-full mb-14 md:mb-0">
+    <div class="w-full pb-32 md:pb-0">
+      <div class="pb-4 md:pb-5 p-2 pt-1 w-full mb-14 md:mb-0 fixed md:static bottom-0 dark:bg-dark-700 bg-white">
         <input-field
           :showButton="true"
           v-model="newMessage"

@@ -85,7 +85,7 @@
           ref="groupListContainer"
           :class="myGroupsOpen ? '' : 'max-h-[29rem] overflow-hidden'"
         >
-          <group-list :groups="myGroups"></group-list>
+          <group-list :groups="myGroups" :isMemberOfGroup="true"></group-list>
         </div>
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">

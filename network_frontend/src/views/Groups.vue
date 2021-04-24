@@ -81,9 +81,9 @@
           </div>
         </div>
         <div
-          class="w-full p-1 flex justify-center min-h-[26rem]"
+          class="w-full p-1 flex justify-center min-h-[24rem]"
           ref="groupListContainer"
-          :class="myGroupsOpen ? '' : 'max-h-[30rem] overflow-hidden'"
+          :class="myGroupsOpen ? '' : 'max-h-[29rem] overflow-hidden'"
         >
           <group-list :groups="myGroups"></group-list>
         </div>
@@ -96,7 +96,7 @@
             <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="toggleGroups">Zeige alle</app-button>
           </div>
         </div>
-        <div class="w-full p-1 flex justify-center min-h-[26rem]" ref="groupListContainer">
+        <div class="w-full p-1 flex justify-center min-h-[24rem]" ref="groupListContainer">
           <group-list :groups="groups"></group-list>
         </div>
       </div>
@@ -137,13 +137,18 @@ export default defineComponent({
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
     const myGroupsOpen = ref(false);
 
-    useResizeObserver(groupListContainer, (entries) => {
+    function updateTake(entries: any) {
       if (takeStateGroups.take < 200) {
+        console.log(entries);
         const entry = entries[0];
         const { width, height } = entry.contentRect;
         console.log(width, height);
         takeStateGroups.take = Math.floor(width / 260);
       }
+    }
+
+    useResizeObserver(groupListContainer, (entries) => {
+      updateTake(entries);
     });
 
     const { onResult } = useGroupsQuery(() => ({
@@ -156,7 +161,7 @@ export default defineComponent({
         takeStateGroups.take = 200;
         allGroups.value = !allGroups.value;
       } else {
-        takeStateGroups.take = 1;
+        updateTake();
         allGroups.value = !allGroups.value;
       }
     }

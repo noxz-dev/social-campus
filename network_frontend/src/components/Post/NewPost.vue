@@ -1,13 +1,53 @@
 <template>
   <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
     <vue-tribute :options="autoCompleteOptions" elementId="newPostTextArea">
-      <textarea
-        id="newPostTextArea"
-        v-model="message"
-        class="dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder="Hey, was gibt's Neues ?"
-        @blur="v.message.$touch"
-      />
+      <div class="w-full relative">
+        <textarea
+          id="newPostTextArea"
+          v-model="message"
+          class="w-full dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+          placeholder="Hey, was gibt's Neues ?"
+          @blur="v.message.$touch"
+        />
+        <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              viewBox="0 0 256 256"
+              class="hover:bg-dark-800 rounded-full transition fill-dark600 dark:fill-white stroke-black dark:stroke-white"
+              @click="emojiOpen = !emojiOpen"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <circle
+                cx="128"
+                cy="128"
+                r="96"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></circle>
+              <path
+                d="M169.57812,151.99627a48.02731,48.02731,0,0,1-83.15624.00073"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></path>
+              <circle cx="92" cy="108" r="12"></circle>
+              <circle cx="164" cy="108" r="12"></circle>
+            </svg>
+          </div>
+          <unicode-emoji-picker
+            filters-position="left"
+            ref="emojiPicker"
+            class="absolute right-0 -mr-2 z-20"
+            v-show="emojiOpen"
+          ></unicode-emoji-picker>
+        </div>
+      </div>
     </vue-tribute>
     <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
       <span class="m">Markdown wird unterstützt</span></span
@@ -78,7 +118,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, ref, watch, watchEffect } from 'vue';
+import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch, watchEffect } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
@@ -95,6 +135,8 @@ import gql from 'graphql-tag';
 import { browsePosts } from '../../graphql/queries/browsePosts';
 import { getPostsFromGroup } from '../../graphql/queries/getPostsFromGroup';
 import { useMagicKeys } from '@vueuse/core';
+import { EmojiPickerElement } from 'unicode-emoji-picker';
+import 'unicode-emoji-picker';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
   emits: ['close'],
@@ -107,6 +149,8 @@ export default defineComponent({
     const showImageUpload = ref(false);
     const groupId = ref();
     const { control_enter } = useMagicKeys();
+    const emojiOpen = ref(false);
+    const emojiPicker = ref<EmojiPickerElement>();
 
     watch(control_enter, (v) => {
       if (v) post();
@@ -287,6 +331,13 @@ export default defineComponent({
       autoCompleteOptions.collection[0].values.push(...users);
     });
 
+    onMounted(() => {
+      emojiPicker.value?.addEventListener('emoji-pick', (event) => {
+        message.value += event.detail.emoji;
+        emojiOpen.value = false;
+      });
+    });
+
     return {
       message,
       post,
@@ -298,6 +349,8 @@ export default defineComponent({
       getInputProps,
       autoCompleteOptions,
       openMarkdownDoku,
+      emojiOpen,
+      emojiPicker,
       ...rest,
     };
   },
@@ -349,5 +402,30 @@ export default defineComponent({
 }
 .tribute-container .menu-highlighted {
   font-weight: bold;
+}
+unicode-emoji-picker {
+  /* Because the component is built using the "em" unit, everything is scaled up from the font-size */
+  /* So you should probably only change this value if you want to resize the component */
+  /* It also directly reflects the font-size for the emoji font */
+  font-size: 16px;
+  max-width: 20em;
+}
+
+.dark unicode-emoji-picker {
+  --fill-color: #393938;
+  --text-color: #fffffc;
+  --box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.35);
+  --filters-border-color: #30302a;
+  --filter-fill-color-hover: #454540;
+  --content-scrollbar-thumb-fill-color: #50504a;
+  --content-scrollbar-thumb-fill-color-hover: #76766f;
+  --filter-active-marker-border-color: #595955;
+  --title-bar-fill-color: rgba(57, 57, 55, 0.96);
+  --search-input-border-color: #50504a;
+  --search-input-border-color-hover: #eee;
+  --emoji-border-color-hover: #595955;
+  --variations-backdrop-fill-color: rgba(57, 57, 55, 0.8);
+  --emoji-variation-marker-border-color: #50504a;
+  --emoji-variation-marker-border-color-hover: #76766f;
 }
 </style>

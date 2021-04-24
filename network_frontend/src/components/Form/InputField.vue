@@ -26,7 +26,7 @@
     <button
       v-if="showButton"
       @click="emitClick"
-      class="inset-y-0 md:hidden cursor-pointer px-6 bg-highlight-500 absolute text-center right-0 rounded-xl items-center justify-center font-medium duration-100"
+      class="inset-y-0 md:hidden cursor-pointer px-6 bg-highlight-500 absolute text-center right-0 rounded-lg items-center justify-center font-medium duration-100"
     >
       <slot name="mobileIcon" />
     </button>

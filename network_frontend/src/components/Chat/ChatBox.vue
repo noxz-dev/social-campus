@@ -99,9 +99,10 @@ import { useMagicKeys } from '@vueuse/core';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 import { Howl } from 'howler';
+import { EmojiPickerElement } from 'unicode-emoji-picker';
 import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
-import { EmojiPickerElement } from 'unicode-emoji-picker';
+
 export default defineComponent({
   props: {},
   components: { Message, InputField },

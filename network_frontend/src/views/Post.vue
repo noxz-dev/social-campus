@@ -33,8 +33,8 @@
         <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück</span>
       </div>
       <div class="w-full mt-10 flex items-center flex-col">
-        <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark600" />
-        <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-6" />
+        <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark600" class="mb-3 md:mb-6" />
+        <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-3 md:mb-6" />
         <card>
           <div class="p-5 flex flex-col">
             <span class="pb-3">Schreibe einen Kommentar</span>
@@ -59,12 +59,12 @@
             </div>
           </div>
         </card>
-        <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-6" />
+        <div class="border-b-2 border-dark500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-3 md:mb-6 mt-3 md:mt-6" />
         <div v-if="postData" class="w-full flex flex-col items-center mb-20">
           <div v-if="postData.postById.comments.length === 0" class="dark:text-gray-50">
             <p>Noch keine Kommentare vorhanden</p>
           </div>
-          <card v-for="comment in postData.postById.comments" :key="comment.id">
+          <card v-for="comment in postData.postById.comments" :key="comment.id" class="m-1 md:my-3">
             <card-header :comment="comment" bg-color-dark="bg-dark-600" />
             <div class="p-5 pt-0">
               {{ comment.text }}

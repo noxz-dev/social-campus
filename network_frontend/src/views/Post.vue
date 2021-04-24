@@ -115,9 +115,12 @@ export default defineComponent({
         }
     );
 
+    let firstload = true;
+
     onResult(({ data }) => {
       postData.value = data;
-      commentInput.value.focus();
+      if (firstload) commentInput.value.focus();
+      firstload = false;
     });
 
     const rules = computed(() => ({

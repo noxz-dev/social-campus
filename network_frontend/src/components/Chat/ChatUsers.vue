@@ -53,7 +53,7 @@ import Modal from '../../components/Modal.vue';
 import NewChat from './NewChat.vue';
 import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import breakpoints from '../../utils/breakpoints';
 export default defineComponent({
   emits: ['user-choosen'],
@@ -62,6 +62,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const user = computed(() => store.state.userData.user);
 
     const modal = ref<InstanceType<typeof Modal>>();
@@ -71,7 +72,7 @@ export default defineComponent({
     let firstload = true;
     onResult(() => {
       console.log('set active chat');
-      if (chats.value && breakpoints.is !== 'sm' && firstload)
+      if (chats.value && breakpoints.is !== 'sm' && firstload && route.name !== 'ChatBox')
         router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
       firstload = false;
     });

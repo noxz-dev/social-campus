@@ -894,7 +894,7 @@ export type GroupByIdQuery = (
   { __typename?: 'Query' }
   & { groupById: (
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfPosts'>
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfPosts' | 'numberOfMembers'>
   ) }
 );
 
@@ -908,7 +908,10 @@ export type GroupMembersQuery = (
   & { groupById: (
     { __typename?: 'Group' }
     & Pick<Group, 'id'>
-    & { members: Array<(
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    ), members: Array<(
       { __typename?: 'GroupMember' }
       & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     )> }
@@ -925,7 +928,7 @@ export type GroupsQuery = (
   { __typename?: 'Query' }
   & { groups: Array<(
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description'>
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
   )> }
 );
 
@@ -952,6 +955,17 @@ export type MyChatsQuery = (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
     )> }
+  )> }
+);
+
+export type MyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyGroupsQuery = (
+  { __typename?: 'Query' }
+  & { myGroups: Array<(
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
   )> }
 );
 

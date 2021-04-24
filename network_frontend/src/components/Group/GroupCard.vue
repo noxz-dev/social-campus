@@ -5,14 +5,19 @@
         <lazy-image
           class="rounded-xl object-cover w-full"
           src="https://picsum.photos/300/300"
-          blurhash="AePC3PmlGv{c"
+          blurhash="LJIzs5=D5uK${^JWKP#*wd]fnlK5"
         />
       </div>
       <div class="p-3">
         <div class="line-clamp-2 h-12">
           <span class="text-md break-words">{{ group.name }}</span>
         </div>
-        <div><span class="text-sm text-gray-400">Gruppe - 1k Mitglieder</span></div>
+        <div>
+          <span class="text-sm text-gray-400"
+            >Gruppe - {{ numberFormatter(memberCount) }} <span v-if="memberCount === 1">Mitglied</span
+            ><span v-else>Mitglieder</span></span
+          >
+        </div>
       </div>
       <div class="mt-4 mb-4 px-2">
         <button
@@ -35,9 +40,10 @@
 
 <script lang="ts">
 import { Group } from '../../graphql/generated/types';
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import Card from '../Card/Card.vue';
 import LazyImage from '../Blurhash/LazyImage.vue';
+import { numberFormatter } from '../../utils/numberFormatter';
 export default defineComponent({
   props: {
     group: {
@@ -46,6 +52,13 @@ export default defineComponent({
     },
   },
   components: { Card, LazyImage },
+  setup(props) {
+    const memberCount = computed(() => props.group.numberOfMembers || 0);
+    return {
+      numberFormatter,
+      memberCount,
+    };
+  },
 });
 </script>
 LazyImage

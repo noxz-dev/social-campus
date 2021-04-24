@@ -6,6 +6,7 @@ export const groups = gql`
       id
       name
       description
+      numberOfMembers
     }
   }
 `;

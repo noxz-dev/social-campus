@@ -132,14 +132,16 @@ export default defineComponent({
 
     const parseTags = (content: string): string => {
       return content
-        .replaceAll(/#\w\w*/g, (val) => {
+        .replaceAll(/#[a-zA-ZäöüÄÖÜß]*/g, (val) => {
           val = val.replaceAll('#', '');
+          if (val.length === 0) return val;
           const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
           tagIds.push(val);
           return tag;
         })
-        .replaceAll(/@\w\w*/g, (val: string) => {
+        .replaceAll(/@[a-zA-ZäöüÄÖÜß]*/g, (val: string) => {
           val = val.replaceAll('@', '');
+          if (val.length === 0) return val;
           const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;
           mentions.push(val);
           return mention;

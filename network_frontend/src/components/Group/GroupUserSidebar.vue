@@ -3,7 +3,12 @@
     <div class="mb-5">
       <span class="dark:text-red-400 text-red-500 dark:text-opacity-60 text-opacity-75 tracking-wider">ADMIN</span>
       <div class="mt-4">
-        <div class="dark:bg-dark-500 bg-gray-300 w-full h-10 rounded-xl"></div>
+        <group-member-card
+          :avatar="owner?.profilePicLink"
+          :firstname="owner?.firstname"
+          :lastname="owner?.lastname"
+          :username="owner?.username"
+        ></group-member-card>
       </div>
     </div>
     <div class="mb-5">
@@ -56,9 +61,13 @@ export default defineComponent({
       groupId: route.params.id as string,
     }));
 
-    const members = useResult(result, null, (data) => result.value.groupById.members);
+    const owner = useResult(result, null, (data) => result.value.groupById.createdBy);
 
-    return { members };
+    const members = useResult(result, null, (data) =>
+      result.value.groupById.members.filter((m) => m.id !== result.value.groupById.createdBy.id)
+    );
+
+    return { members, owner };
   },
 });
 </script>

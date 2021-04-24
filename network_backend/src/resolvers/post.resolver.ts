@@ -294,8 +294,8 @@ export class PostResolver {
     dbPost.commentCount = 0;
     dbPost.liked = false;
 
-    if (content.match(/@\w\w*/g) !== null) {
-      for await (const mention of content.match(/@\w\w*/g)) {
+    if (content.match(/@[a-zA-ZäöüÄÖÜß]*/g) !== null) {
+      for await (const mention of content.match(/@[a-zA-ZäöüÄÖÜß]*/g)) {
         const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
         if (!toUser) return;
         await notify(
@@ -545,7 +545,7 @@ export const countComments = async (postId: string): Promise<number> => {
  * @returns string[]
  */
 const extractTags = (text: string): string[] => {
-  let tags = text.match(/#\w\w*/g);
+  let tags = text.match(/#[a-zA-ZäöüÄÖÜß]*/g);
   if (tags) {
     tags = tags?.map((tag) => tag.replace('#', ''));
     return tags;

@@ -13,7 +13,7 @@
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">Private Gruppe</div>
           <div class="w-1"></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">
-            · {{ numberFormatter(1000) }} Mitglieder
+            · {{ numberFormatter(numberOfMembers) }} Mitglieder
           </div>
         </div>
       </div>
@@ -114,6 +114,7 @@ export default defineComponent({
   setup(props) {
     const group = ref<Group>();
     const numberOfPosts = ref(0);
+    const numberOfMembers = ref(0);
     const router = useRouter();
 
     const { onResult } = useGroupByIdQuery(
@@ -126,6 +127,7 @@ export default defineComponent({
     onResult(({ data }) => {
       group.value = data.groupById;
       numberOfPosts.value = data.groupById.numberOfPosts || 0;
+      numberOfMembers.value = data.groupById.numberOfMembers || 0;
     });
 
     const { mutate: joinGrp } = useJoinGroupMutation(() => ({
@@ -150,6 +152,7 @@ export default defineComponent({
       numberFormatter,
       GroupComponents,
       numberOfPosts,
+      numberOfMembers,
       group,
       joinGroup,
     };

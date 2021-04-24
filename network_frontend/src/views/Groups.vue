@@ -73,9 +73,27 @@
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-2 flex justify-between px-4">
+            <span class="text-lg">Deine Gruppen</span>
+
+            <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="myGroupsOpen = !myGroupsOpen"
+              >Zeige alle</app-button
+            >
+          </div>
+        </div>
+        <div
+          class="w-full p-1 flex justify-center min-h-[26rem]"
+          ref="groupListContainer"
+          :class="myGroupsOpen ? '' : 'max-h-[30rem] overflow-hidden'"
+        >
+          <group-list :groups="myGroups"></group-list>
+        </div>
+      </div>
+      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
+        <div>
+          <div class="pb-2 flex justify-between px-4">
             <span class="text-lg">Empfohlene Gruppen</span>
 
-            <span class="text-lg cursor-pointer hover:text-highlight-500" @click="toggleGroups">Zeige alle</span>
+            <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="toggleGroups">Zeige alle</app-button>
           </div>
         </div>
         <div class="w-full p-1 flex justify-center min-h-[26rem]" ref="groupListContainer">
@@ -92,16 +110,16 @@
 
 <script lang="ts">
 import Card from '../components/Card/Card.vue';
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref } from 'vue';
 import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
-import { Group, GroupsQueryVariables } from '../graphql/generated/types';
-import { useGroupsQuery } from '../graphql/generated/graphqlOperations';
+import { Group } from '../graphql/generated/types';
+import { useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/graphqlOperations';
 import GroupList from '../components/Group/GroupList.vue';
-import breakpoints from '../utils/breakpoints';
 import { takeStateGroups } from '../utils/groupsTake';
 import { useResizeObserver } from '@vueuse/core';
+import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
   components: {
@@ -113,11 +131,11 @@ export default defineComponent({
   },
   setup() {
     const groups = ref<Partial<Group>[]>([]);
-    // const take = ref(3);
     const groupListContainer = ref<HTMLDivElement>();
     const skip = ref(0);
     const allGroups = ref(false);
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
+    const myGroupsOpen = ref(false);
 
     useResizeObserver(groupListContainer, (entries) => {
       if (takeStateGroups.take < 200) {
@@ -147,11 +165,16 @@ export default defineComponent({
       groups.value = data.groups;
     });
 
+    const { result } = useMyGroupsQuery();
+    const myGroups = useResult(result, null, (data) => data.myGroups);
+
     return {
       groups,
       toggleGroups,
       newGroupModal,
       groupListContainer,
+      myGroups,
+      myGroupsOpen,
     };
   },
 });

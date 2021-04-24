@@ -222,7 +222,7 @@ export default defineComponent({
         if (!file.value) return;
       }
 
-      let foundTags = message.value.match(/#\w\w*/g);
+      let foundTags = message.value.match(/#[a-zA-ZäöüÄÖÜß]*/g);
       if (foundTags) {
         foundTags = foundTags?.map((tag) => tag.replace('#', ''));
         tags.value = [...foundTags];

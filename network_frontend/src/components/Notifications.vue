@@ -134,7 +134,7 @@ export default defineComponent({
         console.log(notify);
         if (notify.chat) {
           router.push({
-            name: 'Chats',
+            name: 'ChatBox',
             params: {
               id: notify.chat.id,
             },

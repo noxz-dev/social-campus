@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { getRepository, In, Not } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
 import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
 import { Post } from '../entity/post.entity';
@@ -80,7 +80,7 @@ export class GroupResolver {
   @Query(() => Group)
   public async groupById(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Group> {
     const userId = ctx.req.user.id;
-    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
       throw new Error('group not found');
     }
@@ -91,17 +91,33 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => [Group])
-  public async groups(@Arg('skip') skip: number, @Arg('take') take: number): Promise<Group[]> {
+  public async groups(@Ctx() ctx: MyContext, @Arg('skip') skip: number, @Arg('take') take: number): Promise<Group[]> {
+    const userId = ctx.req.user.id;
+    const user = await getRepository(User).findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['groups'],
+    });
+
+    const ids = user.groups.map((g) => g.id);
     const groups = await getRepository(Group).find({
+      where: {
+        id: Not(In(ids)),
+      },
       skip,
       take,
-      relations: ['members'],
+      relations: ['members', 'createdBy'],
       order: { createdAt: 'DESC' },
     });
     if (!groups) {
       return [];
     }
-    return groups;
+
+    return groups.map((g) => {
+      g.numberOfMembers = g.members.length;
+      return g;
+    });
   }
 
   @Authorized()
@@ -111,12 +127,15 @@ export class GroupResolver {
 
     const user = await getRepository(User).findOne({
       where: { id: userId },
-      relations: ['groups', 'groups.members'],
+      relations: ['groups', 'groups.members', 'groups.createdBy'],
     });
     if (!user.groups) {
       return [];
     }
-    return user.groups;
+    return user.groups.map((g) => {
+      g.numberOfMembers = g.members.length;
+      return g;
+    });
   }
 
   @Authorized()
@@ -174,3 +193,14 @@ export class GroupResolver {
     return state;
   }
 }
+
+/**
+ * helper function to count all member of a group
+ * @param groupId string
+ * @returns number
+ */
+export const countMembers = async (groupId: string): Promise<number> => {
+  const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+  if (!group) return 0;
+  return group.members.length;
+};

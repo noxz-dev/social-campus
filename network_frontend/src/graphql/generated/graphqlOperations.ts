@@ -52,6 +52,8 @@ import {
   MeQueryVariables,
   MyChatsQuery,
   MyChatsQueryVariables,
+  MyGroupsQuery,
+  MyGroupsQueryVariables,
   NotificationsSubscription,
   NotificationsSubscriptionVariables,
   PostByIdQuery,
@@ -1050,6 +1052,7 @@ export const GroupByIdDocument = gql`
       name
       description
       numberOfPosts
+      numberOfMembers
     }
   }
 `;
@@ -1089,6 +1092,13 @@ export const GroupMembersDocument = gql`
   query groupMembers($groupId: String!) {
     groupById(groupId: $groupId) {
       id
+      createdBy {
+        id
+        firstname
+        lastname
+        username
+        profilePicLink
+      }
       members {
         id
         firstname
@@ -1141,6 +1151,7 @@ export const GroupsDocument = gql`
       id
       name
       description
+      numberOfMembers
     }
   }
 `;
@@ -1248,6 +1259,41 @@ export function useMyChatsQuery(
 export type MyChatsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   MyChatsQuery,
   MyChatsQueryVariables
+>;
+export const MyGroupsDocument = gql`
+  query myGroups {
+    myGroups {
+      id
+      name
+      description
+      numberOfMembers
+    }
+  }
+`;
+
+/**
+ * __useMyGroupsQuery__
+ *
+ * To run a query within a Vue component, call `useMyGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyGroupsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useMyGroupsQuery();
+ */
+export function useMyGroupsQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>> = {}
+) {
+  return VueApolloComposable.useQuery<MyGroupsQuery, MyGroupsQueryVariables>(MyGroupsDocument, {}, options);
+}
+export type MyGroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  MyGroupsQuery,
+  MyGroupsQueryVariables
 >;
 export const GetNotificationsDocument = gql`
   query getNotifications {

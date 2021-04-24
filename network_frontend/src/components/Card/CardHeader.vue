@@ -6,7 +6,7 @@
       </div>
       <div class="min-w-0 flex-1">
         <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row">
-          <div class="flex-1">{{ firstname + ' ' + lastname }}</div>
+          <div>{{ firstname + ' ' + lastname }}</div>
           <div v-if="group" class="flex items-center">
             <svg
               class="transform rotate-90 md:mx-2 mr-2"

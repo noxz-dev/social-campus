@@ -12,5 +12,5 @@ export abstract class Base {
 
   @Field()
   @Column()
-  readonly createdAt: Date = new Date();
+  createdAt: Date = new Date();
 }

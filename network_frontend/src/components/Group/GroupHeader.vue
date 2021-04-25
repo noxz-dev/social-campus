@@ -9,13 +9,17 @@
           {{ group.name }}
         </div>
         <div class="flex">
-          <div></div>
-          <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">Private Gruppe</div>
+          <div class="text-lg font-semibold dark:text-gray-400 text-gray-900" v-if="group">
+            <span v-if="group.type === 'PRIVATE'">Private </span>
+            <span v-else>Öffentliche </span>
+            Gruppe
+          </div>
           <div class="w-1"></div>
           <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">
             · {{ numberFormatter(numberOfMembers) }} Mitglieder
           </div>
         </div>
+        <div class="dark:text-gray-50 text-gray-900 my-2 break-words">{{ group?.description }}</div>
       </div>
       <div class="flex h-full items-center">
         <div class="ml-10">

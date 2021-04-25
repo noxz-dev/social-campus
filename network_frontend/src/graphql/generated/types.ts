@@ -145,6 +145,7 @@ export type Mutation = {
   unlikeComment: Comment;
   createGroup: Group;
   joinGroup: Group;
+  updateGroupRole: Group;
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -238,6 +239,13 @@ export type MutationCreateGroupArgs = {
 export type MutationJoinGroupArgs = {
   password?: Maybe<Scalars['String']>;
   groupId: Scalars['String'];
+};
+
+
+export type MutationUpdateGroupRoleArgs = {
+  groupRole: GroupRoles;
+  groupId: Scalars['String'];
+  memberId: Scalars['String'];
 };
 
 
@@ -353,7 +361,6 @@ export type Query = {
   groupById: Group;
   groups: Array<Group>;
   myGroups: Array<Group>;
-  addGroupRole: Group;
   checkGroupAccess: GroupState;
   getRoles: Array<Role>;
   search: Search;
@@ -417,11 +424,6 @@ export type QueryGroupByIdArgs = {
 export type QueryGroupsArgs = {
   take: Scalars['Float'];
   skip: Scalars['Float'];
-};
-
-
-export type QueryAddGroupRoleArgs = {
-  userId: Scalars['String'];
 };
 
 
@@ -901,7 +903,7 @@ export type GroupByIdQuery = (
   { __typename?: 'Query' }
   & { groupById: (
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfPosts' | 'numberOfMembers'>
+    & Pick<Group, 'type' | 'id' | 'name' | 'description' | 'numberOfPosts' | 'numberOfMembers'>
   ) }
 );
 
@@ -1907,6 +1909,7 @@ export type GetPostsFromGroupQueryCompositionFunctionResult = VueApolloComposabl
 export const GroupByIdDocument = gql`
     query groupById($groupId: String!) {
   groupById(groupId: $groupId) {
+    type
     id
     name
     description

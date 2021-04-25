@@ -1,5 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { Chat } from '../entity/chat.entity';
 import { ChatMessage } from '../entity/chatmessage.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -33,9 +34,15 @@ export class ChatResolver {
         order: { createdAt: 'DESC' },
         take: 1,
       });
-      chat.lastMessage = messages[0];
+      if (messages[0]) {
+        chat.lastMessage = messages[0];
+      } else {
+        const message = new ChatMessage(user, chat, 'neuer chat');
+        message.id = uuidv4();
+        message.createdAt = chat.createdAt;
+        chat.lastMessage = message;
+      }
     }
-
     user.chats.sort((a, b) => (a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1));
     log.info(`'User with the id: ${userId} called myChats'`);
     return user.chats;

@@ -85,12 +85,11 @@
 <script lang="ts">
 import { useCreateGroupMutation } from '../../graphql/generated/types';
 import { CreateGroupMutationVariables, GroupType } from '../../graphql/generated/types';
-import { defineComponent, getCurrentInstance, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CustomSelect from '../Form/CustomSelect.vue';
 import InputField from '../Form/InputField.vue';
-import { groups } from '../../graphql/queries/groups';
-import { takeStateGroups } from '../../utils/groupsTake';
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue';
+import { myGroups } from '../../graphql/queries/myGroups';
 export default defineComponent({
   components: { InputField, CustomSelect, TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle },
   props: {
@@ -127,11 +126,7 @@ export default defineComponent({
       },
       refetchQueries: [
         {
-          query: groups,
-          variables: {
-            take: takeStateGroups.take,
-            skip: 0,
-          },
+          query: myGroups,
         },
       ],
     }));

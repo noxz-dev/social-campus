@@ -10,6 +10,7 @@
             :lastname="admin.lastname"
             :username="admin.username"
             :status="admin.onlineStatus"
+            :userId="admin.id"
           ></group-member-card>
         </div>
       </div>
@@ -26,6 +27,7 @@
             :lastname="member.lastname"
             :username="member.username"
             :status="member.onlineStatus"
+            :userId="member.id"
           ></group-member-card>
         </div>
       </div>
@@ -39,6 +41,7 @@
           :lastname="member.lastname"
           :username="member.username"
           :status="member.onlineStatus"
+          :userId="member.id"
         ></group-member-card>
       </div>
     </div>

@@ -97,7 +97,7 @@
           </div>
         </div>
         <div class="w-full p-1 flex justify-center min-h-[24rem]" ref="groupListContainer">
-          <group-list :groups="groups"></group-list>
+          <group-list :groups="groups" :isMemberOfGroup="false"></group-list>
         </div>
       </div>
       <div class="mt-10 p-4 dark:bg-dark-600 bg-gray-200 w-full h-1/3 rounded-lg dark:text-gray-50 pb-20 mb-32">
@@ -139,8 +139,8 @@ export default defineComponent({
 
     function updateTake([entry]: any) {
       if (takeStateGroups.take < 200) {
-        const { width, height } = entry.contentRect;
-        console.log(width, height);
+        const { width } = entry.contentRect;
+
         takeStateGroups.take = Math.floor(width / 260);
       }
     }

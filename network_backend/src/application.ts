@@ -93,7 +93,9 @@ export class Application {
           },
           async onDisconnect(socket: MyWebSocket) {
             log.info('⛏ user disconnected from the subscriptions server');
-            await updateOnlineStatus(socket.user.id, OnlineStatus.OFFLINE);
+            if (socket.user) {
+              await updateOnlineStatus(socket.user.id, OnlineStatus.OFFLINE);
+            }
           },
         },
         context: ({ req, res, connection }) => {

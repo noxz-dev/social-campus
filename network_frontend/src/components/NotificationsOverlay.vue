@@ -1,7 +1,7 @@
 <template></template>
 
 <script lang="ts">
-import { useNotificationsSubscription } from '../graphql/generated/graphqlOperations';
+import { useNotificationsSubscription } from '../graphql/generated/types';
 import { defineComponent, inject, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { Toast } from 'vue-dk-toast';

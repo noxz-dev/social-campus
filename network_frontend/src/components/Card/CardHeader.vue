@@ -166,7 +166,7 @@ import { computed, defineComponent, PropType, ref } from 'vue';
 import dayjs from 'dayjs';
 import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from '../PermissionContainer.vue';
-import { useDeletePostMutation } from '../../graphql/generated/graphqlOperations';
+import { useDeletePostMutation } from '../../graphql/generated/types';
 import { DeletePostMutationVariables, Post } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { useRoute } from 'vue-router';

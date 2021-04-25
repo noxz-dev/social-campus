@@ -11,7 +11,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';
 import CustomSelect from '../Form/CustomSelect.vue';
-import { useCreateChatMutation, useSearchQuery } from '../../graphql/generated/graphqlOperations';
+import { useCreateChatMutation, useSearchQuery } from '../../graphql/generated/types';
 import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
 export default defineComponent({

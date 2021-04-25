@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { useDeleteNotificationMutation } from '../graphql/generated/graphqlOperations';
+import { useDeleteNotificationMutation } from '../graphql/generated/types';
 import { defineComponent, PropType, ref, toRefs, watch } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';

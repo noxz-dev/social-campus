@@ -10,6 +10,7 @@ export const groupMembers = gql`
         lastname
         username
         profilePicLink
+        onlineStatus
       }
       members {
         id
@@ -17,6 +18,8 @@ export const groupMembers = gql`
         lastname
         username
         profilePicLink
+        onlineStatus
+        groupRole
       }
     }
   }

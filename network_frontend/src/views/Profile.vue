@@ -132,7 +132,7 @@ import {
   useRemoveFollowerMutation,
   useUserByUsernameQuery,
   useUserStatsQuery,
-} from '../graphql/generated/graphqlOperations';
+} from '../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';

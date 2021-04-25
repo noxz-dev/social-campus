@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import { useGetPostsFromUserQuery } from '../graphql/generated/graphqlOperations';
-import { GetPostsFromUserQueryVariables, Post } from '../graphql/generated/types';
+import { useGetPostsFromUserQuery } from '../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
+import { useResult } from '@vue/apollo-composable';
 import PostList from '../components/Post/PostList.vue';
 
 export default defineComponent({
@@ -16,20 +16,13 @@ export default defineComponent({
     userId: String,
   },
   setup(props) {
-    const posts = ref<Post>();
+    const { result } = useGetPostsFromUserQuery(() => ({
+      userID: props.userId as string,
+      take: 100,
+      skip: 0,
+    }));
 
-    const { onResult: onResultPosts } = useGetPostsFromUserQuery(
-      () =>
-        <GetPostsFromUserQueryVariables>{
-          userID: props.userId,
-          take: 100,
-          skip: 0,
-        }
-    );
-
-    onResultPosts(({ data: { getPostsFromUser } }: { data: { getPostsFromUser: Post } }) => {
-      posts.value = getPostsFromUser;
-    });
+    const posts = useResult(result, null, (data) => data.getPostsFromUser);
 
     return { posts };
   },

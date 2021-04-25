@@ -83,7 +83,7 @@
         <div
           class="w-full p-1 flex justify-center min-h-[24rem]"
           ref="groupListContainer"
-          :class="myGroupsOpen ? '' : 'max-h-[29rem] overflow-hidden'"
+          :class="myGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
           <group-list :groups="myGroups" :isMemberOfGroup="true"></group-list>
         </div>
@@ -115,7 +115,7 @@ import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
 import { Group } from '../graphql/generated/types';
-import { useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/graphqlOperations';
+import { useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
 import GroupList from '../components/Group/GroupList.vue';
 import { takeStateGroups } from '../utils/groupsTake';
 import { useResizeObserver } from '@vueuse/core';
@@ -137,10 +137,8 @@ export default defineComponent({
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
     const myGroupsOpen = ref(false);
 
-    function updateTake(entries: any) {
+    function updateTake([entry]: any) {
       if (takeStateGroups.take < 200) {
-        console.log(entries);
-        const entry = entries[0];
         const { width, height } = entry.contentRect;
         console.log(width, height);
         takeStateGroups.take = Math.floor(width / 260);
@@ -161,7 +159,8 @@ export default defineComponent({
         takeStateGroups.take = 200;
         allGroups.value = !allGroups.value;
       } else {
-        updateTake();
+        const { width } = groupListContainer.value?.getBoundingClientRect()!;
+        takeStateGroups.take = Math.floor(width / 260);
         allGroups.value = !allGroups.value;
       }
     }

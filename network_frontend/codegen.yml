@@ -6,8 +6,6 @@ generates:
     plugins:
       - 'typescript'
       - 'typescript-operations'
-  src/graphql/generated/graphqlOperations.ts:
-    plugins:
       - 'typescript-vue-apollo'
     config:
       withCompositionFunctions: true

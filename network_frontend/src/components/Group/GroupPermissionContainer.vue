@@ -6,7 +6,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useCheckGroupAccessQuery } from '../../graphql/generated/graphqlOperations';
+import { useCheckGroupAccessQuery } from '../../graphql/generated/types';
 import { CheckGroupAccessQueryVariables, GroupState, GroupType } from '../../graphql/generated/types';
 
 export default defineComponent({

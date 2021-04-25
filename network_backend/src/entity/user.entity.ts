@@ -70,6 +70,10 @@ export class User extends Base {
   @Field(() => Boolean)
   meFollowing: boolean;
 
+  @Field(() => Boolean)
+  @Column({ default: false })
+  onlineStatus: boolean;
+
   @AfterLoad()
   async generatePictureLink(): Promise<void> {
     if (this.profilePicName !== null) {

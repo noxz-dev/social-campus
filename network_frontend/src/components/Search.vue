@@ -102,7 +102,7 @@
 
 <script lang="ts">
 import { onClickOutside, TimeoutFnResult } from '@vueuse/core';
-import { useSearchQuery } from '../graphql/generated/graphqlOperations';
+import { useSearchQuery } from '../graphql/generated/types';
 import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import InputField from './Form/InputField.vue';

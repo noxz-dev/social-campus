@@ -125,7 +125,7 @@ import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 import { getPostsFromUser } from '../../graphql/queries/postFromUser';
-import { useAddPostMutation } from '../../graphql/generated/graphqlOperations';
+import { useAddPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { useRoute } from 'vue-router';
 import { AddPostMutationVariables, Tag, User } from '../../graphql/generated/types';

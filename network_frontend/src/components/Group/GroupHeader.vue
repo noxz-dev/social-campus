@@ -94,7 +94,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import LazyImage from '../Blurhash/LazyImage.vue';
 import { numberFormatter } from '../../utils/numberFormatter';
 import { GroupComponents } from '../../views/Group.vue';
-import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated/graphqlOperations';
+import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated/types';
 import { Group, GroupByIdQueryVariables, JoinGroupMutationVariables } from '../../graphql/generated/types';
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
 import { useRouter } from 'vue-router';

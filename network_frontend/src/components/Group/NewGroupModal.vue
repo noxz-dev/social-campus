@@ -83,7 +83,7 @@
   </TransitionRoot>
 </template>
 <script lang="ts">
-import { useCreateGroupMutation } from '../../graphql/generated/graphqlOperations';
+import { useCreateGroupMutation } from '../../graphql/generated/types';
 import { CreateGroupMutationVariables, GroupType } from '../../graphql/generated/types';
 import { defineComponent, getCurrentInstance, ref } from 'vue';
 import CustomSelect from '../Form/CustomSelect.vue';

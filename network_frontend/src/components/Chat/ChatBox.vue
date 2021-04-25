@@ -94,7 +94,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import InputField from '../Form/InputField.vue';
-import { useChatByIdQuery, useSendMessageMutation } from '../../graphql/generated/graphqlOperations';
+import { useChatByIdQuery, useSendMessageMutation } from '../../graphql/generated/types';
 import Message from './Message.vue';
 import { useResult } from '@vue/apollo-composable';
 import { SendMessageMutationVariables } from '../../graphql/generated/types';

@@ -84,7 +84,7 @@
 
 <script lang="ts">
 import PostCard from '../components/Post/PostCard.vue';
-import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/graphqlOperations';
+import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/types';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';

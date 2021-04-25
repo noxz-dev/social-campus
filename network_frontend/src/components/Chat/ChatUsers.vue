@@ -52,7 +52,7 @@
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
 import { computed, defineComponent, ref } from 'vue';
-import { useMyChatsQuery } from '../../graphql/generated/graphqlOperations';
+import { useMyChatsQuery } from '../../graphql/generated/types';
 import Modal from '../../components/Modal.vue';
 import NewChat from './NewChat.vue';
 import { chatState } from '../../utils/chatState';

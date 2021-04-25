@@ -446,7 +446,7 @@ import Modal from '@/components/Modal.vue';
 import NewPost from './Post/NewPost.vue';
 import EditPost from './Post/EditPost.vue';
 import breakpoints from '../utils/breakpoints';
-import { useGetNotificationsQuery, useMeQuery } from '../graphql/generated/graphqlOperations';
+import { useGetNotificationsQuery, useMeQuery } from '../graphql/generated/types';
 import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';

@@ -37,8 +37,13 @@ export class GroupResolver {
     if (description) group.description = description;
     group.members.push(user as GroupMember);
 
-    await getRepository(Group).save(group);
-    return group;
+    const saved = await getRepository(Group).save(group);
+    const groupRole = new GroupMemberRole();
+    groupRole.group = saved;
+    groupRole.user = user;
+    groupRole.role = GroupRole.ADMIN;
+    await getRepository(GroupMemberRole).save(groupRole);
+    return saved;
   }
 
   @Authorized()
@@ -66,12 +71,22 @@ export class GroupResolver {
 
     if (group.type === GroupType.PRIVATE && group.password === password) {
       group.members.push(user as GroupMember);
-      await getRepository(Group).save(group);
-      return group;
+      const groupRole = new GroupMemberRole();
+      groupRole.group = group;
+      groupRole.user = user;
+      groupRole.role = GroupRole.MEMBER;
+      await getRepository(GroupMemberRole).save(groupRole);
+      const saved = await getRepository(Group).save(group);
+      return saved;
     } else if (group.type === GroupType.PUBLIC) {
       group.members.push(user as GroupMember);
-      await getRepository(Group).save(group);
-      return group;
+      const groupRole = new GroupMemberRole();
+      groupRole.group = group;
+      groupRole.user = user;
+      groupRole.role = GroupRole.MEMBER;
+      await getRepository(GroupMemberRole).save(groupRole);
+      const saved = await getRepository(Group).save(group);
+      return saved;
     }
     throw Error('could not join the group');
   }
@@ -86,6 +101,7 @@ export class GroupResolver {
     }
     group.numberOfMembers = group.members.length;
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
+    group.members = await getGroupMembersWithRoles(group.id);
     return group;
   }
 
@@ -101,7 +117,7 @@ export class GroupResolver {
     });
 
     const ids = user.groups.map((g) => g.id);
-    const groups = await getRepository(Group).find({
+    let groups = await getRepository(Group).find({
       where: {
         id: Not(In(ids)),
       },
@@ -114,10 +130,16 @@ export class GroupResolver {
       return [];
     }
 
-    return groups.map((g) => {
+    groups = groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
     });
+
+    for await (const group of groups) {
+      group.members = await getGroupMembersWithRoles(group.id);
+    }
+
+    return groups;
   }
 
   @Authorized()
@@ -132,42 +154,45 @@ export class GroupResolver {
     if (!user.groups) {
       return [];
     }
-    return user.groups.map((g) => {
+
+    user.groups = user.groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
     });
+
+    for await (const group of user.groups) {
+      group.members = await getGroupMembersWithRoles(group.id);
+    }
+
+    return user.groups;
   }
 
   @Authorized()
-  @Query(() => Group)
-  public async addGroupRole(@Ctx() ctx: MyContext, @Arg('userId') userId: string): Promise<Group> {
-    // const userId = ctx.req.user.id;
-    const user = await getRepository(User).findOne({ where: { id: userId } });
+  @Mutation(() => Group)
+  public async updateGroupRole(
+    @Ctx() ctx: MyContext,
+    @Arg('memberId') memberId: string,
+    @Arg('groupId') groupId: string,
+    @Arg('groupRole', () => GroupRole) groupRole: GroupRole,
+  ): Promise<Group> {
+    const userId = ctx.req.user.id;
+    const loggedInRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId } });
+    console.log(loggedInRole);
+    if (loggedInRole.role !== GroupRole.ADMIN) throw new Error('youre not allowed to do this');
 
-    const group = await getRepository(Group).findOne({ relations: ['members'] });
+    const user = await getRepository(User).findOne({ where: { id: memberId } });
 
-    const role = new GroupMemberRole();
-    role.role = GroupRole.MEMBER;
-    role.group = group;
-    role.user = user;
-    // for await (const user of users) {
+    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
 
-    //   const saved = await getRepository(GroupMemberRole).save(role);
-    //   roles.push(saved);
-    // }
+    const role = await getRepository(GroupMemberRole).findOne({ where: { user: user } });
 
-    // group.memberRoles = [...group.memberRoles, ...roles];
+    role.role = groupRole;
 
-    const updatedGroup = await getRepository(Group).save(group);
+    await getRepository(GroupMemberRole).save(role);
 
-    const roles = await getRepository(GroupMemberRole).find({ where: { group: group }, relations: ['user'] });
+    group.members = await getGroupMembersWithRoles(groupId);
 
-    updatedGroup.members = updatedGroup.members.map((member) => {
-      member.groupRole = roles.find((role) => role.user.id === member.id).role;
-      return member;
-    });
-
-    return updatedGroup;
+    return group;
   }
 
   @Authorized()
@@ -203,4 +228,15 @@ export const countMembers = async (groupId: string): Promise<number> => {
   const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
   if (!group) return 0;
   return group.members.length;
+};
+
+export const getGroupMembersWithRoles = async (groupId: string): Promise<GroupMember[]> => {
+  const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+  const roles = await getRepository(GroupMemberRole).find({ where: { group: group }, relations: ['user'] });
+  group.members = group.members.map((member) => {
+    member.groupRole = roles.find((role) => role.user.id === member.id).role;
+    return member;
+  });
+
+  return group.members;
 };

@@ -10,6 +10,7 @@ import http, { Server } from 'http';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
+import { MyWebSocket } from 'utils/types/apollo';
 import '../ormconfig';
 import {
   ChatResolver,
@@ -24,7 +25,9 @@ import {
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './utils/helpers/authChecker';
+import { OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
 import { MyContext } from './utils/interfaces/context.interface';
+import { JwtUser } from './utils/interfaces/jwtUser.interface';
 import { authenticateToken } from './utils/middlewares/auth';
 import { log } from './utils/services/logger';
 import { initS3 } from './utils/services/minio';
@@ -75,19 +78,22 @@ export class Application {
       const server = new ApolloServer({
         schema,
         subscriptions: {
-          onConnect(connectionParams: { campusToken: string }, socket) {
+          keepAlive: 2000,
+          async onConnect(connectionParams: { campusToken: string }, socket: MyWebSocket) {
             if (connectionParams.campusToken) {
-              const user = verifyAccessToken(connectionParams.campusToken);
+              const user = verifyAccessToken(connectionParams.campusToken) as JwtUser;
               log.info('✨ user connected to the subscriptions server');
-              // socket.user = user;
+              socket.user = user as JwtUser;
+              await updateOnlineStatus(user.id, OnlineStatus.ONLINE);
               return {
                 user,
               };
             }
             throw new Error('Missing auth token!');
           },
-          onDisconnect(socket) {
-            // console.log(socket.user);
+          async onDisconnect(socket: MyWebSocket) {
+            log.info('⛏ user disconnected from the subscriptions server');
+            await updateOnlineStatus(socket.user.id, OnlineStatus.OFFLINE);
           },
         },
         context: ({ req, res, connection }) => {

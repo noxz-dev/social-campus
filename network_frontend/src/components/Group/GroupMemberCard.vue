@@ -17,7 +17,16 @@
         <div class="flex-1 min-w-0">
           <div class="focus:outline-none">
             <p class="text-sm font-medium dark:text-gray-50 text-gray-900">{{ firstname + ' ' + lastname }}</p>
-            <!-- <p class="text-sm text-gray-500 truncate">letzte nachricht</p> -->
+          </div>
+          <div class="dark:text-gray-50 text-xs">
+            <span class="flex items-center text-green-500" v-if="status"
+              ><div class="h-2 rounded-full w-2 bg-green-500 mr-2"></div>
+              online</span
+            >
+            <span class="flex items-center text-gray-400" v-else
+              ><div class="h-2 rounded-full w-2 bg-gray-500 mr-2"></div>
+              offline</span
+            >
           </div>
         </div>
       </div>
@@ -31,6 +40,7 @@ export default defineComponent({
     firstname: String,
     lastname: String,
     username: String,
+    status: Boolean,
     avatar: {
       type: String,
       default: 'https://via.placeholder.com/150',

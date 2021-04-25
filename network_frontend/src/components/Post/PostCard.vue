@@ -68,7 +68,7 @@
 import { defineComponent, onMounted, onUpdated } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useLikePostMutation, useUnlikePostMutation } from '../../graphql/generated/graphqlOperations';
+import { useLikePostMutation, useUnlikePostMutation } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import CardHeader from '../Card/CardHeader.vue';
 import { LikePostMutationVariables, UnlikePostMutationVariables } from '../../graphql/generated/types';

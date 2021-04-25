@@ -15,7 +15,9 @@
         <div class="bg-white dark:bg-dark700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
             <div class="mt-3 sm:mt-0 sm:text-left w-full py-10">
-              <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">Gruppe 1 Beitreten</h3>
+              <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">
+                Gruppe 1 Beitreten
+              </h3>
               <div class="mt-10">
                 <div class="dark:text-gray-50 text-gray-900 mb-4">Gruppen Passwort</div>
                 <input-field placeholder="passwort1234" v-model="groupPassword" />
@@ -32,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { useJoinGroupMutation } from '../../graphql/generated/graphqlOperations';
+import { useJoinGroupMutation } from '../../graphql/generated/types';
 import { JoinGroupMutationVariables } from '../../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';

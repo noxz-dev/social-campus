@@ -32,9 +32,9 @@ import { computed, defineComponent, getCurrentInstance, PropType, ref } from 'vu
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
-import { useEditPostMutation } from '../../graphql/generated/graphqlOperations';
+import { useEditPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
-import { EditPostMutationVariables, Post } from 'src/graphql/generated/types';
+import { Post } from 'src/graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { useRoute } from 'vue-router';
 import { browsePosts } from '../../graphql/queries/browsePosts';

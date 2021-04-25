@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
 import { computed, defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { useGetPostsFromGroupQuery } from '../../graphql/generated/graphqlOperations';
+import { useGetPostsFromGroupQuery } from '../../graphql/generated/types';
 import { GetPostsFromGroupQueryVariables } from '../../graphql/generated/types';
 import PostList from '../Post/PostList.vue';
 

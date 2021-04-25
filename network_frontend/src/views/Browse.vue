@@ -24,7 +24,7 @@
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
 import { computed, defineComponent, ref, watch, watchEffect } from 'vue';
-import { useBrowsePostsQuery } from '../graphql/generated/graphqlOperations';
+import { useBrowsePostsQuery } from '../graphql/generated/types';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';

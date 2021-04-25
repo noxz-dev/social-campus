@@ -5,10 +5,10 @@
         <lazy-image
           class="rounded-xl object-cover w-full"
           src="https://picsum.photos/300/300"
-          blurhash="LJIzs5=D5uK${^JWKP#*wd]fnlK5"
+          blurhash="LJIzs5=D5uK$^aJWKP#*wd]fnlK5"
         />
       </div>
-      <div class="p-3">
+      <div class="p-3 pt-1">
         <div class="line-clamp-2 h-12">
           <span class="text-md break-words">{{ group.name }}</span>
         </div>
@@ -19,7 +19,7 @@
           >
         </div>
       </div>
-      <div class="mt-4 mb-4 px-2">
+      <div class="mb-2 px-2">
         <button
           class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white dark:bg-dark-600 bg-gray-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
           @click="

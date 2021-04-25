@@ -1,4 +1,5 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
+import compression from 'compression';
 import cors from 'cors';
 import 'dotenv/config';
 import { EventEmitter } from 'events';
@@ -139,6 +140,11 @@ export class Application {
         req.pubsub = this.pubsub;
         next();
       });
+      app.use(
+        compression({
+          threshold: 0, // Byte threshold (0 means compress everything)
+        }),
+      );
       server.applyMiddleware({ app });
 
       // start server on default port 5000

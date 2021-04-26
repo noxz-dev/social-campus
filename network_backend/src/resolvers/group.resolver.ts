@@ -155,16 +155,49 @@ export class GroupResolver {
       return [];
     }
 
+    for await (const group of user.groups) {
+      group.members = await getGroupMembersWithRoles(group.id);
+    }
     user.groups = user.groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
     });
 
-    for await (const group of user.groups) {
+    return user.groups;
+  }
+
+  @Authorized()
+  @Query(() => [Group])
+  public async followingGroups(@Ctx() ctx: MyContext): Promise<Group[]> {
+    const userId = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({
+      where: { id: userId },
+      relations: ['following', 'following.groups'],
+    });
+
+    if (!user) {
+      return [];
+    }
+
+    let groups: Group[] = [];
+
+    for (const following of user.following) {
+      groups.push(...following.groups);
+    }
+
+    groups = groups.filter((group, i, arr) => arr.findIndex((t) => t.id === group.id) === i);
+
+    for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);
     }
 
-    return user.groups;
+    groups = groups.map((g) => {
+      g.numberOfMembers = g.members.length;
+      return g;
+    });
+
+    return groups;
   }
 
   @Authorized()

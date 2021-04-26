@@ -47,7 +47,7 @@ export class PostResolver {
         'comments.likes',
         'comments.likes.user',
       ],
-      where: { user: { id: userID } },
+      where: { user: { id: userID }, group: null },
       order: { createdAt: 'DESC' },
       take: take,
       skip: skip,
@@ -81,10 +81,10 @@ export class PostResolver {
     if (tags && tags.length > 0) {
       posts = await getRepository(Post)
         .createQueryBuilder('posts')
-        .where('posts.group = :group', { group: null })
+        .where('posts.group is null')
         .leftJoinAndSelect('posts.user', 'user')
         .leftJoinAndSelect('posts.tags', 'tags')
-        .where('lower(tags.name) IN (:...tags)', { tags: tags.map((t) => t.toLowerCase()) })
+        .andWhere('lower(tags.name) IN (:...tags)', { tags: tags.map((t) => t.toLowerCase()) })
         .orderBy('posts.createdAt', 'DESC')
         .skip(skip)
         .take(take)
@@ -294,8 +294,8 @@ export class PostResolver {
     dbPost.commentCount = 0;
     dbPost.liked = false;
 
-    if (content.match(/@[a-zA-ZäöüÄÖÜß]*/g) !== null) {
-      for await (const mention of content.match(/@[a-zA-ZäöüÄÖÜß]*/g)) {
+    if (content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g) !== null) {
+      for await (const mention of content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)) {
         const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
         if (!toUser) return;
         await notify(
@@ -545,7 +545,7 @@ export const countComments = async (postId: string): Promise<number> => {
  * @returns string[]
  */
 const extractTags = (text: string): string[] => {
-  let tags = text.match(/#[a-zA-ZäöüÄÖÜß]*/g);
+  let tags = text.match(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g);
   if (tags) {
     tags = tags?.map((tag) => tag.replace('#', ''));
     return tags;

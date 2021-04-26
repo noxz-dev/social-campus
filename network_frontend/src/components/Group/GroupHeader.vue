@@ -25,7 +25,7 @@
         <div class="ml-10">
           <group-permission-container :groupId="groupId">
             <template v-slot:onlyMember>
-              <app-button @click="joinGroup"
+              <app-button
                 ><svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
                   <rect width="256" height="256" fill="none"></rect>
                   <line

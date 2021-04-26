@@ -361,6 +361,7 @@ export type Query = {
   groupById: Group;
   groups: Array<Group>;
   myGroups: Array<Group>;
+  followingGroups: Array<Group>;
   checkGroupAccess: GroupState;
   getRoles: Array<Role>;
   search: Search;
@@ -853,6 +854,17 @@ export type FollowingQuery = (
   & { following: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+  )> }
+);
+
+export type FollowingGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FollowingGroupsQuery = (
+  { __typename?: 'Query' }
+  & { followingGroups: Array<(
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
   )> }
 );
 
@@ -1819,6 +1831,33 @@ export function useFollowingQuery(variables: FollowingQueryVariables | VueCompos
   return VueApolloComposable.useQuery<FollowingQuery, FollowingQueryVariables>(FollowingDocument, variables, options);
 }
 export type FollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowingQuery, FollowingQueryVariables>;
+export const FollowingGroupsDocument = gql`
+    query followingGroups {
+  followingGroups {
+    id
+    name
+    description
+    numberOfMembers
+  }
+}
+    `;
+
+/**
+ * __useFollowingGroupsQuery__
+ *
+ * To run a query within a Vue component, call `useFollowingGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFollowingGroupsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useFollowingGroupsQuery();
+ */
+export function useFollowingGroupsQuery(options: VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<FollowingGroupsQuery, FollowingGroupsQueryVariables>(FollowingGroupsDocument, {}, options);
+}
+export type FollowingGroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowingGroupsQuery, FollowingGroupsQueryVariables>;
 export const GetFeedDocument = gql`
     query getFeed($take: Float!, $skip: Float!) {
   getFeed(take: $take, skip: $skip) {

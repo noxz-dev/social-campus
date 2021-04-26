@@ -132,7 +132,7 @@ export default defineComponent({
 
     const parseTags = (content: string): string => {
       return content
-        .replaceAll(/#[a-zA-ZäöüÄÖÜß]*/g, (val) => {
+        .replaceAll(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g, (val) => {
           val = val.replaceAll('#', '');
           if (val.length === 0) return val;
           const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;

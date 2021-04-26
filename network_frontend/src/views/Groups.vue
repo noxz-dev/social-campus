@@ -81,11 +81,14 @@
           </div>
         </div>
         <div
-          class="w-full p-1 flex justify-center min-h-[24rem]"
+          class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]"
           ref="groupListContainer"
           :class="myGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
-          <group-list :groups="myGroups" :isMemberOfGroup="true"></group-list>
+          <div v-if="myGroups" class="w-full">
+            <group-list v-if="myGroups.length > 0" :groups="myGroups" :isMemberOfGroup="true"></group-list>
+          </div>
+          <div v-else>Keine Gruppen gefunden, tritt doch welchen bei</div>
         </div>
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
@@ -96,12 +99,36 @@
             <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="toggleGroups">Zeige alle</app-button>
           </div>
         </div>
-        <div class="w-full p-1 flex justify-center min-h-[24rem]" ref="groupListContainer">
-          <group-list :groups="groups" :isMemberOfGroup="false"></group-list>
+        <div class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]" ref="groupListContainer">
+          <group-list v-if="groups.length > 0" :groups="groups" :isMemberOfGroup="false"></group-list>
+          <div v-else>Keine Gruppen gefunden, erstell doch eine</div>
         </div>
       </div>
-      <div class="mt-10 p-4 dark:bg-dark-600 bg-gray-200 w-full h-1/3 rounded-lg dark:text-gray-50 pb-20 mb-32">
-        Gruppen von Leuten, denen du folgst
+      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
+        <div>
+          <div class="pb-2 flex justify-between px-4">
+            <span class="text-lg">Gruppen von Leuten, denen du folgst</span>
+
+            <app-button
+              class="text-lg cursor-pointer !rounded-full !py-1"
+              @click="followingGroupsOpen = !followingGroupsOpen"
+              >Zeige alle</app-button
+            >
+          </div>
+        </div>
+        <div
+          class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]"
+          :class="followingGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
+        >
+          <div v-if="followingGroups" class="w-full">
+            <group-list
+              v-if="followingGroups.length > 0"
+              :groups="followingGroups"
+              :isMemberOfGroup="false"
+            ></group-list>
+          </div>
+          <div v-else>Keine Gruppen gefunden</div>
+        </div>
       </div>
     </div>
     <new-group-modal ref="newGroupModal" />
@@ -114,8 +141,7 @@ import { defineComponent, ref } from 'vue';
 import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
-import { Group } from '../graphql/generated/types';
-import { useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
+import { Group, useFollowingGroupsQuery, useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
 import GroupList from '../components/Group/GroupList.vue';
 import { takeStateGroups } from '../utils/groupsTake';
 import { useResizeObserver } from '@vueuse/core';
@@ -136,6 +162,7 @@ export default defineComponent({
     const allGroups = ref(false);
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
     const myGroupsOpen = ref(false);
+    const followingGroupsOpen = ref(false);
 
     function updateTake([entry]: any) {
       if (takeStateGroups.take < 200) {
@@ -172,6 +199,9 @@ export default defineComponent({
     const { result } = useMyGroupsQuery();
     const myGroups = useResult(result, null, (data) => data.myGroups);
 
+    const { result: groupsResult } = useFollowingGroupsQuery();
+    const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
+
     return {
       groups,
       toggleGroups,
@@ -179,6 +209,8 @@ export default defineComponent({
       groupListContainer,
       myGroups,
       myGroupsOpen,
+      followingGroups,
+      followingGroupsOpen,
     };
   },
 });

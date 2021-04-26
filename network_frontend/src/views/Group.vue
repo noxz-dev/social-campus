@@ -53,7 +53,7 @@ import GroupEntry from '../components/Group/GroupEntry.vue';
 
 export enum GroupComponents {
   GROUP_FEED = 'GroupFeed',
-  GROUP_WIKI = 'GroupWiki',
+  GROUP_ABOUT = 'GroupAbout',
 }
 
 export default defineComponent({
@@ -64,6 +64,7 @@ export default defineComponent({
     GroupFeed: defineAsyncComponent(() => import('../components/Group/GroupFeed.vue')),
     GroupFeedPlaceholder: defineAsyncComponent(() => import('../components/Group/GroupFeedPlaceholder.vue')),
     GroupUserSidebar: defineAsyncComponent(() => import('../components/Group/GroupUserSidebar.vue')),
+    GroupAbout: defineAsyncComponent(() => import('../components/Group/GroupAbout.vue')),
     GroupPermissionContainer,
     GroupEntry,
     GroupUserSidebarPlaceholder: defineAsyncComponent(
@@ -80,7 +81,7 @@ export default defineComponent({
         case GroupComponents.GROUP_FEED:
           activeComponent.value = comp;
           break;
-        case GroupComponents.GROUP_WIKI:
+        case GroupComponents.GROUP_ABOUT:
           activeComponent.value = comp;
           break;
       }

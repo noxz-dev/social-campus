@@ -36,17 +36,7 @@ export class PostResolver {
     if (!userId) throw Error('auth error');
 
     const posts = await getRepository(Post).find({
-      relations: [
-        'comments',
-        'user',
-        'likes',
-        'likes.user',
-        'user.followers',
-        'user.following',
-        'comments.user',
-        'comments.likes',
-        'comments.likes.user',
-      ],
+      relations: ['comments', 'user', 'likes', 'likes.user'],
       where: { user: { id: userID }, group: null },
       order: { createdAt: 'DESC' },
       take: take,

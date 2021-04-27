@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div id="groups" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto p-5">
+    <div
+      id="groups"
+      class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto p-5 pb-20"
+    >
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">
           <div class="text-md font-semibold text-lg">Finde Gruppen</div>
@@ -73,51 +76,53 @@
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-2 flex justify-between px-4">
-            <span class="text-lg">Deine Gruppen</span>
+            <span class="text-md md:text-lg">Deine Gruppen</span>
 
-            <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="myGroupsOpen = !myGroupsOpen"
+            <app-button class="text-xs cursor-pointer !rounded-full !py-1" @click="myGroupsOpen = !myGroupsOpen"
               >Zeige alle</app-button
             >
           </div>
         </div>
         <div
-          class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]"
+          class="w-full p-1 flex flex-col items-center min-h-[24rem]"
           ref="groupListContainer"
           :class="myGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
           <div v-if="myGroups" class="w-full">
             <group-list v-if="myGroups.length > 0" :groups="myGroups" :isMemberOfGroup="true"></group-list>
           </div>
-          <div v-else>Keine Gruppen gefunden, tritt doch welchen bei</div>
+          <div v-else class="pt-40">Keine Gruppen gefunden, tritt doch welchen bei</div>
         </div>
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-2 flex justify-between px-4">
-            <span class="text-lg">Empfohlene Gruppen</span>
+            <span class="text-md md:text-lg">Empfohlene Gruppen</span>
 
-            <app-button class="text-lg cursor-pointer !rounded-full !py-1" @click="toggleGroups">Zeige alle</app-button>
+            <app-button class="text-xs cursor-pointer !rounded-full !py-1 h-8 md:h-auto" @click="toggleGroups"
+              >Zeige alle</app-button
+            >
           </div>
         </div>
-        <div class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]" ref="groupListContainer">
+        <div class="w-full p-1 flex flex-col items-center min-h-[24rem]" ref="groupListContainer">
           <group-list v-if="groups.length > 0" :groups="groups" :isMemberOfGroup="false"></group-list>
-          <div v-else>Keine Gruppen gefunden, erstell doch eine</div>
+          <div v-else class="pt-40">Keine Gruppen gefunden, erstell doch eine</div>
         </div>
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-2 flex justify-between px-4">
-            <span class="text-lg">Gruppen von Leuten, denen du folgst</span>
+            <span class="text-md md:text-lg">Gruppen von Leuten, denen du folgst</span>
 
             <app-button
-              class="text-lg cursor-pointer !rounded-full !py-1"
+              class="text-xs cursor-pointer !rounded-full !py-1 h-8 md:h-auto"
               @click="followingGroupsOpen = !followingGroupsOpen"
               >Zeige alle</app-button
             >
           </div>
         </div>
         <div
-          class="w-full p-1 flex flex-col items-center justify-center min-h-[24rem]"
+          class="w-full p-1 flex flex-col items-center min-h-[24rem]"
           :class="followingGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
           <div v-if="followingGroups" class="w-full">
@@ -127,7 +132,7 @@
               :isMemberOfGroup="false"
             ></group-list>
           </div>
-          <div v-else>Keine Gruppen gefunden</div>
+          <div v-else class="pt-40">Keine Gruppen gefunden</div>
         </div>
       </div>
     </div>

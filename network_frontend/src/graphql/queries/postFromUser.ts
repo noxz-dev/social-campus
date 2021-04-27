@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const getPostsFromUser = gql`
-  query getPostsFromUser($userID: String!, $take: Float!, $skip: Float!) {
-    getPostsFromUser(userID: $userID, take: $take, skip: $skip) {
+  query getPostsFromUser($userID: String!, $limit: Float!, $offset: Float!) {
+    getPostsFromUser(userID: $userID, limit: $limit, offset: $offset) {
       id
       liked
       imageLink

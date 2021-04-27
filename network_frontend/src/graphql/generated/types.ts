@@ -383,8 +383,8 @@ export type Query = {
 
 
 export type QueryGetPostsFromUserArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
   userID: Scalars['String'];
 };
 
@@ -402,8 +402,8 @@ export type QueryGetPostsFromGroupArgs = {
 
 
 export type QueryGetFeedArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 };
 
 
@@ -869,8 +869,8 @@ export type FollowingGroupsQuery = (
 );
 
 export type GetFeedQueryVariables = Exact<{
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 }>;
 
 
@@ -1046,8 +1046,8 @@ export type PostByIdQuery = (
 
 export type GetPostsFromUserQueryVariables = Exact<{
   userID: Scalars['String'];
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 }>;
 
 
@@ -1859,8 +1859,8 @@ export function useFollowingGroupsQuery(options: VueApolloComposable.UseQueryOpt
 }
 export type FollowingGroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowingGroupsQuery, FollowingGroupsQueryVariables>;
 export const GetFeedDocument = gql`
-    query getFeed($take: Float!, $skip: Float!) {
-  getFeed(take: $take, skip: $skip) {
+    query getFeed($limit: Float!, $offset: Float!) {
+  getFeed(limit: $limit, offset: $offset) {
     id
     liked
     imageLink
@@ -1896,8 +1896,8 @@ export const GetFeedDocument = gql`
  *
  * @example
  * const { result, loading, error } = useGetFeedQuery({
- *   take: // value for 'take'
- *   skip: // value for 'skip'
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
  * });
  */
 export function useGetFeedQuery(variables: GetFeedQueryVariables | VueCompositionApi.Ref<GetFeedQueryVariables> | ReactiveFunction<GetFeedQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFeedQuery, GetFeedQueryVariables>> = {}) {
@@ -2244,8 +2244,8 @@ export function usePostByIdQuery(variables: PostByIdQueryVariables | VueComposit
 }
 export type PostByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<PostByIdQuery, PostByIdQueryVariables>;
 export const GetPostsFromUserDocument = gql`
-    query getPostsFromUser($userID: String!, $take: Float!, $skip: Float!) {
-  getPostsFromUser(userID: $userID, take: $take, skip: $skip) {
+    query getPostsFromUser($userID: String!, $limit: Float!, $offset: Float!) {
+  getPostsFromUser(userID: $userID, limit: $limit, offset: $offset) {
     id
     liked
     imageLink
@@ -2278,8 +2278,8 @@ export const GetPostsFromUserDocument = gql`
  * @example
  * const { result, loading, error } = useGetPostsFromUserQuery({
  *   userID: // value for 'userID'
- *   take: // value for 'take'
- *   skip: // value for 'skip'
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
  * });
  */
 export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariables | VueCompositionApi.Ref<GetPostsFromUserQueryVariables> | ReactiveFunction<GetPostsFromUserQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>> = {}) {

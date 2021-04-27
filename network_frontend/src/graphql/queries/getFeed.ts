@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const getFeed = gql`
-  query getFeed($take: Float!, $skip: Float!) {
-    getFeed(take: $take, skip: $skip) {
+  query getFeed($limit: Float!, $offset: Float!) {
+    getFeed(limit: $limit, offset: $offset) {
       id
       liked
       imageLink

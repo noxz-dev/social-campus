@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import { split } from '@apollo/client/link/core/split';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { getMainDefinition } from '@apollo/client/utilities';
+import { getMainDefinition, offsetLimitPagination } from '@apollo/client/utilities';
 import { createUploadLink } from 'apollo-upload-client';
 import router from './router';
 
@@ -66,7 +66,15 @@ const link = split(
 export const defaultClient = new ApolloClient({
   link: errorLink.concat(authLink).concat(link),
 
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          getFeed: offsetLimitPagination(),
+        },
+      },
+    },
+  }),
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network',

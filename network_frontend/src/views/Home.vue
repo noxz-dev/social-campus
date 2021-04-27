@@ -58,8 +58,8 @@ export default defineComponent({
 
     const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(
       {
-        take: 10,
-        skip: 0,
+        limit: 10,
+        offset: 0,
       },
       () => ({ enabled: feedQueryEnabled.value })
     );
@@ -92,23 +92,16 @@ export default defineComponent({
       },
     }));
 
-    const loadMore = () => {
+    const loadMore = async () => {
+      if (lastResponseLength === 0) return;
       console.log('load triggerd');
-      fetchMore({
+      const data = await fetchMore({
         variables: {
-          skip: posts.value.length,
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          // No new  posts
-          if (!fetchMoreResult) return previousResult;
-
-          // Concat previous posts with new posts
-          return {
-            ...previousResult,
-            getFeed: [...previousResult.getFeed, ...fetchMoreResult.getFeed],
-          };
+          offset: posts.value.length,
         },
       });
+
+      lastResponseLength = data.data.getFeed.length;
     };
 
     return { posts, error, home, loadMore, loading };

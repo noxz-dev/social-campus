@@ -29,8 +29,8 @@ export class PostResolver {
   public async getPostsFromUser(
     @Ctx() ctx: MyContext,
     @Arg('userID') userID: string,
-    @Arg('skip') skip: number,
-    @Arg('take') take: number,
+    @Arg('offset') offset: number,
+    @Arg('limit') limit: number,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
     if (!userId) throw Error('auth error');
@@ -39,8 +39,8 @@ export class PostResolver {
       relations: ['comments', 'user', 'likes', 'likes.user'],
       where: { user: { id: userID }, group: null },
       order: { createdAt: 'DESC' },
-      take: take,
-      skip: skip,
+      take: limit,
+      skip: offset,
     });
     if (!posts) {
       return null;
@@ -156,8 +156,8 @@ export class PostResolver {
   @Query(() => [Post], { description: 'returns the post feed of user' })
   public async getFeed(
     @Ctx() ctx: MyContext,
-    @Arg('skip') skip: number,
-    @Arg('take') take: number,
+    @Arg('offset') offset: number,
+    @Arg('limit') limit: number,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
 
@@ -180,8 +180,8 @@ export class PostResolver {
       ],
       order: { createdAt: 'DESC' },
       relations: ['user', 'comments', 'group'],
-      skip,
-      take,
+      skip: offset,
+      take: limit,
     });
 
     if (!posts) return [];

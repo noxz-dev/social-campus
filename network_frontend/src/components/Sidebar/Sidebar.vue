@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
-    class="flex fixed top-14 h-screen shadow-right transition-all w-14 xl:w-44 bg-white dark:bg-dark700"
+    class="flex fixed top-14 h-screen shadow-right transition-width w-14 xl:w-44 bg-white dark:bg-dark700"
   >
     <div id="navContent" class="w-full flex flex-col items-start pl-0 mt-12 h-full">
       <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">

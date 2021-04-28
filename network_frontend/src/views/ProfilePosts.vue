@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full flex justify-center">
-    <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
+  <div class="w-full flex justify-center lg:justify-start">
+    <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-3/4">
       <post-list :posts="posts" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
       <div v-if="loading" class="w-full flex justify-center">
         <svg

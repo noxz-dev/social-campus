@@ -1,6 +1,6 @@
 <template>
   <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4">
-    <card v-for="user in followings" :key="user.id">
+    <card v-for="user in followings" :key="user.id" class="my-2">
       <div
         @click="$router.push({ name: 'Profile', params: { id: user.username } })"
         class="cursor-pointer p-5 dark:text-gray-50 text-gray-900"

@@ -27,6 +27,9 @@ module.exports = {
       grayDark: theme('colors.gray.500'),
     }),
     extend: {
+      transitionProperty: {
+        width: 'width',
+      },
       colors: {
         dark400: '#48494d',
         dark500: '#3c3f48',

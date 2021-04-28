@@ -18,7 +18,7 @@
               blurhash="AePC3PmlGv{c"
             />
           </div>
-          <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
               <div class="flex w-full" v-if="profileImage">
                 <img
@@ -28,6 +28,7 @@
                 />
                 <div class="flex w-full justify-end items-center mt-14">
                   <button
+                    @click="$refs.editProfileModal.openModal()"
                     v-if="showEditProfile"
                     class="ml-6 cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
                   >
@@ -66,25 +67,25 @@
                 </div>
               </div>
               <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
-                <div class="sm:hidden md:block mt-6 min-w-0 flex-1">
+                <div class="block md:hidden mt-6 min-w-0 flex-1">
                   <h1
                     v-if="user?.firstname"
                     class="md:text-2xl font-bold text-gray-900 truncate dark:text-gray-50 text-lg"
                   >
-                    {{ user?.firstname + ' ' + user?.lastname }}
+                    {{ user?.firstname + ' abc ' + user?.lastname }}
                   </h1>
-                  <h1 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
+                  <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">
                     {{ user.bio }}
-                  </h1>
+                  </h2>
                 </div>
                 <div class="w-full mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                  <div class="hidden sm:block min-w-0 flex-1 pb-4 w-full">
-                    <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50" @click="printRef">
+                  <div class="hidden sm:block min-w-0 flex-1 pb-4 w-full flex-col">
+                    <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
                       {{ user?.firstname + ' ' + user?.lastname }}
                     </h1>
-                    <h1 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
+                    <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
                       {{ user.bio }}
-                    </h1>
+                    </h2>
                   </div>
                 </div>
               </div>
@@ -124,9 +125,111 @@
           </div>
         </div>
       </div>
-
-      <router-view v-if="user" :userId="user.id" />
+      <div class="flex w-11/12">
+        <div
+          class="dark:bg-dark-600 bg-gray-100 border dark:border-dark-600 shadow-sm h-96 w-96 rounded-lg mr-10 hidden lg:flex flex-col mt-2"
+        >
+          <div class="p-5 dark:text-gray-50 text-gray-900">
+            <span class="font-semibold">Fakultät</span>
+            <div class="flex my-2 items-center">
+              <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000000" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none"></rect>
+                  <polygon
+                    points="8 96 128 32 248 96 128 160 8 96"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></polygon>
+                  <polyline
+                    points="188 240 188 128 128 96"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></polyline>
+                  <path
+                    d="M220,110.93333v54.5208a7.95694,7.95694,0,0,1-1.58951,4.78692C211.67382,179.20536,183.2529,212,128,212s-83.67382-32.79464-90.41049-41.75895A7.95694,7.95694,0,0,1,36,165.45413v-54.5208"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></path>
+                </svg>
+              </div>
+              <div>Fakultät 4</div>
+            </div>
+            <span class="font-semibold">Studiengang</span>
+            <div class="flex my-2 items-center">
+              <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000000" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none"></rect>
+                  <polygon
+                    points="8 96 128 32 248 96 128 160 8 96"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></polygon>
+                  <polyline
+                    points="188 240 188 128 128 96"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></polyline>
+                  <path
+                    d="M220,110.93333v54.5208a7.95694,7.95694,0,0,1-1.58951,4.78692C211.67382,179.20536,183.2529,212,128,212s-83.67382-32.79464-90.41049-41.75895A7.95694,7.95694,0,0,1,36,165.45413v-54.5208"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  ></path>
+                </svg>
+              </div>
+              <div>Angewandte Informatik</div>
+            </div>
+            <span class="font-semibold">Interessen</span>
+            <div class="flex my-2 items-center">
+              <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M11.761 20.8538C9.5904 19.5179 7.57111 17.9456 5.73929 16.1652C4.45144 14.8829 3.47101 13.3198 2.8731 11.5954C1.79714 8.25031 3.05393 4.42083 6.57112 3.28752C8.41961 2.69243 10.4384 3.03255 11.9961 4.20148C13.5543 3.03398 15.5725 2.69398 17.4211 3.28752C20.9383 4.42083 22.2041 8.25031 21.1281 11.5954C20.5302 13.3198 19.5498 14.8829 18.2619 16.1652C16.4301 17.9456 14.4108 19.5179 12.2402 20.8538L12.0051 21L11.761 20.8538Z"
+                    stroke="#fff"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M15.7393 7.05301C16.8046 7.39331 17.5615 8.34971 17.6561 9.47499"
+                    stroke="#fff"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <div>Tech, Coding</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <router-view v-if="user" :userId="user.id" />
+      </div>
     </infinite-scroll-wrapper>
+    <modal ref="editProfileModal" headerText="Profil bearbeiten">
+      <edit-profile />
+    </modal>
   </div>
 </template>
 
@@ -145,12 +248,16 @@ import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/t
 import { userByUsername } from '../graphql/queries/userByUsername';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
+import Modal from '../components/Modal.vue';
+import EditProfile from '../components/EditProfile.vue';
 
 export default defineComponent({
   components: {
     PostList,
     LazyImage,
     InfiniteScrollWrapper,
+    Modal,
+    EditProfile,
   },
   setup() {
     const route = useRoute();
@@ -162,6 +269,7 @@ export default defineComponent({
     const stats = ref<UserStats>();
     const followButtonText = ref('Folge ich');
     const qloading = ref(false);
+    const editProfileModal = ref();
 
     const userFromStore = computed(() => store.state.userData.user);
 
@@ -261,6 +369,7 @@ export default defineComponent({
       stats,
       emitLoad,
       qloading,
+      editProfileModal,
     };
   },
 });

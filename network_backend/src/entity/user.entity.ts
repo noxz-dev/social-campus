@@ -42,6 +42,18 @@ export class User extends Base {
   @Column({ type: 'text', nullable: true })
   bio: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  faculty: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  studyCourse: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  interests: string;
+
   @Field(() => [Role])
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()

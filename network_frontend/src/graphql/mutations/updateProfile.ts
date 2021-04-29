@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const userByUsername = gql`
-  query userByUsername($username: String!) {
-    userByUsername(username: $username) {
+export const updateProfile = gql`
+  mutation updateProfile($input: UpdateProfileInput!) {
+    updateProfile(input: $input) {
       id
       bio
       studyCourse

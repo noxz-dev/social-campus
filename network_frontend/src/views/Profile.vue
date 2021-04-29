@@ -22,16 +22,12 @@
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
               <div class="flex w-full" v-if="profileImage">
                 <img
-                  class="z-10 w-24 rounded-full sm:w-36 bg-black self-center border-2 p-1"
+                  class="z-10 w-24 h-24 rounded-full sm:w-36 sm:h-36 bg-dark-600 self-center border-2 p-1 object-cover border-white"
                   :src="profileImage"
                   alt="profile image"
                 />
                 <div class="flex w-full justify-end items-center mt-14">
-                  <button
-                    @click="$refs.editProfileModal.openModal()"
-                    v-if="showEditProfile"
-                    class="ml-6 cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-                  >
+                  <app-button @click="$refs.editProfileModal.openModal()" v-if="showEditProfile" class="">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -47,7 +43,7 @@
                       />
                     </svg>
                     Profil bearbeiten
-                  </button>
+                  </app-button>
                   <a
                     @click="followUser"
                     v-else-if="!following"
@@ -98,25 +94,19 @@
                   <router-link :to="{ name: 'ProfilePosts', params: { id: $route.params.id } }">
                     <div class="py-1 px-2 rounded-lg">
                       <span class="dark:text-gray-50 text-gray-900">Posts</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{
-                        stats?.userStats?.postCount
-                      }}</span>
+                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.postCount }}</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'ProfileFollowers', params: { id: $route.params.id } }">
                     <div class="py-1 px-2 rounded-lg">
                       <span class="dark:text-gray-50 text-gray-900">Followers</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{
-                        stats?.userStats?.followerCount
-                      }}</span>
+                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.followerCount }}</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
                     <div class="py-1 px-2 rounded-lg">
                       <span class="dark:text-gray-50 text-gray-900">Following</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{
-                        stats?.userStats?.followingCount
-                      }}</span>
+                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.followingCount }}</span>
                     </div>
                   </router-link>
                 </div>
@@ -161,7 +151,7 @@
                   ></path>
                 </svg>
               </div>
-              <div>Fakultät 4</div>
+              <div>{{ user?.faculty || '-' }}</div>
             </div>
             <span class="font-semibold">Studiengang</span>
             <div class="flex my-2 items-center">
@@ -194,7 +184,7 @@
                   ></path>
                 </svg>
               </div>
-              <div>Angewandte Informatik</div>
+              <div>{{ user?.studyCourse || '-' }}</div>
             </div>
             <span class="font-semibold">Interessen</span>
             <div class="flex my-2 items-center">
@@ -219,7 +209,7 @@
                 </svg>
               </div>
               <div>
-                <div>Tech, Coding</div>
+                <div class="break-all">{{ user?.interests || '-' }}</div>
               </div>
             </div>
           </div>
@@ -228,7 +218,7 @@
       </div>
     </infinite-scroll-wrapper>
     <modal ref="editProfileModal" headerText="Profil bearbeiten">
-      <edit-profile />
+      <edit-profile @close="$refs.editProfileModal.closeModal()" :user="user" />
     </modal>
   </div>
 </template>
@@ -250,6 +240,7 @@ import LazyImage from '../components/Blurhash/LazyImage.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import Modal from '../components/Modal.vue';
 import EditProfile from '../components/EditProfile.vue';
+import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
   components: {
@@ -262,11 +253,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const showEditProfile = ref(false);
-    const profileImage = ref('');
-    const user = ref<User>();
     const store = useStore();
-    const following = ref(false);
-    const stats = ref<UserStats>();
     const followButtonText = ref('Folge ich');
     const qloading = ref(false);
     const editProfileModal = ref();
@@ -292,28 +279,19 @@ export default defineComponent({
       }
     );
 
-    const { onResult } = useUserByUsernameQuery(() => ({
+    const { result } = useUserByUsernameQuery(() => ({
       username: route.params.id as string,
     }));
 
-    onResult((userResult) => {
-      const userData = userResult.data.userByUsername;
-      profileImage.value = userData.profilePicLink as string;
-      user.value = userData;
+    const user = useResult(result, null, (data) => data.userByUsername);
+    const profileImage = useResult(result, null, (data) => data.userByUsername.profilePicLink);
+    const following = useResult(result, null, (data) => data.userByUsername.meFollowing);
 
-      following.value = userData.meFollowing;
+    const { result: statsResult } = useUserStatsQuery(() => ({
+      userId: user.value?.id as string,
+    }));
 
-      const { onResult: onStats } = useUserStatsQuery(
-        () =>
-          <UserStatsQueryVariables>{
-            userId: user.value?.id,
-          }
-      );
-
-      onStats(({ data }) => {
-        stats.value = data;
-      });
-    });
+    const stats = useResult(statsResult, null, (data) => data.userStats);
 
     const { mutate: follow } = useAddFollowerMutation(() => ({
       variables: {

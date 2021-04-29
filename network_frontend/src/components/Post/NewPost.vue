@@ -128,7 +128,7 @@ import { getPostsFromUser } from '../../graphql/queries/postFromUser';
 import { useAddPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { useRoute } from 'vue-router';
-import { AddPostMutationVariables, Tag, User } from '../../graphql/generated/types';
+import { Tag, User } from '../../graphql/generated/types';
 import VueTribute from '../VueTribute.vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';

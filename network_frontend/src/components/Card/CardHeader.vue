@@ -2,7 +2,7 @@
   <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
       <div class="flex-shrink-0">
-        <img class="h-10 w-10 rounded-full bg-dark700" :src="profilePicLink" alt="" />
+        <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profilePicLink" alt="" />
       </div>
       <div class="min-w-0 flex-1">
         <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row">

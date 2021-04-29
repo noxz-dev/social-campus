@@ -129,7 +129,7 @@
                 @click="showProfileMenu = !showProfileMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <img class="h-10 w-10 rounded-full bg-dark700" :src="profileImage" alt="" />
+                <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profileImage" alt="" />
               </button>
             </div>
 

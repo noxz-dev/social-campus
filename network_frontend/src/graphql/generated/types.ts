@@ -84,6 +84,9 @@ export type GroupMember = {
   email: Scalars['String'];
   profilePicLink?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  faculty?: Maybe<Scalars['String']>;
+  studyCourse?: Maybe<Scalars['String']>;
+  interests?: Maybe<Scalars['String']>;
   roles: Array<Role>;
   posts: Array<Post>;
   followers: Array<User>;
@@ -162,8 +165,8 @@ export type Mutation = {
   addFollower: User;
   /** unfollow a user */
   removeFollower: User;
-  /** update the bio of the loggedin user */
-  setBio: User;
+  /** update the profile information of the loggedIn user */
+  updateProfile: User;
 };
 
 
@@ -302,8 +305,8 @@ export type MutationRemoveFollowerArgs = {
 };
 
 
-export type MutationSetBioArgs = {
-  bio: Scalars['String'];
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 export type Notification = {
@@ -526,6 +529,14 @@ export type Tag = {
   posts: Array<Post>;
 };
 
+export type UpdateProfileInput = {
+  bio: Scalars['String'];
+  interests?: Maybe<Scalars['String']>;
+  faculty?: Maybe<Scalars['String']>;
+  studyCourse?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['Upload']>;
+};
+
 
 export type User = {
   __typename?: 'User';
@@ -537,6 +548,9 @@ export type User = {
   email: Scalars['String'];
   profilePicLink?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  faculty?: Maybe<Scalars['String']>;
+  studyCourse?: Maybe<Scalars['String']>;
+  interests?: Maybe<Scalars['String']>;
   roles: Array<Role>;
   posts: Array<Post>;
   followers: Array<User>;
@@ -768,6 +782,19 @@ export type UnlikePostMutation = (
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
     )> }
+  ) }
+);
+
+export type UpdateProfileMutationVariables = Exact<{
+  input: UpdateProfileInput;
+}>;
+
+
+export type UpdateProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { updateProfile: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
   ) }
 );
 
@@ -1114,7 +1141,7 @@ export type UserByUsernameQuery = (
   { __typename?: 'Query' }
   & { userByUsername: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'bio' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
   ) }
 );
 
@@ -1654,6 +1681,44 @@ export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnlikePostMutation, UnlikePostMutationVariables>;
+export const UpdateProfileDocument = gql`
+    mutation updateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input) {
+    id
+    bio
+    studyCourse
+    faculty
+    interests
+    firstname
+    lastname
+    profilePicLink
+    username
+    meFollowing
+  }
+}
+    `;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateProfileMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(options: VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>>) {
+  return VueApolloComposable.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+}
+export type UpdateProfileMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const BrowsePostsDocument = gql`
     query browsePosts($take: Float!, $skip: Float!, $tags: [String!]) {
   browsePosts(take: $take, skip: $skip, tags: $tags) {
@@ -2375,6 +2440,9 @@ export const UserByUsernameDocument = gql`
   userByUsername(username: $username) {
     id
     bio
+    studyCourse
+    faculty
+    interests
     firstname
     lastname
     profilePicLink

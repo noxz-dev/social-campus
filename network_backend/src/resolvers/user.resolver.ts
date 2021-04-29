@@ -16,6 +16,7 @@ import { uploadFile, uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/jwtUser.interface';
 import { log } from '../utils/services/logger';
+import { UpdateProfileInput } from '../validators/updateProfile.validator';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
 
@@ -193,19 +194,32 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User, { description: 'update the bio of the loggedin user' })
-  async setBio(@Ctx() ctx: MyContext, @Arg('bio') bio: string): Promise<User | null> {
-    const userID = ctx.req.user.id;
-
-    if (!userID) {
+  @Mutation(() => User, { description: 'update the profile information of the loggedIn user' })
+  async updateProfile(@Ctx() ctx: MyContext, @Arg('input') input: UpdateProfileInput): Promise<User> {
+    const userId = ctx.req.user.id;
+    if (!userId) {
       throw new Error('not authenticated');
     }
+
     const userRepo = await getRepository(User);
-    const user = await userRepo.findOne({ id: userID });
-    user.bio = bio;
+
+    const user = await userRepo.findOne({ where: { id: userId }, relations: ['following', 'followers'] });
+
+    if (input.bio) user.bio = input.bio;
+    if (input.interests) user.interests = input.interests;
+    if (input.faculty) user.faculty = input.faculty;
+    if (input.studyCourse) user.studyCourse = input.studyCourse;
+
+    if (input.avatar) {
+      const newFileName = await uploadFileGraphql(input.avatar, 'profile-pics');
+      user.profilePicName = newFileName;
+    }
 
     await userRepo.save(user);
-    log.info(`user with the id ${user.id} updated the bio`);
+
+    const followState = user.followers.some((user) => user.id === userId);
+    user.meFollowing = followState;
+    log.info(`user with the id ${userId} updated the profile`);
     return user;
   }
 
@@ -217,7 +231,6 @@ export class UserResolver {
       throw Error('no user found');
     }
 
-    //could be a bad idea .. maybe better to do via db
     const followState = user.followers.some((user) => user.id === userId);
     user.meFollowing = followState;
 

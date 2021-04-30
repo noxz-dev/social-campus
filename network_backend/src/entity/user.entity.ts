@@ -59,7 +59,7 @@ export class User extends Base {
 
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
-  posts: Promise<Post[]>;
+  posts: Post[];
 
   @Field(() => [User])
   @ManyToMany(() => User, (user) => user.following)

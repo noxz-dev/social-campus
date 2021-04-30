@@ -1,12 +1,11 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { log } from '../utils/services/logger';
-import { minioClient } from '../utils/services/minio';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 import { UserValidator } from '../validators/user.validator';
 import { Base } from './base';
 import { Chat } from './chat.entity';
 import { Group } from './group.entity';
 import { GroupRole } from './groupMemberRole.entity';
+import { Media } from './media.entity';
 import { Post } from './post.entity';
 import { Role } from './role.entity';
 
@@ -32,11 +31,10 @@ export class User extends Base {
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ nullable: true, type: 'varchar' })
-  profilePicName: string;
-
-  @Field(() => String, { nullable: true })
-  profilePicLink: string;
+  @Field(() => Media)
+  @OneToOne(() => Media, { eager: true })
+  @JoinColumn()
+  avatar: Media;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })
@@ -61,7 +59,7 @@ export class User extends Base {
 
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
+  posts: Promise<Post[]>;
 
   @Field(() => [User])
   @ManyToMany(() => User, (user) => user.following)
@@ -86,17 +84,17 @@ export class User extends Base {
   @Column({ default: false, type: 'bool' })
   onlineStatus: boolean;
 
-  @AfterLoad()
-  async generatePictureLink(): Promise<void> {
-    if (this.profilePicName !== null) {
-      minioClient.presignedGetObject('profile-pics', this.profilePicName, (err, url: string) => {
-        if (err) return log.error('link generation failed');
+  // @AfterLoad()
+  // async generatePictureLink(): Promise<void> {
+  //   if (this.avatar !== null) {
+  //     minioClient.presignedGetObject('profile-pics', this.avatar, (err, url: string) => {
+  //       if (err) return log.error('link generation failed');
 
-        const editUrl = url.split('?')[0].replace('http://minio:9000', '');
-        this.profilePicLink = editUrl;
-      });
-    }
-  }
+  //       const editUrl = url.split('?')[0].replace('http://minio:9000', '');
+  //       this.profilePicLink = editUrl;
+  //     });
+  //   }
+  // }
 
   constructor(body: UserValidator, hashedPassword: string) {
     super();

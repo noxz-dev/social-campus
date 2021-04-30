@@ -10,7 +10,9 @@ export const userByUsername = gql`
       interests
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
       meFollowing
     }

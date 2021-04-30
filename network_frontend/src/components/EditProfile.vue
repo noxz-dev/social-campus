@@ -38,7 +38,11 @@
                         d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
                       />
                     </svg> -->
-                    <img :src="profileImage" alt="" class="object-cover h-12 w-12" />
+                    <img
+                      :src="newProfileImage ? newProfileImage : '/profile-pics/' + profileImage"
+                      alt=""
+                      class="object-cover h-12 w-12 bg-dark-700 border-white border rounded-full"
+                    />
                   </span>
                   <button
                     @click="$refs.file.click()"
@@ -128,7 +132,8 @@ export default defineComponent({
     const bio = ref(props.user?.bio || '');
     const faculty = ref(props.user?.faculty);
     const interests = ref(props.user?.interests);
-    const profileImage = ref(props.user?.profilePicLink);
+    const profileImage = ref(props.user?.avatar.name);
+    const newProfileImage = ref();
     const studycourse = ref(props.user?.studyCourse);
     const file = ref<File>();
     const { mutate: update } = useUpdateProfileMutation(() => ({
@@ -156,14 +161,14 @@ export default defineComponent({
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
       file.value = files[0];
-      profileImage.value = URL.createObjectURL(files[0]);
+      newProfileImage.value = URL.createObjectURL(files[0]);
     };
 
     const updateProfile = () => {
       update();
     };
 
-    return { faculty, interests, studycourse, bio, updateProfile, onFileChange, profileImage };
+    return { faculty, interests, studycourse, bio, updateProfile, onFileChange, profileImage, newProfileImage };
   },
 });
 </script>

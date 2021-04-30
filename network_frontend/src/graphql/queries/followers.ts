@@ -7,7 +7,9 @@ export const followers = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
   }
 `;

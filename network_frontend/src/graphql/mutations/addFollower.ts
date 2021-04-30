@@ -6,7 +6,9 @@ export const addFollower = gql`
       id
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
     }
   }

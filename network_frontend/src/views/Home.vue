@@ -77,7 +77,9 @@ export default defineComponent({
               firstname
               lastname
               username
-              profilePicLink
+              avatar {
+                name
+              }
             }
             text
             likesCount

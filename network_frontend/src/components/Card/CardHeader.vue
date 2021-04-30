@@ -2,7 +2,7 @@
   <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
       <div class="flex-shrink-0">
-        <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profilePicLink" alt="" />
+        <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="'/profile-pics/' + avatar" alt="" />
       </div>
       <div class="min-w-0 flex-1">
         <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row">
@@ -195,7 +195,7 @@ export default defineComponent({
     const creationDate = computed(() => props.post?.createdAt || props.comment?.createdAt);
     const userId = computed(() => props.post?.user.id || props.comment?.user.id);
     const username = computed(() => props.post?.user.username || props.comment?.user.username);
-    const profilePicLink = computed(() => props.post?.user.profilePicLink || props.comment?.user.profilePicLink);
+    const avatar = computed(() => props.post?.user.avatar.name || props.comment?.user.avatar.name);
     const group = computed(() => props.post?.group);
 
     onClickOutside(target, (event) => {
@@ -283,7 +283,7 @@ export default defineComponent({
       creationDate,
       userId,
       username,
-      profilePicLink,
+      avatar,
       group,
     };
   },

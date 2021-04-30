@@ -16,7 +16,7 @@
             <div class="flex-shrink-0" v-if="chat">
               <img
                 class="h-10 w-10 rounded-full object-cover"
-                :src="chat.members.filter((m) => m.id !== user.id)[0].profilePicLink"
+                :src="'/profile-pics/' + chat.members.filter((m) => m.id !== user.id)[0].avatar.name"
                 alt=""
               />
             </div>

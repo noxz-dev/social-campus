@@ -37,7 +37,7 @@ export default defineComponent({
       if (toast)
         toast(data.notifications.message, {
           positionY: 'top',
-          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="${data.notifications.fromUser.profilePicLink}"/></div>`,
+          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="/profile-pics/${data.notifications.fromUser.avatar.name}"/></div>`,
         });
     });
   },

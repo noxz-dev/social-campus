@@ -11,7 +11,9 @@ export const browsePosts = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
       text
       likesCount

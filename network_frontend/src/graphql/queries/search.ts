@@ -8,7 +8,9 @@ export const search = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
       groups {
         id

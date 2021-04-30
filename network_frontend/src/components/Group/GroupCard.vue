@@ -6,6 +6,7 @@
           class="rounded-xl object-cover w-full"
           src="https://picsum.photos/300/300"
           blurhash="LJIzs5=D5uK$^aJWKP#*wd]fnlK5"
+          :onLoad="false"
         />
       </div>
       <div class="p-3 pt-1">

@@ -11,7 +11,9 @@ export const getFeed = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
       text
       likesCount

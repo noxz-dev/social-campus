@@ -7,7 +7,9 @@ export const following = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
   }
 `;

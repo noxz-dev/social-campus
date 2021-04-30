@@ -9,12 +9,16 @@ export const getNotifications = gql`
       createdAt
       toUser {
         id
-        profilePicLink
+        avatar {
+          name
+        }
         username
       }
       fromUser {
         id
-        profilePicLink
+        avatar {
+          name
+        }
         username
       }
       post {

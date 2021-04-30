@@ -5,15 +5,14 @@
     :class="isVisible ? 'translate-y-0' : 'translate-y-8'"
   >
     <div class="flex items-center justify-center w-full h-full">
-      <!-- Show the placeholder as background -->
       <blurhash-img
         :hash="blurhash"
         :aspect-ratio="height / width"
         class="transition-opacity duration-500 w-full"
-        :class="isLoaded ? 'opacity-0' : 'opacity-100'"
+        :class="isLoaded ? `opacity-0` : `opacity-100`"
+        :rounded="rounded"
       />
 
-      <!-- Show the real image on the top and fade in after loading -->
       <img
         ref="image"
         v-bind="$attrs"
@@ -24,10 +23,9 @@
   </intersect>
 </template>
 
-<script>
-import { defineComponent, ref, computed, onMounted } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import intersect from '../VueIntersect.vue';
-// import { loadProxyImage } from '../../utils/loadProxyImage';
 import BlurhashImg from './BlurhashImg.vue';
 export default defineComponent({
   components: {
@@ -52,9 +50,17 @@ export default defineComponent({
       type: Number,
       default: 1,
     },
+    onLoad: {
+      type: Boolean,
+      default: true,
+    },
+    rounded: {
+      type: String,
+      default: 'xl',
+    },
   },
   setup(props) {
-    const image = ref(null);
+    const image = ref<HTMLImageElement>();
     const isVisible = ref(true);
     const isLoaded = ref(false);
     const isHorizontal = computed(() => {
@@ -65,12 +71,21 @@ export default defineComponent({
       if (imageBoundingBox.bottom > window.innerHeight) {
         isVisible.value = false;
       }
+
+      watch(
+        () => props.src,
+        () => {
+          onEnter();
+        }
+      );
     });
-    const onEnter = async () => {
+    const onEnter = () => {
       isVisible.value = true;
       const imageData = props.src;
-      //   image.value.src = imageData;
+      console.log(props.onLoad);
+      if (props.onLoad) image.value.src = imageData;
       image.value.onload = () => {
+        console.log('hey');
         isLoaded.value = true;
       };
     };

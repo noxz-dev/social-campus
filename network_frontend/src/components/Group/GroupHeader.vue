@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col dark:bg-dark-600 bg-gray-100 p-6 items-center w-full rounded-xl">
     <div class="bg-pink-300 w-full rounded-xl h-72">
-      <lazy-image src="" blurhash="AePC3PmlGv{c" />
+      <lazy-image src="" blurhash="AePC3PmlGv{c" :onLoad="false" />
     </div>
     <div class="w-full mt-6 py-10 flex flex-col md:flex-row justify-between">
       <div class="flex flex-col">

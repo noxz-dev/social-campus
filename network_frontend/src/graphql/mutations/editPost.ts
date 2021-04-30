@@ -9,7 +9,9 @@ export const editPost = gql`
       user {
         firstname
         lastname
-        profilePicLink
+        avatar {
+          name
+        }
         username
       }
       text

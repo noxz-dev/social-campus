@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import argon2 from 'argon2';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
+import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
@@ -38,14 +38,31 @@ export class UserResolver {
       return null;
     }
 
-    const user = getRepository(User).findOne({ relations: ['roles', 'following', 'followers'], where: { id } });
+    const user = await getRepository(User).findOne({
+      relations: ['roles', 'following', 'followers'],
+      where: { id },
+    });
+
+    // const avatar = new Media();
+
+    // avatar.blurhash = 'LJIzs5=D5uK$^aJWKP#*wd]fnlK5';
+    // avatar.name = 'hey';
+    // avatar.type = MediaType.IMAGE;
+
+    // const saved = await getRepository(Media).save(avatar);
+
+    // user.avatar = saved;
+
+    // await getRepository(User).save(user);
+
     if (!user) {
       return null;
     }
+
     return user;
   }
 
-  @Mutation(() => Boolean, { description: 'Registers a new user' })
+  @Mutation(() => Boolean, { description: 'creates a new user' })
   public async register(
     @Arg('input', () => UserValidator) input: UserValidator,
     @Ctx() ctx: MyContext,
@@ -57,12 +74,23 @@ export class UserResolver {
       },
     });
     if (result) throw Error('a user with this email already exisits');
+
     const user = new User(input, hashedPassword);
     user.followers = [];
     user.following = [];
+
+    //create a profile image
+    const avatar = new Media();
     const profileImg = jdenticon.toPng(user.firstname, 300);
-    const filename = await uploadFile(profileImg, 'profile-pics');
-    user.profilePicName = filename;
+
+    avatar.blurhash = 'LJIzs5=D5uK$^aJWKP#*wd]fnlK5';
+    avatar.name = await uploadFile(profileImg, 'profile-pics');
+    avatar.type = MediaType.IMAGE;
+
+    const saved = await getRepository(Media).save(avatar);
+
+    user.avatar = saved;
+
     await getRepository(User).save(user);
     return true;
   }
@@ -110,26 +138,6 @@ export class UserResolver {
     const response = new JwtResponse(accessToken, refreshToken);
 
     return response;
-  }
-
-  @Authorized()
-  @Mutation(() => User, { description: 'upload a new profileimage' })
-  async uploadProfileImage(@Ctx() ctx: MyContext, @Arg('file', () => GraphQLUpload) file: FileUpload): Promise<User> {
-    const id = ctx.req.user.id;
-    if (!id) {
-      return null;
-    }
-
-    const user = await getRepository(User).findOne({ where: { id: id }, relations: ['following', 'followers'] });
-    if (!user) {
-      return null;
-    }
-
-    const newFileName = await uploadFileGraphql(file, 'profile-pics');
-    user.profilePicName = newFileName;
-
-    await getRepository(User).save(user);
-    return user;
   }
 
   @Authorized()
@@ -218,7 +226,8 @@ export class UserResolver {
 
     if (input.avatar) {
       const newFileName = await uploadFileGraphql(input.avatar, 'profile-pics');
-      user.profilePicName = newFileName;
+      user.avatar.name = newFileName;
+      await getRepository(Media).save(user.avatar);
     }
 
     await userRepo.save(user);

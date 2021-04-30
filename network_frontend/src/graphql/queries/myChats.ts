@@ -14,7 +14,9 @@ export const myChats = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
     }
   }

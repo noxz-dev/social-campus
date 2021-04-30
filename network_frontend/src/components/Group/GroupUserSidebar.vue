@@ -5,7 +5,7 @@
       <div class="mt-4">
         <div class="mt-4" v-for="admin in admins" :key="admin.id">
           <group-member-card
-            :avatar="admin.profilePicLink"
+            :avatar="admin.avatar.name"
             :firstname="admin.firstname"
             :lastname="admin.lastname"
             :username="admin.username"
@@ -22,7 +22,7 @@
       <div class="mt-4">
         <div class="mt-4" v-for="member in members" :key="member.id">
           <group-member-card
-            :avatar="member.profilePicLink"
+            :avatar="member.avatar.name"
             :firstname="member.firstname"
             :lastname="member.lastname"
             :username="member.username"
@@ -36,7 +36,7 @@
       <span class="dark:text-gray-300 text-gray-700 dark:text-opacity-60 text-opacity-75 tracking-wider">OFFLINE</span>
       <div class="mt-4" v-for="member in offlineMembers" :key="member.id">
         <group-member-card
-          :avatar="member.profilePicLink"
+          :avatar="member.avatar.name"
           :firstname="member.firstname"
           :lastname="member.lastname"
           :username="member.username"

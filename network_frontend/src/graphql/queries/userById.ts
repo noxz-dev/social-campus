@@ -6,19 +6,25 @@ export const userById = gql`
       id
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
       followers {
         id
         firstname
         lastname
-        profilePicLink
+        avatar {
+          name
+        }
       }
       following {
         id
         firstname
         lastname
-        profilePicLink
+        avatar {
+          name
+        }
       }
     }
   }

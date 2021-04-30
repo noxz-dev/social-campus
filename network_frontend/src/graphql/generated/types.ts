@@ -82,7 +82,7 @@ export type GroupMember = {
   lastname: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
-  profilePicLink?: Maybe<Scalars['String']>;
+  avatar: Media;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -126,6 +126,20 @@ export type Like = {
   createdAt: Scalars['DateTime'];
   user: User;
 };
+
+export type Media = {
+  __typename?: 'Media';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  type: MediaType;
+  name: Scalars['String'];
+  blurhash?: Maybe<Scalars['String']>;
+};
+
+export enum MediaType {
+  Image = 'IMAGE',
+  Video = 'VIDEO'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -546,7 +560,7 @@ export type User = {
   lastname: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
-  profilePicLink?: Maybe<Scalars['String']>;
+  avatar: Media;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -562,9 +576,9 @@ export type User = {
 
 export type UserStats = {
   __typename?: 'UserStats';
-  postCount: Scalars['Float'];
-  followerCount: Scalars['Float'];
-  followingCount: Scalars['Float'];
+  postCount: Scalars['String'];
+  followerCount: Scalars['String'];
+  followingCount: Scalars['String'];
 };
 
 export type UserValidator = {
@@ -584,7 +598,11 @@ export type AddFollowerMutation = (
   { __typename?: 'Mutation' }
   & { addFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   ) }
 );
 
@@ -600,7 +618,11 @@ export type AddPostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+      & Pick<User, 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -683,7 +705,11 @@ export type EditPostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+      & Pick<User, 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -717,7 +743,11 @@ export type LikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -748,7 +778,11 @@ export type RemoveFollowerMutation = (
   { __typename?: 'Mutation' }
   & { removeFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   ) }
 );
 
@@ -777,7 +811,11 @@ export type UnlikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -794,7 +832,11 @@ export type UpdateProfileMutation = (
   { __typename?: 'Mutation' }
   & { updateProfile: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   ) }
 );
 
@@ -812,7 +854,11 @@ export type BrowsePostsQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), tags: Array<(
       { __typename?: 'Tag' }
       & Pick<Tag, 'id' | 'name'>
@@ -865,7 +911,11 @@ export type FollowersQuery = (
   { __typename?: 'Query' }
   & { followers: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   )> }
 );
 
@@ -880,7 +930,11 @@ export type FollowingQuery = (
   { __typename?: 'Query' }
   & { following: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   )> }
 );
 
@@ -908,7 +962,11 @@ export type GetFeedQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -928,7 +986,11 @@ export type GetPostsFromGroupQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ) }
   )>> }
 );
@@ -958,10 +1020,18 @@ export type GroupMembersQuery = (
     & Pick<Group, 'id'>
     & { createdBy: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink' | 'onlineStatus'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), members: Array<(
       { __typename?: 'GroupMember' }
-      & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink' | 'onlineStatus' | 'groupRole'>
+      & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus' | 'groupRole'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     )> }
   ) }
 );
@@ -987,7 +1057,11 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'profilePicLink' | 'firstname' | 'lastname' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   )> }
 );
 
@@ -1004,7 +1078,11 @@ export type MyChatsQuery = (
       & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
     )>, members: Array<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     )> }
   )> }
 );
@@ -1030,10 +1108,18 @@ export type GetNotificationsQuery = (
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
     & { toUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'profilePicLink' | 'username'>
+      & Pick<User, 'id' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), fromUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'profilePicLink' | 'username'>
+      & Pick<User, 'id' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), post?: Maybe<(
       { __typename?: 'Post' }
       & Pick<Post, 'id'>
@@ -1056,13 +1142,21 @@ export type PostByIdQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), comments: Array<(
       { __typename?: 'Comment' }
       & Pick<Comment, 'id' | 'text' | 'createdAt'>
       & { user: (
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+        & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+        & { avatar: (
+          { __typename?: 'Media' }
+          & Pick<Media, 'name'>
+        ) }
       ) }
     )>, group?: Maybe<(
       { __typename?: 'Group' }
@@ -1085,7 +1179,11 @@ export type GetPostsFromUserQuery = (
     & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ) }
   )>> }
 );
@@ -1101,7 +1199,11 @@ export type SearchQuery = (
     { __typename?: 'Search' }
     & { users: Array<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     )>, groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -1121,13 +1223,24 @@ export type UserByIdQuery = (
   { __typename?: 'Query' }
   & { userById: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink' | 'username'>
-    & { followers: Array<(
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ), followers: Array<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     )>, following: Array<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstname' | 'lastname' | 'profilePicLink'>
+      & Pick<User, 'id' | 'firstname' | 'lastname'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     )> }
   ) }
 );
@@ -1141,7 +1254,11 @@ export type UserByUsernameQuery = (
   { __typename?: 'Query' }
   & { userByUsername: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'profilePicLink' | 'username' | 'meFollowing'>
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    ) }
   ) }
 );
 
@@ -1170,7 +1287,11 @@ export type NotificationsSubscription = (
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
     & { fromUser: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'profilePicLink'>
+      & Pick<User, 'id' | 'username'>
+      & { avatar: (
+        { __typename?: 'Media' }
+        & Pick<Media, 'name'>
+      ) }
     ), toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -1191,7 +1312,9 @@ export const AddFollowerDocument = gql`
     id
     firstname
     lastname
-    profilePicLink
+    avatar {
+      name
+    }
     username
   }
 }
@@ -1227,7 +1350,9 @@ export const AddPostDocument = gql`
     user {
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
     }
     text
@@ -1424,7 +1549,9 @@ export const EditPostDocument = gql`
     user {
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
     }
     text
@@ -1503,7 +1630,9 @@ export const LikePostDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -1576,7 +1705,9 @@ export const RemoveFollowerDocument = gql`
     id
     firstname
     lastname
-    profilePicLink
+    avatar {
+      name
+    }
     username
   }
 }
@@ -1645,7 +1776,9 @@ export const UnlikePostDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -1691,7 +1824,9 @@ export const UpdateProfileDocument = gql`
     interests
     firstname
     lastname
-    profilePicLink
+    avatar {
+      name
+    }
     username
     meFollowing
   }
@@ -1730,7 +1865,9 @@ export const BrowsePostsDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -1837,7 +1974,9 @@ export const FollowersDocument = gql`
     firstname
     lastname
     username
-    profilePicLink
+    avatar {
+      name
+    }
   }
 }
     `;
@@ -1870,7 +2009,9 @@ export const FollowingDocument = gql`
     firstname
     lastname
     username
-    profilePicLink
+    avatar {
+      name
+    }
   }
 }
     `;
@@ -1934,7 +2075,9 @@ export const GetFeedDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -1980,7 +2123,9 @@ export const GetPostsFromGroupDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -2051,7 +2196,9 @@ export const GroupMembersDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
       onlineStatus
     }
     members {
@@ -2059,7 +2206,9 @@ export const GroupMembersDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
       onlineStatus
       groupRole
     }
@@ -2121,7 +2270,9 @@ export const MeDocument = gql`
     query me {
   me {
     id
-    profilePicLink
+    avatar {
+      name
+    }
     firstname
     lastname
     username
@@ -2159,7 +2310,9 @@ export const MyChatsDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
   }
 }
@@ -2217,12 +2370,16 @@ export const GetNotificationsDocument = gql`
     createdAt
     toUser {
       id
-      profilePicLink
+      avatar {
+        name
+      }
       username
     }
     fromUser {
       id
-      profilePicLink
+      avatar {
+        name
+      }
       username
     }
     post {
@@ -2267,7 +2424,9 @@ export const PostByIdDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     comments {
       id
@@ -2278,7 +2437,9 @@ export const PostByIdDocument = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
     }
     group {
@@ -2319,7 +2480,9 @@ export const GetPostsFromUserDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     text
     likesCount
@@ -2359,7 +2522,9 @@ export const SearchDocument = gql`
       firstname
       lastname
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     groups {
       id
@@ -2398,19 +2563,25 @@ export const UserByIdDocument = gql`
     id
     firstname
     lastname
-    profilePicLink
+    avatar {
+      name
+    }
     username
     followers {
       id
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
     }
     following {
       id
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
     }
   }
 }
@@ -2445,7 +2616,9 @@ export const UserByUsernameDocument = gql`
     interests
     firstname
     lastname
-    profilePicLink
+    avatar {
+      name
+    }
     username
     meFollowing
   }
@@ -2510,7 +2683,9 @@ export const NotificationsDocument = gql`
     fromUser {
       id
       username
-      profilePicLink
+      avatar {
+        name
+      }
     }
     toUser {
       id

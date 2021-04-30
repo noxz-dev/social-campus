@@ -88,10 +88,17 @@
           ref="groupListContainer"
           :class="myGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
-          <div v-if="myGroups" class="w-full">
-            <group-list v-if="myGroups.length > 0" :groups="myGroups" :isMemberOfGroup="true"></group-list>
+          <div class="w-full">
+            <div v-if="myGroups">
+              <div v-if="!myGroups" class="pt-40">Keine Gruppen gefunden, tritt doch welchen bei</div>
+              <group-list
+                v-if="myGroups.length > 0"
+                :groups="myGroups"
+                :isMemberOfGroup="true"
+                :loading="myGroupsLoading"
+              ></group-list>
+            </div>
           </div>
-          <div v-else class="pt-40">Keine Gruppen gefunden, tritt doch welchen bei</div>
         </div>
       </div>
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
@@ -105,7 +112,12 @@
           </div>
         </div>
         <div class="w-full p-1 flex flex-col items-center min-h-[24rem]" ref="groupListContainer">
-          <group-list v-if="groups.length > 0" :groups="groups" :isMemberOfGroup="false"></group-list>
+          <group-list
+            v-if="groups.length > 0"
+            :groups="groups"
+            :isMemberOfGroup="false"
+            :loading="recoGroupsLoading"
+          ></group-list>
           <div v-else class="pt-40">Keine Gruppen gefunden, erstell doch eine</div>
         </div>
       </div>
@@ -122,16 +134,16 @@
           </div>
         </div>
         <div
+          v-if="followingGroups"
           class="w-full p-1 flex flex-col items-center min-h-[24rem]"
           :class="followingGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
         >
-          <div v-if="followingGroups" class="w-full">
-            <group-list
-              v-if="followingGroups.length > 0"
-              :groups="followingGroups"
-              :isMemberOfGroup="false"
-            ></group-list>
-          </div>
+          <group-list
+            v-if="followingGroups.length > 0"
+            :groups="followingGroups"
+            :isMemberOfGroup="false"
+            :loading="followingGroupsLoading"
+          ></group-list>
           <div v-else class="pt-40">Keine Gruppen gefunden</div>
         </div>
       </div>
@@ -181,7 +193,7 @@ export default defineComponent({
       updateTake(entries);
     });
 
-    const { onResult } = useGroupsQuery(() => ({
+    const { onResult, loading: recoGroupsLoading } = useGroupsQuery(() => ({
       take: takeStateGroups.take,
       skip: skip.value,
     }));
@@ -201,10 +213,10 @@ export default defineComponent({
       groups.value = data.groups;
     });
 
-    const { result } = useMyGroupsQuery();
+    const { result, loading: myGroupsLoading } = useMyGroupsQuery();
     const myGroups = useResult(result, null, (data) => data.myGroups);
 
-    const { result: groupsResult } = useFollowingGroupsQuery();
+    const { result: groupsResult, loading: followingGroupsLoading } = useFollowingGroupsQuery();
     const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
     return {
@@ -214,8 +226,11 @@ export default defineComponent({
       groupListContainer,
       myGroups,
       myGroupsOpen,
+      myGroupsLoading,
       followingGroups,
       followingGroupsOpen,
+      followingGroupsLoading,
+      recoGroupsLoading,
     };
   },
 });

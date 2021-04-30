@@ -2,11 +2,17 @@
 
 <template>
   <div class="h-0">
-    <canvas ref="canvas" class="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-xl" width="32" height="32" />
+    <canvas
+      ref="canvas"
+      class="absolute top-0 left-0 right-0 bottom-0 w-full h-full"
+      width="32"
+      :class="`rounded-${rounded}`"
+      height="32"
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { decode } from 'blurhash';
 export default {
   props: {
@@ -17,6 +23,9 @@ export default {
     aspectRatio: {
       type: Number,
       default: 1,
+    },
+    rounded: {
+      type: String,
     },
   },
   mounted() {

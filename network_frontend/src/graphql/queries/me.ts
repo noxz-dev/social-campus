@@ -4,7 +4,9 @@ export const me = gql`
   query me {
     me {
       id
-      profilePicLink
+      avatar {
+        name
+      }
       firstname
       lastname
       username

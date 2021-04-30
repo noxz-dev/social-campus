@@ -129,7 +129,16 @@
                 @click="showProfileMenu = !showProfileMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profileImage" alt="" />
+                <!-- <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profileImage" alt="" /> -->
+                <div class="h-10 w-10 rounded-full">
+                  <lazy-image
+                    class="h-10 w-10 !rounded-full bg-dark700 object-cover"
+                    :src="'/profile-pics/' + profileImage"
+                    blurhash="AePC3PmlGv{c"
+                    :onLoad="true"
+                    rounded="full"
+                  />
+                </div>
               </button>
             </div>
 
@@ -226,7 +235,9 @@
                 <div
                   class="flex items-center justify-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100"
                 ></div>
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
+                <div
+                  class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100 cursor-pointer"
+                >
                   <svg
                     width="24px"
                     height="24px"
@@ -254,13 +265,9 @@
                       </g>
                     </g>
                   </svg>
-                  <a
-                    href="#"
-                    class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700"
-                    role="menuitem"
-                    @click="logout"
-                    >Ausloggen</a
-                  >
+                  <div class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem" @click="logout">
+                    Ausloggen
+                  </div>
                 </div>
               </div>
             </transition>
@@ -331,7 +338,7 @@
       <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" :src="profileImage" alt="" />
+            <img class="h-10 w-10 rounded-full" :src="'/profile-pics/' + profileImage" alt="" />
           </div>
           <div class="ml-3">
             <div class="text-base font-medium dark:text-gray-50 text-gray-800">
@@ -461,6 +468,7 @@ import { notificationsSubscription } from '../graphql/subscriptions/notification
 import { Notification } from '../graphql/generated/types';
 import GroupPermissionContainer from './Group/GroupPermissionContainer.vue';
 import { RecursivePartial } from '../utils/typeUtils';
+import LazyImage from './Blurhash/LazyImage.vue';
 
 export default defineComponent({
   components: {
@@ -473,6 +481,7 @@ export default defineComponent({
     EditPost,
     ToggleButton,
     GroupPermissionContainer,
+    LazyImage,
   },
   setup(props) {
     const showProfileMenu = ref(false);
@@ -512,7 +521,7 @@ export default defineComponent({
 
     onResult(({ data: { me } }) => {
       store.dispatch('userData/setUser', me);
-      profileImage.value = me?.profilePicLink || '';
+      profileImage.value = me?.avatar.name || '';
 
       const { onResult: onNotifications, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
       subscribeToMore(() => ({
@@ -531,15 +540,15 @@ export default defineComponent({
       notifications.value = notifications.value.filter((n) => n.id != id);
     };
 
-    profileImage.value = user?.value?.profilePicLink || '';
+    profileImage.value = user?.value?.avatar.name || '';
 
     const openMobileMenu = () => {
       showMobileMenu.value = !showMobileMenu.value;
     };
 
-    const logout = () => {
+    const logout = async () => {
+      await router.go(0);
       onLogout();
-      router.push('/login');
     };
 
     return {

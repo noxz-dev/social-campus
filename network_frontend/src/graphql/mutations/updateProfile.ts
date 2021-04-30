@@ -10,7 +10,9 @@ export const updateProfile = gql`
       interests
       firstname
       lastname
-      profilePicLink
+      avatar {
+        name
+      }
       username
       meFollowing
     }

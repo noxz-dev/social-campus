@@ -9,7 +9,9 @@ export const groupMembers = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
         onlineStatus
       }
       members {
@@ -17,7 +19,9 @@ export const groupMembers = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
         onlineStatus
         groupRole
       }

@@ -11,7 +11,9 @@ export const unlikePost = gql`
         firstname
         lastname
         username
-        profilePicLink
+        avatar {
+          name
+        }
       }
       text
       likesCount

@@ -16,16 +16,22 @@
               src="https://wallpapercave.com/wp/wp5406324.jpg"
               alt=""
               blurhash="AePC3PmlGv{c"
+              :onLoad="false"
             />
           </div>
-          <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14">
+          <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
-              <div class="flex w-full" v-if="profileImage">
-                <img
-                  class="z-10 w-24 h-24 rounded-full sm:w-36 sm:h-36 bg-dark-600 self-center border-2 p-1 object-cover border-white"
-                  :src="profileImage"
-                  alt="profile image"
-                />
+              <div class="flex w-full">
+                <div class="rounded-full">
+                  <lazy-image
+                    blurhash="AePC3PmlGv{c"
+                    class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
+                    :src="'/profile-pics/' + profileImage"
+                    alt="profile image"
+                    rounded="full"
+                  />
+                </div>
+
                 <div class="flex w-full justify-end items-center mt-14">
                   <app-button @click="$refs.editProfileModal.openModal()" v-if="showEditProfile" class="">
                     <svg
@@ -62,13 +68,13 @@
                   </button>
                 </div>
               </div>
-              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10">
+              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-20">
                 <div class="block md:hidden mt-6 min-w-0 flex-1">
                   <h1
                     v-if="user?.firstname"
                     class="md:text-2xl font-bold text-gray-900 truncate dark:text-gray-50 text-lg"
                   >
-                    {{ user?.firstname + ' abc ' + user?.lastname }}
+                    {{ user?.firstname + ' ' + user?.lastname }}
                   </h1>
                   <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">
                     {{ user.bio }}
@@ -76,7 +82,7 @@
                 </div>
                 <div class="w-full mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                   <div class="hidden sm:block min-w-0 flex-1 pb-4 w-full flex-col">
-                    <h1 class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
+                    <h1 v-if="user?.firstname" class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
                       {{ user?.firstname + ' ' + user?.lastname }}
                     </h1>
                     <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
@@ -284,7 +290,7 @@ export default defineComponent({
     }));
 
     const user = useResult(result, null, (data) => data.userByUsername);
-    const profileImage = useResult(result, null, (data) => data.userByUsername.profilePicLink);
+    const profileImage = useResult(result, null, (data) => data.userByUsername.avatar.name);
     const following = useResult(result, null, (data) => data.userByUsername.meFollowing);
 
     const { result: statsResult } = useUserStatsQuery(() => ({

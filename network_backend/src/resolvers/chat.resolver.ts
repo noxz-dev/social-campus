@@ -50,7 +50,7 @@ export class ChatResolver {
 
   @Authorized()
   @Query(() => Chat)
-  public async chatById(@Ctx() ctx: MyContext, @Arg('chatId') chatId: string): Promise<Chat> {
+  public async chatById(@Ctx() ctx: MyContext, @Arg('chatId', () => String) chatId: string): Promise<Chat> {
     const userId = ctx.req.user.id;
     const chat = await getRepository(Chat).findOne({
       where: { id: chatId },
@@ -66,7 +66,10 @@ export class ChatResolver {
 
   @Authorized()
   @Mutation(() => ChatMessage)
-  public async sendMessage(@Ctx() ctx: MyContext, @Arg('input') input: SendMessageInput): Promise<ChatMessage> {
+  public async sendMessage(
+    @Ctx() ctx: MyContext,
+    @Arg('input', () => SendMessageInput) input: SendMessageInput,
+  ): Promise<ChatMessage> {
     const userId = ctx.req.user.id;
     const chat = await getRepository(Chat).findOne({ where: { id: input.chatId }, relations: ['members', 'messages'] });
 
@@ -100,7 +103,7 @@ export class ChatResolver {
 
   @Authorized()
   @Mutation(() => Chat)
-  public async createChat(@Ctx() ctx: MyContext, @Arg('memberId') memberId: string): Promise<Chat> {
+  public async createChat(@Ctx() ctx: MyContext, @Arg('memberId', () => String) memberId: string): Promise<Chat> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['chats', 'chats.members'] });
     const member = await getRepository(User).findOne({ where: { id: memberId } });
@@ -127,14 +130,17 @@ export class ChatResolver {
   public async newMessage(
     @Ctx() ctx: MyContext,
     @Root() payload: NewChatMessagePayload,
-    @Arg('chatId') chatId: string,
+    @Arg('chatId', () => String) chatId: string,
   ): Promise<ChatMessage> {
     return payload.message;
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  public async deleteChatMessage(@Ctx() ctx: MyContext, @Arg('messageId') messageId: string): Promise<boolean> {
+  public async deleteChatMessage(
+    @Ctx() ctx: MyContext,
+    @Arg('messageId', () => String) messageId: string,
+  ): Promise<boolean> {
     const userId = ctx.req.user.id;
     const message = await getRepository(ChatMessage).findOne({
       where: { id: messageId },

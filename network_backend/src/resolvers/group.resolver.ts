@@ -13,10 +13,10 @@ export class GroupResolver {
   @Mutation(() => Group)
   public async createGroup(
     @Ctx() ctx: MyContext,
-    @Arg('name') name: string,
-    @Arg('description', { nullable: true }) description: string,
+    @Arg('name', () => String) name: string,
+    @Arg('description', () => String, { nullable: true }) description: string,
     @Arg('groupType', () => GroupType) groupType: GroupType,
-    @Arg('password', { nullable: true }) password: string,
+    @Arg('password', () => String, { nullable: true }) password: string,
   ): Promise<Group | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -50,8 +50,8 @@ export class GroupResolver {
   @Mutation(() => Group)
   public async joinGroup(
     @Ctx() ctx: MyContext,
-    @Arg('groupId') groupId: string,
-    @Arg('password', { nullable: true }) password: string,
+    @Arg('groupId', () => String) groupId: string,
+    @Arg('password', () => String, { nullable: true }) password: string,
   ): Promise<Group | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
@@ -93,7 +93,7 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => Group)
-  public async groupById(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Group> {
+  public async groupById(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<Group> {
     const userId = ctx.req.user.id;
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
@@ -107,7 +107,11 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => [Group])
-  public async groups(@Ctx() ctx: MyContext, @Arg('skip') skip: number, @Arg('take') take: number): Promise<Group[]> {
+  public async groups(
+    @Ctx() ctx: MyContext,
+    @Arg('skip', () => Number) skip: number,
+    @Arg('take', () => Number) take: number,
+  ): Promise<Group[]> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
       where: {
@@ -204,8 +208,8 @@ export class GroupResolver {
   @Mutation(() => Group)
   public async updateGroupRole(
     @Ctx() ctx: MyContext,
-    @Arg('memberId') memberId: string,
-    @Arg('groupId') groupId: string,
+    @Arg('memberId', () => String) memberId: string,
+    @Arg('groupId', () => String) groupId: string,
     @Arg('groupRole', () => GroupRole) groupRole: GroupRole,
   ): Promise<Group> {
     const userId = ctx.req.user.id;
@@ -230,7 +234,10 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => GroupState)
-  public async checkGroupAccess(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<GroupState> {
+  public async checkGroupAccess(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId', () => String) groupId: string,
+  ): Promise<GroupState> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['groups'] });

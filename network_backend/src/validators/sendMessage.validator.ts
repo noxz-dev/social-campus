@@ -3,12 +3,12 @@ import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class SendMessageInput {
-  @Field()
+  @Field(() => String)
   @IsUUID(4, { message: 'chatId is not a valid Id' })
   @MinLength(10)
   chatId: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(1)
   message: string;

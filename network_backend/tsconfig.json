@@ -1,13 +1,21 @@
 {
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    // same as our --compilerOptions flag and our TS_NODE_COMPILER_OPTIONS environment variable
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
+    "module": "esnext",
+    "target": "es2017",
     "lib": ["esnext"],
     "outDir": "./dist",
     "sourceMap": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "baseUrl": ".",
     "typeRoots": ["src/utils/types", "node_modules/@types"],

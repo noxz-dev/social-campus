@@ -54,7 +54,10 @@ export class NotificationResolver {
       return false;
     },
   })
-  public async notifications(@Root() payload: Notification, @Arg('userId') userId: string): Promise<Notification> {
+  public async notifications(
+    @Root() payload: Notification,
+    @Arg('userId', () => String) userId: string,
+  ): Promise<Notification> {
     log.debug('notification subscription fired');
 
     return payload;
@@ -64,7 +67,7 @@ export class NotificationResolver {
   @Mutation(() => Boolean)
   public async deleteNotification(
     @Ctx() ctx: MyContext,
-    @Arg('notificationId') notifyId: string,
+    @Arg('notificationId', () => String) notifyId: string,
   ): Promise<boolean | null> {
     const userId = ctx.req.user.id;
     if (!userId) {

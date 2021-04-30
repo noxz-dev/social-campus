@@ -3,7 +3,7 @@ import { GroupType } from '../entity/group.entity';
 
 @ObjectType()
 export class GroupState {
-  @Field()
+  @Field(() => String)
   id: string;
 
   @Field(() => GroupType)

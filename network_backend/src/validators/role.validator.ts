@@ -3,12 +3,12 @@ import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class RoleValidator {
-  @Field()
+  @Field(() => String)
   @IsString()
   @IsUppercase()
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   description?: string;

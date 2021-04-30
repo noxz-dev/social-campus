@@ -47,14 +47,14 @@ export class Post extends Base {
   @Field(() => Boolean, { nullable: true })
   liked: boolean;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   imageName: string;
 
   @Field(() => String, { nullable: true })
   imageLink: string;
 
   @Field(() => Boolean, { nullable: true })
-  @Column({ default: false })
+  @Column({ default: false, type: 'bool' })
   edited: boolean;
 
   @AfterLoad()

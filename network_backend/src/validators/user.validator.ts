@@ -3,26 +3,26 @@ import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class UserValidator {
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(2)
   firstName: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(2)
   lastname: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(3, { message: 'Username muss aus min. 3 Zeichen bestehen' })
   username: string;
 
-  @Field()
+  @Field(() => String)
   @IsEmail()
   email: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(5)
   password: string;

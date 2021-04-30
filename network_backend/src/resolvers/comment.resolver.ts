@@ -15,8 +15,8 @@ export class CommentResolver {
   @Mutation(() => Comment)
   public async addComment(
     @Ctx() ctx: MyContext,
-    @Arg('text') text: string,
-    @Arg('postID') postID: string,
+    @Arg('text', () => String) text: string,
+    @Arg('postID', () => String) postID: string,
   ): Promise<Comment | null> {
     const id = ctx.req.user.id;
     if (!id) {
@@ -54,7 +54,10 @@ export class CommentResolver {
 
   @Authorized()
   @Mutation(() => Comment)
-  public async likeComment(@Ctx() ctx: MyContext, @Arg('commentID') commentID: string): Promise<Comment | null> {
+  public async likeComment(
+    @Ctx() ctx: MyContext,
+    @Arg('commentID', () => String) commentID: string,
+  ): Promise<Comment | null> {
     const id = ctx.req.user.id;
     if (!id) {
       return null;
@@ -88,7 +91,10 @@ export class CommentResolver {
 
   @Authorized()
   @Mutation(() => Comment)
-  public async unlikeComment(@Ctx() ctx: MyContext, @Arg('commentID') commentID: string): Promise<Comment | null> {
+  public async unlikeComment(
+    @Ctx() ctx: MyContext,
+    @Arg('commentID', () => String) commentID: string,
+  ): Promise<Comment | null> {
     const id = ctx.req.user.id;
     if (!id) {
       return null;

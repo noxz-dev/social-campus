@@ -4,21 +4,21 @@ import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class UpdateProfileInput {
-  @Field()
+  @Field(() => String)
   @IsString()
   bio: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   interests: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   faculty: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   studyCourse: string;

@@ -27,7 +27,7 @@ export class Notification extends Base {
   type: NotificationType;
 
   @Field(() => String)
-  @Column()
+  @Column({ type: 'varchar' })
   message: string;
 
   @Field(() => User)

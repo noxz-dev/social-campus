@@ -4,7 +4,7 @@ import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class AddPostInput {
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   content: string;
@@ -12,7 +12,7 @@ export class AddPostInput {
   @Field(() => GraphQLUpload, { nullable: true })
   file: FileUpload;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   @MinLength(10)

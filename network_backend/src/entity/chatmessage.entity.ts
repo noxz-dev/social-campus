@@ -15,8 +15,8 @@ export class ChatMessage extends Base {
   @ManyToOne(() => Chat)
   chat: Chat;
 
-  @Field()
-  @Column()
+  @Field(() => String)
+  @Column({ type: 'varchar' })
   content: string;
 
   constructor(sendBy: User, chat: Chat, content: string) {

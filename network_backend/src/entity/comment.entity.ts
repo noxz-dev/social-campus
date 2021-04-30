@@ -13,7 +13,7 @@ export class Comment extends Base {
   user: User;
 
   @Field(() => String)
-  @Column()
+  @Column({ type: 'varchar' })
   text: string;
 
   @Field(() => [Like])

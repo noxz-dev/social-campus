@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { Base } from './base';
 import { Post } from './post.entity';
 import { User } from './user.entity';
@@ -13,7 +13,7 @@ interface TagPayload {
 @Entity()
 export class Tag extends Base {
   @Field(() => String)
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'varchar' })
   name: string;
 
   @Field(() => User)

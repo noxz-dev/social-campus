@@ -14,25 +14,25 @@ import { Role } from './role.entity';
 @ObjectType()
 export class User extends Base {
   @Field(() => String)
-  @Column()
+  @Column({ type: 'varchar' })
   firstname: string;
 
   @Field(() => String)
-  @Column()
+  @Column({ type: 'varchar' })
   lastname: string;
 
   @Field(() => String)
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'varchar' })
   username: string;
 
   @Field(() => String)
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'varchar' })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   profilePicName: string;
 
   @Field(() => String, { nullable: true })
@@ -83,7 +83,7 @@ export class User extends Base {
   meFollowing: boolean;
 
   @Field(() => Boolean)
-  @Column({ default: false })
+  @Column({ default: false, type: 'bool' })
   onlineStatus: boolean;
 
   @AfterLoad()

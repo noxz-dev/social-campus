@@ -17,11 +17,11 @@ registerEnumType(GroupType, {
 @Entity()
 @ObjectType()
 export class Group extends Base {
-  @Field()
-  @Column()
+  @Field(() => String)
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })
   description: string;
 
@@ -33,7 +33,7 @@ export class Group extends Base {
   @ManyToOne(() => User)
   createdBy: User;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   password: string;
 
   @Field(() => [Post])

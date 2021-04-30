@@ -3,10 +3,10 @@ import { Base } from './base';
 
 @Entity()
 export class JwtToken extends Base {
-  @Column()
+  @Column({ type: 'varchar' })
   userId: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   token!: string;
 
   constructor(token: string, userId: string) {

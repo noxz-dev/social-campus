@@ -28,9 +28,9 @@ export class PostResolver {
   })
   public async getPostsFromUser(
     @Ctx() ctx: MyContext,
-    @Arg('userID') userID: string,
-    @Arg('offset') offset: number,
-    @Arg('limit') limit: number,
+    @Arg('userID', () => String) userID: string,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
     if (!userId) throw Error('auth error');
@@ -61,8 +61,8 @@ export class PostResolver {
   })
   public async browsePosts(
     @Ctx() ctx: MyContext,
-    @Arg('skip') skip: number,
-    @Arg('take') take: number,
+    @Arg('skip', () => Number) skip: number,
+    @Arg('take', () => Number) take: number,
     @Arg('tags', () => [String], { nullable: true }) tags: string[],
   ): Promise<Post[]> {
     const userId = ctx.req.user.id;
@@ -121,7 +121,10 @@ export class PostResolver {
     nullable: true,
     description: 'getPostsFromGroup returns all posts from a group',
   })
-  public async getPostsFromGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Post[] | null> {
+  public async getPostsFromGroup(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId', () => String) groupId: string,
+  ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
     if (!userId) return null;
     const posts = await getRepository(Post).find({
@@ -156,8 +159,8 @@ export class PostResolver {
   @Query(() => [Post], { description: 'returns the post feed of user' })
   public async getFeed(
     @Ctx() ctx: MyContext,
-    @Arg('offset') offset: number,
-    @Arg('limit') limit: number,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
 
@@ -207,7 +210,7 @@ export class PostResolver {
 
   @Authorized()
   @Query(() => Post, { description: 'returns a specific post' })
-  public async postById(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<Post | null> {
+  public async postById(@Ctx() ctx: MyContext, @Arg('postId', () => String) postId: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
 
     if (!isUUID(postId, 4)) throw new Error('given postId ist not a valid uuid');
@@ -233,10 +236,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post, { description: 'addPost creates a new Post and pushes updates to all followers' })
-  public async addPost(
-    @Ctx() ctx: MyContext,
-    @Arg('input') { content, file, groupId, tags }: AddPostInput,
-  ): Promise<Post> {
+  public async addPost(@Ctx() ctx: MyContext, @Arg('input', () => AddPostInput) input: AddPostInput): Promise<Post> {
     const id = ctx.req.user.id;
     if (!id) {
       throw new Error('not authenticated');
@@ -251,29 +251,29 @@ export class PostResolver {
     }
 
     let group: Group;
-    if (groupId) {
-      group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+    if (input.groupId) {
+      group = await getRepository(Group).findOne({ where: { id: input.groupId }, relations: ['members'] });
       const user = group.members.find((member) => member.id === id);
       if (!user) throw Error('youre not allowed to create content for this group');
     }
     const post = new Post();
-    post.text = content;
+    post.text = input.content;
     post.user = user;
     post.likes = [];
     post.tags = [];
     post.group = group;
     user.posts.push(post);
 
-    if (tags) {
-      const postTags = await createTags(user, tags, getConnection().createEntityManager());
+    if (input.tags) {
+      const postTags = await createTags(user, input.tags, getConnection().createEntityManager());
       post.tags = [...postTags];
     }
 
-    if (file) {
-      const newFileName = await uploadFileGraphql(file, 'post-images');
+    if (input.file) {
+      const newFileName = await uploadFileGraphql(input.file, 'post-images');
       post.imageName = newFileName;
     }
-    if (groupId && !group) {
+    if (input.groupId && !group) {
       throw new Error('group does not exist');
     }
 
@@ -284,8 +284,8 @@ export class PostResolver {
     dbPost.commentCount = 0;
     dbPost.liked = false;
 
-    if (content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g) !== null) {
-      for await (const mention of content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)) {
+    if (input.content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g) !== null) {
+      for await (const mention of input.content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)) {
         const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
         if (!toUser) return;
         await notify(
@@ -333,9 +333,9 @@ export class PostResolver {
   public async newPost(
     @Ctx() ctx: MyContext,
     @Root() payload: NewPostPayload,
-    @Arg('userId') userId: string,
-    @Arg('all') all: boolean,
-    @Arg('groupId', { nullable: true }) groupId: string,
+    @Arg('userId', () => String) userId: string,
+    @Arg('all', () => Boolean) all: boolean,
+    @Arg('groupId', () => String, { nullable: true }) groupId: string,
   ): Promise<Post> {
     log.info('new post subscription fired');
     return payload.post;
@@ -343,7 +343,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post, { description: 'likes an post' })
-  public async likePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
+  public async likePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;
@@ -391,7 +391,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post, { description: 'unlikes an post' })
-  public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID') postID: string): Promise<Post | null> {
+  public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;
@@ -428,7 +428,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Boolean, { description: 'deletes an post' })
-  public async deletePost(@Ctx() ctx: MyContext, @Arg('postId') postId: string): Promise<boolean | null> {
+  public async deletePost(@Ctx() ctx: MyContext, @Arg('postId', () => String) postId: string): Promise<boolean | null> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;
@@ -448,7 +448,10 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post, { description: 'updates the content of a post' })
-  public async editPost(@Ctx() ctx: MyContext, @Arg('input') { content, postId }: EditPostInput): Promise<Post> {
+  public async editPost(
+    @Ctx() ctx: MyContext,
+    @Arg('input', () => EditPostInput) { content, postId }: EditPostInput,
+  ): Promise<Post> {
     const userId = ctx.req.user.id;
     if (!userId) {
       return null;

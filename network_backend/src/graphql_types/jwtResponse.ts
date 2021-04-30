@@ -2,10 +2,10 @@ import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class JwtResponse {
-  @Field()
+  @Field(() => String)
   accessToken: string;
 
-  @Field()
+  @Field(() => String)
   refreshToken: string;
 
   constructor(accessToken: string, refreshToken: string) {

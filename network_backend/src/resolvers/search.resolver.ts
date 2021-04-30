@@ -10,7 +10,7 @@ import { Search } from '../graphql_types/search';
 export class SearchResolver {
   @Authorized()
   @Query(() => Search)
-  async search(@Arg('searchString') searchString: string): Promise<Search> {
+  async search(@Arg('searchString', () => String) searchString: string): Promise<Search> {
     const users = await getRepository(User).find({
       where: [{ firstname: ILike(`%${searchString}%`) }, { lastname: ILike(`%${searchString}%`) }],
     });

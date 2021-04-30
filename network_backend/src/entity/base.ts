@@ -3,14 +3,14 @@ import { Column, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @ObjectType()
 export abstract class Base {
-  @Field()
+  @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @UpdateDateColumn({ name: 'updated_at', precision: 3 })
   readonly updatedAt: Date = new Date();
 
-  @Field()
-  @Column()
+  @Field(() => Date)
+  @Column({ type: 'timestamp' })
   createdAt: Date = new Date();
 }

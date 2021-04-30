@@ -14,7 +14,7 @@ export class RoleResolver {
 
   @Authorized()
   @Mutation(() => Role)
-  public async addRole(@Arg('input') input: RoleValidator): Promise<Role> {
+  public async addRole(@Arg('input', () => RoleValidator) input: RoleValidator): Promise<Role> {
     const role = new Role(input);
     await getRepository(Role).save(role);
     return role;
@@ -22,7 +22,7 @@ export class RoleResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  public async removeRole(@Arg('name') name: string): Promise<boolean> {
+  public async removeRole(@Arg('name', () => String) name: string): Promise<boolean> {
     const role = await getRepository(Role).findOne({ name });
     try {
       await getRepository(Role).remove(role);
@@ -35,7 +35,10 @@ export class RoleResolver {
 
   @Authorized()
   @Mutation(() => User)
-  public async assignRoleToUser(@Arg('roleName') roleName: string, @Arg('email') email: string): Promise<User | null> {
+  public async assignRoleToUser(
+    @Arg('roleName', () => String) roleName: string,
+    @Arg('email', () => String) email: string,
+  ): Promise<User | null> {
     const role = await getRepository(Role).findOne({ name: roleName });
     if (!role) throw new Error('Role not found!');
     const user = await getRepository(User).findOne({ relations: ['roles'], where: { email } });
@@ -48,8 +51,8 @@ export class RoleResolver {
   @Authorized()
   @Mutation(() => User)
   public async removeRoleFromUser(
-    @Arg('roleName') roleName: string,
-    @Arg('email') email: string,
+    @Arg('roleName', () => String) roleName: string,
+    @Arg('email', () => String) email: string,
   ): Promise<User | null> {
     const role = await getRepository(Role).findOne({ name: roleName });
     if (!role) throw new Error('Role not found!');

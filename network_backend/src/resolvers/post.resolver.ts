@@ -219,11 +219,13 @@ export class PostResolver {
       .createQueryBuilder('post')
       .where('post.id = :id', { id: postId })
       .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('user.avatar', 'avatar')
       .leftJoinAndSelect('post.comments', 'comments')
       .orderBy({
         'comments.createdAt': 'DESC',
       })
-      .leftJoinAndSelect('comments.user', 'user.comments')
+      .leftJoinAndSelect('comments.user', 'commentUser')
+      .leftJoinAndSelect('commentUser.avatar', 'commentUserAvatar')
       .getOne();
 
     if (!post) return null;

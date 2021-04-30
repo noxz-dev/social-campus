@@ -283,6 +283,7 @@ export class UserResolver {
       .createQueryBuilder('following')
       .innerJoin('following.followers', 'followers')
       .where('followers.id = :id', { id: userId })
+      .leftJoinAndSelect('following.avatar', 'avatar')
       .skip(skip)
       .take(take)
       .getMany();
@@ -301,6 +302,7 @@ export class UserResolver {
       .createQueryBuilder('followers')
       .innerJoin('followers.following', 'following')
       .where('following.id = :id', { id: userId })
+      .leftJoinAndSelect('followers.avatar', 'avatar')
       .skip(skip)
       .take(take)
       .getMany();

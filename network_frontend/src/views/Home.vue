@@ -94,6 +94,8 @@ export default defineComponent({
       },
     }));
 
+    let lastResponseLength = 1;
+
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
       console.log('load triggerd');

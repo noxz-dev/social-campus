@@ -73,6 +73,7 @@ export class PostResolver {
         .createQueryBuilder('posts')
         .where('posts.group is null')
         .leftJoinAndSelect('posts.user', 'user')
+        .leftJoinAndSelect('user.avatar', 'avatar')
         .leftJoinAndSelect('posts.tags', 'tags')
         .andWhere('lower(tags.name) IN (:...tags)', { tags: tags.map((t) => t.toLowerCase()) })
         .orderBy('posts.createdAt', 'DESC')

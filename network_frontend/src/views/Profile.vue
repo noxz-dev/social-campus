@@ -15,7 +15,7 @@
               class="object-cover h-32 w-full lg:h-64 rounded-xl"
               src="https://wallpapercave.com/wp/wp5406324.jpg"
               alt=""
-              blurhash="AePC3PmlGv{c"
+              blurhash="LvICmx{hjJJ8B,EzX7wdJTNHoysS"
               :onLoad="false"
             />
           </div>
@@ -68,7 +68,7 @@
                   </button>
                 </div>
               </div>
-              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-20">
+              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-10">
                 <div class="block md:hidden mt-6 min-w-0 flex-1">
                   <h1
                     v-if="user?.firstname"

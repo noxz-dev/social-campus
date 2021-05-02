@@ -81,6 +81,7 @@ export class ChatResolver {
     const user = await getRepository(User).findOne({ where: { id: userId } });
     const chatMessage = new ChatMessage(user, chat, input.message);
     chat.messages = [...chat.messages, chatMessage];
+    chat.lastMessage = chatMessage;
 
     const savedMessage = await getRepository(ChatMessage).save(chatMessage);
 
@@ -92,8 +93,9 @@ export class ChatResolver {
         fromUser: user,
         toUser: toUser,
         type: NotificationType.NEW_CHAT_MESSAGE,
-        message: user.firstname + ' hat dir eine Nachricht gesendet',
+        message: ' Neue Nachricht von ' + user.firstname,
         chat: chat,
+        chatMessage: savedMessage,
       },
       ctx,
     );

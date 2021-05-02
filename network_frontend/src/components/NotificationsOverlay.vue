@@ -1,12 +1,17 @@
 <template></template>
 
 <script lang="ts">
-import { useNotificationsSubscription } from '../graphql/generated/types';
+import { NotificationType, useNotificationsSubscription } from '../graphql/generated/types';
 import { defineComponent, inject, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { Toast } from 'vue-dk-toast';
+import { Howl } from 'howler';
+import lazyImage from '../components/Blurhash/LazyImage.vue';
 
 export default defineComponent({
+  components: {
+    lazyImage,
+  },
   setup() {
     const store = useStore();
     const toast = inject<Toast>('$toast');
@@ -34,10 +39,17 @@ export default defineComponent({
 
     onResult(({ data }) => {
       console.log('sub', data);
+      if (data?.notifications.type === NotificationType.NewChatMessage) {
+        let sound = new Howl({
+          src: ['/notification.mp3'],
+          volume: 0.1,
+        });
+        sound.play();
+      }
       if (toast)
         toast(data.notifications.message, {
           positionY: 'top',
-          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img class="rounded-full w-10 h-10" src="/profile-pics/${data.notifications.fromUser.avatar.name}"/></div>`,
+          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img  class="rounded-full w-10 h-10" src="/profile-pics/${data.notifications.fromUser.avatar.name}" /></div>`,
         });
     });
   },
@@ -51,7 +63,11 @@ export default defineComponent({
 }
 
 .dk__toast-section {
-  @apply mt-20 !important;
+  @apply mt-20;
+}
+
+.dk__toast-mobile-section {
+  @apply mt-16;
 }
 
 .dk__toast-top-right {

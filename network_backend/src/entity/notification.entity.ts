@@ -1,8 +1,9 @@
 import { Field, ObjectType, registerEnumType } from 'type-graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { NotificationPayload } from '../resolvers/notification.resolver';
 import { Base } from './base';
 import { Chat } from './chat.entity';
+import { ChatMessage } from './chatmessage.entity';
 import { Comment } from './comment.entity';
 import { Post } from './post.entity';
 import { User } from './user.entity';
@@ -45,6 +46,11 @@ export class Notification extends Base {
   @Field(() => Chat, { nullable: true })
   @ManyToOne(() => Chat, { onDelete: 'CASCADE', nullable: true })
   chat: Chat;
+
+  @Field(() => ChatMessage, { nullable: true })
+  @OneToOne(() => ChatMessage, { onDelete: 'CASCADE', nullable: true })
+  @JoinColumn()
+  chatMessage: ChatMessage;
 
   @ManyToOne(() => Comment, { onDelete: 'CASCADE', nullable: true })
   comment: Comment;

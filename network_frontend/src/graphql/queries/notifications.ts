@@ -7,6 +7,9 @@ export const getNotifications = gql`
       type
       message
       createdAt
+      chatMessage {
+        content
+      }
       toUser {
         id
         avatar {

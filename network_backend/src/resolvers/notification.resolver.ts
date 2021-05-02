@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Chat } from 'entity/chat.entity';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { getRepository } from 'typeorm';
+import { Chat } from '../entity/chat.entity';
+import { ChatMessage } from '../entity/chatmessage.entity';
 import { Comment } from '../entity/comment.entity';
 import { Notification, NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
@@ -23,6 +24,7 @@ export interface NotificationPayload {
   post?: Post;
   comment?: Comment;
   chat?: Chat;
+  chatMessage?: ChatMessage;
 }
 
 @Resolver(() => Notification)
@@ -39,9 +41,21 @@ export class NotificationResolver {
       where: {
         toUser: userId,
       },
-      relations: ['toUser', 'fromUser', 'post', 'chat'],
+      relations: ['toUser', 'fromUser', 'post', 'chat', 'chatMessage'],
       order: { createdAt: 'DESC' },
     });
+
+    for await (const { chat } of notifys) {
+      const messages = await getRepository(ChatMessage).find({
+        where: { chat: chat },
+        order: { createdAt: 'DESC' },
+        take: 1,
+      });
+      if (messages[0]) {
+        chat.lastMessage = messages[0];
+      }
+    }
+
     return notifys;
   }
 
@@ -94,6 +108,7 @@ export const notify = async (payload: NotificationPayload, context: MyContext): 
   const notify = new Notification(payload);
   if (payload.post) notify.post = payload.post;
   if (payload.chat) notify.chat = payload.chat;
+  if (payload.chatMessage) notify.chatMessage = payload.chatMessage;
   const savedNotification = await getRepository(Notification).save(notify);
   context.req.pubsub.publish(SUB_TOPICS.NEW_NOTIFICATION, savedNotification);
   log.info('Notifcation send');

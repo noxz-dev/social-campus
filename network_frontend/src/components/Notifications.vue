@@ -18,10 +18,21 @@
         :key="notify.id"
         @click="handleNotificationClick(notify)"
       >
-        <div class="h-8 w-8 mx-2">
-          <img :src="'/profile-pics/' + notify.fromUser?.avatar.name" alt="" />
+        <div class="h-8 w-8">
+          <lazy-image
+            class="h-8 w-8 rounded-full"
+            blurhash="AePC3PmlGv{c"
+            rounded="full"
+            :src="'/profile-pics/' + notify.fromUser?.avatar.name"
+            alt=""
+          />
         </div>
-        <span class="flex-1 ml-2 dark:text-gray-50 text-gray-900">{{ notify.message }}</span>
+        <div class="flex flex-col flex-1 ml-2">
+          <span class="flex-1 dark:text-gray-50 text-gray-900 text-sm">{{ notify.message }}</span>
+          <span v-if="notify.chatMessage" class="flex-1 dark:text-gray-300 text-gray-900 text-sm">{{
+            notify.chatMessage.content
+          }}</span>
+        </div>
         <div class="rounded" @click.stop="deleteNotification(notify.id)">
           <svg
             width="24px"
@@ -61,6 +72,7 @@ import { useDeleteNotificationMutation } from '../graphql/generated/types';
 import { defineComponent, PropType, ref, toRefs, watch } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';
+import lazyImage from '../components/Blurhash/LazyImage.vue';
 import { RecursivePartial } from '../utils/typeUtils';
 export default defineComponent({
   emits: ['closeNotify', 'deleteNotification'],
@@ -69,6 +81,9 @@ export default defineComponent({
       type: Object as PropType<RecursivePartial<Notification>[]>,
       required: true,
     },
+  },
+  components: {
+    lazyImage,
   },
   setup(props, { emit }) {
     const notifications = ref<RecursivePartial<Notification>[]>(props.notifications);

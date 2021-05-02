@@ -7,6 +7,9 @@ export const notificationsSubscription = gql`
       type
       message
       createdAt
+      chatMessage {
+        content
+      }
       fromUser {
         id
         username

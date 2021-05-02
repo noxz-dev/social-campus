@@ -38,5 +38,4 @@ const app = createApp({
 app.component('app-button', AppButton);
 
 app.config.globalProperties.eventbus = eventbus;
-
 app.mount('#app');

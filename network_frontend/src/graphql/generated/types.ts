@@ -167,14 +167,12 @@ export type Mutation = {
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
   removeRoleFromUser: User;
-  /** Registers a new user */
+  /** creates a new user */
   register: Scalars['Boolean'];
   /** logout an user to invalidate its refresh token */
   logout: Scalars['Boolean'];
   /** login to get a new auth token */
   login: JwtResponse;
-  /** upload a new profileimage */
-  uploadProfileImage: User;
   /** follow a user */
   addFollower: User;
   /** unfollow a user */
@@ -304,11 +302,6 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationUploadProfileImageArgs = {
-  file: Scalars['Upload'];
-};
-
-
 export type MutationAddFollowerArgs = {
   userID: Scalars['String'];
 };
@@ -333,6 +326,7 @@ export type Notification = {
   toUser: User;
   post?: Maybe<Post>;
   chat?: Maybe<Chat>;
+  chatMessage?: Maybe<ChatMessage>;
 };
 
 export enum NotificationType {
@@ -796,6 +790,10 @@ export type SendMessageMutation = (
   & { sendMessage: (
     { __typename?: 'ChatMessage' }
     & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
+    & { sendBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ) }
   ) }
 );
 
@@ -1106,7 +1104,10 @@ export type GetNotificationsQuery = (
   & { getNotifications: Array<(
     { __typename?: 'Notification' }
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
-    & { toUser: (
+    & { chatMessage?: Maybe<(
+      { __typename?: 'ChatMessage' }
+      & Pick<ChatMessage, 'content'>
+    )>, toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
       & { avatar: (
@@ -1285,7 +1286,10 @@ export type NotificationsSubscription = (
   & { notifications: (
     { __typename?: 'Notification' }
     & Pick<Notification, 'id' | 'type' | 'message' | 'createdAt'>
-    & { fromUser: (
+    & { chatMessage?: Maybe<(
+      { __typename?: 'ChatMessage' }
+      & Pick<ChatMessage, 'content'>
+    )>, fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
       & { avatar: (
@@ -1740,6 +1744,9 @@ export const SendMessageDocument = gql`
     id
     content
     createdAt
+    sendBy {
+      id
+    }
   }
 }
     `;
@@ -2368,6 +2375,9 @@ export const GetNotificationsDocument = gql`
     type
     message
     createdAt
+    chatMessage {
+      content
+    }
     toUser {
       id
       avatar {
@@ -2680,6 +2690,9 @@ export const NotificationsDocument = gql`
     type
     message
     createdAt
+    chatMessage {
+      content
+    }
     fromUser {
       id
       username

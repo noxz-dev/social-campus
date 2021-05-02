@@ -6,6 +6,9 @@ export const sendMessage = gql`
       id
       content
       createdAt
+      sendBy {
+        id
+      }
     }
   }
 `;

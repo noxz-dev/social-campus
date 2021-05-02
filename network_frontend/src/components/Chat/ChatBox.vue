@@ -100,9 +100,7 @@ import { useResult } from '@vue/apollo-composable';
 import { SendMessageMutationVariables } from '../../graphql/generated/types';
 import gql from 'graphql-tag';
 import { useMagicKeys } from '@vueuse/core';
-import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
-import { Howl } from 'howler';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
@@ -127,41 +125,12 @@ export default defineComponent({
 
     const chatQueryEnabled = ref(true);
 
-    const { result, subscribeToMore, onResult } = useChatByIdQuery(
+    const { result, onResult } = useChatByIdQuery(
       () => ({
         chatId: route.params.id as string,
       }),
       () => ({ enabled: chatQueryEnabled.value })
     );
-
-    subscribeToMore(() => ({
-      document: gql`
-        subscription newMessage($chatId: String!) {
-          newMessage(chatId: $chatId) {
-            id
-            content
-            createdAt
-            sendBy {
-              id
-            }
-          }
-        }
-      `,
-      variables: {
-        chatId: route.params.id,
-      },
-      updateQuery(result, { subscriptionData }) {
-        if (subscriptionData.data.newMessage.sendBy.id !== user.value.id) {
-          // new Audio('/notification.mp3').play();
-          var sound = new Howl({
-            src: ['/notification.mp3'],
-          });
-
-          sound.play();
-        }
-        return result;
-      },
-    }));
 
     const chat = useResult(result, null, (data) => data.chatById);
 
@@ -171,6 +140,29 @@ export default defineComponent({
           chatId: route.params.id as string,
           message: newMessage.value,
         },
+      },
+      update: (cache, { data: { sendMessage } }) => {
+        cache.modify({
+          id: cache.identify(chat.value),
+          fields: {
+            messages(existingMessages = []) {
+              const newMessageRef = cache.writeFragment({
+                data: sendMessage,
+                fragment: gql`
+                  fragment NewMessage on ChatMessage {
+                    id
+                    content
+                    createdAt
+                    sendBy {
+                      id
+                    }
+                  }
+                `,
+              });
+              return [...existingMessages, newMessageRef];
+            },
+          },
+        });
       },
     }));
 
@@ -195,7 +187,6 @@ export default defineComponent({
 
     onMounted(() => {
       input.value.focus();
-      console.log('hey');
       emojiPicker.value?.addEventListener('emoji-pick', (event) => {
         newMessage.value += event.detail.emoji;
       });

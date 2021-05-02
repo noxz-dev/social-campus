@@ -147,7 +147,7 @@ export class Application {
         }),
       );
       app.get('/files/:filename', async (req, res) => {
-        if (!req.user) return res.sendStatus(403);
+        // if (!req.user) return res.sendStatus(403);
         if (!req.params.filename) return res.sendStatus(400);
         try {
           const response = await axios({

@@ -28,7 +28,10 @@ export class CommentResolver {
       return null;
     }
 
-    const post = await getRepository(Post).findOne({ where: { id: postID }, relations: ['user'] });
+    const post = await getRepository(Post).findOne({
+      where: { id: postID },
+      relations: ['user', 'group', 'group.members'],
+    });
     if (!post) {
       return null;
     }
@@ -38,6 +41,28 @@ export class CommentResolver {
     comment.post = post;
     comment.likes = [];
     const savedComment = await getRepository(Comment).save(comment);
+
+    if (text.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g) !== null) {
+      for await (const mention of text.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)) {
+        const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
+        if (post.group) {
+          const foundUser = post.group.members.find((member) => member.id === toUser.id);
+          if (!foundUser) continue;
+        }
+        if (!toUser) continue;
+
+        await notify(
+          {
+            type: NotificationType.MENTION,
+            message: `${user.firstname} hat dich in einem Kommentar erwähnt`,
+            toUser: toUser,
+            fromUser: user,
+            post: post,
+          },
+          ctx,
+        );
+      }
+    }
     await notify(
       {
         type: NotificationType.NEW_COMMENT,

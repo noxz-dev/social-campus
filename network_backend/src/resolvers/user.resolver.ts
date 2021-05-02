@@ -43,18 +43,6 @@ export class UserResolver {
       where: { id },
     });
 
-    // const avatar = new Media();
-
-    // avatar.blurhash = 'LJIzs5=D5uK$^aJWKP#*wd]fnlK5';
-    // avatar.name = 'hey';
-    // avatar.type = MediaType.IMAGE;
-
-    // const saved = await getRepository(Media).save(avatar);
-
-    // user.avatar = saved;
-
-    // await getRepository(User).save(user);
-
     if (!user) {
       return null;
     }
@@ -328,6 +316,7 @@ export class UserResolver {
     const postCount = await getRepository(Post).count({
       where: {
         user: userId,
+        group: null,
       },
       relations: ['user'],
     });

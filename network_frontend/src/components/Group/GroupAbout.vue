@@ -1,34 +1,66 @@
 <template>
   <div ref="relativeContainer" class="relative w-full pb-20">
-    <div class="editable markdown bg-gray-100 dark:bg-dark-600 dark:text-gray-50 rounded-lg mt-12 p-5 outline-none">
-      <h2>Willkommen zu dieser Gruppe</h2>
-      <p>Neues zeug</p>
-      <p><br /></p>
-      <p>hier ist das sehr cool</p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-      <p><br /></p>
-    </div>
+    <div
+      class="editable markdown bg-gray-100 dark:bg-dark-600 dark:text-gray-50 rounded-lg mt-12 p-5 outline-none"
+    ></div>
+    <app-button @click="saveAbout">save</app-button>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import MediumEditor from 'medium-editor';
+import { useGroupAboutQuery, useUpdateAboutGroupMutation } from '../../graphql/generated/types';
+import { useRoute } from 'vue-router';
+import { useResult } from '@vue/apollo-composable';
+import { useStore } from 'vuex';
 export default defineComponent({
   props: {},
   setup() {
+    let editor: MediumEditor.MediumEditor;
+    const route = useRoute();
     const relativeContainer = ref();
+    const about = ref('');
+    const store = useStore();
+    const user = computed(() => store.state.userData.user);
+    const { result, onResult } = useGroupAboutQuery(() => ({
+      groupId: route.params.id as string,
+    }));
+
+    const group = useResult(result, null, (data) => data.groupById);
+    const { mutate: updateAbout } = useUpdateAboutGroupMutation(() => ({
+      variables: {
+        groupId: route.params.id as string,
+        aboutContent: about.value,
+      },
+    }));
+
+    const saveAbout = () => {
+      const serialized = editor.serialize();
+      about.value = serialized['element-0'].value;
+      console.log(about.value);
+      updateAbout();
+    };
+
+    onResult(() => {
+      editor.setContent(group.value?.about);
+      if (editor.isActive && user.value.id !== group.value?.createdBy.id) {
+        editor.destroy();
+      }
+    });
+
+    // const toggleEdit = () => {
+    //   if (editor.isActive) {
+    //     editor.destroy();
+    //   } else {
+    //     editor.setup();
+    //   }
+    // };
     onMounted(() => {
-      const editor = new MediumEditor('.editable');
+      editor = new MediumEditor('.editable');
     });
     return {
       relativeContainer,
+      saveAbout,
     };
   },
 });

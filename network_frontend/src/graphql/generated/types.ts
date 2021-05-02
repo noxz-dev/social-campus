@@ -67,6 +67,7 @@ export type Group = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   type: GroupType;
+  about: Scalars['String'];
   createdBy: User;
   posts: Array<Post>;
   members: Array<GroupMember>;
@@ -162,6 +163,7 @@ export type Mutation = {
   unlikeComment: Comment;
   createGroup: Group;
   joinGroup: Group;
+  updateAboutGroup: Group;
   updateGroupRole: Group;
   addRole: Role;
   removeRole: Scalars['Boolean'];
@@ -253,6 +255,12 @@ export type MutationCreateGroupArgs = {
 
 export type MutationJoinGroupArgs = {
   password?: Maybe<Scalars['String']>;
+  groupId: Scalars['String'];
+};
+
+
+export type MutationUpdateAboutGroupArgs = {
+  aboutContent: Scalars['String'];
   groupId: Scalars['String'];
 };
 
@@ -821,6 +829,20 @@ export type UnlikePostMutation = (
   ) }
 );
 
+export type UpdateAboutGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  aboutContent: Scalars['String'];
+}>;
+
+
+export type UpdateAboutGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { updateAboutGroup: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'type' | 'id' | 'name' | 'description' | 'numberOfPosts' | 'numberOfMembers'>
+  ) }
+);
+
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
 }>;
@@ -991,6 +1013,23 @@ export type GetPostsFromGroupQuery = (
       ) }
     ) }
   )>> }
+);
+
+export type GroupAboutQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GroupAboutQuery = (
+  { __typename?: 'Query' }
+  & { groupById: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'about'>
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ) }
+  ) }
 );
 
 export type GroupByIdQueryVariables = Exact<{
@@ -1821,6 +1860,41 @@ export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnlikePostMutation, UnlikePostMutationVariables>;
+export const UpdateAboutGroupDocument = gql`
+    mutation updateAboutGroup($groupId: String!, $aboutContent: String!) {
+  updateAboutGroup(groupId: $groupId, aboutContent: $aboutContent) {
+    type
+    id
+    name
+    description
+    numberOfPosts
+    numberOfMembers
+  }
+}
+    `;
+
+/**
+ * __useUpdateAboutGroupMutation__
+ *
+ * To run a mutation, you first call `useUpdateAboutGroupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAboutGroupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateAboutGroupMutation({
+ *   variables: {
+ *     groupId: // value for 'groupId'
+ *     aboutContent: // value for 'aboutContent'
+ *   },
+ * });
+ */
+export function useUpdateAboutGroupMutation(options: VueApolloComposable.UseMutationOptions<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>>) {
+  return VueApolloComposable.useMutation<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>(UpdateAboutGroupDocument, options);
+}
+export type UpdateAboutGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>;
 export const UpdateProfileDocument = gql`
     mutation updateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input) {
@@ -2162,6 +2236,37 @@ export function useGetPostsFromGroupQuery(variables: GetPostsFromGroupQueryVaria
   return VueApolloComposable.useQuery<GetPostsFromGroupQuery, GetPostsFromGroupQueryVariables>(GetPostsFromGroupDocument, variables, options);
 }
 export type GetPostsFromGroupQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromGroupQuery, GetPostsFromGroupQueryVariables>;
+export const GroupAboutDocument = gql`
+    query groupAbout($groupId: String!) {
+  groupById(groupId: $groupId) {
+    id
+    about
+    createdBy {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGroupAboutQuery__
+ *
+ * To run a query within a Vue component, call `useGroupAboutQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupAboutQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGroupAboutQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useGroupAboutQuery(variables: GroupAboutQueryVariables | VueCompositionApi.Ref<GroupAboutQueryVariables> | ReactiveFunction<GroupAboutQueryVariables>, options: VueApolloComposable.UseQueryOptions<GroupAboutQuery, GroupAboutQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GroupAboutQuery, GroupAboutQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GroupAboutQuery, GroupAboutQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GroupAboutQuery, GroupAboutQueryVariables>(GroupAboutDocument, variables, options);
+}
+export type GroupAboutQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupAboutQuery, GroupAboutQueryVariables>;
 export const GroupByIdDocument = gql`
     query groupById($groupId: String!) {
   groupById(groupId: $groupId) {

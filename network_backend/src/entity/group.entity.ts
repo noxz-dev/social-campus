@@ -29,6 +29,15 @@ export class Group extends Base {
   @Column({ type: 'enum', enum: GroupType })
   type: GroupType;
 
+  @Field(() => String)
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    default:
+      '<h2>Willkommen zu dieser Gruppe</h2><p><br></p><p>hier kannst Termine festhalten, Links sammeln oder alles tun was du gerne möchtest.</p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p>Tipp: Markiere doch diesen Text um den Editor zu öffnen.</p>',
+  })
+  about: string;
+
   @Field(() => User)
   @ManyToOne(() => User)
   createdBy: User;

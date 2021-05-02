@@ -1,4 +1,5 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
+import axios from 'axios';
 import compression from 'compression';
 import cors from 'cors';
 import 'dotenv/config';
@@ -145,6 +146,22 @@ export class Application {
           threshold: 0, // Byte threshold (0 means compress everything)
         }),
       );
+      app.get('/files/:filename', async (req, res) => {
+        if (!req.user) return res.sendStatus(403);
+        if (!req.params.filename) return res.sendStatus(400);
+        try {
+          const response = await axios({
+            url: `http://minio:9000/profile-pics/${req.params.filename}`,
+            method: 'GET',
+            responseType: 'stream',
+          });
+          res.setHeader('content-type', 'image/jpeg');
+          response.data.pipe(res);
+        } catch (err) {
+          return res.sendStatus(404);
+        }
+      });
+
       server.applyMiddleware({ app });
 
       // start server on default port 5000

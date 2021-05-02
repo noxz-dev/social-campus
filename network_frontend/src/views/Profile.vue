@@ -242,7 +242,6 @@ import {
 } from '../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { User, UserStats, UserStatsQueryVariables } from '../graphql/generated/types';
 import { userByUsername } from '../graphql/queries/userByUsername';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';

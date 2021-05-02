@@ -106,6 +106,27 @@ export class GroupResolver {
   }
 
   @Authorized()
+  @Mutation(() => Group)
+  public async updateAboutGroup(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId', () => String) groupId: string,
+    @Arg('aboutContent', () => String) aboutContent: string,
+  ): Promise<Group> {
+    const userId = ctx.req.user.id;
+    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
+    if (!group) {
+      throw new Error('group not found');
+    }
+    group.numberOfMembers = group.members.length;
+    group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
+    group.members = await getGroupMembersWithRoles(group.id);
+
+    group.about = aboutContent;
+    await getRepository(Group).save(group);
+    return group;
+  }
+
+  @Authorized()
   @Query(() => [Group])
   public async groups(
     @Ctx() ctx: MyContext,

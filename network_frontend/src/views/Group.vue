@@ -21,9 +21,6 @@
               </template>
             </group-permission-container>
           </div>
-          <!-- <div class="dark:bg-dark-600 bg-gray-100 dark:text-gray-50 mt-4 w-1/3 rounded-xl items-center justify-center h-96 hidden lg:flex">
-            <div class="">SIDEPANEL RIGHT</div>
-          </div> -->
         </div>
       </infinite-scroll-wrapper>
     </div>

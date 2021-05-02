@@ -290,7 +290,9 @@ export class PostResolver {
     if (input.content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g) !== null) {
       for await (const mention of input.content.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)) {
         const toUser = await getRepository(User).findOne({ where: { username: mention.substring(1) } });
-        if (!toUser) return;
+        const foundUser = group.members.find((member) => member.id === toUser.id);
+        if (!toUser) continue;
+        if (!foundUser) continue;
         await notify(
           {
             type: NotificationType.MENTION,

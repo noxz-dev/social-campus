@@ -7,6 +7,7 @@
       :queryLoading="qloading"
       @loadMore="emitLoad"
       class="w-full overflow-y-auto flex flex-col items-center"
+      v-if="!error"
     >
       <div class="dark:bg-dark600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
         <div>
@@ -223,6 +224,7 @@
         <router-view v-if="user" :userId="user.id" />
       </div>
     </infinite-scroll-wrapper>
+    <div v-else class="mt-36 text-3xl">Dieser Nutzer existiert nicht</div>
     <modal ref="editProfileModal" headerText="Profil bearbeiten">
       <edit-profile @close="$refs.editProfileModal.closeModal()" :user="user" />
     </modal>
@@ -285,7 +287,7 @@ export default defineComponent({
       }
     );
 
-    const { result } = useUserByUsernameQuery(() => ({
+    const { result, error } = useUserByUsernameQuery(() => ({
       username: route.params.id as string,
     }));
 
@@ -354,6 +356,7 @@ export default defineComponent({
       emitLoad,
       qloading,
       editProfileModal,
+      error,
     };
   },
 });

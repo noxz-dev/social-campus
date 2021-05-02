@@ -131,7 +131,13 @@ export default defineComponent({
     };
 
     const parseTags = (content: string): string => {
-      return content
+      const foundEmails = extractEmails(content);
+      if (foundEmails) {
+        for (const [index, email] of foundEmails.entries()) {
+          content = content.replaceAll(email, `[${index}]`);
+        }
+      }
+      let editedContent = content
         .replaceAll(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g, (val) => {
           val = val.replaceAll('#', '');
           if (val.length === 0) return val;
@@ -140,13 +146,31 @@ export default defineComponent({
           return tag;
         })
         .replaceAll(/@[a-zA-ZäöüÄÖÜß]*/g, (val: string) => {
+          console.log(validateEmail(val));
+          if (validateEmail(val)) return val;
           val = val.replaceAll('@', '');
           if (val.length === 0) return val;
           const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;
           mentions.push(val);
           return mention;
         });
+      if (foundEmails) {
+        for (const [index, email] of foundEmails.entries()) {
+          editedContent = editedContent.replaceAll(`[${index}]`, email);
+        }
+      }
+      return editedContent;
     };
+
+    function extractEmails(text: string) {
+      return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+    }
+
+    function validateEmail(email: string) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      console.log(email);
+      return re.test(String(email).toLowerCase());
+    }
 
     const handleTagClick = (tag: string) => {
       router.push({ name: 'Browse', query: { tag } });

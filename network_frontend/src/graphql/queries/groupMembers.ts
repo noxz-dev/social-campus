@@ -11,6 +11,7 @@ export const groupMembers = gql`
         username
         avatar {
           name
+          blurhash
         }
         onlineStatus
       }
@@ -21,6 +22,7 @@ export const groupMembers = gql`
         username
         avatar {
           name
+          blurhash
         }
         onlineStatus
         groupRole

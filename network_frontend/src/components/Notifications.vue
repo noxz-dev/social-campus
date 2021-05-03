@@ -23,7 +23,7 @@
             class="h-8 w-8 rounded-full"
             blurhash="AePC3PmlGv{c"
             rounded="full"
-            :src="'/profile-pics/' + notify.fromUser?.avatar.name"
+            :src="notify.fromUser?.avatar.name"
             alt=""
           />
         </div>

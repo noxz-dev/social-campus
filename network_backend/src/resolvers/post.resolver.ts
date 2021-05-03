@@ -273,8 +273,8 @@ export class PostResolver {
     }
 
     if (input.file) {
-      const newFileName = await uploadFileGraphql(input.file, 'post-images');
-      post.imageName = newFileName;
+      const { filename } = await uploadFileGraphql(input.file, 'images');
+      post.imageName = filename;
     }
     if (input.groupId && !group) {
       throw new Error('group does not exist');

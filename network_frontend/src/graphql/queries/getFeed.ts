@@ -13,6 +13,7 @@ export const getFeed = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
       text

@@ -3,7 +3,7 @@
     <card-header :post="post" :bgColorDark="cardBgColor" />
     <div class="px-4" @click.self="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
-        <div class="markdown" v-html="parseMarkdown(post.text)"></div>
+        <div class="markdown whitespace-pre-wrap" v-html="parseMarkdown(post.text)"></div>
       </div>
       <div v-if="post.imageLink" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <img class="object-cover h-96 w-full rounded-xl m-2" :src="post.imageLink" alt="" />
@@ -127,11 +127,14 @@ export default defineComponent({
     const parseMarkdown = (value: string) => {
       tagIds = [];
       const content = parseTags(value);
-      return DOMPurify.sanitize(marked(content));
+      return DOMPurify.sanitize(marked(content), {
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|tel|callto|cid|xmpp|xxx):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      });
     };
 
     const parseTags = (content: string): string => {
       const foundEmails = extractEmails(content);
+
       if (foundEmails) {
         for (const [index, email] of foundEmails.entries()) {
           content = content.replaceAll(email, `[${index}]`);
@@ -146,8 +149,6 @@ export default defineComponent({
           return tag;
         })
         .replaceAll(/@[a-zA-ZäöüÄÖÜß]*/g, (val: string) => {
-          console.log(validateEmail(val));
-          if (validateEmail(val)) return val;
           val = val.replaceAll('@', '');
           if (val.length === 0) return val;
           const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;

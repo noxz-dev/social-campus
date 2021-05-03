@@ -16,6 +16,7 @@ export const myChats = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
     }

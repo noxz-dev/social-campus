@@ -18,6 +18,7 @@ export const postById = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
       comments {
@@ -31,6 +32,7 @@ export const postById = gql`
           username
           avatar {
             name
+            blurhash
           }
         }
       }

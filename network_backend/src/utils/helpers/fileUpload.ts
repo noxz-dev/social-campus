@@ -1,12 +1,20 @@
+import { encode } from 'blurhash';
 import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
 import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import os from 'os';
 import path from 'path';
+import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { log } from '../services/logger';
 import { minioClient } from '../services/minio';
-export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<string> => {
+
+interface UploadResponse {
+  filename: string;
+  blurhash: string;
+}
+
+export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<UploadResponse> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
     'X-Amz-Meta-Testing': 1234,
@@ -19,6 +27,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   const newFileName = filenameUUID + '.' + fileEnding;
 
   const destinationPath = path.join(os.tmpdir(), filename);
+  let blurhash: string;
   let compress;
   if (fileEnding === 'png') {
     compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
@@ -32,7 +41,8 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         .pipe(compress)
         .pipe(createWriteStream(destinationPath))
         .on('error', rej)
-        .on('finish', () => {
+        .on('finish', async () => {
+          blurhash = await generateBlurhash(destinationPath);
           minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
             if (err) {
               log.error(err.stack);
@@ -52,7 +62,8 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
       createReadStream()
         .pipe(createWriteStream(destinationPath))
         .on('error', rej)
-        .on('finish', () => {
+        .on('finish', async () => {
+          blurhash = await generateBlurhash(destinationPath);
           minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
             if (err) {
               log.error(err.stack);
@@ -69,10 +80,10 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
     );
   }
 
-  return newFileName;
+  return { filename: newFileName, blurhash };
 };
 
-export const uploadFile = async (file: Buffer, bucketName: string): Promise<string> => {
+export const uploadFile = async (file: Buffer, bucketName: string): Promise<UploadResponse> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
     'X-Amz-Meta-Testing': 1234,
@@ -84,6 +95,9 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<stri
   const newFileName = filenameUUID + '.' + fileEnding;
   const destinationPath = path.join(os.tmpdir(), newFileName);
   writeFileSync(destinationPath, file);
+
+  const blurhash = await generateBlurhash(destinationPath);
+
   minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
     if (err) {
       log.error(err.stack);
@@ -94,5 +108,19 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<stri
       log.debug('file upload complete');
     });
   });
-  return newFileName;
+
+  return { filename: newFileName, blurhash };
+};
+
+const generateBlurhash = async (path: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    sharp(path)
+      .raw()
+      .ensureAlpha()
+      .resize(32, 32, { fit: 'inside' })
+      .toBuffer((err, buffer, { width, height }) => {
+        if (err) return reject(err);
+        resolve(encode(new Uint8ClampedArray(buffer), width, height, 4, 4));
+      });
+  });
 };

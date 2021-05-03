@@ -71,8 +71,9 @@ export class UserResolver {
     const avatar = new Media();
     const profileImg = jdenticon.toPng(user.firstname, 300);
 
-    avatar.blurhash = 'LJIzs5=D5uK$^aJWKP#*wd]fnlK5';
-    avatar.name = await uploadFile(profileImg, 'profile-pics');
+    const { filename, blurhash } = await uploadFile(profileImg, 'images');
+    avatar.name = filename;
+    avatar.blurhash = blurhash;
     avatar.type = MediaType.IMAGE;
 
     const saved = await getRepository(Media).save(avatar);
@@ -213,8 +214,9 @@ export class UserResolver {
     if (input.studyCourse) user.studyCourse = input.studyCourse;
 
     if (input.avatar) {
-      const newFileName = await uploadFileGraphql(input.avatar, 'profile-pics');
-      user.avatar.name = newFileName;
+      const { filename, blurhash } = await uploadFileGraphql(input.avatar, 'images');
+      user.avatar.name = filename;
+      user.avatar.blurhash = blurhash;
       await getRepository(Media).save(user.avatar);
     }
 

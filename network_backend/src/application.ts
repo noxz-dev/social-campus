@@ -1,5 +1,5 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
-import axios from 'axios';
+import { Base64Encode } from 'base64-stream';
 import compression from 'compression';
 import cors from 'cors';
 import 'dotenv/config';
@@ -32,7 +32,7 @@ import { MyContext } from './utils/interfaces/context.interface';
 import { JwtUser } from './utils/interfaces/jwtUser.interface';
 import { authenticateToken } from './utils/middlewares/auth';
 import { log } from './utils/services/logger';
-import { initS3 } from './utils/services/minio';
+import { initS3, minioClient } from './utils/services/minio';
 
 export class Application {
   public host: express.Application;
@@ -146,19 +146,29 @@ export class Application {
           threshold: 0, // Byte threshold (0 means compress everything)
         }),
       );
+
+      //register file proxy
       app.get('/files/:filename', async (req, res) => {
         // if (!req.user) return res.sendStatus(403);
-        if (!req.params.filename) return res.sendStatus(400);
         try {
-          const response = await axios({
-            url: `http://minio:9000/profile-pics/${req.params.filename}`,
-            method: 'GET',
-            responseType: 'stream',
+          const { filename } = req.params;
+
+          if (!filename) return res.status(400).send('missing file name');
+
+          log.debug('filename', filename);
+
+          minioClient.getObject('images', filename, (err, dataStream) => {
+            if (err) {
+              log.error('minio get object', err);
+              return res.sendStatus(500);
+            }
+            res.setHeader('content-type', 'base64');
+            dataStream.pipe(new Base64Encode()).pipe(res);
+            return;
           });
-          res.setHeader('content-type', 'image/jpeg');
-          response.data.pipe(res);
         } catch (err) {
-          return res.sendStatus(404);
+          log.error('IMAGE PROXY', err);
+          return res.sendStatus(500);
         }
       });
 

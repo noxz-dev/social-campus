@@ -39,7 +39,7 @@
                       />
                     </svg> -->
                     <img
-                      :src="newProfileImage ? newProfileImage : '/profile-pics/' + profileImage"
+                      :src="newProfileImage ? newProfileImage : profileImage"
                       alt=""
                       class="object-cover h-12 w-12 bg-dark-700 border-white border rounded-full"
                     />

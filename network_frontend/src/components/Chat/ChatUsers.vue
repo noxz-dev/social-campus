@@ -14,9 +14,11 @@
             class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
           >
             <div class="flex-shrink-0" v-if="chat">
-              <img
+              <lazy-image
                 class="h-10 w-10 rounded-full object-cover"
-                :src="'/profile-pics/' + chat.members.filter((m) => m.id !== user.id)[0].avatar.name"
+                :src="chat.members.filter((m) => m.id !== user.id)[0].avatar.name"
+                :blurhash="chat.members.filter((m) => m.id !== user.id)[0].avatar.blurhash"
+                rounded="full"
                 alt=""
               />
             </div>
@@ -59,9 +61,10 @@ import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import breakpoints from '../../utils/breakpoints';
+import LazyImage from '../../components/Blurhash/LazyImage.vue';
 export default defineComponent({
   emits: ['user-choosen'],
-  components: { NewChat, Modal },
+  components: { NewChat, Modal, LazyImage },
   props: {},
   setup(props, { emit }) {
     const store = useStore();

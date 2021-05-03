@@ -6,12 +6,12 @@
           class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-2 pl-1 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
         >
           <div class="flex-shrink-0">
-            <!-- <img class="w-10 rounded-full object-cover bg-dark-700" alt="" :src="avatar" /> -->
             <div class="h-10 rounded-full">
               <lazy-image
                 class="h-10 w-10 !rounded-full bg-dark700 object-cover"
-                :src="'/profile-pics/' + avatar"
-                blurhash="AePC3PmlGv{c"
+                :src="avatar"
+                :blurhash="avatarBlurhash"
+                rounded="full"
                 :onLoad="true"
               />
             </div>
@@ -107,7 +107,9 @@ export default defineComponent({
     },
     avatar: {
       type: String,
-      default: 'https://via.placeholder.com/150',
+    },
+    avatarBlurhash: {
+      type: String,
     },
   },
   setup(props) {

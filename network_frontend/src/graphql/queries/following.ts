@@ -9,6 +9,7 @@ export const following = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
   }

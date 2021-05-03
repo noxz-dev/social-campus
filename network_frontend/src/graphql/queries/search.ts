@@ -10,6 +10,7 @@ export const search = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
       groups {

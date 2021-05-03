@@ -6,7 +6,7 @@
           <div class="h-10 rounded-full ml-2">
             <lazy-image
               class="h-10 w-10 !rounded-full bg-dark700 object-cover"
-              :src="'/profile-pics/' + user.avatar.name"
+              :src="user.avatar.name"
               blurhash="AePC3PmlGv{c"
               :onLoad="true"
             />

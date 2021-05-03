@@ -13,6 +13,7 @@ export const getPostsFromUser = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
       text

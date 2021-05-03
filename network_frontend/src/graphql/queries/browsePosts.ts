@@ -13,6 +13,7 @@ export const browsePosts = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
       text

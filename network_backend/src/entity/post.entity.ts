@@ -60,7 +60,7 @@ export class Post extends Base {
   @AfterLoad()
   async generateImageLink(): Promise<void> {
     if (this.imageName) {
-      minioClient.presignedGetObject('post-images', this.imageName, (err, url: string) => {
+      minioClient.presignedGetObject('images', this.imageName, (err, url: string) => {
         if (err) return log.error('link generation failed');
 
         const editUrl = url.split('?')[0].replace('http://minio:9000', '');

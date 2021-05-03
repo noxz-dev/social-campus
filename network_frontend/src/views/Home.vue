@@ -79,6 +79,7 @@ export default defineComponent({
               username
               avatar {
                 name
+                blurhash
               }
             }
             text

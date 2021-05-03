@@ -8,6 +8,7 @@ export const userById = gql`
       lastname
       avatar {
         name
+        blurhash
       }
       username
       followers {
@@ -16,6 +17,7 @@ export const userById = gql`
         lastname
         avatar {
           name
+          blurhash
         }
       }
       following {
@@ -24,6 +26,7 @@ export const userById = gql`
         lastname
         avatar {
           name
+          blurhash
         }
       }
     }

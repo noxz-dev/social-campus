@@ -23,50 +23,52 @@
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
               <div class="flex w-full">
-                <div class="rounded-full">
-                  <lazy-image
-                    blurhash="AePC3PmlGv{c"
+                <div class="rounded-full" v-if="!user">
+                  <div
                     class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
-                    :src="'/profile-pics/' + profileImage"
+                  ></div>
+                </div>
+                <div class="rounded-full" v-if="user">
+                  <lazy-image
+                    :blurhash="user.avatar.blurhash"
+                    class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
+                    :src="profileImage"
                     alt="profile image"
                     rounded="full"
                   />
                 </div>
 
                 <div class="flex w-full justify-end items-center mt-14">
-                  <app-button @click="$refs.editProfileModal.openModal()" v-if="showEditProfile" class="">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      class="h-4 mr-2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div class="flex flex-col">
+                    <app-button @click="$refs.editProfileModal.openModal()" v-if="showEditProfile" class="">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        class="h-4 mr-2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      Profil bearbeiten
+                    </app-button>
+                    <app-button @click="followUser" v-else-if="!following" class="justify-center"> Folgen </app-button>
+                    <app-button
+                      @mouseover="followButtonText = 'Entfolgen'"
+                      @mouseout="followButtonText = 'Folge ich'"
+                      @click="unfollowUser"
+                      v-else
+                      class="justify-center hover:bg-red-600 transition-colors duration-200"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    Profil bearbeiten
-                  </app-button>
-                  <a
-                    @click="followUser"
-                    v-else-if="!following"
-                    class="ml-6 px-6 inline-flex cursor-pointer items-center py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
-                  >
-                    Folgen
-                  </a>
-                  <button
-                    @mouseover="followButtonText = 'Entfolgen'"
-                    @mouseout="followButtonText = 'Folge ich'"
-                    @click="unfollowUser"
-                    v-else
-                    class="w-[6.5rem] text-center inline-flex justify-center cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500 duration-200"
-                  >
-                    {{ followButtonText }}
-                  </button>
+                      {{ followButtonText }}
+                    </app-button>
+                    <app-button @click="" class="mt-2 justify-center"> Nachricht senden </app-button>
+                  </div>
                 </div>
               </div>
               <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-10">

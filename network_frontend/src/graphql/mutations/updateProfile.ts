@@ -12,6 +12,7 @@ export const updateProfile = gql`
       lastname
       avatar {
         name
+        blurhash
       }
       username
       meFollowing

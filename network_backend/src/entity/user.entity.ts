@@ -84,18 +84,6 @@ export class User extends Base {
   @Column({ default: false, type: 'bool' })
   onlineStatus: boolean;
 
-  // @AfterLoad()
-  // async generatePictureLink(): Promise<void> {
-  //   if (this.avatar !== null) {
-  //     minioClient.presignedGetObject('profile-pics', this.avatar, (err, url: string) => {
-  //       if (err) return log.error('link generation failed');
-
-  //       const editUrl = url.split('?')[0].replace('http://minio:9000', '');
-  //       this.profilePicLink = editUrl;
-  //     });
-  //   }
-  // }
-
   constructor(body: UserValidator, hashedPassword: string) {
     super();
     this.firstname = body?.firstName;

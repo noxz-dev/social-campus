@@ -9,6 +9,7 @@ export const followers = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
   }

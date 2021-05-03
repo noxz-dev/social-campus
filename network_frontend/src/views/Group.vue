@@ -44,7 +44,6 @@ import PostList from '../components/Post/PostList.vue';
 import { GroupType } from '../graphql/generated/types';
 import { defineComponent, ref, defineAsyncComponent, watch, computed, PropType } from 'vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
-import GroupHeader from '../components/Group/GroupHeader.vue';
 import GroupPermissionContainer from '../components/Group/GroupPermissionContainer.vue';
 import GroupEntry from '../components/Group/GroupEntry.vue';
 
@@ -57,7 +56,7 @@ export default defineComponent({
   components: {
     PostList,
     InfiniteScrollWrapper,
-    GroupHeader,
+    GroupHeader: defineAsyncComponent(() => import('../components/Group/GroupHeader.vue')),
     GroupFeed: defineAsyncComponent(() => import('../components/Group/GroupFeed.vue')),
     GroupFeedPlaceholder: defineAsyncComponent(() => import('../components/Group/GroupFeedPlaceholder.vue')),
     GroupUserSidebar: defineAsyncComponent(() => import('../components/Group/GroupUserSidebar.vue')),

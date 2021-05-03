@@ -12,6 +12,7 @@ export const userByUsername = gql`
       lastname
       avatar {
         name
+        blurhash
       }
       username
       meFollowing

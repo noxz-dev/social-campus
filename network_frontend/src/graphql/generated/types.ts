@@ -603,7 +603,7 @@ export type AddFollowerMutation = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   ) }
 );
@@ -623,7 +623,7 @@ export type AddPostMutation = (
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -710,7 +710,7 @@ export type EditPostMutation = (
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -748,7 +748,7 @@ export type LikePostMutation = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -783,7 +783,7 @@ export type RemoveFollowerMutation = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   ) }
 );
@@ -820,7 +820,7 @@ export type UnlikePostMutation = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -855,7 +855,7 @@ export type UpdateProfileMutation = (
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   ) }
 );
@@ -877,7 +877,7 @@ export type BrowsePostsQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), tags: Array<(
       { __typename?: 'Tag' }
@@ -934,7 +934,7 @@ export type FollowersQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   )> }
 );
@@ -953,7 +953,7 @@ export type FollowingQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   )> }
 );
@@ -985,7 +985,7 @@ export type GetFeedQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -1009,7 +1009,7 @@ export type GetPostsFromGroupQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ) }
   )>> }
@@ -1060,14 +1060,14 @@ export type GroupMembersQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), members: Array<(
       { __typename?: 'GroupMember' }
       & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus' | 'groupRole'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     )> }
   ) }
@@ -1097,7 +1097,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   )> }
 );
@@ -1118,7 +1118,7 @@ export type MyChatsQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     )> }
   )> }
@@ -1151,14 +1151,14 @@ export type GetNotificationsQuery = (
       & Pick<User, 'id' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), post?: Maybe<(
       { __typename?: 'Post' }
@@ -1185,7 +1185,7 @@ export type PostByIdQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), comments: Array<(
       { __typename?: 'Comment' }
@@ -1195,7 +1195,7 @@ export type PostByIdQuery = (
         & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
         & { avatar: (
           { __typename?: 'Media' }
-          & Pick<Media, 'name'>
+          & Pick<Media, 'name' | 'blurhash'>
         ) }
       ) }
     )>, group?: Maybe<(
@@ -1222,7 +1222,7 @@ export type GetPostsFromUserQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ) }
   )>> }
@@ -1242,7 +1242,7 @@ export type SearchQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     )>, groups: Array<(
       { __typename?: 'Group' }
@@ -1266,20 +1266,20 @@ export type UserByIdQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ), followers: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     )>, following: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     )> }
   ) }
@@ -1297,7 +1297,7 @@ export type UserByUsernameQuery = (
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     ) }
   ) }
 );
@@ -1333,7 +1333,7 @@ export type NotificationsSubscription = (
       & Pick<User, 'id' | 'username'>
       & { avatar: (
         { __typename?: 'Media' }
-        & Pick<Media, 'name'>
+        & Pick<Media, 'name' | 'blurhash'>
       ) }
     ), toUser: (
       { __typename?: 'User' }
@@ -1357,6 +1357,7 @@ export const AddFollowerDocument = gql`
     lastname
     avatar {
       name
+      blurhash
     }
     username
   }
@@ -1395,6 +1396,7 @@ export const AddPostDocument = gql`
       lastname
       avatar {
         name
+        blurhash
       }
       username
     }
@@ -1594,6 +1596,7 @@ export const EditPostDocument = gql`
       lastname
       avatar {
         name
+        blurhash
       }
       username
     }
@@ -1675,6 +1678,7 @@ export const LikePostDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -1750,6 +1754,7 @@ export const RemoveFollowerDocument = gql`
     lastname
     avatar {
       name
+      blurhash
     }
     username
   }
@@ -1824,6 +1829,7 @@ export const UnlikePostDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -1907,6 +1913,7 @@ export const UpdateProfileDocument = gql`
     lastname
     avatar {
       name
+      blurhash
     }
     username
     meFollowing
@@ -1948,6 +1955,7 @@ export const BrowsePostsDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -2057,6 +2065,7 @@ export const FollowersDocument = gql`
     username
     avatar {
       name
+      blurhash
     }
   }
 }
@@ -2092,6 +2101,7 @@ export const FollowingDocument = gql`
     username
     avatar {
       name
+      blurhash
     }
   }
 }
@@ -2158,6 +2168,7 @@ export const GetFeedDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -2206,6 +2217,7 @@ export const GetPostsFromGroupDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -2310,6 +2322,7 @@ export const GroupMembersDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
       onlineStatus
     }
@@ -2320,6 +2333,7 @@ export const GroupMembersDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
       onlineStatus
       groupRole
@@ -2384,6 +2398,7 @@ export const MeDocument = gql`
     id
     avatar {
       name
+      blurhash
     }
     firstname
     lastname
@@ -2424,6 +2439,7 @@ export const MyChatsDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
   }
@@ -2487,6 +2503,7 @@ export const GetNotificationsDocument = gql`
       id
       avatar {
         name
+        blurhash
       }
       username
     }
@@ -2494,6 +2511,7 @@ export const GetNotificationsDocument = gql`
       id
       avatar {
         name
+        blurhash
       }
       username
     }
@@ -2541,6 +2559,7 @@ export const PostByIdDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     comments {
@@ -2554,6 +2573,7 @@ export const PostByIdDocument = gql`
         username
         avatar {
           name
+          blurhash
         }
       }
     }
@@ -2597,6 +2617,7 @@ export const GetPostsFromUserDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     text
@@ -2639,6 +2660,7 @@ export const SearchDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     groups {
@@ -2680,6 +2702,7 @@ export const UserByIdDocument = gql`
     lastname
     avatar {
       name
+      blurhash
     }
     username
     followers {
@@ -2688,6 +2711,7 @@ export const UserByIdDocument = gql`
       lastname
       avatar {
         name
+        blurhash
       }
     }
     following {
@@ -2696,6 +2720,7 @@ export const UserByIdDocument = gql`
       lastname
       avatar {
         name
+        blurhash
       }
     }
   }
@@ -2733,6 +2758,7 @@ export const UserByUsernameDocument = gql`
     lastname
     avatar {
       name
+      blurhash
     }
     username
     meFollowing
@@ -2803,6 +2829,7 @@ export const NotificationsDocument = gql`
       username
       avatar {
         name
+        blurhash
       }
     }
     toUser {

@@ -64,7 +64,7 @@
             @click="handleRouting('USERS', result.username)"
           >
             <div class="table-cell align-middle mr-4">
-              <img class="h-10 w-10 rounded-full bg-dark700" :src="'/profile-pics/' + result.avatar.name" />
+              <img class="h-10 w-10 rounded-full bg-dark700" :src="result.avatar.name" />
             </div>
             <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
             <div class="flex flex-row align-middle ml-3">@{{ result.username }}</div>

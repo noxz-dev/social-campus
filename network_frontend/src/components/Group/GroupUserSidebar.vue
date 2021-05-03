@@ -6,6 +6,7 @@
         <div class="mt-4" v-for="admin in admins" :key="admin.id">
           <group-member-card
             :avatar="admin.avatar.name"
+            :avatarBlurhash="admin.avatar.blurhash"
             :firstname="admin.firstname"
             :lastname="admin.lastname"
             :username="admin.username"
@@ -23,6 +24,7 @@
         <div class="mt-4" v-for="member in members" :key="member.id">
           <group-member-card
             :avatar="member.avatar.name"
+            :avatarBlurhash="member.avatar.blurhash"
             :firstname="member.firstname"
             :lastname="member.lastname"
             :username="member.username"
@@ -37,6 +39,7 @@
       <div class="mt-4" v-for="member in offlineMembers" :key="member.id">
         <group-member-card
           :avatar="member.avatar.name"
+          :avatarBlurhash="member.avatar.blurhash"
           :firstname="member.firstname"
           :lastname="member.lastname"
           :username="member.username"

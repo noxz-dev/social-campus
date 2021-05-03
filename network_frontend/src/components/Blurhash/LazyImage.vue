@@ -1,9 +1,5 @@
 <template>
-  <intersect
-    @enter.once="onEnter"
-    class="relative w-full h-full transform transiation duration-500"
-    :class="isVisible ? 'translate-y-0' : 'translate-y-8'"
-  >
+  <intersect @enter.once="onEnter" class="relative w-full h-full transform transiation duration-500">
     <div class="flex items-center justify-center w-full h-full">
       <blurhash-img
         :hash="blurhash"
@@ -24,6 +20,7 @@
 </template>
 
 <script lang="ts">
+import { loadProxyImage } from '../../utils/loadProxyImage';
 import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import intersect from '../VueIntersect.vue';
 import BlurhashImg from './BlurhashImg.vue';
@@ -66,6 +63,7 @@ export default defineComponent({
     const isHorizontal = computed(() => {
       return props.height / props.width >= 1;
     });
+
     onMounted(() => {
       const imageBoundingBox = image.value.getBoundingClientRect();
       if (imageBoundingBox.bottom > window.innerHeight) {
@@ -79,10 +77,12 @@ export default defineComponent({
         }
       );
     });
-    const onEnter = () => {
+    const onEnter = async () => {
       isVisible.value = true;
-      const imageData = props.src;
+      const imageData = await loadProxyImage(props.src);
+      // const imageData = props.src;
       console.log(props.onLoad);
+
       if (props.onLoad) image.value.src = imageData;
       image.value.onload = () => {
         console.log('hey');

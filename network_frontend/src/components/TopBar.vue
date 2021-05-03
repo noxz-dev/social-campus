@@ -132,9 +132,10 @@
                 <!-- <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profileImage" alt="" /> -->
                 <div class="h-10 w-10 rounded-full">
                   <lazy-image
+                    v-if="profileImage"
                     class="h-10 w-10 !rounded-full bg-dark700 object-cover"
-                    :src="'/profile-pics/' + profileImage"
-                    blurhash="AePC3PmlGv{c"
+                    :src="profileImage"
+                    :blurhash="user?.avatar.blurhash"
                     :onLoad="true"
                     rounded="full"
                   />
@@ -338,7 +339,7 @@
       <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" :src="'/profile-pics/' + profileImage" alt="" />
+            <img class="h-10 w-10 rounded-full" :src="profileImage" alt="" />
           </div>
           <div class="ml-3">
             <div class="text-base font-medium dark:text-gray-50 text-gray-800">

@@ -5,7 +5,10 @@ export const getPostsFromGroup = gql`
     getPostsFromGroup(groupId: $groupId) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         id
         firstname

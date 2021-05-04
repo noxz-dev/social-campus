@@ -120,7 +120,10 @@ export default defineComponent({
           newPost(userId: $userId, all: $all) {
             id
             liked
-            imageLink
+            media {
+              name
+              blurhash
+            }
             user {
               id
               firstname

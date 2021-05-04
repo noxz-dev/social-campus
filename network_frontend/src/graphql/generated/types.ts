@@ -358,7 +358,7 @@ export type Post = {
   likesCount?: Maybe<Scalars['Float']>;
   commentCount?: Maybe<Scalars['Float']>;
   liked?: Maybe<Scalars['Boolean']>;
-  imageLink?: Maybe<Scalars['String']>;
+  media?: Maybe<Media>;
   edited?: Maybe<Scalars['Boolean']>;
 };
 
@@ -617,8 +617,11 @@ export type AddPostMutation = (
   { __typename?: 'Mutation' }
   & { addPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -704,8 +707,11 @@ export type EditPostMutation = (
   { __typename?: 'Mutation' }
   & { editPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -742,8 +748,11 @@ export type LikePostMutation = (
   { __typename?: 'Mutation' }
   & { likePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -814,8 +823,11 @@ export type UnlikePostMutation = (
   { __typename?: 'Mutation' }
   & { unlikePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -871,8 +883,11 @@ export type BrowsePostsQuery = (
   { __typename?: 'Query' }
   & { browsePosts?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -979,8 +994,11 @@ export type GetFeedQuery = (
   { __typename?: 'Query' }
   & { getFeed: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -1003,8 +1021,11 @@ export type GetPostsFromGroupQuery = (
   { __typename?: 'Query' }
   & { getPostsFromGroup?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -1179,8 +1200,11 @@ export type PostByIdQuery = (
   { __typename?: 'Query' }
   & { postById: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -1216,8 +1240,11 @@ export type GetPostsFromUserQuery = (
   { __typename?: 'Query' }
   & { getPostsFromUser?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'liked' | 'imageLink' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
-    & { user: (
+    & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name'>
+    )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar: (
@@ -1390,7 +1417,10 @@ export const AddPostDocument = gql`
   addPost(input: $input) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       firstname
       lastname
@@ -1590,7 +1620,10 @@ export const EditPostDocument = gql`
   editPost(input: $input) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       firstname
       lastname
@@ -1670,7 +1703,10 @@ export const LikePostDocument = gql`
   likePost(postID: $postID) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       id
       firstname
@@ -1821,7 +1857,10 @@ export const UnlikePostDocument = gql`
   unlikePost(postID: $postID) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       id
       firstname
@@ -1947,7 +1986,10 @@ export const BrowsePostsDocument = gql`
   browsePosts(take: $take, skip: $skip, tags: $tags) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       id
       firstname
@@ -2160,7 +2202,10 @@ export const GetFeedDocument = gql`
   getFeed(limit: $limit, offset: $offset) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       id
       firstname
@@ -2209,7 +2254,10 @@ export const GetPostsFromGroupDocument = gql`
   getPostsFromGroup(groupId: $groupId) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     user {
       id
       firstname
@@ -2546,7 +2594,10 @@ export const PostByIdDocument = gql`
   postById(postId: $postId) {
     id
     liked
-    imageLink
+    media {
+      name
+      blurhash
+    }
     text
     likesCount
     commentCount
@@ -2609,7 +2660,9 @@ export const GetPostsFromUserDocument = gql`
   getPostsFromUser(userID: $userID, limit: $limit, offset: $offset) {
     id
     liked
-    imageLink
+    media {
+      name
+    }
     user {
       id
       firstname

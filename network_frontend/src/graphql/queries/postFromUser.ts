@@ -5,7 +5,9 @@ export const getPostsFromUser = gql`
     getPostsFromUser(userID: $userID, limit: $limit, offset: $offset) {
       id
       liked
-      imageLink
+      media {
+        name
+      }
       user {
         id
         firstname

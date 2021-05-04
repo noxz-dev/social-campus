@@ -1,12 +1,11 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { countComments, countLikes } from '../resolvers/post.resolver';
-import { log } from '../utils/services/logger';
-import { minioClient } from '../utils/services/minio';
 import { Base } from './base';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
 import { Like } from './like.entity';
+import { Media } from './media.entity';
 import { Tag } from './tag.entity';
 import { User } from './user.entity';
 
@@ -47,27 +46,32 @@ export class Post extends Base {
   @Field(() => Boolean, { nullable: true })
   liked: boolean;
 
-  @Column({ nullable: true, type: 'varchar' })
-  imageName: string;
-
-  @Field(() => String, { nullable: true })
-  imageLink: string;
+  @Field(() => Media, { nullable: true })
+  @OneToOne(() => Media, { eager: true, nullable: true })
+  @JoinColumn()
+  media: Media;
 
   @Field(() => Boolean, { nullable: true })
   @Column({ default: false, type: 'bool' })
   edited: boolean;
 
-  @AfterLoad()
-  async generateImageLink(): Promise<void> {
-    if (this.imageName) {
-      minioClient.presignedGetObject('images', this.imageName, (err, url: string) => {
-        if (err) return log.error('link generation failed');
+  // @Column({ nullable: true, type: 'varchar' })
+  // imageName: string;
 
-        const editUrl = url.split('?')[0].replace('http://minio:9000', '');
-        this.imageLink = editUrl;
-      });
-    }
-  }
+  // @Field(() => String, { nullable: true })
+  // imageLink: string;
+
+  // @AfterLoad()
+  // async generateImageLink(): Promise<void> {
+  //   if (this.imageName) {
+  //     minioClient.presignedGetObject('images', this.imageName, (err, url: string) => {
+  //       if (err) return log.error('link generation failed');
+
+  //       const editUrl = url.split('?')[0].replace('http://minio:9000', '');
+  //       this.imageLink = editUrl;
+  //     });
+  //   }
+  // }
 
   @AfterLoad()
   async countLikes(): Promise<void> {

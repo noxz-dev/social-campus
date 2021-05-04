@@ -5,7 +5,10 @@ export const getFeed = gql`
     getFeed(limit: $limit, offset: $offset) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         id
         firstname

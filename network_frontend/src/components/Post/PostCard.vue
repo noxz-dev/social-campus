@@ -5,8 +5,13 @@
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown whitespace-pre-wrap" v-html="parseMarkdown(post.text)"></div>
       </div>
-      <div v-if="post.imageLink" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
-        <img class="object-cover h-96 w-full rounded-xl m-2" :src="post.imageLink" alt="" />
+      <div v-if="post.media" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
+        <lazy-image
+          class="object-cover h-96 w-full rounded-xl m-2"
+          :src="post.media.name"
+          alt=""
+          :blurhash="post.media.blurhash"
+        />
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
@@ -76,11 +81,12 @@ import Card from '../Card/Card.vue';
 import { useRouter } from 'vue-router';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
+import LazyImage from '../Blurhash/LazyImage.vue';
 
 dayjs.extend(relativeTime);
 
 export default defineComponent({
-  components: { CardHeader, Card },
+  components: { CardHeader, Card, LazyImage },
   props: {
     post: {
       type: Object,

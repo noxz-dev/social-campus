@@ -5,7 +5,10 @@ export const browsePosts = gql`
     browsePosts(take: $take, skip: $skip, tags: $tags) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         id
         firstname

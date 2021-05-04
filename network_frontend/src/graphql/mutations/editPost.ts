@@ -5,7 +5,10 @@ export const editPost = gql`
     editPost(input: $input) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         firstname
         lastname

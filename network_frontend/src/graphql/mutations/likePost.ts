@@ -5,7 +5,10 @@ export const likePost = gql`
     likePost(postID: $postID) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         id
         firstname

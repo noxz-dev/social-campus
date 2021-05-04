@@ -39,7 +39,10 @@ export default defineComponent({
           newPost(userId: $userId, all: $all, groupId: $groupId) {
             id
             liked
-            imageLink
+            media {
+              name
+              blurhash
+            }
             user {
               id
               firstname

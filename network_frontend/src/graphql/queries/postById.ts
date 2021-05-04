@@ -5,7 +5,10 @@ export const postById = gql`
     postById(postId: $postId) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       text
       likesCount
       commentCount

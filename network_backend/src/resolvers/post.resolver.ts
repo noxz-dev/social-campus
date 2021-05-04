@@ -4,6 +4,7 @@ import { EntityManager, getConnection, getManager, getRepository, In, IsNull } f
 import { Comment } from '../entity/comment.entity';
 import { Group } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
+import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { Tag } from '../entity/tag.entity';
@@ -72,6 +73,7 @@ export class PostResolver {
       posts = await getRepository(Post)
         .createQueryBuilder('posts')
         .where('posts.group is null')
+        .leftJoinAndSelect('posts.media', 'media')
         .leftJoinAndSelect('posts.user', 'user')
         .leftJoinAndSelect('user.avatar', 'avatar')
         .leftJoinAndSelect('posts.tags', 'tags')
@@ -103,6 +105,7 @@ export class PostResolver {
       const tagsFromPost = await getRepository(Tag)
         .createQueryBuilder('tags')
         .leftJoin('tags.posts', 'post')
+        .leftJoinAndSelect('post.media', 'media')
         .where('post.id = :id', { id: post.id })
         .getMany();
 
@@ -219,6 +222,7 @@ export class PostResolver {
     const post = await getRepository(Post)
       .createQueryBuilder('post')
       .where('post.id = :id', { id: postId })
+      .leftJoinAndSelect('post.media', 'media')
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('user.avatar', 'avatar')
       .leftJoinAndSelect('post.comments', 'comments')
@@ -273,8 +277,13 @@ export class PostResolver {
     }
 
     if (input.file) {
-      const { filename } = await uploadFileGraphql(input.file, 'images');
-      post.imageName = filename;
+      const { filename, blurhash } = await uploadFileGraphql(input.file, 'images');
+      const media = new Media();
+      media.blurhash = blurhash;
+      media.name = filename;
+      media.type = MediaType.IMAGE;
+      const savedMedia = await getRepository(Media).save(media);
+      post.media = savedMedia;
     }
     if (input.groupId && !group) {
       throw new Error('group does not exist');

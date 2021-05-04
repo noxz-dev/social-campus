@@ -5,7 +5,10 @@ export const addPost = gql`
     addPost(input: $input) {
       id
       liked
-      imageLink
+      media {
+        name
+        blurhash
+      }
       user {
         firstname
         lastname

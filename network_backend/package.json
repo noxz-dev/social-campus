@@ -2,7 +2,7 @@
   "name": "network",
   "version": "0.1.0",
   "description": "social network",
-  "main": "dist/src/index.js",
+  "main": "./dist/src/index.js",
   "type": "commonjs",
   "devDependencies": {
     "@types/argon2": "^0.15.0",
@@ -75,7 +75,7 @@
     "build": "tsc -p .",
     "lint": "eslint src/**/*.ts --fix",
     "gen-env-types": "gen-env-types .env -o src/utils/types/env.d.ts -e .",
-    "start": "node dist/src/index.js",
+    "start": "node ./dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli",
     "prod": "ts-node src/index.ts"

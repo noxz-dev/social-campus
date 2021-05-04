@@ -129,7 +129,6 @@
                 @click="showProfileMenu = !showProfileMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <!-- <img class="h-10 w-10 rounded-full bg-dark700 object-cover" :src="profileImage" alt="" /> -->
                 <div class="h-10 w-10 rounded-full">
                   <lazy-image
                     v-if="profileImage"
@@ -339,7 +338,13 @@
       <div class="border-t border-dark600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" :src="profileImage" alt="" />
+            <lazy-image
+              v-if="user?.avatar"
+              class="h-10 w-10 rounded-full"
+              :src="profileImage"
+              alt=""
+              :blurhash="user?.avatar.blurhash"
+            />
           </div>
           <div class="ml-3">
             <div class="text-base font-medium dark:text-gray-50 text-gray-800">

@@ -64,7 +64,12 @@
             @click="handleRouting('USERS', result.username)"
           >
             <div class="table-cell align-middle mr-4">
-              <img class="h-10 w-10 rounded-full bg-dark700" :src="result.avatar.name" />
+              <lazy-image
+                class="h-10 w-10 rounded-full bg-dark700"
+                :src="result.avatar.name"
+                :blurhash="result.avatar.blurhash"
+                rounded="full"
+              />
             </div>
             <div class="flex flex-row align-middle">{{ result.firstname }} {{ result.lastname }}</div>
             <div class="flex flex-row align-middle ml-3">@{{ result.username }}</div>
@@ -106,6 +111,7 @@ import { useSearchQuery } from '../graphql/generated/types';
 import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import InputField from './Form/InputField.vue';
+import LazyImage from './Blurhash/LazyImage.vue';
 export type MaybeRef<T> = Ref<T> | T;
 function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside: MaybeRef<boolean> = true) {
   let timeout: NodeJS.Timeout;
@@ -131,7 +137,7 @@ function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside:
   });
 }
 export default defineComponent({
-  components: { InputField },
+  components: { InputField, LazyImage },
   name: 'GroupSearch',
   setup() {
     const searchString = useDebounceRef('', 300, true);

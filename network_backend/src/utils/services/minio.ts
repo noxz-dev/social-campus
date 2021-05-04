@@ -27,6 +27,8 @@ export const initS3 = async (): Promise<void> => {
           log.info('✔ bucket s3 bucket policy set');
         });
       });
+    } else {
+      log.info('bucket already exisits');
     }
   });
 };

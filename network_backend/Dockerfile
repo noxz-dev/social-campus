@@ -11,9 +11,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+RUN npm run build
 
 EXPOSE 3000:3000
 
-ENTRYPOINT ["npm"]
-
-CMD ["run", "prod"]
+CMD ["npm", "start"]

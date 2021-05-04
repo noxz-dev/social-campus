@@ -23,9 +23,10 @@ WORKDIR /builder
 COPY --from=deps /deps/node_modules ./node_modules
 COPY . .
 RUN npm run build
+RUN npm prune --production
 
 FROM base AS runner
-
+ENV NODE_ENV production
 COPY --from=builder /builder/dist ./dist
 COPY --from=builder /builder/node_modules ./node_modules
 COPY --from=builder /builder/package.json ./package.json

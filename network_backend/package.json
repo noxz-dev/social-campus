@@ -2,8 +2,8 @@
   "name": "network",
   "version": "0.1.0",
   "description": "social network",
-  "main": "src/index.ts",
-  "type": "module",
+  "main": "dist/src/index.js",
+  "type": "commonjs",
   "devDependencies": {
     "@types/argon2": "^0.15.0",
     "@types/body-parser": "^1.19.0",

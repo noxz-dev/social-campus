@@ -29,6 +29,9 @@ FROM base AS runner
 COPY --from=builder /builder/dist ./dist
 COPY --from=builder /builder/node_modules ./node_modules
 COPY --from=builder /builder/package.json ./package.json
+COPY --from=builder /builder/dist/ormconfig.js ./ormconfig.js
+COPY --from=builder /builder/dist/ormconfig.js.map ./ormconfig.js.map
+
 
 
 EXPOSE 3000:3000

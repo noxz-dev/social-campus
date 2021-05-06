@@ -26,7 +26,7 @@
             <span v-if="user"></span>Hey {{ user?.firstname }} 👋
           </div>
         </div>
-        <div class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-4 xl:col-start-5">
+        <div class="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-5 xl:col-start-5">
           <div class="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
             <div class="w-full">
               <label for="search" class="sr-only">Search</label>
@@ -68,7 +68,7 @@
             </svg>
           </button>
         </div>
-        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4" id="notify-button" ref="notifyTarget">
+        <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-3" id="notify-button" ref="notifyTarget">
           <div
             @click="notifyOpen = !notifyOpen"
             class="hover:opacity-70 relative cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 py-2 px-2 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

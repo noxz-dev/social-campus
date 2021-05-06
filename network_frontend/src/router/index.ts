@@ -54,8 +54,8 @@ const routes = [
     component: () => import('@/views/auth/Login.vue'),
   },
   {
-    path: '/Register',
-    name: 'Register',
+    path: '/signup',
+    name: 'Signup',
     meta: {
       public: true,
       onlyWhenLoggedOut: true,

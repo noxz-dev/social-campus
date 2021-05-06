@@ -814,6 +814,16 @@ export type SendMessageMutation = (
   ) }
 );
 
+export type SignupMutationVariables = Exact<{
+  input: UserValidator;
+}>;
+
+
+export type SignupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'register'>
+);
+
 export type UnlikePostMutationVariables = Exact<{
   postID: Scalars['String'];
 }>;
@@ -1852,6 +1862,33 @@ export function useSendMessageMutation(options: VueApolloComposable.UseMutationO
   return VueApolloComposable.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
 }
 export type SendMessageMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SendMessageMutation, SendMessageMutationVariables>;
+export const SignupDocument = gql`
+    mutation signup($input: UserValidator!) {
+  register(input: $input)
+}
+    `;
+
+/**
+ * __useSignupMutation__
+ *
+ * To run a mutation, you first call `useSignupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useSignupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useSignupMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSignupMutation(options: VueApolloComposable.UseMutationOptions<SignupMutation, SignupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SignupMutation, SignupMutationVariables>>) {
+  return VueApolloComposable.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
+}
+export type SignupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SignupMutation, SignupMutationVariables>;
 export const UnlikePostDocument = gql`
     mutation unlikePost($postID: String!) {
   unlikePost(postID: $postID) {

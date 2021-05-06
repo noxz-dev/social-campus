@@ -260,7 +260,7 @@ export default defineComponent({
       showImageUpload.value = false;
     };
 
-    const post = () => {
+    const post = async () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) {
         if (!file.value) return;
@@ -272,7 +272,7 @@ export default defineComponent({
         tags.value = [...foundTags];
       }
       if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
-      newPost();
+      await newPost();
       emit('close');
     };
 

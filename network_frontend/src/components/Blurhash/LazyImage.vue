@@ -79,11 +79,10 @@ export default defineComponent({
     });
     const onEnter = async () => {
       isVisible.value = true;
-      const imageData = await loadProxyImage(props.src);
       // const imageData = props.src;
-      console.log(props.onLoad);
+      console.log('hash', props.blurhash, props.src);
 
-      if (props.onLoad) image.value.src = imageData;
+      if (props.onLoad) image.value.src = await loadProxyImage(props.src);
       image.value.onload = () => {
         console.log('hey');
         isLoaded.value = true;

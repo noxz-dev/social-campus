@@ -5,7 +5,7 @@
       v-model="searchString"
       :iconPadding="2"
       inputClasses="text-sm md:text-md pl-10 !pr-0"
-      placeholder="Suche nach Usern, Tags oder Gruppen"
+      :placeholder="breakpoints.is !== 'sm' ? 'Suche nach Usern, Tags oder Gruppen' : 'Suche User, Tags oder Gruppen'"
     >
       <template v-slot:icon>
         <svg
@@ -110,6 +110,7 @@ import { onClickOutside, TimeoutFnResult } from '@vueuse/core';
 import { useSearchQuery } from '../graphql/generated/types';
 import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import breakpoints from '../utils/breakpoints';
 import InputField from './Form/InputField.vue';
 import LazyImage from './Blurhash/LazyImage.vue';
 export type MaybeRef<T> = Ref<T> | T;
@@ -195,7 +196,7 @@ export default defineComponent({
       isFocus.value = false;
     };
 
-    return { searchString, searchResult, isFocus, target, handleRouting };
+    return { searchString, searchResult, isFocus, target, handleRouting, breakpoints };
   },
 });
 </script>

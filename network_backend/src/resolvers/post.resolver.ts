@@ -186,7 +186,7 @@ export class PostResolver {
         { user: In(following), group: IsNull() },
       ],
       order: { createdAt: 'DESC' },
-      relations: ['user', 'comments', 'group'],
+      relations: ['user', 'group', 'likes', 'likes.user'],
       skip: offset,
       take: limit,
     });
@@ -203,9 +203,20 @@ export class PostResolver {
       }
     });
 
+    // const result = await getRepository(Like).findOne({ where: { user: userId, post: postId } });
+    // if (result) return true;
+    // return false;
+
+    await getRepository(Like);
     for await (const post of feedPosts) {
-      const likeState = await checkLikeState(userId, post.id);
-      post.liked = likeState;
+      const like = post.likes.find((like) => like.user.id === userId);
+      console.log(like);
+      // const likeState = await checkLikeState(userId, post.id);
+      if (like) {
+        post.liked = true;
+      } else {
+        post.liked = false;
+      }
     }
 
     log.info(`'User with the id: ${userId} called getFeed'`);

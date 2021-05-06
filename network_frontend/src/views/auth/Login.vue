@@ -1,8 +1,14 @@
 <template>
   <div class="flex justify-center items-center h-full w-full">
-    <div class="md:min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8 w-full">
+    <div
+      class="md:min-h-screen bg-gray-50 dark:bg-dark700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8 w-full"
+    >
       <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
-        <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
+        <img
+          class="mx-auto h-12 w-auto"
+          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+          alt="Workflow"
+        />
         <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Login SocialCampus</h2>
       </div>
 
@@ -60,8 +66,19 @@
               </button>
             </div>
           </form>
+          <div class="flex justify-center dark:text-gray-50 text-gray-900 mt-3 text-sm">
+            <span
+              >Neu hier ?
+              <span class="text-highlight-500 underline cursor-pointer" @click="$router.push('/signup')">
+                Konto erstellen</span
+              ></span
+            >
+          </div>
         </div>
-        <div v-if="error" class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 mt-5 left-1/2 transform -translate-x-1/2">
+        <div
+          v-if="error"
+          class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 mt-5 left-1/2 transform -translate-x-1/2"
+        >
           Falsche E-Mail oder Passwort!
         </div>
       </div>

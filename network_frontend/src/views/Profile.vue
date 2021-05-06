@@ -14,7 +14,7 @@
           <div class="h-32 w-full lg:h-64">
             <lazy-image
               class="object-cover h-32 w-full lg:h-64 rounded-xl"
-              src="https://wallpapercave.com/wp/wp5406324.jpg"
+              src="abc"
               alt=""
               blurhash="LvICmx{hjJJ8B,EzX7wdJTNHoysS"
               :onLoad="false"
@@ -22,7 +22,7 @@
           </div>
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
-              <div class="flex w-full">
+              <div class="flex w-full z-10">
                 <div class="rounded-full" v-if="!user">
                   <div
                     class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
@@ -72,19 +72,14 @@
                 </div>
               </div>
               <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-10">
-                <div class="block md:hidden mt-6 min-w-0 flex-1">
-                  <h1
-                    v-if="user?.firstname"
-                    class="md:text-2xl font-bold text-gray-900 truncate dark:text-gray-50 text-lg"
-                  >
+                <div class="block md:hidden mt-6 min-w-full flex-1">
+                  <h1 v-if="user" class="md:text-2xl font-bold text-gray-900 dark:text-gray-50 text-lg">
                     {{ user?.firstname + ' ' + user?.lastname }}
                   </h1>
-                  <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">
-                    {{ user.bio }}
-                  </h2>
+                  <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">{{ user.bio }}</h2>
                 </div>
                 <div class="w-full mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                  <div class="hidden sm:block min-w-0 flex-1 pb-4 w-full flex-col">
+                  <div class="hidden md:block min-w-0 flex-1 pb-4 w-full flex-col">
                     <h1 v-if="user?.firstname" class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
                       {{ user?.firstname + ' ' + user?.lastname }}
                     </h1>

@@ -10,7 +10,7 @@
           class="object-cover h-96 w-full rounded-xl m-2"
           :src="post.media.name"
           alt=""
-          :blurhash="post.media.blurhash"
+          :blurhash="post.media.blurhash || 'abcdefghijklmn'"
         />
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>

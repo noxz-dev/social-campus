@@ -47,7 +47,7 @@ export default defineComponent({
     watch(
       () => route.path,
       async (newParams) => {
-        showLogin.value = route.path === '/login';
+        showLogin.value = route.path === '/login' || route.path === '/signup';
       }
     );
 

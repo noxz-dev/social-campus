@@ -168,17 +168,21 @@ export class PostResolver {
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
 
+    console.time('user');
+    // const repo = await getRepository(User);
+    // const user = await queryWithRelations(userId, repo, 'user', ['following', 'groups']);
     const user = await getRepository(User).findOne({
       where: { id: userId },
       relations: ['following', 'groups'],
     });
-
+    console.timeEnd('user');
     const following = user.following.map((user: User) => user.id);
     const userGroups = user.groups.map((group) => group.id);
 
     // push own user id to see also your own posts
     following.push(userId);
 
+    console.time('start');
     //fetch all posts from the users you follow
     const posts = await getRepository(Post).find({
       where: [
@@ -191,6 +195,7 @@ export class PostResolver {
       take: limit,
     });
 
+    console.timeEnd('start');
     if (!posts) return [];
 
     const feedPosts = posts.filter((p) => {
@@ -207,10 +212,9 @@ export class PostResolver {
     // if (result) return true;
     // return false;
 
-    await getRepository(Like);
-    for await (const post of feedPosts) {
+    // await getRepository(Like);
+    for (const post of feedPosts) {
       const like = post.likes.find((like) => like.user.id === userId);
-      console.log(like);
       // const likeState = await checkLikeState(userId, post.id);
       if (like) {
         post.liked = true;
@@ -606,3 +610,37 @@ const createTags = async (user: User, tags: string[], manager: EntityManager): P
 
   return postTags;
 };
+
+// export const queryWithRelations = async (id, repository, alias, relations) => {
+//   return await Promise.all(
+//     relations.map((relation) => {
+//       const leftJoinAndSelect = getJoins(alias, relation);
+//       return repository.findOne(id, {
+//         loadEagerRelations: false,
+//         join: { alias, leftJoinAndSelect },
+//       });
+//     }),
+//   ).then(mergeObjects);
+// };
+
+// const getJoins = (base, relation) => {
+//   if (Array.isArray(relation)) {
+//     const parent = relation.shift();
+//     const children = relation.reduce((prev, current) => {
+//       return { ...prev, ...getJoins(parent, current) };
+//     }, {});
+//     return {
+//       [parent]: `${base}.${parent}`,
+//       ...children,
+//     };
+//   } else {
+//     return { [`${base}_${relation}`]: `${base}.${relation}` };
+//   }
+// };
+
+// const mergeObjects = (objects) => {
+//   return objects.reduce((prev, current) => {
+//     const props = Object.fromEntries(Object.entries(current).filter(([_, v]) => v !== undefined));
+//     return { ...prev, ...props };
+//   }, {});
+// };

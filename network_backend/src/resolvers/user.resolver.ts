@@ -13,6 +13,7 @@ import { JwtResponse } from '../graphql_types/jwtResponse';
 import { UserStats } from '../graphql_types/userStats';
 import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
 import { uploadFile, uploadFileGraphql } from '../utils/helpers/fileUpload';
+import { sendEmail } from '../utils/helpers/sendMail';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/jwtUser.interface';
 import { log } from '../utils/services/logger';
@@ -81,6 +82,11 @@ export class UserResolver {
     user.avatar = saved;
 
     await getRepository(User).save(user);
+    await sendEmail({
+      email: input.email,
+      subject: 'Konto erstellt',
+      text: 'Willkommen zu SocialCampus, du kannst dich nun anmelden: https://social.noxz.dev/login',
+    });
     return true;
   }
 

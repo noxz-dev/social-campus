@@ -39,6 +39,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
     working_dir: /srv/backend
     depends_on:
       - postgres

@@ -38,7 +38,7 @@
               width="30"
               height="30"
               viewBox="0 0 256 256"
-              class="hover:bg-dark-800 rounded-full transition fill-dark600 dark:fill-white stroke-black dark:stroke-white"
+              class="hover:bg-dark-800 rounded-full transition fill-dark-600 dark:fill-white stroke-black dark:stroke-white"
               @click="emojiPickerOpen = !emojiPickerOpen"
             >
               <rect width="256" height="256" fill="none"></rect>

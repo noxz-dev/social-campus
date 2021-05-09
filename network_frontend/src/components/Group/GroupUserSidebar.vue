@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="mb-5">
-      <span class="dark:text-indigo-300 text-indigo-500 dark:text-opacity-60 text-opacity-75 tracking-wider"
+      <span class="dark:text-brand-300 text-brand-500 dark:text-opacity-60 text-opacity-75 tracking-wider"
         >MITGLIEDER</span
       >
       <div class="mt-4">

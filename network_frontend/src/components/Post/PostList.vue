@@ -23,7 +23,7 @@ export default defineComponent({
     },
     cardBgColor: {
       type: String,
-      default: 'bg-dark600',
+      default: 'bg-dark-600',
     },
   },
 });

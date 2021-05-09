@@ -3,7 +3,7 @@
     <button
       type="button"
       :class="scrolledDown ? 'px-3 py-3' : 'px-6 py-3'"
-      class="transition-all duration-200 inline-flex items-center border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      class="transition-all duration-200 inline-flex items-center border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
     >
       <span v-if="!scrolledDown">{{ text }}</span>
       <svg

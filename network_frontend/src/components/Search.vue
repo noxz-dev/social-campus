@@ -9,7 +9,7 @@
     >
       <template v-slot:icon>
         <svg
-          class="h-6 w-6 dark:fill-white fill-dark700"
+          class="h-6 w-6 dark:fill-white fill-dark-700"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
-          class="dark:fill-white fill-dark600 h-14 w-14"
+          class="dark:fill-white fill-dark-600 h-14 w-14"
         >
           <g id="Iconly/Bulk/Plus" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Plus" transform="translate(2.000000, 2.000000)" fill-rule="nonzero" class="fill-highlight-500">
@@ -48,7 +48,7 @@
     </input-field>
 
     <div
-      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark400 max-h-96 overflow-auto"
+      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark-500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark-400 max-h-96 overflow-auto"
       v-if="searchString.length !== 0 && isFocus"
     >
       <div v-if="searchResult.users.length === 0 && searchResult.groups.length === 0 && searchResult.tags.length === 0">
@@ -60,12 +60,12 @@
           <div
             v-for="result in searchResult.users"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
             @click="handleRouting('USERS', result.username)"
           >
             <div class="table-cell align-middle mr-4">
               <lazy-image
-                class="h-10 w-10 rounded-full bg-dark700"
+                class="h-10 w-10 rounded-full bg-dark-700"
                 :src="result.avatar.name"
                 :blurhash="result.avatar.blurhash"
                 rounded="full"
@@ -81,7 +81,7 @@
           <div
             v-for="result in searchResult.tags"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-2 p-3 rounded-md cursor-pointer"
+            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-2 p-3 rounded-md cursor-pointer"
             @click="handleRouting('TAGS', result.name)"
           >
             <div class="flex flex-row align-middle">{{ result.name }}</div>
@@ -93,7 +93,7 @@
           <div
             v-for="result in searchResult.groups"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
             @click="handleRouting('GROUPS', result.id)"
           >
             <div class="flex flex-row align-middle">{{ result.name }}</div>

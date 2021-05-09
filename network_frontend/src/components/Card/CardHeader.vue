@@ -1,9 +1,19 @@
 <template>
   <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
-      <div class="flex-shrink-0">
+      <div
+        class="flex-shrink-0 cursor-pointer"
+        @click.stop="
+          $router.push({
+            name: 'Profile',
+            params: {
+              id: username,
+            },
+          })
+        "
+      >
         <lazy-image
-          class="h-10 w-10 rounded-full bg-dark700 object-cover"
+          class="h-10 w-10 rounded-full bg-dark-700 object-cover"
           :src="avatar"
           alt=""
           :blurhash="avatarBlurhash"
@@ -11,8 +21,19 @@
         />
       </div>
       <div class="min-w-0 flex-1">
-        <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row">
-          <div>{{ firstname + ' ' + lastname }}</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-gray-50 flex flex-col md:flex-row cursor-pointer">
+          <div
+            @click.stop="
+              $router.push({
+                name: 'Profile',
+                params: {
+                  id: username,
+                },
+              })
+            "
+          >
+            {{ firstname + ' ' + lastname }}
+          </div>
           <div v-if="group" class="flex items-center">
             <svg
               class="transform rotate-90 md:mx-2 mr-2"
@@ -23,7 +44,7 @@
             >
               <rect width="256" height="256" fill="none"></rect>
               <path
-                class="dark:fill-white fill-dark800"
+                class="dark:fill-white fill-dark-800"
                 d="M236.74219,187.96875,148.77344,35.97656a24.00413,24.00413,0,0,0-41.54688,0h.00781L19.25781,187.96875a23.9925,23.9925,0,0,0,20.76563,36.02344H215.97656a23.9925,23.9925,0,0,0,20.76563-36.02344Z"
               ></path>
             </svg>
@@ -82,7 +103,7 @@
 
             <div
               v-if="optionsOpen"
-              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-dark600 dark:border-dark400 border ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-dark-600 dark:border-dark-400 border ring-1 ring-black ring-opacity-5 focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-1"

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full dark:bg-dark600">
+  <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full dark:bg-dark-600">
     <div class="flex space-x-3">
       <div class="flex-shrink-0 dark:bg-dark-500 rounded-full">
         <div class="h-10 w-10 rounded-full" />

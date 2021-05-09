@@ -1,10 +1,16 @@
 <template>
-  <router-link :to="to" class="w-full xl:ml-0 md:ml-1 hover:text-highlight-500" :class="navState.lastView === to ? 'highlight' : ''">
+  <router-link
+    :to="to"
+    class="w-full xl:ml-0 md:ml-1 hover:text-highlight-500"
+    :class="navState.lastView === to ? 'highlight' : ''"
+  >
     <div
       class="flex xl:mx-3 border-b-4 md:rounded-xl px-6 border-transparent items-center h-16 justify-center md:border-b-0 md:border-l-6 md:justify-center xl:justify-start xl:pl-4"
     >
       <slot />
-      <span class="hidden text-bold font-semibold xl:block md:ml-4 dark:text-gray-50 text-gray-900 antialiased">{{ name }}</span>
+      <span class="hidden text-bold font-semibold xl:block md:ml-4 dark:text-gray-50 text-gray-900 antialiased">{{
+        name
+      }}</span>
     </div>
   </router-link>
 </template>
@@ -44,8 +50,8 @@ a.router-link-exact-active div {
 a.router-link-exact-active path,
 a.router-link-exact-active polyline,
 a.router-link-exact-active polygon {
-  @apply fill-indigo !important;
-  @apply stroke-indigo;
+  @apply fill-brand !important;
+  @apply stroke-brand;
 }
 
 .highlight:hover path,
@@ -54,13 +60,13 @@ a.router-link-exact-active polygon {
 a:hover path,
 a:hover polyline,
 a:hover polygon {
-  @apply fill-indigo !important;
-  @apply stroke-indigo;
+  @apply fill-brand !important;
+  @apply stroke-brand;
 }
 @screen md {
   .dark .highlight div,
   .dark a.router-link-exact-active div {
-    @apply bg-dark600;
+    @apply bg-dark-600;
     @apply relative;
     @apply border-b-0;
   }

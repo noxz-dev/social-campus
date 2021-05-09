@@ -7,7 +7,7 @@
         aria-expanded="true"
         aria-labelledby="listbox-label"
         @click="open = !open"
-        class="dark:bg-dark-600 border border-dark-500 relative w-full rounded-md shadow-sm pl-3 pr-10 py-[0.62rem] text-left cursor-default focus:outline-none focus:ring-1 focus:ring-highlight-500 focus:border-highlight-500 sm:text-sm"
+        class="dark:bg-dark-600 border border-dark-500 relative w-full rounded-md shadow-sm pl-3 pr-10 py-[0.62rem] text-left cursor-default focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
       >
         <span class="block truncate"> {{ selected }} </span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -38,7 +38,7 @@
           <li
             id="listbox-option-0"
             role="option"
-            class="group text-whitetext-gray-100 cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-highlight-600 hover:text-white duration-100 rounded-lg"
+            class="group text-whitetext-gray-100 cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-brand-600 hover:text-white duration-100 rounded-lg"
             v-for="option in options"
             :key="option"
             @click="choose(option)"

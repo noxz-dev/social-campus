@@ -1,7 +1,7 @@
 <template>
   <header
     v-if="show && $route?.name !== 'Login' && $route?.name !== 'Register'"
-    class="fixed bg-white dark:bg-dark700 shadow-sm w-full lg:overflow-y-visible z-40"
+    class="fixed bg-white dark:bg-dark-700 shadow-sm w-full lg:overflow-y-visible z-40"
   >
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
@@ -37,11 +37,11 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden dark:bg-dark700 bg-white">
+        <div class="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden dark:bg-dark-700 bg-white">
           <!-- Mobile menu button -->
           <button
             type="button"
-            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center bg-white dark:bg-dark600 text-gray-400 hover:bg-gray-100 dark:hover:bg-dark700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            class="-mx-2 rounded-md p-2 inline-flex items-center justify-center bg-white dark:bg-dark-600 text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
             aria-expanded="false"
             @click="openMobileMenu"
           >
@@ -71,7 +71,7 @@
         <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-3" id="notify-button" ref="notifyTarget">
           <div
             @click="notifyOpen = !notifyOpen"
-            class="hover:opacity-70 relative cursor-pointer ml-5 flex-shrink-0 border-2 border-dark800 dark:border-gray-500 rounded-full p-1 py-2 px-2 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="hover:opacity-70 relative cursor-pointer ml-5 flex-shrink-0 border-2 border-dark-800 dark:border-gray-500 rounded-full p-1 py-2 px-2 text-gray-200 hover:text-gray-500 focus:outline-none dark:focus:ring-offset-dark-700 focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
           >
             <span class="sr-only">View notifications</span>
             <svg
@@ -79,7 +79,7 @@
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
-              class="h-8 dark:stroke-white stroke-black dark:fill-dark600 fill-white"
+              class="h-8 dark:stroke-white stroke-black dark:fill-dark-600 fill-white"
             >
               <g
                 id="Iconly/Light/Notification"
@@ -124,7 +124,7 @@
               <button
                 id="user-menu"
                 type="button"
-                class="p-1 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+                class="p-1 rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-700 focus:ring-brand-500"
                 aria-haspopup="true"
                 @click="showProfileMenu = !showProfileMenu"
               >
@@ -132,7 +132,7 @@
                 <div class="h-10 w-10 rounded-full">
                   <lazy-image
                     v-if="profileImage"
-                    class="h-10 w-10 !rounded-full bg-dark700 object-cover"
+                    class="h-10 w-10 !rounded-full bg-dark-700 object-cover"
                     :src="profileImage"
                     :blurhash="user?.avatar.blurhash"
                     :onLoad="true"
@@ -146,12 +146,12 @@
               <div
                 v-if="showProfileMenu"
                 @click.stop
-                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark800 ring-1 ring-black ring-opacity-5 border-dark500 border"
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-dark-800 ring-1 ring-black ring-opacity-5 border-dark-500 border"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="user-menu"
               >
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
+                <div class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100">
                   <svg
                     viewBox="0 0 24 24"
                     version="1.1"
@@ -201,7 +201,7 @@
                     >Dein Profil</a
                   >
                 </div>
-                <div class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100">
+                <div class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100">
                   <!-- settings icon -->
                   <svg
                     viewBox="0 0 24 24"
@@ -233,10 +233,10 @@
                   >
                 </div>
                 <div
-                  class="flex items-center justify-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100"
+                  class="flex items-center justify-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100"
                 ></div>
                 <div
-                  class="flex items-center dark:hover:bg-dark600 hover:bg-gray-100 transition duration-100 cursor-pointer"
+                  class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100 cursor-pointer"
                 >
                   <svg
                     width="24px"
@@ -335,7 +335,7 @@
       </div>
     </div>
     <nav class="lg:hidden" :class="showMobileMenu ? 'block' : 'hidden'" aria-label="Global">
-      <div class="border-t border-dark600 pt-4 pb-3">
+      <div class="border-t border-dark-600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
           <div class="flex-shrink-0">
             <lazy-image
@@ -357,7 +357,7 @@
           <button
             ref="mobileNotifyTarget"
             type="button"
-            class="ml-auto flex-shrink-0 dark:bg-dark700 bg-white rounded-full p-1 text-gray-400 hover:text-highlight-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark700 focus:ring-indigo-500"
+            class="ml-auto flex-shrink-0 dark:bg-dark-700 bg-white rounded-full p-1 text-gray-400 hover:text-highlight-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-700 focus:ring-brand-500"
           >
             <span class="sr-only">View notifications</span>
             <svg
@@ -407,20 +407,20 @@
                 showMobileMenu = false;
               }
             "
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark-600"
           >
             Dein Profil
           </div>
 
           <div
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark-600"
           >
             Einstellungen
           </div>
 
           <div
             @click="logout"
-            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark600"
+            class="block rounded-md py-2 px-3 text-base font-medium dark:text-gray-50 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-50 dark:hover:bg-dark-600"
           >
             Ausloggen
           </div>

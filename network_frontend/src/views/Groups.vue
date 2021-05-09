@@ -2,7 +2,7 @@
   <div>
     <div
       id="groups"
-      class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto p-5 pb-20"
+      class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl overflow-y-auto p-5 pb-20"
     >
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">

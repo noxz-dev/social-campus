@@ -1,7 +1,7 @@
 <template>
   <div
     id="profile"
-    class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl overflow-y-auto text-gray-100"
+    class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl overflow-y-auto text-gray-100"
   >
     <infinite-scroll-wrapper
       :queryLoading="qloading"
@@ -9,7 +9,7 @@
       class="w-full overflow-y-auto flex flex-col items-center"
       v-if="!error"
     >
-      <div class="dark:bg-dark600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
+      <div class="dark:bg-dark-600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
         <div>
           <div class="h-32 w-full lg:h-64">
             <lazy-image
@@ -364,22 +364,22 @@ a.router-link-exact-active div {
   @apply border-indigo-500;
 }
 a.router-link-exact-active path {
-  @apply fill-indigo;
+  @apply fill-brand;
 }
 a:hover path {
-  @apply fill-indigo;
+  @apply fill-brand;
 }
 
 @screen md {
   .dark a.router-link-exact-active div {
-    @apply bg-highlight-500;
+    @apply bg-brand-500;
     @apply relative;
     @apply border-b-0 !important;
     @apply rounded-lg !important;
   }
 
   a.router-link-exact-active div {
-    @apply bg-highlight-500;
+    @apply bg-brand-500;
     @apply relative;
     @apply border-b-0 !important;
     @apply rounded-lg !important;

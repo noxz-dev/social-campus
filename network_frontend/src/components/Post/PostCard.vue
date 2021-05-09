@@ -20,7 +20,7 @@
               class="h-6 hover:stroke-red duration-200 stroke-current"
               :class="{
                 'fill-red': post.liked,
-                'dark:stroke-white dark:hover:stroke-red stroke-black  dark:fill-dark600 fill-white': !post.liked,
+                'dark:stroke-white dark:hover:stroke-red stroke-black  dark:fill-dark-600 fill-white': !post.liked,
               }"
               viewBox="0 0 24 24"
               version="1.1"
@@ -94,7 +94,7 @@ export default defineComponent({
     },
     cardBgColor: {
       type: String,
-      default: 'bg-dark500',
+      default: 'bg-dark-500',
     },
   },
   setup(props) {

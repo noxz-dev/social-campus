@@ -1,6 +1,6 @@
 <template>
   <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-3/4 mb-10 mt-10">
-    <post-list :posts="posts" class="pt-10 md:pt-0" cardBgColor="bg-dark600" />
+    <post-list :posts="posts" class="pt-10 md:pt-0" cardBgColor="bg-dark-600" />
   </div>
 </template>
 

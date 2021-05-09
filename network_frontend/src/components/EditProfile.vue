@@ -11,7 +11,7 @@
           "
         >
           <div class="shadow sm:rounded-md sm:overflow-hidden">
-            <div class="px-4 py-5 bg-white dark:bg-dark700 space-y-6 sm:p-6">
+            <div class="px-4 py-5 bg-white dark:bg-dark-700 space-y-6 sm:p-6">
               <div>
                 <label for="about" class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Über dich </label>
                 <div class="mt-1">
@@ -20,7 +20,7 @@
                     name="about"
                     v-model="bio"
                     rows="3"
-                    class="resize-none shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-black dark:border-dark-500 rounded-md dark:bg-dark-600"
+                    class="resize-none shadow-sm focus:ring-brand-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-black dark:border-dark-500 rounded-md dark:bg-dark-600"
                     placeholder=""
                   />
                 </div>
@@ -47,7 +47,7 @@
                   <button
                     @click="$refs.file.click()"
                     type="button"
-                    class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
                   >
                     Ändern
                   </button>
@@ -87,7 +87,7 @@
                     <div class="flex text-sm text-gray-600">
                       <label
                         for="file-upload"
-                        class="relative cursor-pointer bg-white dark:bg-dark-700 rounded-md font-medium text-indigo-500 hover:text-indigo-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                        class="relative cursor-pointer bg-white dark:bg-dark-700 rounded-md font-medium text-brand-500 hover:text-brand-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500"
                       >
                         <span>Upload a file</span>
                         <input id="file-upload" name="file-upload" type="file" class="sr-only" />
@@ -102,7 +102,7 @@
             <div class="px-4 py-3 bg-gray-50 dark:bg-dark-700 text-right sm:px-6">
               <button
                 type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
               >
                 Save
               </button>

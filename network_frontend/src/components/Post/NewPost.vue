@@ -5,7 +5,7 @@
         <textarea
           id="newPostTextArea"
           v-model="message"
-          class="w-full dark:bg-dark600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full dark:bg-dark-600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-brand-500 focus:border-indigo-500"
           placeholder="Hey, was gibt's Neues ?"
           @blur="v.message.$touch"
         />
@@ -16,7 +16,7 @@
               width="25"
               height="25"
               viewBox="0 0 256 256"
-              class="hover:bg-dark-800 rounded-full transition fill-dark600 dark:fill-white stroke-black dark:stroke-white"
+              class="hover:bg-dark-800 rounded-full transition fill-dark-600 dark:fill-white stroke-black dark:stroke-white"
               @click="emojiOpen = !emojiOpen"
             >
               <rect width="256" height="256" fill="none"></rect>
@@ -63,7 +63,7 @@
       <div
         v-bind="getRootProps()"
         class="border border-dashed p-8 rounded-lg"
-        :class="isDragActive ? 'border-highlight-500' : 'border-dark700 dark:border-gray-100'"
+        :class="isDragActive ? 'border-brand-500' : 'border-dark-700 dark:border-gray-100'"
       >
         <input v-bind="getInputProps()" />
         <p v-if="isDragActive">Lass einfach los</p>
@@ -113,7 +113,7 @@
         </g>
       </svg>
     </app-button>
-    <app-button class="!bg-dark400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
+    <app-button class="!bg-dark-400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
   </div>
 </template>
 

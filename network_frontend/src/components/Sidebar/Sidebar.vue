@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
-    class="flex fixed top-14 h-screen shadow-right transition-width w-14 xl:w-44 bg-white dark:bg-dark700"
+    class="flex fixed top-14 h-screen shadow-right transition-width w-14 xl:w-44 bg-white dark:bg-dark-700"
   >
     <div id="navContent" class="w-full flex flex-col items-start pl-0 mt-12 h-full">
       <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <div v-else class="fixed h-16 w-full z-20 bottom-0 bg-gray-300 dark:bg-dark600">
+  <div v-else class="fixed h-16 w-full z-20 bottom-0 bg-gray-300 dark:bg-dark-600">
     <div id="navContent" class="h-16 w-full flex flex-row items-center">
       <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>

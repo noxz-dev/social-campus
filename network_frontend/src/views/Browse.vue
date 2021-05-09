@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="browse" class="flex h-full items-center bg-white dark:bg-dark700 flex-col rounded-3xl">
+    <div id="browse" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
           <div class="h-10 w-full flex items-center mb-10 flex-col md:flex-row">

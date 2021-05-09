@@ -49,7 +49,7 @@ export default defineComponent({
       if (toast)
         toast(data.notifications.message, {
           positionY: 'top',
-          slotLeft: `<div class="p-1 bg-highlight-800 rounded-full"> <img  class="rounded-full w-10 h-10" src="${data.notifications.fromUser.avatar.name}" /></div>`,
+          slotLeft: `<div class="p-1 bg-brand-800 rounded-full"> <img  class="rounded-full w-10 h-10" src="${data.notifications.fromUser.avatar.name}" /></div>`,
         });
     });
   },
@@ -75,6 +75,6 @@ export default defineComponent({
 }
 
 .notification {
-  @apply sm:w-full bg-highlight-700 py-4 md:w-[20rem] text-gray-50 z-40  !important;
+  @apply sm:w-full bg-brand-700 py-4 md:w-[20rem] text-gray-50 z-40  !important;
 }
 </style>

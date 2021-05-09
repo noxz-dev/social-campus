@@ -8,7 +8,7 @@
           <div class="flex-shrink-0">
             <div class="h-10 rounded-full">
               <lazy-image
-                class="h-10 w-10 !rounded-full bg-dark700 object-cover"
+                class="h-10 w-10 !rounded-full bg-dark-700 object-cover"
                 :src="avatar"
                 :blurhash="avatarBlurhash"
                 rounded="full"
@@ -42,7 +42,7 @@
           leave-to-class="transform scale-95 opacity-0"
         >
           <MenuItems
-            class="absolute z-30 w-56 mt-2 origin-top-right bg-white dark:bg-dark600 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black dark:ring-dark-500 ring-opacity-5 focus:outline-none"
+            class="absolute z-30 w-56 mt-2 origin-top-right bg-white dark:bg-dark-600 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black dark:ring-dark-500 ring-opacity-5 focus:outline-none"
           >
             <div class="px-1 py-1">
               <MenuItem v-slot="{ active }">

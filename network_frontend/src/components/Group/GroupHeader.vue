@@ -77,14 +77,14 @@
         <div
           class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_ABOUT)"
-          :class="{ 'bg-indigo-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_ABOUT }"
+          :class="{ 'bg-brand-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_ABOUT }"
         >
           <span class="">About</span>
         </div>
         <div
           class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_FEED)"
-          :class="{ 'bg-indigo-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_FEED }"
+          :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_FEED }"
         >
           <span class="dark:text-gray-50">Feed</span>
           <span class="ml-2 font-medium">{{ numberFormatter(numberOfPosts) }}</span>

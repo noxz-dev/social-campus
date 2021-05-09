@@ -1,7 +1,7 @@
 <template>
   <div id="group" class="flex h-full">
     <div
-      class="flex h-full items-center flex-1 bg-white dark:bg-dark700 flex-col rounded-t-2xl border-t-2 border-r-2 py-1 pt-2 pr-0.5 border-dark-600"
+      class="flex h-full items-center flex-1 bg-white dark:bg-dark-700 flex-col rounded-t-2xl border-t-2 border-r-2 py-1 pt-2 pr-0.5 border-dark-600"
     >
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto p-4 py-3">
         <group-header

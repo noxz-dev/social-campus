@@ -1,9 +1,9 @@
 <template>
   <div
     id="notificationContainer"
-    class="absolute dark:bg-dark700 bg-white h-96 w-80 top-12 right-0 rounded-lg border border-dark500 shadow-xl overflow-auto"
+    class="absolute dark:bg-dark-700 bg-white h-96 w-80 top-12 right-0 rounded-lg border border-dark-500 shadow-xl overflow-auto"
   >
-    <div class="dark:text-gray-50 text-gray-900 text-lg border-b-2 w-full border-dark400 p-2 font-semibold">
+    <div class="dark:text-gray-50 text-gray-900 text-lg border-b-2 w-full border-dark-400 p-2 font-semibold">
       Mitteilungen
     </div>
     <div v-if="notificationsLoading" class="dark:text-gray-50 text-gray-900">Loading...</div>
@@ -13,7 +13,7 @@
       >
       <div
         id="card"
-        class="dark:bg-dark600 bg-white rounded dark:text-gray-50 text-gray-900 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-center w-full border-dark500 border"
+        class="dark:bg-dark-600 bg-white rounded dark:text-gray-50 text-gray-900 px-1 py-3 cursor-pointer my-1 flex justify-evenly items-center w-full border-dark-500 border"
         v-for="notify of notifications"
         :key="notify.id"
         @click="handleNotificationClick(notify)"

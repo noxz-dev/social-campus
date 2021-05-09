@@ -4,7 +4,7 @@
       <div>
         <div
           v-if="positionRight"
-          class="mr-2 py-2 px-4 max-w-xs md:max-w-xl bg-highlight-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
+          class="mr-2 py-2 px-4 max-w-xs md:max-w-xl bg-brand-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
         >
           <span class="break-words">{{ message }}</span>
           <span class="ml-2 text-[0.7rem] text-gray-300">{{ dayjs(createdAt).format('HH:mm') }}</span>

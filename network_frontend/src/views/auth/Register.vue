@@ -32,7 +32,7 @@
                 />
               </div>
               <div v-if="v.firstname.$error" class="text-red-500 mt-0.5 text-sm">
-                Der Vorname muss aus mindestens zwei Zeichen bestehen
+                Der Vorname muss aus mindestens zwei Zeichen bestehen und darf keine Zahlen enthalten
               </div>
             </div>
 
@@ -52,7 +52,9 @@
                   class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
-              <div v-if="v.lastname.$error" class="text-red-500 mt-0.5 text-sm">Der Nachname wird benötigt</div>
+              <div v-if="v.lastname.$error" class="text-red-500 mt-0.5 text-sm">
+                Der Nachname wird benötigt und darf keine Zahlen enthalten
+              </div>
             </div>
 
             <div>
@@ -81,13 +83,14 @@
                   name="username"
                   type="text"
                   placeholder="legend27"
-                  v-model="username"
+                  v-model.trim="username"
                   required
                   class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
               <div v-if="v.username.$error" class="text-red-500 mt-0.5 text-sm">
-                Das Passwort muss aus 3 Zeichen oder mehr bestehen
+                <p>Der Benutzername muss aus 3 Zeichen oder mehr bestehen</p>
+                <p>und darf keine Sonderzeichen oder Leerzeichen enthalten</p>
               </div>
             </div>
 
@@ -163,7 +166,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import { required, minLength, email, sameAs } from '@vuelidate/validators';
+import { required, minLength, email, sameAs, alpha, alphaNum } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useSignupMutation } from '../../graphql/generated/types';
@@ -189,14 +192,17 @@ export default defineComponent({
         minLength: minLength(5),
       },
       firstname: {
+        alpha,
         required,
         minLength: minLength(2),
       },
       lastname: {
+        alpha,
         required,
       },
       username: {
         minLength: minLength(3),
+        alphaNum,
         required,
       },
       confirmPassword: {

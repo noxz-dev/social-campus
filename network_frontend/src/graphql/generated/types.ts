@@ -600,7 +600,7 @@ export type AddFollowerMutation = (
   { __typename?: 'Mutation' }
   & { addFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
@@ -789,7 +789,7 @@ export type RemoveFollowerMutation = (
   { __typename?: 'Mutation' }
   & { removeFollower: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
@@ -1253,7 +1253,7 @@ export type GetPostsFromUserQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name'>
+      & Pick<Media, 'name' | 'blurhash'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1390,6 +1390,10 @@ export const AddFollowerDocument = gql`
     mutation addFollower($userID: String!) {
   addFollower(userID: $userID) {
     id
+    bio
+    studyCourse
+    faculty
+    interests
     firstname
     lastname
     avatar {
@@ -1397,6 +1401,7 @@ export const AddFollowerDocument = gql`
       blurhash
     }
     username
+    meFollowing
   }
 }
     `;
@@ -1796,6 +1801,10 @@ export const RemoveFollowerDocument = gql`
     mutation removeFollower($userID: String!) {
   removeFollower(userID: $userID) {
     id
+    bio
+    studyCourse
+    faculty
+    interests
     firstname
     lastname
     avatar {
@@ -1803,6 +1812,7 @@ export const RemoveFollowerDocument = gql`
       blurhash
     }
     username
+    meFollowing
   }
 }
     `;
@@ -2699,6 +2709,7 @@ export const GetPostsFromUserDocument = gql`
     liked
     media {
       name
+      blurhash
     }
     user {
       id

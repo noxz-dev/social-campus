@@ -4,7 +4,7 @@
       <lazy-image src="" blurhash="AePC3PmlGv{c" :onLoad="false" />
     </div>
     <div class="w-full mt-6 py-10 flex flex-col md:flex-row justify-between">
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <div class="flex justify-between flex-col md:flex-row">
           <div>
             <div v-if="group" class="w-40 md:w-full text-xl font-semibold dark:text-gray-50 text-gray-900 break-words">

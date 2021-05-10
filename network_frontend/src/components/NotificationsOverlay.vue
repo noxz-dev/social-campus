@@ -7,6 +7,7 @@ import { useStore } from 'vuex';
 import { Toast } from 'vue-dk-toast';
 import { Howl } from 'howler';
 import lazyImage from '../components/Blurhash/LazyImage.vue';
+import { loadProxyImage } from '../utils/loadProxyImage';
 
 export default defineComponent({
   components: {
@@ -37,7 +38,7 @@ export default defineComponent({
       })
     );
 
-    onResult(({ data }) => {
+    onResult(async ({ data }) => {
       console.log('sub', data);
       if (data?.notifications.type === NotificationType.NewChatMessage) {
         let sound = new Howl({
@@ -49,7 +50,9 @@ export default defineComponent({
       if (toast)
         toast(data.notifications.message, {
           positionY: 'top',
-          slotLeft: `<div class="p-1 bg-brand-800 rounded-full"> <img  class="rounded-full w-10 h-10" src="${data.notifications.fromUser.avatar.name}" /></div>`,
+          slotLeft: `<div class="p-1 bg-brand-800 rounded-full"> <img class="rounded-full w-10 h-10" src="${await loadProxyImage(
+            data.notifications.fromUser.avatar.name
+          )}" blurhash="LB7nu;@dr^#q8rIVf9RlxuniXla2" rounded="full"/></div>`,
         });
     });
   },

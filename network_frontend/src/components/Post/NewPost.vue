@@ -3,13 +3,15 @@
     <vue-tribute :options="autoCompleteOptions" elementId="newPostTextArea">
       <div class="w-full relative">
         <textarea
+          v-if="!showPreview"
           id="newPostTextArea"
           v-model="message"
           class="w-full dark:bg-dark-600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-brand-500 focus:border-indigo-500"
           placeholder="Hey, was gibt's Neues ?"
           @blur="v.message.$touch"
         />
-        <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3">
+        <div class="markdown bg-gray-700 rounded-lg p-0.5" v-else v-html="parseMarkdown(message)"></div>
+        <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3" v-if="!showPreview">
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,9 +51,18 @@
         </div>
       </div>
     </vue-tribute>
-    <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
-      <span class="m">Markdown wird unterstützt</span></span
-    >
+    <div class="flex justify-between">
+      <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
+        <span class="">Markdown wird unterstützt</span></span
+      >
+      <span
+        class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center"
+        @click="showPreview = !showPreview"
+      >
+        <span class="">preview markdown</span></span
+      >
+    </div>
+
     <div class="h-8">
       <div v-if="v.message.$error" class="text-red-400">Du musst schon was eingeben...</div>
     </div>
@@ -87,9 +98,24 @@
     </div>
   </div>
   <div class="flex flex-row-reverse">
-    <app-button class="ml-3" @click="post">
+    <app-button class="ml-4" @click="post">
       Posten
       <svg
+        class="animate-spin ml-2 mr-1 h-5 w-5 text-white"
+        v-if="loading"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <svg
+        v-else
         viewBox="0 0 24 24"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +144,8 @@
 </template>
 
 <script lang="ts">
+import marked from 'marked';
+import DOMPurify from 'dompurify';
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch, watchEffect } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
@@ -151,10 +179,17 @@ export default defineComponent({
     const { control_enter } = useMagicKeys();
     const emojiOpen = ref(false);
     const emojiPicker = ref<EmojiPickerElement>();
+    const showPreview = ref(false);
 
     watch(control_enter, (v) => {
       if (v) post();
     });
+
+    const parseMarkdown = (value: string) => {
+      return DOMPurify.sanitize(marked(value), {
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|tel|callto|cid|xmpp|xxx):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      });
+    };
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -175,7 +210,7 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { message });
 
-    const { mutate: newPost } = useAddPostMutation(() => ({
+    const { mutate: newPost, loading } = useAddPostMutation(() => ({
       variables: {
         input: {
           content: message.value,
@@ -352,6 +387,9 @@ export default defineComponent({
       emojiOpen,
       emojiPicker,
       ...rest,
+      loading,
+      parseMarkdown,
+      showPreview,
     };
   },
 });

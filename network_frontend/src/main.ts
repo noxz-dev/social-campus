@@ -5,6 +5,7 @@ import { createApp, h, provide } from 'vue';
 import DKToast from 'vue-dk-toast';
 import { defaultClient } from './apollo';
 import App from './App.vue';
+import LazyImageVue from './components/Blurhash/LazyImage.vue';
 import AppButton from './components/Form/AppButton.vue';
 import './index.css';
 import './markdown.css';
@@ -36,6 +37,7 @@ const app = createApp({
   .use(store);
 
 app.component('app-button', AppButton);
+app.component('lazy-image', LazyImageVue);
 
 app.config.globalProperties.eventbus = eventbus;
 app.mount('#app');

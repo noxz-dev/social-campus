@@ -76,7 +76,7 @@
       </div>
       <div class="flex-shrink-0 self-center flex">
         <permission-container :userId="userId">
-          <div class="relative inline-block text-left" ref="target">
+          <div class="relative inline-block text-left z-10" ref="target">
             <div>
               <button
                 id="menu-1"

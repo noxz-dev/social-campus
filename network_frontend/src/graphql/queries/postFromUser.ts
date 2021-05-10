@@ -7,6 +7,7 @@ export const getPostsFromUser = gql`
       liked
       media {
         name
+        blurhash
       }
       user {
         id

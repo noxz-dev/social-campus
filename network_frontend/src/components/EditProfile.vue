@@ -39,10 +39,12 @@
                       />
                     </svg> -->
                     <img
-                      :src="newProfileImage ? newProfileImage : profileImage"
+                      v-if="newProfileImage"
+                      :src="newProfileImage"
                       alt=""
                       class="object-cover h-12 w-12 bg-dark-700 border-white border rounded-full"
                     />
+                    <lazy-image v-else :src="profileImage" :blurhash="blurhash" />
                   </span>
                   <button
                     @click="$refs.file.click()"
@@ -118,9 +120,10 @@ import { useUpdateProfileMutation } from '../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
 import InputField from './Form/InputField.vue';
 import { userByUsername } from '../graphql/queries/userByUsername';
+import LazyImage from './Blurhash/LazyImage.vue';
 
 export default defineComponent({
-  components: { InputField },
+  components: { InputField, LazyImage },
   emits: ['close'],
   props: {
     user: {
@@ -133,6 +136,7 @@ export default defineComponent({
     const faculty = ref(props.user?.faculty);
     const interests = ref(props.user?.interests);
     const profileImage = ref(props.user?.avatar.name);
+    const blurhash = ref(props.user?.avatar.blurhash);
     const newProfileImage = ref();
     const studycourse = ref(props.user?.studyCourse);
     const file = ref<File>();
@@ -168,7 +172,17 @@ export default defineComponent({
       update();
     };
 
-    return { faculty, interests, studycourse, bio, updateProfile, onFileChange, profileImage, newProfileImage };
+    return {
+      faculty,
+      interests,
+      studycourse,
+      bio,
+      updateProfile,
+      onFileChange,
+      profileImage,
+      newProfileImage,
+      blurhash,
+    };
   },
 });
 </script>

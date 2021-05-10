@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="mt-2 text-sm mb-4" v-else>Keine Nutzer gefunden</div>
-        <div class="pb-2 pt-2 font-semibold">tags</div>
+        <div class="pb-2 pt-2 font-semibold">Tags</div>
         <div v-if="searchResult.tags && searchResult.tags.length > 0">
           <div
             v-for="result in searchResult.tags"

@@ -67,7 +67,13 @@
                     >
                       {{ followButtonText }}
                     </app-button>
-                    <app-button @click="" class="mt-2 justify-center"> Nachricht senden </app-button>
+                    <app-button
+                      v-if="!showEditProfile"
+                      @click="handleChatNav"
+                      class="mt-2 justify-center !border-2 !border-brand-500 bg-opacity-20"
+                    >
+                      Nachricht senden
+                    </app-button>
                   </div>
                 </div>
               </div>
@@ -233,11 +239,12 @@ import { defineComponent, ref, computed, watch, onMounted, watchEffect, getCurre
 import PostList from '../components/Post/PostList.vue';
 import {
   useAddFollowerMutation,
+  useCreateChatMutation,
   useRemoveFollowerMutation,
   useUserByUsernameQuery,
   useUserStatsQuery,
 } from '../graphql/generated/types';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { userByUsername } from '../graphql/queries/userByUsername';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
@@ -260,6 +267,7 @@ export default defineComponent({
     const store = useStore();
     const followButtonText = ref('Folge ich');
     const qloading = ref(false);
+    const router = useRouter();
     const editProfileModal = ref();
 
     const userFromStore = computed(() => store.state.userData.user);
@@ -340,6 +348,17 @@ export default defineComponent({
       qloading.value = loadingState;
     });
 
+    const { mutate: createChat } = useCreateChatMutation(() => ({
+      variables: {
+        memberId: user.value?.id as string,
+      },
+    }));
+
+    const handleChatNav = async () => {
+      const response = await createChat();
+      router.push({ name: 'ChatBox', params: { id: response.data?.createChat.id! } });
+    };
+
     return {
       following,
       followUser,
@@ -353,6 +372,7 @@ export default defineComponent({
       qloading,
       editProfileModal,
       error,
+      handleChatNav,
     };
   },
 });

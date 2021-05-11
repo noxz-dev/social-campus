@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="['2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
+    v-if="['4xl', '3xl', '2xl', 'xl', 'lg', 'md'].includes(breakpoints.is)"
     class="flex fixed top-14 h-screen shadow-right transition-width w-14 xl:w-44 bg-white dark:bg-dark-700"
   >
     <div id="navContent" class="w-full flex flex-col items-start pl-0 mt-12 h-full">

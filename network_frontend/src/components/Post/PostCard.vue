@@ -7,7 +7,7 @@
       </div>
       <div v-if="post.media" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <lazy-image
-          class="object-cover h-96 w-full rounded-xl m-2"
+          class="h-[28rem] 4xl:h-[38rem] w-full rounded-xl m-2"
           :src="post.media.name"
           alt=""
           :blurhash="post.media.blurhash || 'abcdefghijklmn'"
@@ -174,7 +174,8 @@ export default defineComponent({
     }
 
     function validateEmail(email: string) {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       console.log(email);
       return re.test(String(email).toLowerCase());
     }

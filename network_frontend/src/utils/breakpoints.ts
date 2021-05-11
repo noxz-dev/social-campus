@@ -6,9 +6,13 @@ const screens = {
   lg: 1024,
   xl: 1280,
   '2xl': 1536,
+  '3xl': 1920,
+  '4xl': 2560,
 };
 
 const getBreakpoint = (width: number) => {
+  if (width >= screens['4xl']) return '4xl';
+  if (width >= screens['3xl']) return '3xl';
   if (width >= screens['2xl']) return '2xl';
   if (width >= screens.xl) return 'xl';
   if (width >= screens.lg) return 'lg';

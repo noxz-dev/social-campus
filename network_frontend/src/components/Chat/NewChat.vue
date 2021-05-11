@@ -36,7 +36,7 @@ export default defineComponent({
     const choosenId = ref('');
 
     const setUser = (user: string) => {
-      const username = user.match(/@\w\w*/g)[0].replace('@', '');
+      const username = user.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)[0].replace('@', '');
       const foundUser = users.value?.find((u) => u.username === username);
       if (!foundUser) return;
       choosenId.value = foundUser.id;

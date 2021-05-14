@@ -235,7 +235,6 @@ export class GroupResolver {
   ): Promise<Group> {
     const userId = ctx.req.user.id;
     const loggedInRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId } });
-    console.log(loggedInRole);
     if (loggedInRole.role !== GroupRole.ADMIN) throw new Error('youre not allowed to do this');
 
     const user = await getRepository(User).findOne({ where: { id: memberId } });

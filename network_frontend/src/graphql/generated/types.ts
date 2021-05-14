@@ -42,6 +42,7 @@ export type ChatMessage = {
   sendBy: User;
   chat: Chat;
   content: Scalars['String'];
+  media?: Maybe<Media>;
 };
 
 export type Comment = {
@@ -509,6 +510,7 @@ export type Search = {
 export type SendMessageInput = {
   chatId: Scalars['String'];
   message: Scalars['String'];
+  file?: Maybe<Scalars['Upload']>;
 };
 
 export type Subscription = {
@@ -807,7 +809,10 @@ export type SendMessageMutation = (
   & { sendMessage: (
     { __typename?: 'ChatMessage' }
     & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
-    & { sendBy: (
+    & { media?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>, sendBy: (
       { __typename?: 'User' }
       & Pick<User, 'id'>
     ) }
@@ -927,7 +932,10 @@ export type ChatByIdQuery = (
       & { sendBy: (
         { __typename?: 'User' }
         & Pick<User, 'id'>
-      ) }
+      ), media?: Maybe<(
+        { __typename?: 'Media' }
+        & Pick<Media, 'name' | 'blurhash'>
+      )> }
     )> }
   ) }
 );
@@ -1843,6 +1851,10 @@ export const SendMessageDocument = gql`
   sendMessage(input: $input) {
     id
     content
+    media {
+      name
+      blurhash
+    }
     createdAt
     sendBy {
       id
@@ -2091,6 +2103,10 @@ export const ChatByIdDocument = gql`
       createdAt
       sendBy {
         id
+      }
+      media {
+        name
+        blurhash
       }
     }
   }

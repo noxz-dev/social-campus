@@ -1,11 +1,78 @@
 <template>
-  <div class="flex flex-col justify-between h-full">
+  <div class="flex flex-col justify-between h-full relative">
+    <div
+      v-bind="getRootProps()"
+      class="
+        rounded-lg
+        dark:text-gray-50
+        text-gray-900
+        inset-2
+        bottom-24
+        flex
+        justify-center
+        items-center
+        h-0
+        overflow-visible
+        pointer-events-none
+        dark:bg-dark-80
+      "
+      :class="
+        isDragActive
+          ? 'border border-dashed border-dark-700 dark:bg-dark-800 bg-gray-200 bg-opacity-90 dark:border-gray-100 !z-40'
+          : ''
+      "
+    >
+      <input v-bind="getInputProps()" />
+      <p v-if="isDragActive" class="text-xl">Ziehe Datei hierhin</p>
+    </div>
+    <div class="rounded-full h-28 w-28 fixed bottom-32 mb-1 md:bottom-24 pl-2" v-if="previewUrl">
+      <img :src="previewUrl" class="rounded-xl h-28 w-28 object-cover" />
+      <div>
+        <button
+          @click="
+            () => {
+              previewUrl = '';
+              file = undefined;
+            }
+          "
+          class="
+            z-50
+            absolute
+            right-1
+            top-1
+            bg-black
+            text-white
+            bg-opacity-80
+            hover:opacity-75
+            transition
+            shadow
+            rounded-full
+            h-6
+            w-6
+            flex
+            items-center
+            justify-center
+            focus:outline-none
+            focus:ring-2 focus:ring-white
+          "
+        >
+          <svg viewBox="0 0 24 24" class="fill-white">
+            <g>
+              <path
+                d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
+              ></path>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div id="chatContainer" ref="chatContainer" class="overflow-y-auto">
       <div class="w-full px-1 flex flex-col items-between">
         <div class="flex flex-col mt-5">
           <div v-for="message in chat?.messages" :key="message.id">
             <message
               :message="message.content"
+              :media="message.media"
               :createdAt="new Date(message.createdAt)"
               :positionRight="message.sendBy.id === user.id"
             ></message>
@@ -25,7 +92,7 @@
           :showButton="true"
           v-model="newMessage"
           :iconPadding="4"
-          inputClasses="text-sm md:text-md p-4"
+          inputClasses="text-sm md:text-md p-4 !pr-[9.5rem] md:!pr-[11.5rem]"
           buttonText="Senden"
           placeholder="Schreibe eine Nachricht"
           @focus="emojiPickerOpen = false"
@@ -33,15 +100,64 @@
           ref="input"
         >
           <template v-slot:extraButton>
+            <div @click="openChooseFile">
+              <svg
+                class="
+                  mr-2
+                  dark:hover:bg-dark-800
+                  hover:bg-gray-200
+                  transition
+                  stroke-black
+                  dark:stroke-white
+                  rounded-full
+                "
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M21.21 7.89979V16.0498C21.21 19.0698 19.32 21.1998 16.3 21.1998H7.65C4.63 21.1998 2.75 19.0698 2.75 16.0498V7.89979C2.75 4.87979 4.64 2.75079 7.65 2.75079H16.3C19.32 2.75079 21.21 4.87979 21.21 7.89979Z"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M5.28131 16.4321L6.81031 14.8191C7.36131 14.2371 8.28631 14.2341 8.84231 14.8111L9.72731 15.7141C10.3243 16.3231 11.3173 16.2791 11.8583 15.6201L14.0873 12.9091C14.7273 12.1301 15.9013 12.0821 16.6023 12.8051L18.6783 14.9471"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M10.3135 9.13419C10.3135 10.1022 9.52752 10.8882 8.55952 10.8882C7.59152 10.8882 6.80652 10.1022 6.80652 9.13419C6.80652 8.16619 7.59152 7.38019 8.55952 7.38019C9.52752 7.38019 10.3135 8.16619 10.3135 9.13419Z"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 256 256"
-              class="hover:bg-dark-800 rounded-full transition fill-dark-600 dark:fill-white stroke-black dark:stroke-white"
+              class="
+                dark:hover:bg-dark-800
+                hover:bg-gray-200
+                transition
+                fill-dark-600
+                dark:fill-white
+                stroke-black
+                dark:stroke-white
+                rounded-full
+              "
               @click="emojiPickerOpen = !emojiPickerOpen"
             >
-              <rect width="256" height="256" fill="none"></rect>
               <circle
                 cx="128"
                 cy="128"
@@ -94,16 +210,16 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import InputField from '../Form/InputField.vue';
-import { useChatByIdQuery, useSendMessageMutation } from '../../graphql/generated/types';
+import { Chat, useChatByIdQuery, useSendMessageMutation } from '../../graphql/generated/types';
 import Message from './Message.vue';
 import { useResult } from '@vue/apollo-composable';
-import { SendMessageMutationVariables } from '../../graphql/generated/types';
 import gql from 'graphql-tag';
 import { useMagicKeys } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
+import { useDropzone } from 'vue3-dropzone';
 
 export default defineComponent({
   props: {},
@@ -112,6 +228,8 @@ export default defineComponent({
     const store = useStore();
     const user = computed(() => store.state.userData.user);
     const newMessage = ref('');
+    const previewUrl = ref();
+    const file = ref<File>();
     const chatContainer = ref();
     const { enter } = useMagicKeys();
     const route = useRoute();
@@ -139,11 +257,12 @@ export default defineComponent({
         input: {
           chatId: route.params.id as string,
           message: newMessage.value,
+          file: file.value,
         },
       },
       update: (cache, { data: { sendMessage } }) => {
         cache.modify({
-          id: cache.identify(chat.value),
+          id: cache.identify(chat.value as Chat),
           fields: {
             messages(existingMessages = []) {
               const newMessageRef = cache.writeFragment({
@@ -153,6 +272,10 @@ export default defineComponent({
                     id
                     content
                     createdAt
+                    media {
+                      name
+                      blurhash
+                    }
                     sendBy {
                       id
                     }
@@ -166,14 +289,36 @@ export default defineComponent({
       },
     }));
 
-    function sendMessage() {
+    const onDrop = (acceptFiles: any[], rejectReasons: any[]) => {
+      previewUrl.value = URL.createObjectURL(acceptFiles[0]);
+      file.value = acceptFiles[0];
+      // showImageUpload.value = false;
+    };
+
+    const { acceptedFiles, getRootProps, getInputProps, ...dropUtils } = useDropzone({
+      onDrop,
+      noClick: true,
+      accept: 'image/jpeg, image/png, image/gif',
+      maxFiles: 1,
+    });
+
+    async function sendMessage() {
       scrollDown();
-      if (newMessage.value.length > 0) {
-        send();
-        newMessage.value = '';
-        emojiPickerOpen.value = false;
+      if (newMessage.value.length > 0 || file.value) {
+        try {
+          await send();
+        } finally {
+          previewUrl.value = '';
+          file.value = undefined;
+          newMessage.value = '';
+          emojiPickerOpen.value = false;
+        }
       }
     }
+
+    const openChooseFile = () => {
+      dropUtils.open();
+    };
 
     function scrollDown() {
       chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
@@ -209,6 +354,12 @@ export default defineComponent({
       emojiPickerOpen,
       emojiPicker,
       input,
+      getRootProps,
+      getInputProps,
+      ...dropUtils,
+      openChooseFile,
+      previewUrl,
+      file,
     };
   },
 });

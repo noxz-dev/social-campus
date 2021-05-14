@@ -155,8 +155,6 @@ export class Application {
 
           if (!filename) return res.status(400).send('missing file name');
 
-          log.debug('filename', filename);
-
           minioClient.getObject('images', filename, (err, dataStream) => {
             if (err) {
               log.error('minio get object', err);

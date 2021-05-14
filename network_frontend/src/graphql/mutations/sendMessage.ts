@@ -5,6 +5,10 @@ export const sendMessage = gql`
     sendMessage(input: $input) {
       id
       content
+      media {
+        name
+        blurhash
+      }
       createdAt
       sendBy {
         id

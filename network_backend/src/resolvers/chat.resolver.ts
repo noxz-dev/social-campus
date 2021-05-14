@@ -1,10 +1,12 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Chat } from '../entity/chat.entity';
 import { ChatMessage } from '../entity/chatmessage.entity';
+import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { User } from '../entity/user.entity';
+import { uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { SendMessageInput } from '../validators/sendMessage.validator';
@@ -78,29 +80,42 @@ export class ChatResolver {
       throw Error('youre not allowed to access this chat');
     }
 
-    const user = await getRepository(User).findOne({ where: { id: userId } });
-    const chatMessage = new ChatMessage(user, chat, input.message);
-    chat.messages = [...chat.messages, chatMessage];
-    chat.lastMessage = chatMessage;
+    const result = await getManager().transaction(async (transactionManager) => {
+      const user = await getRepository(User).findOne({ where: { id: userId } });
+      const chatMessage = new ChatMessage(user, chat, input.message);
+      chat.messages = [...chat.messages, chatMessage];
+      chat.lastMessage = chatMessage;
 
-    const savedMessage = await getRepository(ChatMessage).save(chatMessage);
+      if (input.file) {
+        const { filename, blurhash } = await uploadFileGraphql(input.file, 'images');
+        const media = new Media();
+        media.blurhash = blurhash;
+        media.name = filename;
+        media.type = MediaType.IMAGE;
+        const savedMedia = await transactionManager.save(media);
+        chatMessage.media = Promise.resolve(savedMedia);
+      }
 
-    const toUser = chat.members.find((member) => member.id !== userId);
+      const savedMessage = await transactionManager.save(chatMessage);
 
-    await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+      const toUser = chat.members.find((member) => member.id !== userId);
+
+      await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+      return { savedMessage, user, toUser };
+    });
     await notify(
       {
-        fromUser: user,
-        toUser: toUser,
+        fromUser: result.user,
+        toUser: result.toUser,
         type: NotificationType.NEW_CHAT_MESSAGE,
-        message: ' Neue Nachricht von ' + user.firstname,
+        message: ' Neue Nachricht von ' + result.user.firstname,
         chat: chat,
-        chatMessage: savedMessage,
+        chatMessage: result.savedMessage,
       },
       ctx,
     );
     log.info(`'User with the id: ${userId} send a message'`);
-    return savedMessage;
+    return result.savedMessage;
   }
 
   @Authorized()

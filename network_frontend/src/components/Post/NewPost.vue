@@ -6,7 +6,18 @@
           v-if="!showPreview"
           id="newPostTextArea"
           v-model="message"
-          class="w-full dark:bg-dark-600 border-2 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-brand-500 focus:border-indigo-500"
+          class="
+            w-full
+            dark:bg-dark-600
+            border-2 border-gray-700
+            h-24
+            resize-none
+            rounded-lg
+            p-2
+            outline-none
+            focus:ring-1 focus:ring-brand-500
+            focus:border-indigo-500
+          "
           placeholder="Hey, was gibt's Neues ?"
           @blur="v.message.$touch"
         />
@@ -18,7 +29,15 @@
               width="25"
               height="25"
               viewBox="0 0 256 256"
-              class="hover:bg-dark-800 rounded-full transition fill-dark-600 dark:fill-white stroke-black dark:stroke-white"
+              class="
+                hover:bg-dark-800
+                rounded-full
+                transition
+                fill-dark-600
+                dark:fill-white
+                stroke-black
+                dark:stroke-white
+              "
               @click="emojiOpen = !emojiOpen"
             >
               <rect width="256" height="256" fill="none"></rect>
@@ -85,7 +104,26 @@
       <img class="w-full rounded-lg h-52 object-cover border" v-if="previewUrl" :src="previewUrl" />
       <button
         @click="previewUrl = ''"
-        class="z-50 absolute left-2 top-2 bg-black text-white bg-opacity-80 hover:opacity-75 transition shadow rounded-full h-8 w-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white"
+        class="
+          z-50
+          absolute
+          left-2
+          top-2
+          bg-black
+          text-white
+          bg-opacity-80
+          hover:opacity-75
+          transition
+          shadow
+          rounded-full
+          h-8
+          w-8
+          flex
+          items-center
+          justify-center
+          focus:outline-none
+          focus:ring-2 focus:ring-white
+        "
       >
         <svg viewBox="0 0 24 24" class="fill-white">
           <g>
@@ -146,7 +184,7 @@
 <script lang="ts">
 import marked from 'marked';
 import DOMPurify from 'dompurify';
-import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch, watchEffect } from 'vue';
+import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
@@ -296,26 +334,32 @@ export default defineComponent({
     };
 
     const post = async () => {
-      v.value.$touch();
-      if (v.value.$errors.length !== 0) {
-        if (!file.value) return;
-      }
+      try {
+        v.value.$touch();
+        if (v.value.$errors.length !== 0) {
+          if (!file.value) return;
+        }
 
-      let foundTags = message.value.match(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g);
-      if (foundTags) {
-        foundTags = foundTags?.map((tag) => tag.replace('#', ''));
-        tags.value = [...foundTags];
+        let foundTags = message.value.match(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g);
+        if (foundTags) {
+          foundTags = foundTags?.map((tag) => tag.replace('#', ''));
+          tags.value = [...foundTags];
+        }
+        if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
+        await newPost();
+      } finally {
+        emit('close');
       }
-      if (route.path.includes('/groups/') && route.params.id) groupId.value = route.params.id;
-      await newPost();
-      emit('close');
     };
 
     const openMarkdownDoku = () => {
       window.open('https://guides.github.com/features/mastering-markdown/');
     };
 
-    const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
+    const { getRootProps, getInputProps, ...rest } = useDropzone({
+      onDrop,
+      accept: 'image/jpeg, image/png, image/gif',
+    });
 
     const autoCompleteOptions = {
       collection: [
@@ -382,11 +426,12 @@ export default defineComponent({
       toggle,
       getRootProps,
       getInputProps,
+      ...rest,
       autoCompleteOptions,
       openMarkdownDoku,
       emojiOpen,
       emojiPicker,
-      ...rest,
+
       loading,
       parseMarkdown,
       showPreview,

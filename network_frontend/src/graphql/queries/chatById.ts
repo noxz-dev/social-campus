@@ -11,6 +11,10 @@ export const chatById = gql`
         sendBy {
           id
         }
+        media {
+          name
+          blurhash
+        }
       }
     }
   }

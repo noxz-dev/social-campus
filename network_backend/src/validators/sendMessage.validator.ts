@@ -1,4 +1,5 @@
-import { IsString, IsUUID, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
@@ -9,7 +10,10 @@ export class SendMessageInput {
   chatId: string;
 
   @Field(() => String)
+  @IsOptional()
   @IsString()
-  @MinLength(1)
   message: string;
+
+  @Field(() => GraphQLUpload, { nullable: true })
+  file: FileUpload;
 }

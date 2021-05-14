@@ -13,6 +13,14 @@ module.exports = {
     },
   },
   theme: {
+    aspectRatio: {
+      // defaults to {}
+      none: 0,
+      square: [1, 1], // or 1 / 1, or simply 1
+      '16/9': [16, 9], // or 16 / 9
+      '4/3': [4, 3], // or 4 / 3
+      '21/9': [21, 9], // or 21 / 9
+    },
     fill: (theme) => ({
       red: theme('colors.red.500'),
       white: theme('colors.white'),
@@ -69,5 +77,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp'), require('tailwindcss-aspect-ratio')],
 };

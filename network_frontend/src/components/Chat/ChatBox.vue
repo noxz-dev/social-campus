@@ -1,9 +1,11 @@
 <template>
   <div class="flex flex-col justify-between h-full relative">
     <div
+      v-show="dragover"
       v-bind="getRootProps()"
       class="
         rounded-lg
+        absolute
         dark:text-gray-50
         text-gray-900
         inset-2
@@ -11,9 +13,6 @@
         flex
         justify-center
         items-center
-        h-0
-        overflow-visible
-        pointer-events-none
         dark:bg-dark-80
       "
       :class="
@@ -66,7 +65,13 @@
         </button>
       </div>
     </div>
-    <div id="chatContainer" ref="chatContainer" class="overflow-y-auto">
+    <div
+      id="chatContainer"
+      ref="chatContainer"
+      class="overflow-y-auto"
+      @dragover="dragover = true"
+      @mouseleave="dragover = false"
+    >
       <div class="w-full px-1 flex flex-col items-between">
         <div class="flex flex-col mt-5">
           <div v-for="message in chat?.messages" :key="message.id">
@@ -236,6 +241,7 @@ export default defineComponent({
     const emojiPickerOpen = ref(false);
     const emojiPicker = ref<EmojiPickerElement>();
     const input = ref();
+    const dragover = ref(false);
 
     watch(enter, (v) => {
       if (v) sendMessage();
@@ -360,6 +366,7 @@ export default defineComponent({
       openChooseFile,
       previewUrl,
       file,
+      dragover,
     };
   },
 });

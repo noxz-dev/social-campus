@@ -84,7 +84,6 @@ export class ChatResolver {
       const user = await getRepository(User).findOne({ where: { id: userId } });
       const chatMessage = new ChatMessage(user, chat, input.message);
       chat.messages = [...chat.messages, chatMessage];
-      chat.lastMessage = chatMessage;
 
       if (input.file) {
         const { filename, blurhash } = await uploadFileGraphql(input.file, 'images');
@@ -100,7 +99,10 @@ export class ChatResolver {
 
       const toUser = chat.members.find((member) => member.id !== userId);
 
-      await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+      console.log(savedMessage);
+
+      // await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+      chat.lastMessage = chatMessage;
       return { savedMessage, user, toUser };
     });
     await notify(
@@ -149,6 +151,7 @@ export class ChatResolver {
     @Root() payload: NewChatMessagePayload,
     @Arg('chatId', () => String) chatId: string,
   ): Promise<ChatMessage> {
+    payload.message.createdAt = new Date(payload.message.createdAt);
     return payload.message;
   }
 

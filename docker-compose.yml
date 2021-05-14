@@ -42,6 +42,8 @@ services:
       - SMTP_SERVER=${SMTP_SERVER}
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASS=${EMAIL_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     working_dir: /srv/backend
     depends_on:
       - postgres
@@ -55,6 +57,13 @@ services:
     working_dir: /srv/frontend
     depends_on:
       - postgres
+  redis:
+    image: redis:latest
+    volumes:
+      - './redis_data:/data'
+    ports:
+      - '6379:6379'
+    command: ['redis-server', '--appendonly', 'yes']
   nginx:
     image: nginx
     ports:

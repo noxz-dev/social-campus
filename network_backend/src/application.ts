@@ -1,4 +1,4 @@
-import { ApolloServer, PubSub } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import { Base64Encode } from 'base64-stream';
 import compression from 'compression';
 import cors from 'cors';
@@ -7,8 +7,10 @@ import { EventEmitter } from 'events';
 import express from 'express';
 import 'express-async-errors';
 import { GraphQLSchema } from 'graphql';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { graphqlUploadExpress } from 'graphql-upload';
 import http, { Server } from 'http';
+import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
@@ -37,7 +39,7 @@ import { initS3, minioClient } from './utils/services/minio';
 export class Application {
   public host: express.Application;
   public server: Server;
-  public pubsub: PubSub;
+  public pubsub: RedisPubSub;
 
   public connect = async (): Promise<void> => {
     try {
@@ -54,7 +56,18 @@ export class Application {
     const app = express();
     const em = new EventEmitter();
     em.setMaxListeners(30);
-    this.pubsub = new PubSub({ eventEmitter: em });
+    // this.pubsub = new PubSub({ eventEmitter: em });
+
+    const options: Redis.RedisOptions = {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      retryStrategy: (times) => Math.max(times * 100, 3000),
+    };
+
+    this.pubsub = new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    });
 
     initS3();
 

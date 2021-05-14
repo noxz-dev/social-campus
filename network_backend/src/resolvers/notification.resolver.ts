@@ -73,7 +73,7 @@ export class NotificationResolver {
     @Arg('userId', () => String) userId: string,
   ): Promise<Notification> {
     log.debug('notification subscription fired');
-
+    payload.createdAt = new Date(payload.createdAt);
     return payload;
   }
 

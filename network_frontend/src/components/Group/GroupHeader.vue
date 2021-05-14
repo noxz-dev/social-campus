@@ -112,6 +112,7 @@ import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated
 import { Group, GroupByIdQueryVariables, JoinGroupMutationVariables } from '../../graphql/generated/types';
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
 import { useRouter } from 'vue-router';
+import { state } from '../../utils/state';
 
 export default defineComponent({
   components: { LazyImage, GroupPermissionContainer },
@@ -151,15 +152,16 @@ export default defineComponent({
     }));
 
     const joinGroup = async () => {
-      joinGrp();
+      await joinGrp();
+      state.refreshGroup = true;
 
       //TODO THIS SHOULD BE CHANGED TO A WAY BETTER MECHANISM XD
-      try {
-        await router.push({ name: 'Groups' });
-        router.push({ name: 'Group', params: { id: props.groupId } });
-      } catch (err) {
-        console.log('refresh triggerd');
-      }
+      // try {
+      //   await router.push({ name: 'Groups' });
+      //   router.push({ name: 'Group', params: { id: props.groupId } });
+      // } catch (err) {
+      //   console.log('refresh triggerd');
+      // }
     };
 
     return {

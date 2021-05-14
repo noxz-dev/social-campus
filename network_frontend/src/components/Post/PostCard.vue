@@ -154,7 +154,7 @@ export default defineComponent({
           tagIds.push(val);
           return tag;
         })
-        .replaceAll(/@[a-zA-ZäöüÄÖÜß]*/g, (val: string) => {
+        .replaceAll(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g, (val: string) => {
           val = val.replaceAll('@', '');
           if (val.length === 0) return val;
           const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;
@@ -171,13 +171,6 @@ export default defineComponent({
 
     function extractEmails(text: string) {
       return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
-    }
-
-    function validateEmail(email: string) {
-      const re =
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      console.log(email);
-      return re.test(String(email).toLowerCase());
     }
 
     const handleTagClick = (tag: string) => {

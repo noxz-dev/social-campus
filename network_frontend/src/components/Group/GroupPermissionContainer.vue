@@ -5,9 +5,10 @@
   <slot name="public" v-if="groupState?.type === GroupType.Public && !groupState.isMember"></slot>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { useCheckGroupAccessQuery } from '../../graphql/generated/types';
 import { CheckGroupAccessQueryVariables, GroupState, GroupType } from '../../graphql/generated/types';
+import { state } from '../../utils/state';
 
 export default defineComponent({
   props: {
@@ -23,9 +24,12 @@ export default defineComponent({
         }
     );
 
-    const update = () => {
-      refetch();
-    };
+    watch(
+      () => state.refreshGroup,
+      async () => {
+        await refetch();
+      }
+    );
 
     onResult(({ data }) => {
       if (data) {
@@ -37,7 +41,7 @@ export default defineComponent({
       console.log('error');
     });
 
-    return { groupState, update, GroupType };
+    return { groupState, GroupType };
   },
 });
 </script>

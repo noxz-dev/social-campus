@@ -99,8 +99,6 @@ export class ChatResolver {
 
       const toUser = chat.members.find((member) => member.id !== userId);
 
-      console.log(savedMessage);
-
       // await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
       chat.lastMessage = chatMessage;
       return { savedMessage, user, toUser };

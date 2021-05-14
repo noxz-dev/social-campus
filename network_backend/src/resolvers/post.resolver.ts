@@ -332,8 +332,6 @@ export class PostResolver {
       }
     }
 
-    console.log('addpost', dbPost);
-
     //fix circular strucutre
     post.user.posts = post.user.posts.filter((p) => p.id !== dbPost.id);
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
@@ -373,7 +371,6 @@ export class PostResolver {
     @Arg('groupId', () => String, { nullable: true }) groupId: string,
   ): Promise<Post> {
     log.info('new post subscription fired');
-    console.log('newpost', payload.post);
     payload.post.createdAt = new Date(payload.post.createdAt);
     return payload.post;
   }

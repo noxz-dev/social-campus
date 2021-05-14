@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { getRepository, In, Not } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -335,5 +335,29 @@ export class UserResolver {
     const userStats = new UserStats(postCount, followerCount, followingCount);
 
     return userStats;
+  }
+
+  @Authorized()
+  @Query(() => [User], { description: 'recommeding users based on Faculty' })
+  async recommendedUsersFaculty(@Ctx() ctx: MyContext): Promise<User[]> {
+    const userId = ctx.req.user.id;
+    const me = await getRepository(User).findOne({ id: userId });
+
+    const following = getRepository(User)
+      .createQueryBuilder('following')
+      .innerJoin('following.followers', 'followers')
+      .where(`followers.id = '${userId}'`)
+      .leftJoinAndSelect('following.avatar', 'avatar')
+      .select('following.id', 'following_id');
+
+    const recommended = await getRepository(User)
+      .createQueryBuilder('user')
+      .where('user.id NOT IN (' + following.getSql() + ')')
+      .andWhere('user.id != :id', { id: userId })
+      .andWhere('user.faculty = :faculty', { faculty: me.faculty })
+      .orderBy('RANDOM()')
+      .getMany();
+
+    return recommended;
   }
 }

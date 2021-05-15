@@ -15,9 +15,10 @@
             @click="$router.push({ name: 'Profile', params: { id: user.username } })"
             class="cursor-pointer p-5 dark:text-gray-50 text-gray-900 flex-1"
           >
-            {{ user.firstname + ' ' + user.lastname + ' ' }}@{{ user.username }}
+            <span>{{ user.firstname + ' ' + user.lastname + ' ' }}</span>
+            <span>@{{ user.username }}</span>
           </div>
-          <app-button class="mr-5 rounded-xl"> hey missing content </app-button>
+          <app-button class="rounded-xl"> <span class="!text-xs">Folgen</span></app-button>
         </div>
       </card>
     </div>

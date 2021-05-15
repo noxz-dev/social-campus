@@ -71,19 +71,22 @@
       </div>
     </vue-tribute>
     <div class="flex justify-between">
-      <span class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center" @click="openMarkdownDoku">
-        <span class="">Markdown wird unterstützt</span></span
+      <span
+        class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center hover:underline"
+        @click="openMarkdownDoku"
+      >
+        <span class="">🛈 Markdown wird unterstützt</span></span
       >
       <span
-        class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center"
+        class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center hover:underline"
         @click="showPreview = !showPreview"
       >
-        <span class="">preview markdown</span></span
+        <span class="">markdown vorschau</span></span
       >
     </div>
 
     <div class="h-8">
-      <div v-if="v.message.$error" class="text-red-400">Du musst schon was eingeben...</div>
+      <div v-if="v.message.$error && !file" class="text-red-400">Du musst schon was eingeben...</div>
     </div>
     <div v-if="!previewUrl" class="flex my-4">
       <div class="mr-4">Bild Hochladen?</div>
@@ -435,6 +438,7 @@ export default defineComponent({
       loading,
       parseMarkdown,
       showPreview,
+      file,
     };
   },
 });

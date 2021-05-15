@@ -2,22 +2,69 @@
   <div>
     <div id="home" ref="home" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
-        <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
-          <post-list :posts="posts" emptyText="Ganz schön leer hier, schreibe doch einen Post oder folge anderen!" />
-          <div v-if="loading" class="w-full flex justify-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+        <div class="w-full flex justify-center">
+          <div class="h-full w-[34%]"></div>
+          <div class="w-full flex justify-center">
+            <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-[80%] mb-10 mt-10">
+              <div class="flex flex-row dark:text-gray-50 text-gray-900">
+                <post-list
+                  :posts="posts"
+                  emptyText="Ganz schön leer hier, schreibe doch einen Post oder folge anderen!"
+                />
+                <div v-if="loading" class="w-full flex justify-center">
+                  <svg
+                    class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="h-full w-[34%] dark:text-gray-50 text-gray-900 sticky">
+            <div class="p-5 pl-0 mt-7">
+              <div
+                class="p-3 w-full min-h-[15] dark:bg-dark-600 rounded-xl shadow-lg dark:shadow-xl text-sm font-semibold"
+              >
+                Personen die du vielleicht kennst
+                <div class="h-full flex flex-col justify-evenly gap-2 mt-4" v-if="posts">
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                </div>
+              </div>
+              <div
+                class="
+                  p-3
+                  min-h-[15]
+                  w-full
+                  mt-5
+                  dark:bg-dark-600
+                  rounded-xl
+                  shadow-lg
+                  dark:shadow-xl
+                  text-sm
+                  font-semibold
+                "
+              >
+                Basierend auf deinen Interessen
+
+                <div class="h-full flex flex-col justify-evenly gap-2 mt-4" v-if="posts">
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </infinite-scroll-wrapper>
@@ -27,15 +74,16 @@
 
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
-import { computed, defineComponent, onMounted, ref, watch, watchEffect } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import { useGetFeedQuery } from '../graphql/generated/types';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
+import FollowUserCard from '../components/FollowUserCard.vue';
 
 export default defineComponent({
-  components: { PostList, InfiniteScrollWrapper },
+  components: { PostList, InfiniteScrollWrapper, FollowUserCard },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.userData.user);

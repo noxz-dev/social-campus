@@ -106,7 +106,12 @@
     <div v-if="previewUrl" id="preview" class="flex flex-col items-center relative">
       <img class="w-full rounded-lg h-52 object-cover border" v-if="previewUrl" :src="previewUrl" />
       <button
-        @click="previewUrl = ''"
+        @click="
+          () => {
+            previewUrl = '';
+            file = undefined;
+          }
+        "
         class="
           z-50
           absolute

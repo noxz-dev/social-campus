@@ -18,7 +18,12 @@
           <span class="text-xs font-medium">@{{ user.username }}</span>
         </div>
       </div>
-      <follow-button :user="user" :following="user.meFollowing" class="mr-2 rounded-xl !text-xs"></follow-button>
+      <follow-button
+        :user="user"
+        :following="user.meFollowing"
+        class="mr-2 rounded-xl"
+        :class="'!text-' + buttonTextSize"
+      ></follow-button>
     </div>
   </card>
 </template>
@@ -28,6 +33,10 @@ import FollowButton from './FollowButton.vue';
 export default defineComponent({
   components: { FollowButton },
   props: {
+    buttonTextSize: {
+      type: String,
+      default: 'base',
+    },
     user: {
       type: Object,
       required: true,

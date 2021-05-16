@@ -56,6 +56,7 @@
                     :key="user.id"
                     :user="user"
                     class="!bg-dark-700 rounded-lg py-2 w-full"
+                    buttonTextSize="xs"
                   ></follow-user-card>
                   <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
                 </div>
@@ -85,6 +86,7 @@
                     v-for="user in recommendUsers"
                     :key="user.id"
                     :user="user"
+                    buttonTextSize="xs"
                     class="!bg-dark-700 rounded-lg py-2 w-full"
                   ></follow-user-card>
                   <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>

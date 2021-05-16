@@ -276,10 +276,13 @@ export class UserResolver {
   @Authorized()
   @Query(() => [User], { description: 'returns all users that the logged in user is following' })
   async following(
+    @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
     @Arg('take', () => Number) take: number,
   ): Promise<User[]> {
+    const me_userId = ctx.req.user.id;
+    const me = await getRepository(User).findOne({ where: { id: me_userId }, relations: ['following'] });
     const following = await getRepository(User)
       .createQueryBuilder('following')
       .innerJoin('following.followers', 'followers')
@@ -289,16 +292,23 @@ export class UserResolver {
       .take(take)
       .getMany();
 
+    following.forEach((user) => {
+      user.meFollowing = me.following.some((u) => u.id === user.id);
+    });
+
     return following;
   }
 
   @Authorized()
   @Query(() => [User], { description: 'returns all followers of the user' })
   async followers(
+    @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
     @Arg('take', () => Number) take: number,
   ): Promise<User[]> {
+    const me_userId = ctx.req.user.id;
+    const me = await getRepository(User).findOne({ where: { id: me_userId }, relations: ['following'] });
     const followers = await getRepository(User)
       .createQueryBuilder('followers')
       .innerJoin('followers.following', 'following')
@@ -307,6 +317,10 @@ export class UserResolver {
       .skip(skip)
       .take(take)
       .getMany();
+
+    followers.forEach((user) => {
+      user.meFollowing = me.following.some((u) => user.id === u.id);
+    });
 
     return followers;
   }
@@ -343,7 +357,7 @@ export class UserResolver {
   @Query(() => [User], { description: 'recommeding users based on Faculty' })
   async recommendedUsersFaculty(@Ctx() ctx: MyContext): Promise<User[]> {
     const userId = ctx.req.user.id;
-    const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['followers'] });
+    const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
 
     const following = getRepository(User)
       .createQueryBuilder('following')
@@ -379,7 +393,7 @@ export class UserResolver {
     }
 
     recommended.forEach((user) => {
-      user.meFollowing = me.followers.some((user) => user.id === userId);
+      user.meFollowing = me.following.some((u) => u.id === user.id);
     });
 
     return recommended;

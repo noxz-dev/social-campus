@@ -7,6 +7,7 @@ export const following = gql`
       firstname
       lastname
       username
+      meFollowing
       avatar {
         name
         blurhash

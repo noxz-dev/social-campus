@@ -966,7 +966,7 @@ export type FollowersQuery = (
   { __typename?: 'Query' }
   & { followers: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
@@ -985,7 +985,7 @@ export type FollowingQuery = (
   { __typename?: 'Query' }
   & { following: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar: (
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
@@ -2185,6 +2185,7 @@ export const FollowersDocument = gql`
     firstname
     lastname
     username
+    meFollowing
     avatar {
       name
       blurhash
@@ -2221,6 +2222,7 @@ export const FollowingDocument = gql`
     firstname
     lastname
     username
+    meFollowing
     avatar {
       name
       blurhash

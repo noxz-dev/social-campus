@@ -3,10 +3,10 @@
     <div id="home" ref="home" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-full flex justify-center">
-          <div class="h-full w-[34%]"></div>
+          <div class="h-full hidden lg:block w-[34%]"></div>
           <div class="w-full flex justify-center">
             <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-[80%] mb-10 mt-10">
-              <div class="flex flex-row dark:text-gray-50 text-gray-900">
+              <div class="flex flex-col dark:text-gray-50 text-gray-900">
                 <post-list
                   :posts="posts"
                   emptyText="Ganz schön leer hier, schreibe doch einen Post oder folge anderen!"
@@ -30,22 +30,40 @@
             </div>
           </div>
 
-          <div class="h-full w-[34%] dark:text-gray-50 text-gray-900 sticky">
+          <div class="h-full hidden lg:block w-[34%] dark:text-gray-50 text-gray-900 sticky">
             <div class="p-5 pl-0 mt-7">
               <div
-                class="p-3 w-full min-h-[15] dark:bg-dark-600 rounded-xl shadow-lg dark:shadow-xl text-sm font-semibold"
+                class="
+                  p-3
+                  w-full
+                  min-h-[15rem]
+                  dark:bg-dark-600
+                  rounded-xl
+                  shadow-lg
+                  dark:shadow-xl
+                  text-sm
+                  font-semibold
+                "
               >
                 Personen die du vielleicht kennst
-                <div class="h-full flex flex-col justify-evenly gap-2 mt-4" v-if="posts">
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                <div
+                  class="h-full flex flex-col gap-2 mt-4 items-center"
+                  v-if="recommendUsers"
+                  :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                >
+                  <follow-user-card
+                    v-for="user in recommendUsers"
+                    :key="user.id"
+                    :user="user"
+                    class="!bg-dark-700 rounded-lg py-2 w-full"
+                  ></follow-user-card>
+                  <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
                 </div>
               </div>
               <div
                 class="
                   p-3
-                  min-h-[15]
+                  min-h-[15rem]
                   w-full
                   mt-5
                   dark:bg-dark-600
@@ -58,10 +76,18 @@
               >
                 Basierend auf deinen Interessen
 
-                <div class="h-full flex flex-col justify-evenly gap-2 mt-4" v-if="posts">
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
-                  <follow-user-card :user="posts[0].user" class="!bg-dark-700 rounded-lg py-2"></follow-user-card>
+                <div
+                  class="h-full flex flex-col gap-2 mt-4 items-center"
+                  v-if="recommendUsers"
+                  :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                >
+                  <follow-user-card
+                    v-for="user in recommendUsers"
+                    :key="user.id"
+                    :user="user"
+                    class="!bg-dark-700 rounded-lg py-2 w-full"
+                  ></follow-user-card>
+                  <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
                 </div>
               </div>
             </div>
@@ -75,7 +101,7 @@
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
 import { computed, defineComponent, ref, watch } from 'vue';
-import { useGetFeedQuery } from '../graphql/generated/types';
+import { useGetFeedQuery, useRecommendedUsersFacultyQuery } from '../graphql/generated/types';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
@@ -112,6 +138,10 @@ export default defineComponent({
       () => ({ enabled: feedQueryEnabled.value })
     );
     const posts = useResult(result);
+
+    const { result: recommendUsersFaculty } = useRecommendedUsersFacultyQuery();
+
+    const recommendUsers = useResult(recommendUsersFaculty, null, (data) => data.recommendedUsersFaculty);
 
     subscribeToMore(() => ({
       document: gql`
@@ -160,7 +190,7 @@ export default defineComponent({
       lastResponseLength = data.data.getFeed.length;
     };
 
-    return { posts, error, home, loadMore, loading };
+    return { posts, error, home, loadMore, loading, recommendUsers };
   },
 });
 </script>

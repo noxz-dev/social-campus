@@ -18,7 +18,7 @@
             <span>{{ user.firstname + ' ' + user.lastname + ' ' }}</span>
             <span>@{{ user.username }}</span>
           </div>
-          <app-button class="rounded-xl"> <span class="!text-xs">Folgen</span></app-button>
+          <app-button class="rounded-xl mr-2"> <span class="!text-xs">Folgen</span></app-button>
         </div>
       </card>
     </div>

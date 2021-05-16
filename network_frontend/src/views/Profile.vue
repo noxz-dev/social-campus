@@ -25,13 +25,39 @@
               <div class="flex w-full z-10">
                 <div class="rounded-full" v-if="!user">
                   <div
-                    class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
+                    class="
+                      z-10
+                      w-24
+                      h-24
+                      rounded-full
+                      md:w-44
+                      md:h-44
+                      bg-dark-600
+                      self-center
+                      border-2
+                      p-1
+                      object-cover
+                      border-white
+                    "
                   ></div>
                 </div>
                 <div class="rounded-full" v-if="user">
                   <lazy-image
                     :blurhash="user.avatar.blurhash"
-                    class="z-10 w-24 h-24 rounded-full md:w-44 md:h-44 bg-dark-600 self-center border-2 p-1 object-cover border-white"
+                    class="
+                      z-10
+                      w-24
+                      h-24
+                      rounded-full
+                      md:w-44
+                      md:h-44
+                      bg-dark-600
+                      self-center
+                      border-2
+                      p-1
+                      object-cover
+                      border-white
+                    "
                     :src="profileImage"
                     alt="profile image"
                     rounded="full"
@@ -57,66 +83,12 @@
                       </svg>
                       Profil bearbeiten
                     </app-button>
-                    <app-button
-                      @click="followUser"
-                      v-else-if="!following"
-                      class="justify-center"
-                      :disabled="addFollowLoading"
-                    >
-                      <svg
-                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        v-if="addFollowLoading"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Folgen
-                    </app-button>
-                    <app-button
-                      @mouseover="followButtonText = 'Entfolgen'"
-                      @mouseout="followButtonText = 'Folge ich'"
-                      @click="unfollowUser"
-                      v-else
-                      :disabled="removeFollowLoading"
-                      class="justify-center hover:bg-red-600 transition-colors duration-200"
-                    >
-                      <svg
-                        class="animate-spin mr-3 -ml-1 h-5 w-5 text-white"
-                        v-if="removeFollowLoading"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {{ followButtonText }}
-                    </app-button>
+                    <follow-button
+                      class="w-full"
+                      v-else-if="!showEditProfile"
+                      :user="user"
+                      :following="following"
+                    ></follow-button>
                     <app-button
                       v-if="!showEditProfile"
                       @click="handleChatNav"
@@ -146,10 +118,33 @@
                 </div>
               </div>
               <div
-                class="flex flex-col sm:space-y-0 space-y-5 sm:flex-row dark:text-gray-50 pb-2 md:pb-4 justify-center w-full items-center"
+                class="
+                  flex flex-col
+                  sm:space-y-0
+                  space-y-5
+                  sm:flex-row
+                  dark:text-gray-50
+                  pb-2
+                  md:pb-4
+                  justify-center
+                  w-full
+                  items-center
+                "
               >
                 <div
-                  class="flex items-center md:justify-center justify-evenly sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row transition-all duration-1000 w-full"
+                  class="
+                    flex
+                    items-center
+                    md:justify-center
+                    justify-evenly
+                    sm:space-x-10
+                    space-x-0
+                    sm:space-y-0
+                    sm:flex-row
+                    transition-all
+                    duration-1000
+                    w-full
+                  "
                 >
                   <router-link :to="{ name: 'ProfilePosts', params: { id: $route.params.id } }">
                     <div class="py-1 px-2 rounded-lg">
@@ -177,7 +172,21 @@
       </div>
       <div class="flex w-11/12">
         <div
-          class="dark:bg-dark-600 bg-gray-100 border dark:border-dark-600 shadow-sm h-96 w-96 rounded-lg mr-10 hidden lg:flex flex-col mt-2"
+          class="
+            dark:bg-dark-600
+            bg-gray-100
+            border
+            dark:border-dark-600
+            shadow-sm
+            h-96
+            w-96
+            rounded-lg
+            mr-10
+            hidden
+            lg:flex
+            flex-col
+            mt-2
+          "
         >
           <div class="p-5 dark:text-gray-50 text-gray-900">
             <span class="font-semibold">Fakultät</span>
@@ -287,21 +296,15 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, watchEffect, getCurrentInstance } from 'vue';
 import PostList from '../components/Post/PostList.vue';
-import {
-  useAddFollowerMutation,
-  useCreateChatMutation,
-  useRemoveFollowerMutation,
-  useUserByUsernameQuery,
-  useUserStatsQuery,
-} from '../graphql/generated/types';
+import { useCreateChatMutation, useUserByUsernameQuery, useUserStatsQuery } from '../graphql/generated/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { userByUsername } from '../graphql/queries/userByUsername';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import Modal from '../components/Modal.vue';
 import EditProfile from '../components/EditProfile.vue';
 import { useResult } from '@vue/apollo-composable';
+import FollowButton from '../components/FollowButton.vue';
 
 export default defineComponent({
   components: {
@@ -310,6 +313,7 @@ export default defineComponent({
     InfiniteScrollWrapper,
     Modal,
     EditProfile,
+    FollowButton,
   },
   setup() {
     const route = useRoute();
@@ -355,54 +359,6 @@ export default defineComponent({
 
     const stats = useResult(statsResult, null, (data) => data.userStats);
 
-    const { mutate: follow, loading: addFollowLoading } = useAddFollowerMutation(() => ({
-      variables: {
-        userID: user.value?.id as string,
-      },
-      update: (cache, { data: { addFollower } }) => {
-        cache.modify({
-          id: cache.identify(user.value),
-          fields: {
-            meFollowing() {
-              return addFollower.meFollowing;
-            },
-          },
-        });
-      },
-    }));
-
-    const { mutate: unfollow, loading: removeFollowLoading } = useRemoveFollowerMutation(() => ({
-      variables: {
-        userID: user.value?.id as string,
-      },
-      update: (cache, { data: { removeFollower } }) => {
-        cache.modify({
-          id: cache.identify(user.value),
-          fields: {
-            meFollowing() {
-              return removeFollower.meFollowing;
-            },
-          },
-        });
-      },
-    }));
-
-    const followUser = async () => {
-      try {
-        const data = await follow();
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const unfollowUser = async () => {
-      try {
-        const data = unfollow();
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     const internalInstance = getCurrentInstance();
     const eventbus = internalInstance?.appContext.config.globalProperties.eventbus;
     const emitLoad = () => {
@@ -427,8 +383,7 @@ export default defineComponent({
 
     return {
       following,
-      followUser,
-      unfollowUser,
+
       user,
       profileImage,
       showEditProfile,
@@ -439,8 +394,6 @@ export default defineComponent({
       editProfileModal,
       error,
       handleChatNav,
-      addFollowLoading,
-      removeFollowLoading,
     };
   },
 });

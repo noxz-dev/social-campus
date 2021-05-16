@@ -34,7 +34,7 @@ export class User extends Base {
   @Field(() => Media)
   @OneToOne(() => Media, { eager: true })
   @JoinColumn()
-  avatar: Media;
+  avatar: Promise<Media>;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })

@@ -616,6 +616,8 @@ const createTags = async (user: User, tags: string[], manager: EntityManager): P
   return postTags;
 };
 
+//Helper functions to make some releational operations faster
+
 export const queryWithRelations = async (
   id: string,
   repository: any,

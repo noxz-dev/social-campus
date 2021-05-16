@@ -399,6 +399,8 @@ export type Query = {
   followers: Array<User>;
   /** UserStats are some stats like follower count, post count ... */
   userStats: UserStats;
+  /** recommeding users based on Faculty */
+  recommendedUsersFaculty: Array<User>;
 };
 
 
@@ -1271,6 +1273,21 @@ export type GetPostsFromUserQuery = (
       ) }
     ) }
   )>> }
+);
+
+export type RecommendedUsersFacultyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecommendedUsersFacultyQuery = (
+  { __typename?: 'Query' }
+  & { recommendedUsersFaculty: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
+    & { avatar: (
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    ) }
+  )> }
 );
 
 export type SearchQueryVariables = Exact<{
@@ -2767,6 +2784,38 @@ export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariabl
   return VueApolloComposable.useQuery<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
 }
 export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>;
+export const RecommendedUsersFacultyDocument = gql`
+    query recommendedUsersFaculty {
+  recommendedUsersFaculty {
+    id
+    firstname
+    lastname
+    username
+    meFollowing
+    avatar {
+      name
+      blurhash
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecommendedUsersFacultyQuery__
+ *
+ * To run a query within a Vue component, call `useRecommendedUsersFacultyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecommendedUsersFacultyQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useRecommendedUsersFacultyQuery();
+ */
+export function useRecommendedUsersFacultyQuery(options: VueApolloComposable.UseQueryOptions<RecommendedUsersFacultyQuery, RecommendedUsersFacultyQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<RecommendedUsersFacultyQuery, RecommendedUsersFacultyQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<RecommendedUsersFacultyQuery, RecommendedUsersFacultyQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<RecommendedUsersFacultyQuery, RecommendedUsersFacultyQueryVariables>(RecommendedUsersFacultyDocument, {}, options);
+}
+export type RecommendedUsersFacultyQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<RecommendedUsersFacultyQuery, RecommendedUsersFacultyQueryVariables>;
 export const SearchDocument = gql`
     query search($searchString: String!) {
   search(searchString: $searchString) {

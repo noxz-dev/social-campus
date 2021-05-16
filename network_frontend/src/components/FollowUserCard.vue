@@ -5,7 +5,7 @@
         <lazy-image
           class="h-10 w-10 !rounded-full bg-dark-700 object-cover"
           :src="user.avatar.name"
-          blurhash="AePC3PmlGv{c"
+          :blurhash="user.avatar.blurhash"
           :onLoad="true"
         />
       </div>
@@ -18,13 +18,15 @@
           <span class="text-xs font-medium">@{{ user.username }}</span>
         </div>
       </div>
-      <app-button class="mr-2 rounded-xl"><span class="!text-xs">Folgen</span></app-button>
+      <follow-button :user="user" :following="user.meFollowing" class="mr-2 rounded-xl !text-xs"></follow-button>
     </div>
   </card>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import FollowButton from './FollowButton.vue';
 export default defineComponent({
+  components: { FollowButton },
   props: {
     user: {
       type: Object,

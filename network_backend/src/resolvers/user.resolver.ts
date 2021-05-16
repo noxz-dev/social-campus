@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository, In, Not } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -79,7 +79,7 @@ export class UserResolver {
 
     const saved = await getRepository(Media).save(avatar);
 
-    user.avatar = saved;
+    user.avatar = Promise.resolve(saved);
 
     await getRepository(User).save(user);
     await sendEmail({
@@ -224,9 +224,11 @@ export class UserResolver {
 
     if (input.avatar) {
       const { filename, blurhash } = await uploadFileGraphql(input.avatar, 'images');
-      user.avatar.name = filename;
-      user.avatar.blurhash = blurhash;
-      await getRepository(Media).save(user.avatar);
+      const avatar = await user.avatar;
+      avatar.name = filename;
+      avatar.blurhash = blurhash;
+      user.avatar = Promise.resolve(avatar);
+      await getRepository(Media).save(avatar);
     }
 
     await userRepo.save(user);
@@ -341,7 +343,7 @@ export class UserResolver {
   @Query(() => [User], { description: 'recommeding users based on Faculty' })
   async recommendedUsersFaculty(@Ctx() ctx: MyContext): Promise<User[]> {
     const userId = ctx.req.user.id;
-    const me = await getRepository(User).findOne({ id: userId });
+    const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['followers'] });
 
     const following = getRepository(User)
       .createQueryBuilder('following')
@@ -356,7 +358,29 @@ export class UserResolver {
       .andWhere('user.id != :id', { id: userId })
       .andWhere('user.faculty = :faculty', { faculty: me.faculty })
       .orderBy('RANDOM()')
+      .limit(3)
       .getMany();
+
+    if (recommended.length < 3) {
+      const ids = recommended.map((u) => u.id);
+      ids.push(userId);
+      const moreUsers = await getRepository(User)
+        .createQueryBuilder('user')
+        .where('user.id NOT IN (' + following.getSql() + ')')
+        .andWhere('user.id NOT IN (:...recommended)', { recommended: ids })
+        .orderBy('RANDOM()')
+        .limit(3)
+        .getMany();
+
+      console.log(moreUsers);
+
+      //fill up recommend with random users of the network
+      recommended.push(...moreUsers.splice(0, 3 - recommended.length));
+    }
+
+    recommended.forEach((user) => {
+      user.meFollowing = me.followers.some((user) => user.id === userId);
+    });
 
     return recommended;
   }

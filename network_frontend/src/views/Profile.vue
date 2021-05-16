@@ -160,7 +160,7 @@
                   </router-link>
                   <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
                     <div class="py-1 px-2 rounded-lg">
-                      <span class="dark:text-gray-50 text-gray-900">Following</span>
+                      <span class="dark:text-gray-50 text-gray-900">Folge Ich</span>
                       <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.followingCount }}</span>
                     </div>
                   </router-link>

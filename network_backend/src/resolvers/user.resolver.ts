@@ -386,8 +386,6 @@ export class UserResolver {
         .limit(3)
         .getMany();
 
-      console.log(moreUsers);
-
       //fill up recommend with random users of the network
       recommended.push(...moreUsers.splice(0, 3 - recommended.length));
     }

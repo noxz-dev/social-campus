@@ -21,6 +21,7 @@ export type Scalars = {
 
 export type AddPostInput = {
   content?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['Upload']>;
   file?: Maybe<Scalars['Upload']>;
   groupId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -140,7 +141,8 @@ export type Media = {
 
 export enum MediaType {
   Image = 'IMAGE',
-  Video = 'VIDEO'
+  Video = 'VIDEO',
+  File = 'FILE'
 }
 
 export type Mutation = {

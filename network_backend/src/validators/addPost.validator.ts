@@ -10,6 +10,9 @@ export class AddPostInput {
   content: string;
 
   @Field(() => GraphQLUpload, { nullable: true })
+  image: FileUpload;
+
+  @Field(() => GraphQLUpload, { nullable: true })
   file: FileUpload;
 
   @Field(() => String, { nullable: true })

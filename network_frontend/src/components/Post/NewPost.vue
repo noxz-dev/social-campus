@@ -260,7 +260,7 @@ export default defineComponent({
       variables: {
         input: {
           content: message.value,
-          file: file.value,
+          image: file.value,
           groupId: groupId.value,
           tags: tags.value,
         },

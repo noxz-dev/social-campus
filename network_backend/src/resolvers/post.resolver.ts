@@ -291,8 +291,8 @@ export class PostResolver {
       post.tags = [...postTags];
     }
 
-    if (input.file) {
-      const { filename, blurhash } = await uploadFileGraphql(input.file, 'images');
+    if (input.image) {
+      const { filename, blurhash } = await uploadFileGraphql(input.image, 'images');
       const media = new Media();
       media.blurhash = blurhash;
       media.name = filename;
@@ -300,6 +300,11 @@ export class PostResolver {
       const savedMedia = await getRepository(Media).save(media);
       post.media = savedMedia;
     }
+
+    if (input.file) {
+      console.log('todo');
+    }
+
     if (input.groupId && !group) {
       throw new Error('group does not exist');
     }

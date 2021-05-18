@@ -6,7 +6,7 @@
           v-for="user in followings"
           :key="user.id"
           :user="user"
-          class="!bg-dark-600 rounded-lg py-3 w-full !text-md"
+          class="dark:!bg-dark-600 bg-gray-200 rounded-lg py-3 w-full !text-md"
         ></follow-user-card>
       </div>
     </div>

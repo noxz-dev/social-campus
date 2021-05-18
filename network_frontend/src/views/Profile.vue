@@ -9,7 +9,7 @@
       class="w-full overflow-y-auto flex flex-col items-center"
       v-if="!error"
     >
-      <div class="dark:bg-dark-600 bg-gray-100 w-11/12 my-3 mb-6 flex flex-col rounded-xl">
+      <div class="dark:bg-dark-600 bg-gray-100 w-11/12 my-3 mb-2 flex flex-col rounded-xl">
         <div>
           <div class="h-32 w-full lg:h-64">
             <lazy-image
@@ -99,7 +99,7 @@
                   </div>
                 </div>
               </div>
-              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-10">
+              <div class="w-full mt-2 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:pb-10 md:ml-10 min-h-[5rem]">
                 <div class="block md:hidden mt-6 min-w-full flex-1">
                   <h1 v-if="user" class="md:text-2xl font-bold text-gray-900 dark:text-gray-50 text-lg">
                     {{ user?.firstname + ' ' + user?.lastname }}
@@ -170,8 +170,26 @@
           </div>
         </div>
       </div>
-      <div class="flex w-11/12">
+      <div
+        v-if="['sm', 'md'].includes(breakpoints.is)"
+        class="bg-dark-600 px-4 py-1 rounded-xl flex items-center cursor-pointer"
+        @click="openAboutMe = !openAboutMe"
+      >
+        <div>Über mich</div>
+        <div class="ml-2">
+          <svg
+            class="h-5 w-5 dark:stroke-white stroke-black"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M19 8.5L12 15.5L5 8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+      <div class="flex w-11/12 flex-col lg:flex-row items-center lg:items-start">
         <div
+          v-if="!['sm', 'md'].includes(breakpoints.is) || openAboutMe"
           class="
             dark:bg-dark-600
             bg-gray-100
@@ -179,10 +197,10 @@
             dark:border-dark-600
             shadow-sm
             h-96
-            w-96
+            w-11/12
+            lg:w-96
             rounded-lg
-            mr-10
-            hidden
+            lg:mr-10
             lg:flex
             flex-col
             mt-2
@@ -305,7 +323,7 @@ import Modal from '../components/Modal.vue';
 import EditProfile from '../components/EditProfile.vue';
 import { useResult } from '@vue/apollo-composable';
 import FollowButton from '../components/FollowButton.vue';
-
+import breakpoints from '../utils/breakpoints';
 export default defineComponent({
   components: {
     PostList,
@@ -323,8 +341,9 @@ export default defineComponent({
     const qloading = ref(false);
     const router = useRouter();
     const editProfileModal = ref();
-
+    const userStatsEnabled = ref(false);
     const userFromStore = computed(() => store.state.userData.user);
+    const openAboutMe = ref(false);
 
     watchEffect(() => {
       if (userFromStore.value.username === route.params.id) {
@@ -353,12 +372,26 @@ export default defineComponent({
     const profileImage = useResult(result, null, (data) => data.userByUsername.avatar.name);
     const following = useResult(result, null, (data) => data.userByUsername.meFollowing);
 
-    const { result: statsResult } = useUserStatsQuery(() => ({
-      userId: user.value?.id as string,
-    }));
+    //stats query is disabled by default, activate the query if the user is set
+    watch(
+      () => user.value,
+      () => {
+        if (user.value) {
+          userStatsEnabled.value = true;
+        }
+      }
+    );
+
+    const { result: statsResult } = useUserStatsQuery(
+      () => ({
+        userId: user.value?.id as string,
+      }),
+      () => ({ enabled: userStatsEnabled.value })
+    );
 
     const stats = useResult(statsResult, null, (data) => data.userStats);
 
+    //register eventbus event for the infintyscroll wrapper
     const internalInstance = getCurrentInstance();
     const eventbus = internalInstance?.appContext.config.globalProperties.eventbus;
     const emitLoad = () => {
@@ -376,6 +409,7 @@ export default defineComponent({
       },
     }));
 
+    //create a chat with the user and navigate to the new chat
     const handleChatNav = async () => {
       const response = await createChat();
       router.push({ name: 'ChatBox', params: { id: response.data?.createChat.id! } });
@@ -383,7 +417,6 @@ export default defineComponent({
 
     return {
       following,
-
       user,
       profileImage,
       showEditProfile,
@@ -394,6 +427,8 @@ export default defineComponent({
       editProfileModal,
       error,
       handleChatNav,
+      openAboutMe,
+      breakpoints,
     };
   },
 });

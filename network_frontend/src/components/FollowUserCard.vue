@@ -19,6 +19,7 @@
         </div>
       </div>
       <follow-button
+        v-if="user.id !== userFromStore.id"
         :user="user"
         :following="user.meFollowing"
         class="mr-2 rounded-xl"
@@ -28,7 +29,8 @@
   </card>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { useStore } from 'vuex';
 import FollowButton from './FollowButton.vue';
 export default defineComponent({
   components: { FollowButton },
@@ -43,7 +45,11 @@ export default defineComponent({
     },
   },
   setup() {
-    return {};
+    const store = useStore();
+    const userFromStore = computed(() => store.state.userData.user);
+    return {
+      userFromStore,
+    };
   },
 });
 </script>

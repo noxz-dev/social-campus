@@ -6,21 +6,35 @@
           @submit.prevent="
             () => {
               updateProfile();
-              $emit('close');
             }
           "
         >
-          <div class="shadow sm:rounded-md sm:overflow-hidden">
+          <div class="sm:rounded-md sm:overflow-hidden">
             <div class="px-4 py-5 bg-white dark:bg-dark-700 space-y-6 sm:p-6">
               <div>
-                <label for="about" class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Über dich </label>
+                <label for="about" class="block text-sm font-medium text-gray-700 dark:text-gray-50 text-left">
+                  Über dich
+                </label>
                 <div class="mt-1">
                   <textarea
                     id="about"
                     name="about"
                     v-model="bio"
                     rows="3"
-                    class="resize-none shadow-sm focus:ring-brand-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-black dark:border-dark-500 rounded-md dark:bg-dark-600"
+                    class="
+                      resize-none
+                      shadow-sm
+                      focus:ring-brand-500
+                      focus:border-indigo-500
+                      mt-1
+                      block
+                      w-full
+                      sm:text-sm
+                      border-gray-black
+                      dark:border-dark-500
+                      rounded-md
+                      dark:bg-dark-600
+                    "
                     placeholder=""
                   />
                 </div>
@@ -30,14 +44,9 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Profilbild </label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-50 text-left"> Profilbild </label>
                 <div class="mt-1 flex items-center">
                   <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                    <!-- <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                      <path
-                        d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
-                      />
-                    </svg> -->
                     <img
                       v-if="newProfileImage"
                       :src="newProfileImage"
@@ -49,7 +58,22 @@
                   <button
                     @click="$refs.file.click()"
                     type="button"
-                    class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+                    class="
+                      ml-5
+                      bg-white
+                      py-2
+                      px-3
+                      border border-gray-300
+                      rounded-md
+                      shadow-sm
+                      text-sm
+                      leading-4
+                      font-medium
+                      text-gray-700
+                      hover:bg-gray-50
+                      focus:outline-none
+                      focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
+                    "
                   >
                     Ändern
                   </button>
@@ -57,20 +81,120 @@
                 </div>
               </div>
 
-              <label for="faculty" class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Fakultät</label>
-              <input-field id="faculty" class="!mt-2" v-model="faculty"></input-field>
-              <label for="studycourse" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2">
+              <Listbox as="div" v-model="selectedFaculty">
+                <ListboxLabel class="block text-sm font-medium text-gray-700 dark:text-gray-50">
+                  Fakultät
+                </ListboxLabel>
+                <div class="mt-2 relative">
+                  <ListboxButton
+                    class="
+                      dark:bg-dark-600
+                      bg-white
+                      relative
+                      w-full
+                      border border-gray-800
+                      dark:border-dark-400
+                      rounded-md
+                      shadow-sm
+                      pl-3
+                      pr-10
+                      py-2
+                      text-left
+                      cursor-default
+                      focus:outline-none
+                      focus:ring-1 focus:ring-brand-500
+                      focus:border-brand-500
+                      sm:text-sm
+                    "
+                  >
+                    <span class="block truncate">{{ selectedFaculty.name }}</span>
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg
+                        class="h-5 w-5 dark:stroke-white stroke-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M19 8.5L12 15.5L5 8.5"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </ListboxButton>
+
+                  <transition
+                    leave-active-class="transition ease-in duration-100"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                  >
+                    <ListboxOptions
+                      class="
+                        absolute
+                        z-10
+                        mt-1
+                        w-full
+                        bg-white
+                        dark:bg-dark-600
+                        shadow-lg
+                        max-h-60
+                        rounded-md
+                        py-1
+                        text-base
+                        ring-1 ring-black ring-opacity-5
+                        overflow-auto
+                        focus:outline-none
+                        sm:text-sm
+                      "
+                    >
+                      <ListboxOption
+                        as="template"
+                        v-for="faculty in faculties"
+                        :key="faculty.id"
+                        :value="faculty"
+                        v-slot="{ active, selected }"
+                      >
+                        <li
+                          :class="[
+                            active ? 'text-white bg-brand-600' : 'dark:text-gray-50 text-gray-900',
+                            'cursor-default select-none relative py-2 pl-3 pr-9',
+                          ]"
+                        >
+                          <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
+                            {{ faculty.name }}
+                          </span>
+
+                          <span
+                            v-if="selected"
+                            :class="[
+                              active ? 'text-white' : 'text-brand-600',
+                              'absolute inset-y-0 right-0 flex items-center pr-4',
+                            ]"
+                          >
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
+              <label
+                for="studycourse"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2 text-left"
+              >
                 Studiengang
               </label>
               <input-field id="studycourse" class="!mt-2" v-model="studycourse"></input-field>
-              <label for="interests" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2">
+              <label for="interests" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2 text-left">
                 Interessen
               </label>
               <input-field id="interests" class="!mt-2" v-model="interests"></input-field>
 
-              <!-- <div>
+              <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Profilbanner </label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                   <div class="space-y-1 text-center">
                     <svg
                       class="mx-auto h-12 w-12 text-gray-400"
@@ -89,25 +213,39 @@
                     <div class="flex text-sm text-gray-600">
                       <label
                         for="file-upload"
-                        class="relative cursor-pointer bg-white dark:bg-dark-700 rounded-md font-medium text-brand-500 hover:text-brand-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500"
+                        class="
+                          relative
+                          cursor-pointer
+                          bg-white
+                          dark:bg-dark-700
+                          rounded-md
+                          font-medium
+                          text-brand-500
+                          hover:text-brand-400
+                          focus-within:outline-none
+                          focus-within:ring-2
+                          focus-within:ring-offset-2
+                          focus-within:ring-brand-500
+                        "
                       >
-                        <span>Upload a file</span>
+                        <span>Lade eine Datei hoch</span>
                         <input id="file-upload" name="file-upload" type="file" class="sr-only" />
                       </label>
-                      <p class="pl-1 dark:text-gray-400">or drag and drop</p>
+                      <p class="pl-1 dark:text-gray-400">oder nutze drag und drop</p>
                     </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF bis zu 10MB</p>
                   </div>
                 </div>
-              </div> -->
+              </div>
+            </div>
+            <div>
+              <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
+                {{ error.$message }}
+              </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 dark:bg-dark-700 text-right sm:px-6">
-              <button
-                type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
-              >
-                Save
-              </button>
+              <app-button type="submit" class="bg-dark-400 mr-2 hover:bg-red-600"> Abbrechen</app-button>
+              <app-button type="submit"> Speichern </app-button>
             </div>
           </div>
         </form>
@@ -117,13 +255,25 @@
 </template>
 <script lang="ts">
 import { useUpdateProfileMutation } from '../graphql/generated/types';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import InputField from './Form/InputField.vue';
 import { userByUsername } from '../graphql/queries/userByUsername';
 import LazyImage from './Blurhash/LazyImage.vue';
+import useVuelidate from '@vuelidate/core';
+import { maxLength, helpers } from '@vuelidate/validators';
+import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue';
+
+//Fakultäten der Hochschule Hannover
+const faculties = [
+  { id: 1, name: 'Fakultät 1 - Elektro- und Informationstechnik' },
+  { id: 2, name: 'Fakultät 2 - Maschinenbau und Bioverfahrenstechnik' },
+  { id: 3, name: 'Fakultät 3 - Medien, Information und Design' },
+  { id: 4, name: 'Fakultät 4 - Wirtschaft und Informatik' },
+  { id: 5, name: 'Fakultät 5 - Diakonie, Gesundheit und Soziales' },
+];
 
 export default defineComponent({
-  components: { InputField, LazyImage },
+  components: { InputField, LazyImage, Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions },
   emits: ['close'],
   props: {
     user: {
@@ -131,7 +281,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
+    const selectedFaculty = ref(faculties.find((f) => f.name == props.user?.faculty) || faculties[0]);
     const bio = ref(props.user?.bio || '');
     const faculty = ref(props.user?.faculty);
     const interests = ref(props.user?.interests);
@@ -144,7 +295,7 @@ export default defineComponent({
       variables: {
         input: {
           bio: bio.value,
-          faculty: faculty.value,
+          faculty: selectedFaculty.value.name,
           interests: interests.value,
           studyCourse: studycourse.value,
           avatar: file.value,
@@ -161,15 +312,37 @@ export default defineComponent({
       ],
     }));
 
+    //input validation rules
+    const rules = computed(() => ({
+      bio: {
+        maxLength: helpers.withMessage('Über dich darf maximal 250 Zeichen lang sein', maxLength(250)),
+      },
+      studycourse: {
+        maxLength: helpers.withMessage('Der Studiengang hat eine maximale Länge von 75 Zeichen', maxLength(75)),
+      },
+      interests: {
+        maxLength: helpers.withMessage('Das Passwort kann maximal 16 Zeichen lang sein', maxLength(100)),
+      },
+    }));
+
+    const v = useVuelidate(rules, { bio, studycourse, interests });
+
     const onFileChange = (e: any) => {
-      var files = e.target.files || e.dataTransfer.files;
+      const files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
       file.value = files[0];
       newProfileImage.value = URL.createObjectURL(files[0]);
     };
 
-    const updateProfile = () => {
-      update();
+    const updateProfile = async () => {
+      v.value.$touch();
+      if (v.value.$errors.length === 0) {
+        try {
+          await update();
+        } finally {
+          emit('close');
+        }
+      }
     };
 
     return {
@@ -182,6 +355,9 @@ export default defineComponent({
       profileImage,
       newProfileImage,
       blurhash,
+      faculties,
+      selectedFaculty,
+      v,
     };
   },
 });

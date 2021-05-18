@@ -86,7 +86,9 @@
     </div>
 
     <div class="h-8">
-      <div v-if="v.message.$error && !file" class="text-red-400">Du musst schon was eingeben...</div>
+      <div class="text-red-400" v-for="(error, index) in v.message.$errors" :key="index">
+        <span v-if="(file && error.$validator !== 'required') || !file">{{ error.$message }}</span>
+      </div>
     </div>
     <div v-if="!previewUrl" class="flex my-4">
       <div class="mr-4">Bild Hochladen?</div>
@@ -197,7 +199,7 @@ import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
-import { minLength, required } from '@vuelidate/validators';
+import { minLength, required, maxLength, helpers } from '@vuelidate/validators';
 import { getPostsFromUser } from '../../graphql/queries/postFromUser';
 import { useAddPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
@@ -249,8 +251,9 @@ export default defineComponent({
 
     const rules = computed(() => ({
       message: {
-        required,
-        minLength: minLength(1),
+        required: helpers.withMessage('Du musst schon was eingeben...', required),
+        minLength: helpers.withMessage('Du musst schon was eingeben...', minLength(1)),
+        maxLength: helpers.withMessage('Maximal 1500 Zeichen', maxLength(1500)),
       },
     }));
 

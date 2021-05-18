@@ -38,9 +38,12 @@
                   w-full
                   min-h-[15rem]
                   dark:bg-dark-600
+                  bg-gray-100
                   rounded-xl
+                  border border-gray-200
                   shadow-lg
                   dark:shadow-xl
+                  dark:border-dark-600
                   text-sm
                   font-semibold
                 "
@@ -55,7 +58,7 @@
                     v-for="user in recommendUsers"
                     :key="user.id"
                     :user="user"
-                    class="!bg-dark-700 rounded-lg py-2 w-full"
+                    class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                     buttonTextSize="xs"
                   ></follow-user-card>
                   <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
@@ -68,6 +71,9 @@
                   w-full
                   mt-5
                   dark:bg-dark-600
+                  bg-gray-100
+                  border border-gray-200
+                  dark:border-dark-600
                   rounded-xl
                   shadow-lg
                   dark:shadow-xl
@@ -87,7 +93,7 @@
                     :key="user.id"
                     :user="user"
                     buttonTextSize="xs"
-                    class="!bg-dark-700 rounded-lg py-2 w-full"
+                    class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                   ></follow-user-card>
                   <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
                 </div>

@@ -11,9 +11,25 @@
         >
           <div
             :class="chat.id === $route.params.id ? 'dark:!bg-dark-600 !bg-gray-200' : ''"
-            class="cursor-pointer rounded-lg border dark:border-dark-600 bg-white dark:bg-dark-700 dark:hover:!bg-dark-600 hover:!bg-gray-200 px-6 py-5 shadow-sm flex items-center space-x-3 hover:!border-gray-400"
+            class="
+              cursor-pointer
+              rounded-lg
+              border
+              dark:border-dark-600
+              bg-white
+              dark:bg-dark-700
+              dark:hover:!bg-dark-600
+              hover:!bg-gray-200
+              px-6
+              py-5
+              shadow-sm
+              flex
+              items-center
+              space-x-3
+              hover:!border-gray-400
+            "
           >
-            <div class="flex-shrink-0" v-if="chat">
+            <div class="flex-shrink-0 h-10 w-10" v-if="chat">
               <lazy-image
                 class="h-10 w-10 rounded-full object-cover"
                 :src="chat.members.filter((m) => m.id !== user.id)[0].avatar.name"

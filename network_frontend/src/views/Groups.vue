@@ -124,7 +124,7 @@
       <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
         <div>
           <div class="pb-2 flex justify-between px-4">
-            <span class="text-md md:text-lg">Gruppen von Leuten, denen du folgst</span>
+            <span class="text-md md:text-lg">Gruppen von Personen, denen du folgst</span>
 
             <app-button
               class="text-xs cursor-pointer !rounded-full !py-1 h-8 md:h-auto"

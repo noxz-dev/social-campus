@@ -5,16 +5,16 @@
     </div>
     <div class="w-full mt-6 py-10 flex flex-col md:flex-row justify-between">
       <div class="flex flex-col w-full">
-        <div class="flex justify-between flex-col md:flex-row">
-          <div>
-            <div v-if="group" class="w-40 md:w-full text-xl font-semibold dark:text-gray-50 text-gray-900 break-words">
-              {{ group.name }}
+        <div class="flex justify-between flex-col md:flex-row w-full">
+          <div id="groupNameWrapper" class="w-[80%]">
+            <div v-if="group" class="text-xl font-semibold dark:text-gray-50 text-gray-900 break-words">
+              <span>{{ group.name }}</span>
             </div>
             <div class="flex flex-col md:flex-row">
               <div class="text-lg font-semibold dark:text-gray-400 text-gray-900" v-if="group">
                 <span v-if="group.type === 'PRIVATE'">Private </span>
                 <span v-else>Öffentliche </span>
-                Gruppe
+                <span>Gruppe</span>
               </div>
               <div class="w-1"></div>
               <div class="text-lg font-semibold dark:text-gray-400 text-gray-900">
@@ -79,7 +79,7 @@
           @click="$emit('switchComponent', GroupComponents.GROUP_ABOUT)"
           :class="{ 'bg-brand-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_ABOUT }"
         >
-          <span class="">About</span>
+          <span class="">Über</span>
         </div>
         <div
           class="py-1 px-2 rounded-lg cursor-pointer"
@@ -90,13 +90,12 @@
           <span class="ml-2 font-medium">{{ numberFormatter(numberOfPosts) }}</span>
         </div>
 
-        <div class="py-1 px-2 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
-          <span class="dark:text-gray-50 text-gray-900">Files</span>
-          <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
-        </div>
-        <div class="py-1 px-2 rounded-lg cursor-pointer" @click="$emit('switchComponent', GroupComponents.GROUP_FEED)">
-          <span class="dark:text-gray-50 text-gray-900">...</span>
-          <span class="ml-2 font-light dark:text-gray-50 text-gray-900"></span>
+        <div
+          class="py-1 px-2 rounded-lg cursor-pointer"
+          @click="$emit('switchComponent', GroupComponents.GROUP_FILES)"
+          :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_FILES }"
+        >
+          <span class="dark:text-gray-50 text-gray-900">Dateien</span>
         </div>
       </div>
     </div>

@@ -1,7 +1,22 @@
 <template>
   <div id="group" class="flex h-full">
     <div
-      class="flex h-full items-center flex-1 bg-white dark:bg-dark-700 flex-col rounded-t-2xl border-t-2 border-r-2 py-1 pt-2 pr-0.5 border-dark-600"
+      class="
+        flex
+        h-full
+        lg:w-[80%]
+        w-full
+        items-center
+        bg-white
+        dark:bg-dark-700
+        flex-col
+        rounded-t-2xl
+        border-t-2 border-r-2
+        py-1
+        pt-2
+        pr-0.5
+        border-dark-600
+      "
     >
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto p-4 py-3">
         <group-header
@@ -50,6 +65,7 @@ import GroupEntry from '../components/Group/GroupEntry.vue';
 export enum GroupComponents {
   GROUP_FEED = 'GroupFeed',
   GROUP_ABOUT = 'GroupAbout',
+  GROUP_FILES = 'GroupFiles',
 }
 
 export default defineComponent({
@@ -61,6 +77,7 @@ export default defineComponent({
     GroupFeedPlaceholder: defineAsyncComponent(() => import('../components/Group/GroupFeedPlaceholder.vue')),
     GroupUserSidebar: defineAsyncComponent(() => import('../components/Group/GroupUserSidebar.vue')),
     GroupAbout: defineAsyncComponent(() => import('../components/Group/GroupAbout.vue')),
+    GroupFiles: defineAsyncComponent(() => import('../components/Group/GroupFiles.vue')),
     GroupPermissionContainer,
     GroupEntry,
     GroupUserSidebarPlaceholder: defineAsyncComponent(
@@ -73,14 +90,7 @@ export default defineComponent({
     const groupState = computed(() => groupPermission.value?.groupState);
 
     const switchComponent = (comp: GroupComponents) => {
-      switch (comp) {
-        case GroupComponents.GROUP_FEED:
-          activeComponent.value = comp;
-          break;
-        case GroupComponents.GROUP_ABOUT:
-          activeComponent.value = comp;
-          break;
-      }
+      activeComponent.value = comp;
     };
 
     return { activeComponent, switchComponent, groupPermission, groupState, GroupType };

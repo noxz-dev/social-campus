@@ -210,7 +210,7 @@
             <span class="font-semibold">Fakultät</span>
             <div class="flex my-2 items-center">
               <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000000" viewBox="0 0 256 256">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 p-1" fill="#000000" viewBox="0 0 256 256">
                   <rect width="256" height="256" fill="none"></rect>
                   <polygon
                     points="8 96 128 32 248 96 128 160 8 96"
@@ -243,7 +243,7 @@
             <span class="font-semibold">Studiengang</span>
             <div class="flex my-2 items-center">
               <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000000" viewBox="0 0 256 256">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 p-1" fill="#000000" viewBox="0 0 256 256">
                   <rect width="256" height="256" fill="none"></rect>
                   <polygon
                     points="8 96 128 32 248 96 128 160 8 96"
@@ -276,7 +276,7 @@
             <span class="font-semibold">Interessen</span>
             <div class="flex my-2 items-center">
               <div class="dark:bg-dark-500 bg-gray-400 h-8 w-8 rounded-full mr-4 flex items-center justify-center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-8 w-8 p-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"

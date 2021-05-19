@@ -3,7 +3,7 @@
     <div id="home" ref="home" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-full flex justify-center">
-          <div class="h-full hidden lg:block w-[34%]"></div>
+          <div class="h-full hidden xl:block w-[34%]"></div>
           <div class="w-full flex justify-center">
             <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-[80%] mb-10 mt-10">
               <div class="flex flex-col dark:text-gray-50 text-gray-900">
@@ -30,72 +30,74 @@
             </div>
           </div>
 
-          <div class="h-full hidden lg:block w-[34%] dark:text-gray-50 text-gray-900 sticky">
-            <div class="p-5 pl-0 mt-7">
-              <div
-                class="
-                  p-3
-                  w-full
-                  min-h-[15rem]
-                  dark:bg-dark-600
-                  bg-gray-100
-                  rounded-xl
-                  border border-gray-200
-                  shadow-lg
-                  dark:shadow-xl
-                  dark:border-dark-600
-                  text-sm
-                  font-semibold
-                "
-              >
-                Personen die du vielleicht kennst
+          <div class="h-full hidden lg:block w-[34%] dark:text-gray-50 text-gray-900">
+            <div class="relative">
+              <div class="p-5 pl-0 mt-7 fixed right-1 min-w-[19%]">
                 <div
-                  class="h-full flex flex-col gap-2 mt-4 items-center"
-                  v-if="recommendUsers"
-                  :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                  class="
+                    p-3
+                    w-full
+                    min-h-[15rem]
+                    dark:bg-dark-600
+                    bg-gray-100
+                    rounded-xl
+                    border border-gray-200
+                    shadow-lg
+                    dark:shadow-xl
+                    dark:border-dark-600
+                    text-sm
+                    font-semibold
+                  "
                 >
-                  <follow-user-card
-                    v-for="user in recommendUsers"
-                    :key="user.id"
-                    :user="user"
-                    class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
-                    buttonTextSize="xs"
-                  ></follow-user-card>
-                  <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                  Personen die du vielleicht kennst
+                  <div
+                    class="h-full flex flex-col gap-2 mt-4 items-center"
+                    v-if="recommendUsers"
+                    :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                  >
+                    <follow-user-card
+                      v-for="user in recommendUsers"
+                      :key="user.id"
+                      :user="user"
+                      class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
+                      buttonTextSize="xs"
+                    ></follow-user-card>
+                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                  </div>
                 </div>
-              </div>
-              <div
-                class="
-                  p-3
-                  min-h-[15rem]
-                  w-full
-                  mt-5
-                  dark:bg-dark-600
-                  bg-gray-100
-                  border border-gray-200
-                  dark:border-dark-600
-                  rounded-xl
-                  shadow-lg
-                  dark:shadow-xl
-                  text-sm
-                  font-semibold
-                "
-              >
-                Basierend auf deinen Interessen
-
                 <div
-                  class="h-full flex flex-col gap-2 mt-4 items-center"
-                  v-if="recommendUsers"
-                  :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                  class="
+                    p-3
+                    min-h-[15rem]
+                    w-full
+                    mt-5
+                    dark:bg-dark-600
+                    bg-gray-100
+                    border border-gray-200
+                    dark:border-dark-600
+                    rounded-xl
+                    shadow-lg
+                    dark:shadow-xl
+                    text-sm
+                    font-semibold
+                  "
                 >
-                  <follow-user-card
-                    v-for="user in recommendUsers"
-                    :key="user.id"
-                    :user="user"
-                    buttonTextSize="xs"
-                    class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
-                  ></follow-user-card>
-                  <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                  Basierend auf deinen Interessen
+
+                  <div
+                    class="h-full flex flex-col gap-2 mt-4 items-center"
+                    v-if="recommendUsers"
+                    :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                  >
+                    <follow-user-card
+                      v-for="user in recommendUsers"
+                      :key="user.id"
+                      :user="user"
+                      buttonTextSize="xs"
+                      class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
+                    ></follow-user-card>
+                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                  </div>
                 </div>
               </div>
             </div>

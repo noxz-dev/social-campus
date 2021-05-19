@@ -73,7 +73,10 @@ export class ChatResolver {
     @Arg('input', () => SendMessageInput) input: SendMessageInput,
   ): Promise<ChatMessage> {
     const userId = ctx.req.user.id;
-    const chat = await getRepository(Chat).findOne({ where: { id: input.chatId }, relations: ['members', 'messages'] });
+    const chat = await getRepository(Chat).findOne({
+      where: { id: input.chatId },
+      relations: ['members', 'messages', 'members.avatar'],
+    });
 
     if (!chat) throw Error('chat not found');
     if (!checkChatAccess(chat.members, userId)) {
@@ -81,10 +84,10 @@ export class ChatResolver {
     }
 
     const result = await getManager().transaction(async (transactionManager) => {
-      const user = await getRepository(User).findOne({ where: { id: userId } });
+      const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['avatar'] });
       const chatMessage = new ChatMessage(user, chat, input.message);
       chat.messages = [...chat.messages, chatMessage];
-
+      chat.lastMessage = chatMessage;
       if (input.file) {
         const { filename, blurhash } = await uploadFileGraphql(input.file, 'images');
         const media = new Media();
@@ -99,8 +102,8 @@ export class ChatResolver {
 
       const toUser = chat.members.find((member) => member.id !== userId);
 
-      // await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
-      chat.lastMessage = chatMessage;
+      await ctx.req.pubsub.publish(SUB_TOPICS.NEW_CHAT_MESSAGE, { message: savedMessage, members: chat.members });
+
       return { savedMessage, user, toUser };
     });
     await notify(

@@ -31,10 +31,10 @@ export class User extends Base {
   @Column({ type: 'varchar' })
   password: string;
 
-  @Field(() => Media)
+  @Field(() => Media, { nullable: true })
   @OneToOne(() => Media, { eager: true })
   @JoinColumn()
-  avatar: Promise<Media>;
+  avatar: Media;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })

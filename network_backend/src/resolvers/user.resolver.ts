@@ -79,7 +79,7 @@ export class UserResolver {
 
     const saved = await getRepository(Media).save(avatar);
 
-    user.avatar = Promise.resolve(saved);
+    user.avatar = saved;
 
     await getRepository(User).save(user);
     await sendEmail({
@@ -224,11 +224,9 @@ export class UserResolver {
 
     if (input.avatar) {
       const { filename, blurhash } = await uploadFileGraphql(input.avatar, 'images');
-      const avatar = await user.avatar;
-      avatar.name = filename;
-      avatar.blurhash = blurhash;
-      user.avatar = Promise.resolve(avatar);
-      await getRepository(Media).save(avatar);
+      user.avatar.name = filename;
+      user.avatar.blurhash = blurhash;
+      await getRepository(Media).save(user.avatar);
     }
 
     await userRepo.save(user);
@@ -371,6 +369,7 @@ export class UserResolver {
       .where('user.id NOT IN (' + following.getSql() + ')')
       .andWhere('user.id != :id', { id: userId })
       .andWhere('user.faculty = :faculty', { faculty: me.faculty })
+      .leftJoinAndSelect('user.avatar', 'avatar')
       .orderBy('RANDOM()')
       .limit(3)
       .getMany();
@@ -382,6 +381,7 @@ export class UserResolver {
         .createQueryBuilder('user')
         .where('user.id NOT IN (' + following.getSql() + ')')
         .andWhere('user.id NOT IN (:...recommended)', { recommended: ids })
+        .leftJoinAndSelect('user.avatar', 'avatar')
         .orderBy('RANDOM()')
         .limit(3)
         .getMany();

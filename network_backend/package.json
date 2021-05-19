@@ -53,6 +53,7 @@
     "esno": "^0.5.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "flatted": "^3.1.1",
     "graphql": "^15.5.0",
     "graphql-fields-to-relations": "^1.0.4",
     "graphql-playground-middleware-express": "^1.7.22",

@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { EventEmitter } from 'events';
 import express from 'express';
 import 'express-async-errors';
+import { parse, stringify } from 'flatted';
 import { GraphQLSchema } from 'graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { graphqlUploadExpress } from 'graphql-upload';
@@ -67,6 +68,8 @@ export class Application {
     this.pubsub = new RedisPubSub({
       publisher: new Redis(options),
       subscriber: new Redis(options),
+      serializer: stringify,
+      deserializer: parse,
     });
 
     initS3();

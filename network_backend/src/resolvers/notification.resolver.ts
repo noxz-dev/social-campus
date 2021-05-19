@@ -74,6 +74,7 @@ export class NotificationResolver {
   ): Promise<Notification> {
     log.debug('notification subscription fired');
     payload.createdAt = new Date(payload.createdAt);
+    console.log(payload);
     return payload;
   }
 
@@ -110,8 +111,6 @@ export const notify = async (payload: NotificationPayload, context: MyContext): 
   if (payload.chat) notify.chat = payload.chat;
   if (payload.chatMessage) notify.chatMessage = payload.chatMessage;
   const savedNotification = await getRepository(Notification).save(notify);
-  //FIXME
-  if (savedNotification.chat) savedNotification.chat.lastMessage.chat = null;
   context.req.pubsub.publish(SUB_TOPICS.NEW_NOTIFICATION, savedNotification);
   log.info('Notifcation send');
 };

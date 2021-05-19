@@ -421,12 +421,13 @@
     <nav class="lg:hidden" :class="showMobileMenu ? 'block' : 'hidden'" aria-label="Global">
       <div class="border-t border-dark-600 pt-4 pb-3">
         <div class="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
-          <div class="flex-shrink-0">
+          <div class="flex-shrink-0 h-10 w-10">
             <lazy-image
               v-if="user?.avatar"
               class="h-10 w-10 rounded-full"
               :src="profileImage"
               alt=""
+              rounded="full"
               :blurhash="user?.avatar.blurhash"
             />
           </div>

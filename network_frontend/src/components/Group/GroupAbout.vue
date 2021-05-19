@@ -1,9 +1,9 @@
 <template>
-  <div ref="relativeContainer" class="relative w-full pb-20">
+  <div ref="relativeContainer" class="relative w-full pb-20 flex flex-col">
     <div
       class="editable markdown bg-gray-100 dark:bg-dark-600 dark:text-gray-50 rounded-lg mt-12 p-5 outline-none"
     ></div>
-    <app-button class="mt-2" @click="saveAbout">Speichern</app-button>
+    <app-button class="mt-2 self-end" @click="saveAbout">Speichern</app-button>
   </div>
 </template>
 <script lang="ts">

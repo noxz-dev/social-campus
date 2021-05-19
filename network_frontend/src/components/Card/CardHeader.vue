@@ -2,7 +2,7 @@
   <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
       <div
-        class="flex-shrink-0 cursor-pointer"
+        class="flex-shrink-0 cursor-pointer h-10 w-10"
         @click.stop="
           $router.push({
             name: 'Profile',
@@ -50,7 +50,15 @@
             </svg>
 
             <span
-              class="hover:underline cursor-pointer dark:hover:text-gray-400 hover:text-gray-700 break-words md:w-full truncate"
+              class="
+                hover:underline
+                cursor-pointer
+                dark:hover:text-gray-400
+                hover:text-gray-700
+                break-words
+                md:w-full
+                truncate
+              "
               @click="$router.push({ name: 'Group', params: { id: group.id } })"
             >
               {{ group.name }}</span
@@ -103,7 +111,21 @@
 
             <div
               v-if="optionsOpen"
-              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-dark-600 dark:border-dark-400 border ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="
+                origin-top-right
+                absolute
+                right-0
+                mt-2
+                w-56
+                rounded-md
+                shadow-lg
+                bg-white
+                dark:bg-dark-600
+                dark:border-dark-400
+                border
+                ring-1 ring-black ring-opacity-5
+                focus:outline-none
+              "
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-1"
@@ -111,7 +133,22 @@
               <div class="">
                 <button
                   @click="eventbus.emit('open-edit-modal', post)"
-                  class="w-full stroke-grayLight transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-dark-500 rounded-t-lg dark:text-gray-50 hover:text-gray-900"
+                  class="
+                    w-full
+                    stroke-grayLight
+                    transition
+                    duration-200
+                    cursor-pointer
+                    flex
+                    px-2
+                    py-2
+                    text-sm text-gray-700
+                    hover:bg-gray-100
+                    dark:hover:bg-dark-500
+                    rounded-t-lg
+                    dark:text-gray-50
+                    hover:text-gray-900
+                  "
                   role="menuitem"
                 >
                   <svg
@@ -145,7 +182,21 @@
                   <span>Bearbeiten</span>
                 </button>
                 <button
-                  class="w-full transition duration-200 cursor-pointer flex px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-dark-500 stroke-grayLight rounded-b-lg"
+                  class="
+                    w-full
+                    transition
+                    duration-200
+                    cursor-pointer
+                    flex
+                    px-2
+                    py-2
+                    text-sm text-gray-700
+                    hover:bg-gray-100
+                    dark:text-gray-50
+                    dark:hover:bg-dark-500
+                    stroke-grayLight
+                    rounded-b-lg
+                  "
                   role="menuitem"
                   @click="deleteContent()"
                 >

@@ -74,7 +74,6 @@ export class NotificationResolver {
   ): Promise<Notification> {
     log.debug('notification subscription fired');
     payload.createdAt = new Date(payload.createdAt);
-    console.log(payload);
     return payload;
   }
 

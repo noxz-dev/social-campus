@@ -48,7 +48,22 @@
     </input-field>
 
     <div
-      class="dark:text-gray-50 text-gray-900 absolute w-full dark:bg-dark-500 bg-gray-50 mt-4 p-4 rounded-lg shadow-2xl border dark:border-dark-400 max-h-96 overflow-auto"
+      class="
+        dark:text-gray-50
+        text-gray-900
+        absolute
+        w-full
+        dark:bg-dark-500
+        bg-gray-50
+        mt-4
+        p-4
+        rounded-lg
+        shadow-2xl
+        border
+        dark:border-dark-400
+        max-h-96
+        overflow-auto
+      "
       v-if="searchString.length !== 0 && isFocus"
     >
       <div v-if="searchResult.users.length === 0 && searchResult.groups.length === 0 && searchResult.tags.length === 0">
@@ -60,10 +75,22 @@
           <div
             v-for="result in searchResult.users"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            class="
+              flex
+              items-center
+              w-full
+              dark:bg-dark-600
+              bg-gray-200
+              first:mt-0
+              last:mb-0
+              my-4
+              p-3
+              rounded-md
+              cursor-pointer
+            "
             @click="handleRouting('USERS', result.username)"
           >
-            <div class="table-cell align-middle mr-4">
+            <div class="table-cell align-middle mr-4 h-10 w-10">
               <lazy-image
                 class="h-10 w-10 rounded-full bg-dark-700"
                 :src="result.avatar.name"
@@ -81,7 +108,19 @@
           <div
             v-for="result in searchResult.tags"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-2 p-3 rounded-md cursor-pointer"
+            class="
+              flex
+              items-center
+              w-full
+              dark:bg-dark-600
+              bg-gray-200
+              first:mt-0
+              last:mb-0
+              my-2
+              p-3
+              rounded-md
+              cursor-pointer
+            "
             @click="handleRouting('TAGS', result.name)"
           >
             <div class="flex flex-row align-middle">{{ result.name }}</div>
@@ -93,7 +132,19 @@
           <div
             v-for="result in searchResult.groups"
             :key="result.id"
-            class="flex items-center w-full dark:bg-dark-600 bg-gray-200 first:mt-0 last:mb-0 my-4 p-3 rounded-md cursor-pointer"
+            class="
+              flex
+              items-center
+              w-full
+              dark:bg-dark-600
+              bg-gray-200
+              first:mt-0
+              last:mb-0
+              my-4
+              p-3
+              rounded-md
+              cursor-pointer
+            "
             @click="handleRouting('GROUPS', result.id)"
           >
             <div class="flex flex-row align-middle">{{ result.name }}</div>
@@ -106,13 +157,14 @@
 </template>
 
 <script lang="ts">
-import { onClickOutside, TimeoutFnResult } from '@vueuse/core';
+import { onClickOutside } from '@vueuse/core';
 import { useSearchQuery } from '../graphql/generated/types';
 import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import breakpoints from '../utils/breakpoints';
 import InputField from './Form/InputField.vue';
 import LazyImage from './Blurhash/LazyImage.vue';
+import { useResult } from '@vue/apollo-composable';
 export type MaybeRef<T> = Ref<T> | T;
 function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside: MaybeRef<boolean> = true) {
   let timeout: NodeJS.Timeout;
@@ -139,25 +191,17 @@ function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside:
 }
 export default defineComponent({
   components: { InputField, LazyImage },
-  name: 'GroupSearch',
   setup() {
     const searchString = useDebounceRef('', 300, true);
     const router = useRouter();
-    const searchResult = ref([]);
     const isFocus = ref(false);
 
     //CALLS ON INIT .. could be not the best idea
-    const { onResult } = useSearchQuery(() => ({
+    const { result } = useSearchQuery(() => ({
       searchString: searchString.value,
     }));
 
-    onResult(({ data }) => {
-      if (data.search) {
-        searchResult.value = data.search;
-      } else {
-        searchResult.value = [];
-      }
-    });
+    const searchResult = useResult(result, [], (data) => data.search);
 
     const target = ref(null);
     onClickOutside(target, () => {

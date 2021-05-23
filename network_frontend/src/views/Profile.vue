@@ -104,13 +104,25 @@
                   <h1 v-if="user" class="md:text-2xl font-bold text-gray-900 dark:text-gray-50 text-lg">
                     {{ user?.firstname + ' ' + user?.lastname }}
                   </h1>
-                  <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">{{ user.bio }}</h2>
+                  <div v-if="user?.roles" class="flex mt-2">
+                    <div v-for="role in user?.roles" :key="role.id" class="mr-1 cursor-default">
+                      <role-wrapper :name="role.name" />
+                    </div>
+                  </div>
+                  <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 my-5">
+                    {{ user.bio }}
+                  </h2>
                 </div>
                 <div class="w-full mt-1 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                  <div class="hidden md:block min-w-0 flex-1 pb-4 w-full flex-col">
+                  <div class="hidden md:flex min-w-0 flex-1 pb-4 w-full flex-col">
                     <h1 v-if="user?.firstname" class="text-2xl font-bold text-gray-900 truncate dark:text-gray-50">
                       {{ user?.firstname + ' ' + user?.lastname }}
                     </h1>
+                    <div v-if="user?.roles" class="flex mt-2">
+                      <div v-for="role in user?.roles" :key="role.id" class="mr-1 cursor-default">
+                        <role-wrapper :name="role.name" />
+                      </div>
+                    </div>
                     <h2 v-if="user?.bio" class="text-gray-900 dark:text-gray-50 mt-5">
                       {{ user.bio }}
                     </h2>
@@ -238,7 +250,7 @@
                   ></path>
                 </svg>
               </div>
-              <div>{{ user?.faculty || '-' }}</div>
+              <div class="text-sm">{{ user?.faculty || '-' }}</div>
             </div>
             <span class="font-semibold">Studiengang</span>
             <div class="flex my-2 items-center">
@@ -271,7 +283,7 @@
                   ></path>
                 </svg>
               </div>
-              <div>{{ user?.studyCourse || '-' }}</div>
+              <div class="text-sm">{{ user?.studyCourse || '-' }}</div>
             </div>
             <span class="font-semibold">Interessen</span>
             <div class="flex my-2 items-center">
@@ -296,7 +308,7 @@
                 </svg>
               </div>
               <div>
-                <div class="break-all">{{ user?.interests || '-' }}</div>
+                <div class="break-all text-sm">{{ user?.interests || '-' }}</div>
               </div>
             </div>
           </div>
@@ -324,6 +336,7 @@ import EditProfile from '../components/EditProfile.vue';
 import { useResult } from '@vue/apollo-composable';
 import FollowButton from '../components/FollowButton.vue';
 import breakpoints from '../utils/breakpoints';
+import RoleWrapper from '../components/RoleWrapper.vue';
 export default defineComponent({
   components: {
     PostList,
@@ -332,6 +345,7 @@ export default defineComponent({
     Modal,
     EditProfile,
     FollowButton,
+    RoleWrapper,
   },
   setup() {
     const route = useRoute();

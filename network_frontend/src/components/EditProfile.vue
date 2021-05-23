@@ -91,6 +91,7 @@
                       dark:bg-dark-600
                       bg-white
                       relative
+                      min-h-[2.38rem]
                       w-full
                       border border-gray-800
                       dark:border-dark-400
@@ -180,13 +181,106 @@
                   </transition>
                 </div>
               </Listbox>
-              <label
-                for="studycourse"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2 text-left"
-              >
-                Studiengang
-              </label>
-              <input-field id="studycourse" class="!mt-2" v-model="studycourse"></input-field>
+              <Listbox as="div" v-model="selectedCourse">
+                <ListboxLabel class="block text-sm font-medium text-gray-700 dark:text-gray-50 -mt-4">
+                  Studiengang
+                </ListboxLabel>
+                <div class="mt-2 relative">
+                  <ListboxButton
+                    class="
+                      dark:bg-dark-600
+                      bg-white
+                      relative
+                      w-full
+                      min-h-[2.38rem]
+                      border border-gray-800
+                      dark:border-dark-400
+                      rounded-md
+                      shadow-sm
+                      pl-3
+                      pr-10
+                      py-2
+                      text-left
+                      cursor-default
+                      focus:outline-none
+                      focus:ring-1 focus:ring-brand-500
+                      focus:border-brand-500
+                      sm:text-sm
+                    "
+                  >
+                    <span class="block truncate">{{ selectedCourse.name }}</span>
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg
+                        class="h-5 w-5 dark:stroke-white stroke-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M19 8.5L12 15.5L5 8.5"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </ListboxButton>
+
+                  <transition
+                    leave-active-class="transition ease-in duration-100"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                  >
+                    <ListboxOptions
+                      class="
+                        absolute
+                        z-10
+                        mt-1
+                        w-full
+                        bg-white
+                        dark:bg-dark-600
+                        shadow-lg
+                        max-h-60
+                        rounded-md
+                        py-1
+                        text-base
+                        ring-1 ring-black ring-opacity-5
+                        overflow-auto
+                        focus:outline-none
+                        sm:text-sm
+                      "
+                    >
+                      <ListboxOption
+                        as="template"
+                        v-for="course in courses"
+                        :key="course.id"
+                        :value="course"
+                        v-slot="{ active, selected }"
+                      >
+                        <li
+                          :class="[
+                            active ? 'text-white bg-brand-600' : 'dark:text-gray-50 text-gray-900',
+                            'cursor-default select-none relative py-2 pl-3 pr-9',
+                          ]"
+                        >
+                          <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
+                            {{ course.name }}
+                          </span>
+
+                          <span
+                            v-if="selected"
+                            :class="[
+                              active ? 'text-white' : 'text-brand-600',
+                              'absolute inset-y-0 right-0 flex items-center pr-4',
+                            ]"
+                          >
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
               <label for="interests" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2 text-left">
                 Interessen
               </label>
@@ -262,15 +356,7 @@ import LazyImage from './Blurhash/LazyImage.vue';
 import useVuelidate from '@vuelidate/core';
 import { maxLength, helpers } from '@vuelidate/validators';
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue';
-
-//Fakultäten der Hochschule Hannover
-const faculties = [
-  { id: 1, name: 'Fakultät 1 - Elektro- und Informationstechnik' },
-  { id: 2, name: 'Fakultät 2 - Maschinenbau und Bioverfahrenstechnik' },
-  { id: 3, name: 'Fakultät 3 - Medien, Information und Design' },
-  { id: 4, name: 'Fakultät 4 - Wirtschaft und Informatik' },
-  { id: 5, name: 'Fakultät 5 - Diakonie, Gesundheit und Soziales' },
-];
+import { courses, faculties } from '../universityData';
 
 export default defineComponent({
   components: { InputField, LazyImage, Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions },
@@ -282,7 +368,8 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const selectedFaculty = ref(faculties.find((f) => f.name == props.user?.faculty) || faculties[0]);
+    const selectedFaculty = ref(faculties.find((f) => f.name == props.user?.faculty) || faculties[1]);
+    const selectedCourse = ref(courses.find((c) => c.name == props.user?.studyCourse) || courses[1]);
     const bio = ref(props.user?.bio || '');
     const faculty = ref(props.user?.faculty);
     const interests = ref(props.user?.interests);
@@ -297,7 +384,7 @@ export default defineComponent({
           bio: bio.value,
           faculty: selectedFaculty.value.name,
           interests: interests.value,
-          studyCourse: studycourse.value,
+          studyCourse: selectedCourse.value.name,
           avatar: file.value,
         },
       },
@@ -357,6 +444,8 @@ export default defineComponent({
       blurhash,
       faculties,
       selectedFaculty,
+      courses,
+      selectedCourse,
       v,
     };
   },

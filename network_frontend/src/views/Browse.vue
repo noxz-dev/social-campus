@@ -11,7 +11,7 @@
               class="w-full md:flex-1"
               ref="chipInput"
               :startTags="inputTags"
-              inputPlaceholder="z.B. #hsh, #socialnetwork"
+              inputPlaceholder="z.B. #hsh, #socialnetwork, #webtechnologien"
             ></chips-input>
           </div>
           <post-list :posts="posts" class="pt-10 md:pt-0" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
@@ -28,7 +28,6 @@ import { useBrowsePostsQuery } from '../graphql/generated/types';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
-import { BrowsePostsQueryVariables } from '../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import ChipsInput from '../components/Form/ChipsInput.vue';

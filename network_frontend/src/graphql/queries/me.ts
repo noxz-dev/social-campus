@@ -11,6 +11,10 @@ export const me = gql`
       firstname
       lastname
       username
+      roles {
+        id
+        name
+      }
     }
   }
 `;

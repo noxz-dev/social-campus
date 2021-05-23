@@ -62,7 +62,7 @@
                       class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                       buttonTextSize="xs"
                     ></follow-user-card>
-                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
                   </div>
                 </div>
                 <div
@@ -96,7 +96,7 @@
                       buttonTextSize="xs"
                       class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                     ></follow-user-card>
-                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🚀</div>
+                    <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
                   </div>
                 </div>
               </div>

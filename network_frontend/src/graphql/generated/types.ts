@@ -77,6 +77,13 @@ export type Group = {
   numberOfMembers?: Maybe<Scalars['Float']>;
 };
 
+export type GroupAccess = {
+  __typename?: 'GroupAccess';
+  id: Scalars['String'];
+  type: GroupType;
+  isMember: Scalars['Boolean'];
+};
+
 export type GroupMember = {
   __typename?: 'GroupMember';
   id: Scalars['String'];
@@ -85,7 +92,7 @@ export type GroupMember = {
   lastname: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
-  avatar: Media;
+  avatar?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -100,17 +107,15 @@ export type GroupMember = {
   groupRole?: Maybe<GroupRoles>;
 };
 
+export type GroupRoleAccess = {
+  __typename?: 'GroupRoleAccess';
+  isAllowed: Scalars['Boolean'];
+};
+
 export enum GroupRoles {
   Member = 'MEMBER',
   Admin = 'ADMIN'
 }
-
-export type GroupState = {
-  __typename?: 'GroupState';
-  id: Scalars['String'];
-  type: GroupType;
-  isMember: Scalars['Boolean'];
-};
 
 export enum GroupType {
   Private = 'PRIVATE',
@@ -378,13 +383,16 @@ export type Query = {
   getFeed: Array<Post>;
   /** returns a specific post */
   postById: Post;
+  /** returns all posts that are not associated with groups, allows to be filterd via tags */
+  searchPosts?: Maybe<Array<Post>>;
   myChats: Array<Chat>;
   chatById: Chat;
   groupById: Group;
   groups: Array<Group>;
   myGroups: Array<Group>;
   followingGroups: Array<Group>;
-  checkGroupAccess: GroupState;
+  checkGroupAccess: GroupAccess;
+  checkGroupRoleAccess: GroupRoleAccess;
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -403,6 +411,8 @@ export type Query = {
   userStats: UserStats;
   /** recommeding users based on Faculty */
   recommendedUsersFaculty: Array<User>;
+  /** recommeding users based on Faculty */
+  recommendedUsersInterests: Array<User>;
 };
 
 
@@ -436,6 +446,11 @@ export type QueryPostByIdArgs = {
 };
 
 
+export type QuerySearchPostsArgs = {
+  searchString: Scalars['String'];
+};
+
+
 export type QueryChatByIdArgs = {
   chatId: Scalars['String'];
 };
@@ -453,6 +468,12 @@ export type QueryGroupsArgs = {
 
 
 export type QueryCheckGroupAccessArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type QueryCheckGroupRoleAccessArgs = {
+  groupRole: GroupRoles;
   groupId: Scalars['String'];
 };
 
@@ -568,7 +589,7 @@ export type User = {
   lastname: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
-  avatar: Media;
+  avatar?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -607,10 +628,10 @@ export type AddFollowerMutation = (
   & { addFollower: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   ) }
 );
 
@@ -630,10 +651,10 @@ export type AddPostMutation = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -720,10 +741,10 @@ export type EditPostMutation = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -761,10 +782,10 @@ export type LikePostMutation = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -796,10 +817,10 @@ export type RemoveFollowerMutation = (
   & { removeFollower: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   ) }
 );
 
@@ -849,10 +870,10 @@ export type UnlikePostMutation = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -884,10 +905,10 @@ export type UpdateProfileMutation = (
   & { updateProfile: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   ) }
 );
 
@@ -909,10 +930,10 @@ export type BrowsePostsQuery = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), tags: Array<(
       { __typename?: 'Tag' }
       & Pick<Tag, 'id' | 'name'>
@@ -952,8 +973,8 @@ export type CheckGroupAccessQueryVariables = Exact<{
 export type CheckGroupAccessQuery = (
   { __typename?: 'Query' }
   & { checkGroupAccess: (
-    { __typename?: 'GroupState' }
-    & Pick<GroupState, 'id' | 'type' | 'isMember'>
+    { __typename?: 'GroupAccess' }
+    & Pick<GroupAccess, 'id' | 'type' | 'isMember'>
   ) }
 );
 
@@ -969,10 +990,10 @@ export type FollowersQuery = (
   & { followers: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   )> }
 );
 
@@ -988,10 +1009,10 @@ export type FollowingQuery = (
   & { following: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   )> }
 );
 
@@ -1023,10 +1044,10 @@ export type GetFeedQuery = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -1050,10 +1071,10 @@ export type GetPostsFromGroupQuery = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ) }
   )>> }
 );
@@ -1101,18 +1122,32 @@ export type GroupMembersQuery = (
     & { createdBy: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), members: Array<(
       { __typename?: 'GroupMember' }
       & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus' | 'groupRole'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     )> }
+  ) }
+);
+
+export type CheckGroupRoleAccessQueryVariables = Exact<{
+  groupId: Scalars['String'];
+  groupRole: GroupRoles;
+}>;
+
+
+export type CheckGroupRoleAccessQuery = (
+  { __typename?: 'Query' }
+  & { checkGroupRoleAccess: (
+    { __typename?: 'GroupRoleAccess' }
+    & Pick<GroupRoleAccess, 'isAllowed'>
   ) }
 );
 
@@ -1138,10 +1173,13 @@ export type MeQuery = (
   & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & Pick<Role, 'id' | 'name'>
+    )> }
   )> }
 );
 
@@ -1159,10 +1197,10 @@ export type MyChatsQuery = (
     )>, members: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     )> }
   )> }
 );
@@ -1192,17 +1230,17 @@ export type GetNotificationsQuery = (
     )>, toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), post?: Maybe<(
       { __typename?: 'Post' }
       & Pick<Post, 'id'>
@@ -1229,20 +1267,20 @@ export type PostByIdQuery = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), comments: Array<(
       { __typename?: 'Comment' }
       & Pick<Comment, 'id' | 'text' | 'createdAt'>
       & { user: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-        & { avatar: (
+        & { avatar?: Maybe<(
           { __typename?: 'Media' }
           & Pick<Media, 'name' | 'blurhash'>
-        ) }
+        )> }
       ) }
     )>, group?: Maybe<(
       { __typename?: 'Group' }
@@ -1269,10 +1307,10 @@ export type GetPostsFromUserQuery = (
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ) }
   )>> }
 );
@@ -1285,10 +1323,10 @@ export type RecommendedUsersFacultyQuery = (
   & { recommendedUsersFaculty: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   )> }
 );
 
@@ -1304,10 +1342,10 @@ export type SearchQuery = (
     & { users: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     )>, groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -1328,23 +1366,23 @@ export type UserByIdQuery = (
   & { userById: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
-    & { avatar: (
+    & { avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ), followers: Array<(
+    )>, followers: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     )>, following: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     )> }
   ) }
 );
@@ -1359,10 +1397,13 @@ export type UserByUsernameQuery = (
   & { userByUsername: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
-    & { avatar: (
+    & { roles: Array<(
+      { __typename?: 'Role' }
+      & Pick<Role, 'id' | 'name'>
+    )>, avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
-    ) }
+    )> }
   ) }
 );
 
@@ -1395,10 +1436,10 @@ export type NotificationsSubscription = (
     )>, fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-      & { avatar: (
+      & { avatar?: Maybe<(
         { __typename?: 'Media' }
         & Pick<Media, 'name' | 'blurhash'>
-      ) }
+      )> }
     ), toUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -2493,6 +2534,34 @@ export function useGroupMembersQuery(variables: GroupMembersQueryVariables | Vue
   return VueApolloComposable.useQuery<GroupMembersQuery, GroupMembersQueryVariables>(GroupMembersDocument, variables, options);
 }
 export type GroupMembersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupMembersQuery, GroupMembersQueryVariables>;
+export const CheckGroupRoleAccessDocument = gql`
+    query checkGroupRoleAccess($groupId: String!, $groupRole: GroupRoles!) {
+  checkGroupRoleAccess(groupId: $groupId, groupRole: $groupRole) {
+    isAllowed
+  }
+}
+    `;
+
+/**
+ * __useCheckGroupRoleAccessQuery__
+ *
+ * To run a query within a Vue component, call `useCheckGroupRoleAccessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckGroupRoleAccessQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useCheckGroupRoleAccessQuery({
+ *   groupId: // value for 'groupId'
+ *   groupRole: // value for 'groupRole'
+ * });
+ */
+export function useCheckGroupRoleAccessQuery(variables: CheckGroupRoleAccessQueryVariables | VueCompositionApi.Ref<CheckGroupRoleAccessQueryVariables> | ReactiveFunction<CheckGroupRoleAccessQueryVariables>, options: VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>(CheckGroupRoleAccessDocument, variables, options);
+}
+export type CheckGroupRoleAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>;
 export const GroupsDocument = gql`
     query groups($take: Float!, $skip: Float!) {
   groups(take: $take, skip: $skip) {
@@ -2535,6 +2604,10 @@ export const MeDocument = gql`
     firstname
     lastname
     username
+    roles {
+      id
+      name
+    }
   }
 }
     `;
@@ -2926,6 +2999,10 @@ export const UserByUsernameDocument = gql`
     interests
     firstname
     lastname
+    roles {
+      id
+      name
+    }
     avatar {
       name
       blurhash

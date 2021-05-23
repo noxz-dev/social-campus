@@ -257,7 +257,7 @@ export class UserResolver {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
       where: { username: username },
-      relations: ['following', 'followers'],
+      relations: ['following', 'followers', 'roles'],
     });
 
     //could be a bad idea .. maybe better to do via db
@@ -354,6 +354,52 @@ export class UserResolver {
   @Authorized()
   @Query(() => [User], { description: 'recommeding users based on Faculty' })
   async recommendedUsersFaculty(@Ctx() ctx: MyContext): Promise<User[]> {
+    const userId = ctx.req.user.id;
+    const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
+
+    const following = getRepository(User)
+      .createQueryBuilder('following')
+      .innerJoin('following.followers', 'followers')
+      .where(`followers.id = '${userId}'`)
+      .leftJoinAndSelect('following.avatar', 'avatar')
+      .select('following.id', 'following_id');
+
+    const recommended = await getRepository(User)
+      .createQueryBuilder('user')
+      .where('user.id NOT IN (' + following.getSql() + ')')
+      .andWhere('user.id != :id', { id: userId })
+      .andWhere('user.faculty = :faculty', { faculty: me.faculty })
+      .leftJoinAndSelect('user.avatar', 'avatar')
+      .orderBy('RANDOM()')
+      .limit(3)
+      .getMany();
+
+    if (recommended.length < 3) {
+      const ids = recommended.map((u) => u.id);
+      ids.push(userId);
+      const moreUsers = await getRepository(User)
+        .createQueryBuilder('user')
+        .where('user.id NOT IN (' + following.getSql() + ')')
+        .andWhere('user.id NOT IN (:...recommended)', { recommended: ids })
+        .leftJoinAndSelect('user.avatar', 'avatar')
+        .orderBy('RANDOM()')
+        .limit(3)
+        .getMany();
+
+      //fill up recommend with random users of the network
+      recommended.push(...moreUsers.splice(0, 3 - recommended.length));
+    }
+
+    recommended.forEach((user) => {
+      user.meFollowing = me.following.some((u) => u.id === user.id);
+    });
+
+    return recommended;
+  }
+
+  @Authorized()
+  @Query(() => [User], { description: 'recommeding users based on Faculty' })
+  async recommendedUsersInterests(@Ctx() ctx: MyContext): Promise<User[]> {
     const userId = ctx.req.user.id;
     const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
 

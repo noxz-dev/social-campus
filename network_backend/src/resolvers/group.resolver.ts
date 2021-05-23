@@ -4,7 +4,8 @@ import { Group, GroupType } from '../entity/group.entity';
 import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
 import { Post } from '../entity/post.entity';
 import { GroupMember, User } from '../entity/user.entity';
-import { GroupState } from '../graphql_types/groupState';
+import { GroupAccess } from '../graphql_types/groupAccess';
+import { GroupRoleAccess } from '../graphql_types/groupRoleAccess';
 import { MyContext } from '../utils/interfaces/context.interface';
 
 @Resolver(() => Group)
@@ -253,17 +254,17 @@ export class GroupResolver {
   }
 
   @Authorized()
-  @Query(() => GroupState)
+  @Query(() => GroupAccess)
   public async checkGroupAccess(
     @Ctx() ctx: MyContext,
     @Arg('groupId', () => String) groupId: string,
-  ): Promise<GroupState> {
+  ): Promise<GroupAccess> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({ where: { id: userId }, relations: ['groups'] });
 
     const found = user.groups.find((grp) => grp.id === groupId);
-    const state = new GroupState();
+    const state = new GroupAccess();
     if (found) {
       state.id = found.id;
       state.isMember = true;
@@ -276,6 +277,28 @@ export class GroupResolver {
     }
 
     return state;
+  }
+
+  @Authorized()
+  @Query(() => GroupRoleAccess)
+  public async checkGroupRoleAccess(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId', () => String) groupId: string,
+    @Arg('groupRole', () => GroupRole) role: string,
+  ): Promise<GroupRoleAccess> {
+    const userId = ctx.req.user.id;
+
+    const members = await getGroupMembersWithRoles(groupId);
+
+    const user = members.find((m) => m.id === userId);
+
+    if (!user) throw new Error('User is not part of this group!');
+
+    if (user.groupRole === role) {
+      return { isAllowed: true };
+    }
+
+    return { isAllowed: false };
   }
 }
 
@@ -290,8 +313,16 @@ export const countMembers = async (groupId: string): Promise<number> => {
   return group.members.length;
 };
 
+/**
+ * helper function to get all members of a group with their roles
+ * @param groupId string
+ * @returns number
+ */
 export const getGroupMembersWithRoles = async (groupId: string): Promise<GroupMember[]> => {
   const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
+
+  if (!group) throw new Error('Group not found');
+
   const roles = await getRepository(GroupMemberRole).find({ where: { group: group }, relations: ['user'] });
   group.members = group.members.map((member) => {
     member.groupRole = roles.find((role) => role.user.id === member.id).role;

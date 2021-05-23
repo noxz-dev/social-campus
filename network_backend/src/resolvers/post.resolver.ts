@@ -168,21 +168,14 @@ export class PostResolver {
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
 
-    console.time('user');
     const repo = await getRepository(User);
     const user = await queryWithRelations(userId, repo, 'user', ['following', 'groups']);
-    // const user = await getRepository(User).findOne({
-    //   where: { id: userId },
-    //   relations: ['following', 'groups'],
-    // });
-    console.timeEnd('user');
     const following = user.following.map((user: User) => user.id);
     const userGroups = user.groups.map((group) => group.id);
 
     // push own user id to see also your own posts
     following.push(userId);
 
-    console.time('start');
     //fetch all posts from the users you follow
     const posts = await getRepository(Post).find({
       where: [
@@ -195,7 +188,6 @@ export class PostResolver {
       take: limit,
     });
 
-    console.timeEnd('start');
     if (!posts) return [];
 
     const feedPosts = posts.filter((p) => {
@@ -207,15 +199,8 @@ export class PostResolver {
         return p;
       }
     });
-
-    // const result = await getRepository(Like).findOne({ where: { user: userId, post: postId } });
-    // if (result) return true;
-    // return false;
-
-    // await getRepository(Like);
     for (const post of feedPosts) {
       const like = post.likes.find((like) => like.user.id === userId);
-      // const likeState = await checkLikeState(userId, post.id);
       if (like) {
         post.liked = true;
       } else {
@@ -525,6 +510,35 @@ export class PostResolver {
       return savedPost;
     }
     throw Error('youre not allowed to do that');
+  }
+
+  @Authorized()
+  @Query(() => [Post], {
+    nullable: true,
+    description: 'returns all posts that are not associated with groups, allows to be filterd via tags',
+  })
+  public async searchPosts(
+    @Ctx() ctx: MyContext,
+    @Arg('searchString', () => String) searchString: string,
+  ): Promise<Post[]> {
+    const userId = ctx.req.user.id;
+    if (!userId) throw new Error('no user found');
+
+    const posts = await getRepository(Post)
+      .createQueryBuilder('post')
+      .where(`to_tsvector('simple', post.text) @@ to_tsquery('simple', :query)`, { query: `${searchString}:*` })
+      .getMany();
+
+    if (!posts) {
+      return [];
+    }
+
+    for await (const post of posts) {
+      const likeState = await checkLikeState(userId, post.id);
+      post.liked = likeState;
+    }
+    log.info(`'User with the id: ${userId} called searchPosts'`);
+    return posts;
   }
 }
 

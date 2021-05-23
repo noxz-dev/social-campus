@@ -228,6 +228,20 @@ export default defineComponent({
     const emojiOpen = ref(false);
     const emojiPicker = ref<EmojiPickerElement>();
     const showPreview = ref(false);
+    const activeTrigger = ref('#');
+
+    watch(
+      () => message.value,
+      () => {
+        if (
+          message.value.charAt(message.value.length - 1) === '#' ||
+          message.value.charAt(message.value.length - 1) === '@'
+        ) {
+          activeTrigger.value = message.value.charAt(message.value.length - 1);
+          console.log(activeTrigger.value);
+        }
+      }
+    );
 
     watch(control_enter, (v) => {
       if (v) post();
@@ -373,6 +387,10 @@ export default defineComponent({
     });
 
     const autoCompleteOptions = {
+      noMatchTemplate() {
+        if (activeTrigger.value === '#') return '<li>Kein Tag gefunden - Tag wird erstellt</li>';
+        else if (activeTrigger.value === '@') return '<li>Kein Benutzer gefunden</li>';
+      },
       collection: [
         {
           trigger: '@',

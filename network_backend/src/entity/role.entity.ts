@@ -1,5 +1,6 @@
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { RoleValidator } from '../validators/role.validator';
 import { Base } from './base';
 import { User } from './user.entity';
 
@@ -19,9 +20,9 @@ export class Role extends Base {
   @JoinTable()
   users: User[];
 
-  constructor(name, description?) {
+  constructor(input: RoleValidator) {
     super();
-    this.name = name;
-    this.description = description;
+    this.name = input?.name;
+    this.description = input?.description;
   }
 }

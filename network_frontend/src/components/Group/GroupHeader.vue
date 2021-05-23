@@ -30,34 +30,68 @@
             <div class="ml-0 md:ml-10 w-full mt-5 md:mt-0">
               <group-permission-container :groupId="groupId">
                 <template v-slot:onlyMember>
-                  <app-button class="w-full items-center justify-center"
-                    ><svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
-                      <rect width="256" height="256" fill="none"></rect>
-                      <line
-                        x1="40"
-                        y1="128"
-                        x2="216"
-                        y2="128"
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="24"
-                      ></line>
-                      <line
-                        x1="128"
-                        y1="40"
-                        x2="128"
-                        y2="216"
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="24"
-                      ></line>
-                    </svg>
-                    <span class="text-md">Einladen</span>
-                  </app-button>
+                  <div class="flex flex-col">
+                    <!-- <app-button class="w-full items-center justify-center"
+                      ><svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
+                        <rect width="256" height="256" fill="none"></rect>
+                        <line
+                          x1="40"
+                          y1="128"
+                          x2="216"
+                          y2="128"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="24"
+                        ></line>
+                        <line
+                          x1="128"
+                          y1="40"
+                          x2="128"
+                          y2="216"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="24"
+                        ></line>
+                      </svg>
+                      <span class="text-md px-2">Einladen</span>
+                    </app-button> -->
+                    <app-button
+                      class="w-full items-center justify-center mt-2"
+                      @click="$refs.groupSettingsModal.openModal()"
+                    >
+                      <svg
+                        class="h-6 w-6 mr-2"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                      >
+                        <g
+                          id="Iconly/Light/Edit"
+                          stroke="none"
+                          stroke-width="1"
+                          fill="none"
+                          fill-rule="evenodd"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <g id="Edit" transform="translate(3.000000, 3.000000)" stroke="#fff" stroke-width="1.5">
+                            <line x1="10.7473996" y1="17.4429051" x2="18" y2="17.4429051" id="Stroke-1"></line>
+                            <path
+                              d="M9.7800071,0.794792587 C10.5556498,-0.132213323 11.949987,-0.268144478 12.8962256,0.491732963 C12.9485416,0.532957985 14.6294799,1.83878843 14.6294799,1.83878843 C15.6689776,2.46719147 15.9919725,3.80310504 15.3493946,4.8225887 C15.3152754,4.877184 5.81194644,16.7644749 5.81194644,16.7644749 C5.49577537,17.1588981 5.01583223,17.3917638 4.50290722,17.3973347 L0.863527997,17.4430165 L0.0435303654,13.9723153 C-0.0713375414,13.4843002 0.0435303654,12.9717729 0.359701436,12.5773497 L9.7800071,0.794792587 Z"
+                              id="Stroke-3"
+                            ></path>
+                            <line x1="8.02082217" y1="3.00088838" x2="13.4730672" y2="7.18801364" id="Stroke-5"></line>
+                          </g>
+                        </g>
+                      </svg>
+                      <span class="text-md">Bearbeiten</span>
+                    </app-button>
+                  </div>
                 </template>
                 <template v-slot:public>
                   <app-button @click="joinGroup">
@@ -99,6 +133,66 @@
         </div>
       </div>
     </div>
+    <modal ref="groupSettingsModal" headerText="Gruppe bearbeiten">
+      <div class="text-gray-900 dark:text-gray-50 flex min-h-[25rem] flex-col">
+        <group-role-container :groupId="groupId" :role="GroupRoles.Admin">
+          <div class="flex-1 mt-2">
+            <div class="my-4">
+              <label for="groupname">Gruppenname</label>
+              <input-field class="mt-2" id="groupname" v-model="group.name"></input-field>
+            </div>
+            <div class="my-4">
+              <label for="groupname">Beschreibung</label>
+              <textarea
+                class="
+                  dark:bg-dark-600
+                  border
+                  placeholder-gray-400
+                  dark:text-gray-50
+                  text-gray-900
+                  w-full
+                  mt-3
+                  -mb-3
+                  border-gray-700
+                  h-24
+                  resize-none
+                  rounded-lg
+                  p-2
+                  outline-none
+                  focus:ring-1 focus:ring-brand-500
+                  focus:border-indigo-500
+                "
+                placeholder="Gruppenbeschreibung"
+                v-model="newDescription"
+              />
+            </div>
+            <label for="groupType">Gruppenart</label>
+            <custom-select
+              id="groupType"
+              :options="['PRIVATE', 'PUBLIC']"
+              class="w-1/3 dark:text-gray-50 text-gray-900 mt-2 mb-4"
+              @valueChosen=""
+            />
+            <label for="newGroupPassword">Gruppen Passwort</label>
+            <input-field
+              id="newGroupPassword"
+              v-if="true"
+              placeholder="Gruppen Passwort"
+              class="mt-2"
+              inputClasses="!pr-0"
+              v-model="newGroupPassword"
+            />
+          </div>
+          <div class="flex flex-row-reverse my-4">
+            <app-button class="ml-4" @click=""> Speichern </app-button>
+            <app-button class="!bg-dark-400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
+          </div>
+        </group-role-container>
+        <app-button class="w-full items-center justify-center bg-red-600 hover:bg-red-700 focus:ring-red-600 my-6">
+          <span class="text-md">Gruppe Verlassen</span>
+        </app-button>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -112,9 +206,14 @@ import { Group, GroupByIdQueryVariables, JoinGroupMutationVariables } from '../.
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
 import { useRouter } from 'vue-router';
 import { state } from '../../utils/state';
+import Modal from '../../components/Modal.vue';
+import InputField from '../../components/Form/InputField.vue';
+import CustomSelect from '../../components/Form/CustomSelect.vue';
+import GroupRoleContainer from './GroupRoleContainer.vue';
+import { GroupRoles } from '../../graphql/generated/types';
 
 export default defineComponent({
-  components: { LazyImage, GroupPermissionContainer },
+  components: { LazyImage, GroupPermissionContainer, Modal, InputField, CustomSelect, GroupRoleContainer },
   emits: ['switchComponent'],
   props: {
     groupId: {
@@ -170,6 +269,7 @@ export default defineComponent({
       numberOfMembers,
       group,
       joinGroup,
+      GroupRoles,
     };
   },
 });

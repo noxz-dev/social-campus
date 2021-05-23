@@ -10,6 +10,10 @@ export const userByUsername = gql`
       interests
       firstname
       lastname
+      roles {
+        id
+        name
+      }
       avatar {
         name
         blurhash

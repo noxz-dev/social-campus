@@ -266,9 +266,15 @@ export class GroupResolver {
 
     const user = await getRepository(User).findOne({ where: { id: memberId } });
 
+    if (!user) throw new Error('User not found');
+
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
 
+    if (!group) throw new Error('Group not found');
+
     const role = await getRepository(GroupMemberRole).findOne({ where: { user: user } });
+
+    if (!role) throw new Error('Role not found');
 
     role.role = groupRole;
 

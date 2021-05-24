@@ -331,3 +331,16 @@ export const getGroupMembersWithRoles = async (groupId: string): Promise<GroupMe
 
   return group.members;
 };
+
+export const isMemberOfGroup = async (groupId: string, userId: string): Promise<boolean> => {
+  const isMemberOfGroup = await getRepository(Group)
+    .createQueryBuilder('group')
+    .leftJoinAndSelect('group.members', 'members')
+    .where('group.id = :groupId', { groupId: groupId })
+    .andWhere('members.id = :userId', { userId: userId })
+    .getCount();
+
+  console.log(Boolean(isMemberOfGroup));
+
+  return;
+};

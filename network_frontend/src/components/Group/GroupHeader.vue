@@ -134,7 +134,7 @@
       </div>
     </div>
     <modal ref="groupSettingsModal" headerText="Gruppe bearbeiten">
-      <div class="text-gray-900 dark:text-gray-50 flex min-h-[25rem] flex-col">
+      <div class="text-gray-900 dark:text-gray-50 flex flex-col justify-end">
         <group-role-container :groupId="groupId" :role="GroupRoles.Admin">
           <div class="flex-1 mt-2">
             <div class="my-4">

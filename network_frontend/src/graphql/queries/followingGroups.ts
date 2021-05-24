@@ -7,6 +7,12 @@ export const followingGroups = gql`
       name
       description
       numberOfMembers
+      members {
+        avatar {
+          name
+          blurhash
+        }
+      }
     }
   }
 `;

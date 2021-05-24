@@ -153,6 +153,10 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteNotification: Scalars['Boolean'];
+  createGroup: Group;
+  joinGroup: Group;
+  updateAboutGroup: Group;
+  updateGroupRole: Group;
   /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
   /** likes an post */
@@ -169,10 +173,6 @@ export type Mutation = {
   addComment: Comment;
   likeComment: Comment;
   unlikeComment: Comment;
-  createGroup: Group;
-  joinGroup: Group;
-  updateAboutGroup: Group;
-  updateGroupRole: Group;
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -194,6 +194,33 @@ export type Mutation = {
 
 export type MutationDeleteNotificationArgs = {
   notificationId: Scalars['String'];
+};
+
+
+export type MutationCreateGroupArgs = {
+  password?: Maybe<Scalars['String']>;
+  groupType: GroupType;
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+
+export type MutationJoinGroupArgs = {
+  password?: Maybe<Scalars['String']>;
+  groupId: Scalars['String'];
+};
+
+
+export type MutationUpdateAboutGroupArgs = {
+  aboutContent: Scalars['String'];
+  groupId: Scalars['String'];
+};
+
+
+export type MutationUpdateGroupRoleArgs = {
+  groupRole: GroupRoles;
+  groupId: Scalars['String'];
+  memberId: Scalars['String'];
 };
 
 
@@ -250,33 +277,6 @@ export type MutationLikeCommentArgs = {
 
 export type MutationUnlikeCommentArgs = {
   commentID: Scalars['String'];
-};
-
-
-export type MutationCreateGroupArgs = {
-  password?: Maybe<Scalars['String']>;
-  groupType: GroupType;
-  description?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-};
-
-
-export type MutationJoinGroupArgs = {
-  password?: Maybe<Scalars['String']>;
-  groupId: Scalars['String'];
-};
-
-
-export type MutationUpdateAboutGroupArgs = {
-  aboutContent: Scalars['String'];
-  groupId: Scalars['String'];
-};
-
-
-export type MutationUpdateGroupRoleArgs = {
-  groupRole: GroupRoles;
-  groupId: Scalars['String'];
-  memberId: Scalars['String'];
 };
 
 
@@ -373,6 +373,12 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
+  groupById: Group;
+  groups: Array<Group>;
+  myGroups: Array<Group>;
+  followingGroups: Array<Group>;
+  checkGroupAccess: GroupAccess;
+  checkGroupRoleAccess: GroupRoleAccess;
   /** getPosts returns all posts for a given userID */
   getPostsFromUser?: Maybe<Array<Post>>;
   /** returns all posts that are not associated with groups, allows to be filterd via tags */
@@ -387,12 +393,6 @@ export type Query = {
   searchPosts?: Maybe<Array<Post>>;
   myChats: Array<Chat>;
   chatById: Chat;
-  groupById: Group;
-  groups: Array<Group>;
-  myGroups: Array<Group>;
-  followingGroups: Array<Group>;
-  checkGroupAccess: GroupAccess;
-  checkGroupRoleAccess: GroupRoleAccess;
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -413,6 +413,28 @@ export type Query = {
   recommendedUsersFaculty: Array<User>;
   /** recommeding users based on Faculty */
   recommendedUsersInterests: Array<User>;
+};
+
+
+export type QueryGroupByIdArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type QueryGroupsArgs = {
+  take: Scalars['Float'];
+  skip: Scalars['Float'];
+};
+
+
+export type QueryCheckGroupAccessArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type QueryCheckGroupRoleAccessArgs = {
+  groupRole: GroupRoles;
+  groupId: Scalars['String'];
 };
 
 
@@ -453,28 +475,6 @@ export type QuerySearchPostsArgs = {
 
 export type QueryChatByIdArgs = {
   chatId: Scalars['String'];
-};
-
-
-export type QueryGroupByIdArgs = {
-  groupId: Scalars['String'];
-};
-
-
-export type QueryGroupsArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
-};
-
-
-export type QueryCheckGroupAccessArgs = {
-  groupId: Scalars['String'];
-};
-
-
-export type QueryCheckGroupRoleAccessArgs = {
-  groupRole: GroupRoles;
-  groupId: Scalars['String'];
 };
 
 
@@ -978,6 +978,20 @@ export type CheckGroupAccessQuery = (
   ) }
 );
 
+export type CheckGroupRoleAccessQueryVariables = Exact<{
+  groupId: Scalars['String'];
+  groupRole: GroupRoles;
+}>;
+
+
+export type CheckGroupRoleAccessQuery = (
+  { __typename?: 'Query' }
+  & { checkGroupRoleAccess: (
+    { __typename?: 'GroupRoleAccess' }
+    & Pick<GroupRoleAccess, 'isAllowed'>
+  ) }
+);
+
 export type FollowersQueryVariables = Exact<{
   userId: Scalars['String'];
   take: Scalars['Float'];
@@ -1024,6 +1038,13 @@ export type FollowingGroupsQuery = (
   & { followingGroups: Array<(
     { __typename?: 'Group' }
     & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
+    & { members: Array<(
+      { __typename?: 'GroupMember' }
+      & { avatar?: Maybe<(
+        { __typename?: 'Media' }
+        & Pick<Media, 'name' | 'blurhash'>
+      )> }
+    )> }
   )> }
 );
 
@@ -1137,20 +1158,6 @@ export type GroupMembersQuery = (
   ) }
 );
 
-export type CheckGroupRoleAccessQueryVariables = Exact<{
-  groupId: Scalars['String'];
-  groupRole: GroupRoles;
-}>;
-
-
-export type CheckGroupRoleAccessQuery = (
-  { __typename?: 'Query' }
-  & { checkGroupRoleAccess: (
-    { __typename?: 'GroupRoleAccess' }
-    & Pick<GroupRoleAccess, 'isAllowed'>
-  ) }
-);
-
 export type GroupsQueryVariables = Exact<{
   take: Scalars['Float'];
   skip: Scalars['Float'];
@@ -1212,7 +1219,14 @@ export type MyGroupsQuery = (
   { __typename?: 'Query' }
   & { myGroups: Array<(
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
+    & { members: Array<(
+      { __typename?: 'GroupMember' }
+      & { avatar?: Maybe<(
+        { __typename?: 'Media' }
+        & Pick<Media, 'name' | 'blurhash'>
+      )> }
+    )> }
   )> }
 );
 
@@ -2221,6 +2235,34 @@ export function useCheckGroupAccessQuery(variables: CheckGroupAccessQueryVariabl
   return VueApolloComposable.useQuery<CheckGroupAccessQuery, CheckGroupAccessQueryVariables>(CheckGroupAccessDocument, variables, options);
 }
 export type CheckGroupAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<CheckGroupAccessQuery, CheckGroupAccessQueryVariables>;
+export const CheckGroupRoleAccessDocument = gql`
+    query checkGroupRoleAccess($groupId: String!, $groupRole: GroupRoles!) {
+  checkGroupRoleAccess(groupId: $groupId, groupRole: $groupRole) {
+    isAllowed
+  }
+}
+    `;
+
+/**
+ * __useCheckGroupRoleAccessQuery__
+ *
+ * To run a query within a Vue component, call `useCheckGroupRoleAccessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckGroupRoleAccessQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useCheckGroupRoleAccessQuery({
+ *   groupId: // value for 'groupId'
+ *   groupRole: // value for 'groupRole'
+ * });
+ */
+export function useCheckGroupRoleAccessQuery(variables: CheckGroupRoleAccessQueryVariables | VueCompositionApi.Ref<CheckGroupRoleAccessQueryVariables> | ReactiveFunction<CheckGroupRoleAccessQueryVariables>, options: VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>(CheckGroupRoleAccessDocument, variables, options);
+}
+export type CheckGroupRoleAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>;
 export const FollowersDocument = gql`
     query followers($userId: String!, $take: Float!, $skip: Float!) {
   followers(userId: $userId, take: $take, skip: $skip) {
@@ -2302,6 +2344,12 @@ export const FollowingGroupsDocument = gql`
     name
     description
     numberOfMembers
+    members {
+      avatar {
+        name
+        blurhash
+      }
+    }
   }
 }
     `;
@@ -2534,34 +2582,6 @@ export function useGroupMembersQuery(variables: GroupMembersQueryVariables | Vue
   return VueApolloComposable.useQuery<GroupMembersQuery, GroupMembersQueryVariables>(GroupMembersDocument, variables, options);
 }
 export type GroupMembersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupMembersQuery, GroupMembersQueryVariables>;
-export const CheckGroupRoleAccessDocument = gql`
-    query checkGroupRoleAccess($groupId: String!, $groupRole: GroupRoles!) {
-  checkGroupRoleAccess(groupId: $groupId, groupRole: $groupRole) {
-    isAllowed
-  }
-}
-    `;
-
-/**
- * __useCheckGroupRoleAccessQuery__
- *
- * To run a query within a Vue component, call `useCheckGroupRoleAccessQuery` and pass it any options that fit your needs.
- * When your component renders, `useCheckGroupRoleAccessQuery` returns an object from Apollo Client that contains result, loading and error properties
- * you can use to render your UI.
- *
- * @param variables that will be passed into the query
- * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
- *
- * @example
- * const { result, loading, error } = useCheckGroupRoleAccessQuery({
- *   groupId: // value for 'groupId'
- *   groupRole: // value for 'groupRole'
- * });
- */
-export function useCheckGroupRoleAccessQuery(variables: CheckGroupRoleAccessQueryVariables | VueCompositionApi.Ref<CheckGroupRoleAccessQueryVariables> | ReactiveFunction<CheckGroupRoleAccessQueryVariables>, options: VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>(CheckGroupRoleAccessDocument, variables, options);
-}
-export type CheckGroupRoleAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>;
 export const GroupsDocument = gql`
     query groups($take: Float!, $skip: Float!) {
   groups(take: $take, skip: $skip) {
@@ -2674,6 +2694,13 @@ export const MyGroupsDocument = gql`
     name
     description
     numberOfMembers
+    type
+    members {
+      avatar {
+        name
+        blurhash
+      }
+    }
   }
 }
     `;

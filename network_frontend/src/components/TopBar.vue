@@ -215,7 +215,9 @@
                 aria-orientation="vertical"
                 aria-labelledby="user-menu"
               >
-                <div class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100">
+                <button
+                  class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100 w-full"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     version="1.1"
@@ -245,7 +247,9 @@
                       </g>
                     </g>
                   </svg>
-                  <a
+                  <div
+                    class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700"
+                    role="menuitem"
                     @click="
                       () => {
                         if (user?.username) {
@@ -260,12 +264,14 @@
                         showProfileMenu = false;
                       }
                     "
-                    class="block py-2 pl-5 w-full px-4 text-sm dark:text-gray-100 text-gray-700 cursor-pointer"
-                    role="menuitem"
-                    >Dein Profil</a
                   >
-                </div>
-                <div class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100">
+                    Dein Profil
+                  </div>
+                </button>
+                <button
+                  class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100 w-full"
+                  @click="$refs.settingsModal.openModal()"
+                >
                   <!-- settings icon -->
                   <svg
                     viewBox="0 0 24 24"
@@ -292,10 +298,10 @@
                     </g>
                   </svg>
 
-                  <a href="#" class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem"
-                    >Einstellungen</a
-                  >
-                </div>
+                  <div class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem">
+                    Einstellungen
+                  </div>
+                </button>
                 <div
                   class="
                     flex
@@ -307,7 +313,7 @@
                     duration-100
                   "
                 ></div>
-                <div
+                <button
                   class="
                     flex
                     items-center
@@ -316,6 +322,7 @@
                     transition
                     duration-100
                     cursor-pointer
+                    w-full
                   "
                 >
                   <svg
@@ -348,7 +355,7 @@
                   <div class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem" @click="logout">
                     Ausloggen
                   </div>
-                </div>
+                </button>
               </div>
             </transition>
           </div>
@@ -524,6 +531,7 @@
           </div>
 
           <div
+            @click="$refs.settingsModal.openModal()"
             class="
               block
               rounded-md
@@ -587,6 +595,9 @@
   <modal ref="modal" content-text="" header-text="Neuer Post">
     <new-post @close="modal.closeModal()" />
   </modal>
+  <modal ref="settingsModal" content-text="" header-text="Einstellungen">
+    <settings-modal @close="modal.closeModal()" />
+  </modal>
   <edit-modal content-text="" header-text="Edit Post" />
 </template>
 
@@ -612,6 +623,7 @@ import { Notification } from '../graphql/generated/types';
 import GroupPermissionContainer from './Group/GroupPermissionContainer.vue';
 import { RecursivePartial } from '../utils/typeUtils';
 import LazyImage from './Blurhash/LazyImage.vue';
+import SettingsModal from './SettingsModal.vue';
 
 export default defineComponent({
   components: {
@@ -625,6 +637,7 @@ export default defineComponent({
     ToggleButton,
     GroupPermissionContainer,
     LazyImage,
+    SettingsModal,
   },
   setup(props) {
     const showProfileMenu = ref(false);

@@ -5,19 +5,35 @@
         <lazy-image
           class="rounded-xl object-cover w-full"
           src="https://picsum.photos/300/300"
-          blurhash="LJIzs5=D5uK$^aJWKP#*wd]fnlK5"
+          :blurhash="blurhashes[Math.floor(Math.random() * blurhashes.length)]"
           :onLoad="false"
         />
       </div>
-      <div class="p-3 pt-1">
+      <div class="p-3 pt-1 flex flex-col">
         <div class="line-clamp-2 h-12">
           <span class="text-md break-words">{{ group.name }}</span>
         </div>
-        <div>
-          <span class="text-sm text-gray-400"
-            >Gruppe - {{ numberFormatter(memberCount) }} <span v-if="memberCount === 1">Mitglied</span
-            ><span v-else>Mitglieder</span></span
-          >
+        <div class="flex flex-row-reverse items-center justify-between">
+          <div class="flex -space-x-1 overflow-hidden p-1 pr-1 min-h-[2rem]" v-if="group.members">
+            <div
+              v-if="group.type === 'PUBLIC'"
+              v-for="member in previewMembers"
+              :key="member.id"
+              class="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+            >
+              <lazy-image
+                class="rounded-xl object-cover h-6 w-6"
+                :src="member.avatar.name"
+                :blurhash="member.avatar?.blurhash"
+                rounded="full"
+              />
+            </div>
+          </div>
+          <span class="text-xs text-gray-400">
+            <span v-if="group.type === 'PUBLIC'"> Öffentlich</span><span v-else> Privat</span> -
+            <span class="font-mono">{{ numberFormatter(memberCount) }} </span>
+            <span v-if="memberCount === 1"> Mitglied</span><span v-else> Mitglieder</span>
+          </span>
         </div>
       </div>
       <div class="mb-2 px-2">
@@ -108,10 +124,19 @@ export default defineComponent({
   },
   components: { Card, LazyImage },
   setup(props) {
+    const blurhashes = [
+      'LJIzs5=D5uK$^aJWKP#*wd]fnlK5',
+      'AePC3PmlGv{c',
+      'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
+      'LGFFaXYk^6#M@-5c,1J5@[or[Q6.',
+    ];
     const memberCount = computed(() => props.group.numberOfMembers || 0);
+    const previewMembers = computed(() => props.group.members.slice(0, 2));
     return {
       numberFormatter,
       memberCount,
+      blurhashes,
+      previewMembers,
     };
   },
 });

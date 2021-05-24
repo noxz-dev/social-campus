@@ -7,6 +7,13 @@ export const myGroups = gql`
       name
       description
       numberOfMembers
+      type
+      members {
+        avatar {
+          name
+          blurhash
+        }
+      }
     }
   }
 `;

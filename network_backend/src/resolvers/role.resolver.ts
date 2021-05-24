@@ -12,7 +12,7 @@ export class RoleResolver {
     return await getRepository(Role).find();
   }
 
-  @Authorized()
+  @Authorized('ADMIN')
   @Mutation(() => Role)
   public async addRole(@Arg('input', () => RoleValidator) input: RoleValidator): Promise<Role> {
     const role = new Role(input);
@@ -20,7 +20,7 @@ export class RoleResolver {
     return role;
   }
 
-  @Authorized()
+  @Authorized('ADMIN')
   @Mutation(() => Boolean)
   public async removeRole(@Arg('name', () => String) name: string): Promise<boolean> {
     const role = await getRepository(Role).findOne({ name });

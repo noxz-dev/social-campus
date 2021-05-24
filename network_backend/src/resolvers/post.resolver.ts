@@ -14,6 +14,7 @@ import { MyContext } from '../utils/interfaces/context.interface';
 import { log } from '../utils/services/logger';
 import { AddPostInput } from '../validators/addPost.validator';
 import { EditPostInput } from '../validators/editPost.validator';
+import { isMemberOfGroup } from './group.resolver';
 import { notify, SUB_TOPICS } from './notification.resolver';
 
 export interface NewPostPayload {
@@ -226,6 +227,7 @@ export class PostResolver {
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('user.avatar', 'avatar')
       .leftJoinAndSelect('post.comments', 'comments')
+      .leftJoinAndSelect('post.group', 'group')
       .orderBy({
         'comments.createdAt': 'DESC',
       })
@@ -233,7 +235,13 @@ export class PostResolver {
       .leftJoinAndSelect('commentUser.avatar', 'commentUserAvatar')
       .getOne();
 
-    if (!post) return null;
+    if (!post) throw new Error('Post not found!');
+
+    //check if member of the group to restrict interaction
+    if (post.group) {
+      if (!(await isMemberOfGroup(post.group.id, userId)))
+        throw new Error('youre not allowed to interact with this post');
+    }
 
     const likeState = await checkLikeState(userId, post.id);
     post.liked = likeState;

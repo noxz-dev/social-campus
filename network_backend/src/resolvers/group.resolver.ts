@@ -175,7 +175,7 @@ export class GroupResolver {
 
     const user = await getRepository(User).findOne({
       where: { id: userId },
-      relations: ['groups', 'groups.members', 'groups.createdBy'],
+      relations: ['groups', 'groups.members', 'groups.createdBy', 'groups.posts'],
     });
     if (!user.groups) {
       return [];
@@ -183,10 +183,36 @@ export class GroupResolver {
 
     for await (const group of user.groups) {
       group.members = await getGroupMembersWithRoles(group.id);
+      group.posts = await getRepository(Post).find({ where: { group: group.id } });
     }
     user.groups = user.groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
+    });
+
+    //sort groups after post activity
+    user.groups.sort((a, b) => {
+      a.posts.sort((a, b) => {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      });
+
+      b.posts.sort((a, b) => {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      });
+
+      if (!a.posts[0] && b.posts[0]) {
+        return new Date(b.posts[0].createdAt).getTime() - 0;
+      }
+
+      if (!b.posts[0] && a.posts[0]) {
+        return 0 - new Date(a.posts[0].createdAt).getTime();
+      }
+
+      if (!b.posts[0] && !a.posts[0]) {
+        return 0 - 0;
+      }
+
+      return new Date(b.posts[0].createdAt).getTime() - new Date(a.posts[0].createdAt).getTime();
     });
 
     return user.groups;
@@ -235,7 +261,7 @@ export class GroupResolver {
     @Arg('groupRole', () => GroupRole) groupRole: GroupRole,
   ): Promise<Group> {
     const userId = ctx.req.user.id;
-    const loggedInRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId } });
+    const loggedInRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId, group: groupId } });
     if (loggedInRole.role !== GroupRole.ADMIN) throw new Error('youre not allowed to do this');
 
     const user = await getRepository(User).findOne({ where: { id: memberId } });

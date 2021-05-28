@@ -152,7 +152,7 @@ import TributeTextarea from '../../components/TributeTextarea.vue';
 export default defineComponent({
   components: { ToggleButton, VueTribute, TributeTextarea },
   emits: ['close'],
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const message = ref('');
     const route = useRoute();
     const file = ref<File>();
@@ -401,75 +401,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.tribute-container {
-  z-index: 50;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: auto;
-  max-height: 300px;
-  max-width: 500px;
-  overflow: auto;
-  display: block;
-  z-index: 999999;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(#000, 0.13);
-}
-.tribute-container ul {
-  margin: 0;
-  margin-top: 2px;
-  padding: 0;
-  list-style: none;
-  background: #fff;
-  border-radius: 4px;
-  border: 1px solid rgba(#000, 0.13);
-  background-clip: padding-box;
-  overflow: hidden;
-}
-.tribute-container li {
-  color: #3f5efb;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.tribute-container li.highlight,
-.tribute-container li:hover {
-  background: #3f5efb;
-  color: #fff;
-}
-.tribute-container li span {
-  font-weight: bold;
-}
-.tribute-container li.no-match {
-  cursor: default;
-}
-.tribute-container .menu-highlighted {
-  font-weight: bold;
-}
-unicode-emoji-picker {
-  /* Because the component is built using the "em" unit, everything is scaled up from the font-size */
-  /* So you should probably only change this value if you want to resize the component */
-  /* It also directly reflects the font-size for the emoji font */
-  font-size: 16px;
-  max-width: 20em;
-}
-
-.dark unicode-emoji-picker {
-  --fill-color: #393938;
-  --text-color: #fffffc;
-  --box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.35);
-  --filters-border-color: #30302a;
-  --filter-fill-color-hover: #454540;
-  --content-scrollbar-thumb-fill-color: #50504a;
-  --content-scrollbar-thumb-fill-color-hover: #76766f;
-  --filter-active-marker-border-color: #595955;
-  --title-bar-fill-color: rgba(57, 57, 55, 0.96);
-  --search-input-border-color: #50504a;
-  --search-input-border-color-hover: #eee;
-  --emoji-border-color-hover: #595955;
-  --variations-backdrop-fill-color: rgba(57, 57, 55, 0.8);
-  --emoji-variation-marker-border-color: #50504a;
-  --emoji-variation-marker-border-color-hover: #76766f;
-}
-</style>
+<style></style>

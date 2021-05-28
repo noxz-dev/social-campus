@@ -18,13 +18,15 @@
           <span class="text-xs font-medium">@{{ user.username }}</span>
         </div>
       </div>
-      <follow-button
-        v-if="user.id !== userFromStore.id"
-        :user="user"
-        :following="user.meFollowing"
-        class="mr-2 rounded-xl"
-        :class="'!text-' + buttonTextSize"
-      ></follow-button>
+      <div class="min-w-[6.5rem] mr-2">
+        <follow-button
+          v-if="user.id !== userFromStore.id"
+          :user="user"
+          :following="user.meFollowing"
+          class="mr-2 rounded-xl w-full"
+          :class="'!text-' + buttonTextSize"
+        ></follow-button>
+      </div>
     </div>
   </card>
 </template>

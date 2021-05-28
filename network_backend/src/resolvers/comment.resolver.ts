@@ -7,6 +7,7 @@ import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/context.interface';
+import { isMemberOfGroup } from './group.resolver';
 import { notify } from './notification.resolver';
 
 @Resolver(() => Comment)
@@ -18,23 +19,23 @@ export class CommentResolver {
     @Arg('text', () => String) text: string,
     @Arg('postID', () => String) postID: string,
   ): Promise<Comment | null> {
-    const id = ctx.req.user.id;
-    if (!id) {
-      return null;
-    }
+    const userId = ctx.req.user.id;
+    if (!userId) throw new Error('youre not authenticated');
 
-    const user = await getRepository(User).findOne({ where: { id: id } });
-    if (!user) {
-      return null;
-    }
+    const user = await getRepository(User).findOne({ where: { id: userId } });
+    if (!user) throw new Error('User not found!');
 
     const post = await getRepository(Post).findOne({
       where: { id: postID },
       relations: ['user', 'group', 'group.members'],
     });
-    if (!post) {
-      return null;
+
+    if (!post) throw new Error('Post not found!');
+
+    if (post.group && !(await isMemberOfGroup(post.group.id, userId))) {
+      throw new Error('youre not allowed to interact with this content');
     }
+
     const comment = new Comment();
     comment.text = text;
     comment.user = user;

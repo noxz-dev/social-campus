@@ -372,7 +372,5 @@ export const isMemberOfGroup = async (groupId: string, userId: string): Promise<
     .andWhere('members.id = :userId', { userId: userId })
     .getCount();
 
-  console.log(Boolean(isMemberOfGroup));
-
-  return;
+  return Boolean(isMemberOfGroup);
 };

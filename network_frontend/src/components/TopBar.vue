@@ -217,6 +217,20 @@
               >
                 <button
                   class="flex items-center dark:hover:bg-dark-600 hover:bg-gray-100 transition duration-100 w-full"
+                  @click="
+                    () => {
+                      if (user?.username) {
+                        $router.push({
+                          name: 'Profile',
+                          params: {
+                            id: user.username,
+                          },
+                        });
+                      }
+
+                      showProfileMenu = false;
+                    }
+                  "
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -247,24 +261,7 @@
                       </g>
                     </g>
                   </svg>
-                  <div
-                    class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700"
-                    role="menuitem"
-                    @click="
-                      () => {
-                        if (user?.username) {
-                          $router.push({
-                            name: 'Profile',
-                            params: {
-                              id: user.username,
-                            },
-                          });
-                        }
-
-                        showProfileMenu = false;
-                      }
-                    "
-                  >
+                  <div class="block py-2 px-4 text-sm dark:text-gray-100 text-gray-700" role="menuitem">
                     Dein Profil
                   </div>
                 </button>

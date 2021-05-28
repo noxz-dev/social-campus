@@ -73,7 +73,6 @@ import { computed, defineComponent, ref } from 'vue';
 import { useMyChatsQuery } from '../../graphql/generated/types';
 import Modal from '../../components/Modal.vue';
 import NewChat from './NewChat.vue';
-import { chatState } from '../../utils/chatState';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import breakpoints from '../../utils/breakpoints';
@@ -94,20 +93,18 @@ export default defineComponent({
     const chats = useResult(result, null, (data) => data.myChats);
     let firstload = true;
     onResult(() => {
-      console.log('set active chat');
       if (chats.value && breakpoints.is !== 'sm' && firstload && route.name !== 'ChatBox')
         router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
       firstload = false;
     });
 
     const setActiveChat = (chatId: string) => {
-      console.log('UPDATED CHAT');
       router.push({ name: 'ChatBox', params: { id: chatId } });
       emit('user-choosen');
       console.log(chatId);
     };
 
-    return { chats, modal, refetch, setActiveChat, chatState, user };
+    return { chats, modal, refetch, setActiveChat, user };
   },
 });
 </script>

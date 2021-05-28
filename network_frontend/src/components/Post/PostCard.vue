@@ -3,7 +3,7 @@
     <card-header :post="post" :bgColorDark="cardBgColor" />
     <div class="px-4" @click.self="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
-        <div class="markdown whitespace-pre-wrap" v-html="parseMarkdown(post.text)"></div>
+        <div class="markdown whitespace-pre-wrap" v-html="content"></div>
       </div>
       <div v-if="post.media" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <lazy-image
@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated } from 'vue';
+import { defineComponent, onMounted, onUpdated, ref } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../../graphql/generated/types';
@@ -79,8 +79,7 @@ import CardHeader from '../Card/CardHeader.vue';
 import { LikePostMutationVariables, UnlikePostMutationVariables } from '../../graphql/generated/types';
 import Card from '../Card/Card.vue';
 import { useRouter } from 'vue-router';
-import marked from 'marked';
-import DOMPurify from 'dompurify';
+import { parseMarkdown } from '../../utils/postUtils';
 import LazyImage from '../Blurhash/LazyImage.vue';
 
 dayjs.extend(relativeTime);
@@ -101,15 +100,7 @@ export default defineComponent({
     const router = useRouter();
     let tagIds: string[] = [];
     let mentions: string[] = [];
-
-    //little bit hacky there has to be a better way
-    onMounted(() => {
-      addTagAndMentionHandle();
-    });
-
-    onUpdated(() => {
-      addTagAndMentionHandle();
-    });
+    const content = ref('');
 
     const addTagAndMentionHandle = () => {
       for (const tagId of tagIds) {
@@ -130,48 +121,18 @@ export default defineComponent({
       }
     };
 
-    const parseMarkdown = (value: string) => {
-      tagIds = [];
-      const content = parseTags(value);
-      return DOMPurify.sanitize(marked(content), {
-        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|tel|callto|cid|xmpp|xxx):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-      });
-    };
+    onMounted(() => {
+      const parsed = parseMarkdown(props.post.text);
+      tagIds = parsed.tagIds;
+      mentions = parsed.mentions;
+      content.value = parsed.sanitizedContent;
 
-    const parseTags = (content: string): string => {
-      const foundEmails = extractEmails(content);
+      addTagAndMentionHandle();
+    });
 
-      if (foundEmails) {
-        for (const [index, email] of foundEmails.entries()) {
-          content = content.replaceAll(email, `[${index}]`);
-        }
-      }
-      let editedContent = content
-        .replaceAll(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g, (val) => {
-          val = val.replaceAll('#', '');
-          if (val.length === 0) return val;
-          const tag = `<span id="${val}" class="cursor-pointer inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">#${val}</span>`;
-          tagIds.push(val);
-          return tag;
-        })
-        .replaceAll(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g, (val: string) => {
-          val = val.replaceAll('@', '');
-          if (val.length === 0) return val;
-          const mention = `<span id="${val}" class="cursor-pointer inline-flex items-center py-0.5 rounded-full text-md hover:underline font-medium text-highlight-500">@${val}</span>`;
-          mentions.push(val);
-          return mention;
-        });
-      if (foundEmails) {
-        for (const [index, email] of foundEmails.entries()) {
-          editedContent = editedContent.replaceAll(`[${index}]`, email);
-        }
-      }
-      return editedContent;
-    };
-
-    function extractEmails(text: string) {
-      return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
-    }
+    onUpdated(() => {
+      addTagAndMentionHandle();
+    });
 
     const handleTagClick = (tag: string) => {
       router.push({ name: 'Browse', query: { tag } });
@@ -284,6 +245,7 @@ export default defineComponent({
 
     return {
       likePost,
+      content,
       handleNavigation,
       parseMarkdown,
       viewerOptions,

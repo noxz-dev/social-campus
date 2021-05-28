@@ -22,7 +22,7 @@
     @click="unfollowUser"
     v-else
     :disabled="removeFollowLoading"
-    class="justify-center hover:bg-red-600 transition-colors duration-200"
+    class="justify-center hover:!bg-red-600 transition-colors duration-200"
   >
     <svg
       class="animate-spin mr-3 -ml-1 h-5 w-5 text-white"

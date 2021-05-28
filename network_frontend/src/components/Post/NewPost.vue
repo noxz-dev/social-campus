@@ -21,7 +21,7 @@
           placeholder="Hey, was gibt's Neues ?"
           @blur="v.message.$touch"
         />
-        <div class="markdown bg-gray-700 rounded-lg p-0.5" v-else v-html="parseMarkdown(message)"></div>
+        <div class="markdown bg-gray-700 rounded-lg p-1" v-else v-html="parseMarkdown(message).sanitizedContent"></div>
         <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3" v-if="!showPreview">
           <div>
             <svg
@@ -192,8 +192,6 @@
 </template>
 
 <script lang="ts">
-import marked from 'marked';
-import DOMPurify from 'dompurify';
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
@@ -212,6 +210,7 @@ import { browsePosts } from '../../graphql/queries/browsePosts';
 import { getPostsFromGroup } from '../../graphql/queries/getPostsFromGroup';
 import { useMagicKeys } from '@vueuse/core';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
+import { parseMarkdown } from '../../utils/postUtils';
 import 'unicode-emoji-picker';
 export default defineComponent({
   components: { ToggleButton, VueTribute },
@@ -246,12 +245,6 @@ export default defineComponent({
     watch(control_enter, (v) => {
       if (v) post();
     });
-
-    const parseMarkdown = (value: string) => {
-      return DOMPurify.sanitize(marked(value), {
-        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|tel|callto|cid|xmpp|xxx):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-      });
-    };
 
     const toggle = () => {
       showImageUpload.value = !showImageUpload.value;
@@ -386,26 +379,7 @@ export default defineComponent({
       accept: 'image/jpeg, image/png, image/gif',
     });
 
-    const autoCompleteOptions = {
-      noMatchTemplate() {
-        if (activeTrigger.value === '#') return '<li>Kein Tag gefunden - Tag wird erstellt</li>';
-        else if (activeTrigger.value === '@') return '<li>Kein Benutzer gefunden</li>';
-      },
-      collection: [
-        {
-          trigger: '@',
-          values: [] as string[],
-          positionMenu: true,
-        },
-        {
-          trigger: '#',
-          values: [] as string[],
-          positionMenu: true,
-        },
-      ],
-    };
-
-    const { onResult: onTags } = useQuery(gql`
+    const { refetch: getTags, onResult: onTags } = useQuery(gql`
       query {
         getAllTags {
           id
@@ -420,6 +394,34 @@ export default defineComponent({
       });
       autoCompleteOptions.collection[1].values.push(...tags);
     });
+
+    const autoCompleteOptions = {
+      noMatchTemplate() {
+        if (activeTrigger.value === '#') return '<li>Kein Tag gefunden - Tag wird erstellt</li>';
+        else if (activeTrigger.value === '@') return '<li>Kein Benutzer gefunden</li>';
+      },
+      collection: [
+        {
+          trigger: '@',
+          values: [] as string[],
+          positionMenu: true,
+        },
+        {
+          trigger: '#',
+          // values: async (text, cb) => {
+          //   const response = await getTags();
+          //   console.log(response.data.getAllTags);
+          //   cb(
+          //     response.data.getAllTags.map((tag: Tag) => {
+          //       return { key: tag.name, value: tag.name };
+          //     })
+          //   );
+          // },
+          values: [] as string[],
+          positionMenu: true,
+        },
+      ],
+    };
 
     const { onResult: onUsers } = useQuery(gql`
       query {

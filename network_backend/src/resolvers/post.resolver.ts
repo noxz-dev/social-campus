@@ -2,7 +2,7 @@ import { isUUID } from 'class-validator';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { EntityManager, getConnection, getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
-import { Group } from '../entity/group.entity';
+import { Group, GroupType } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -239,8 +239,10 @@ export class PostResolver {
 
     //check if member of the group to restrict interaction
     if (post.group) {
-      if (!(await isMemberOfGroup(post.group.id, userId)))
+      const isMember = await isMemberOfGroup(post.group.id, userId);
+      if (!isMember && post.group.type === GroupType.PRIVATE) {
         throw new Error('youre not allowed to interact with this post');
+      }
     }
 
     const likeState = await checkLikeState(userId, post.id);
@@ -268,6 +270,8 @@ export class PostResolver {
     let group: Group;
     if (input.groupId) {
       group = await getRepository(Group).findOne({ where: { id: input.groupId }, relations: ['members'] });
+
+      //check if the user is allowed to post content for the group
       const user = group.members.find((member) => member.id === id);
       if (!user) throw Error('youre not allowed to create content for this group');
     }
@@ -377,22 +381,31 @@ export class PostResolver {
   @Mutation(() => Post, { description: 'likes an post' })
   public async likePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
-    if (!userId) {
-      return null;
-    }
+    if (!userId) throw new Error('youre not authenticated');
 
     const user = await getRepository(User).findOne({ where: { id: userId } });
-    if (!user) {
-      return null;
-    }
+    if (!user) throw new Error('User not found!');
 
     const post = await getRepository(Post).findOne({
-      relations: ['comments', 'user', 'likes', 'likes.user', 'comments.user', 'comments.likes', 'comments.likes.user'],
+      relations: [
+        'comments',
+        'user',
+        'likes',
+        'likes.user',
+        'comments.user',
+        'comments.likes',
+        'comments.likes.user',
+        'group',
+      ],
       where: { id: postID },
     });
-    if (!post) {
-      return null;
+    if (!post) throw new Error('Post not found!');
+
+    //check if the post is associated with a group and enforce permission check
+    if (post.group && !(await isMemberOfGroup(post.group.id, userId))) {
+      throw new Error('youre not allowed to interact with this content');
     }
+
     for (const like of post.likes) {
       if (userId === like.user.id) throw new Error('you already liked this post');
     }
@@ -425,9 +438,7 @@ export class PostResolver {
   @Mutation(() => Post, { description: 'unlikes an post' })
   public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
     const userId = ctx.req.user.id;
-    if (!userId) {
-      return null;
-    }
+    if (!userId) throw new Error('youre not authenticated');
 
     const post = await getRepository(Post).findOne({
       relations: [
@@ -439,11 +450,15 @@ export class PostResolver {
         'comments.user',
         'comments.likes',
         'comments.likes.user',
+        'group',
       ],
       where: { id: postID },
     });
-    if (!post) {
-      return null;
+    if (!post) throw new Error('Post not found!');
+
+    //check if the post is associated with a group and enforce permission check
+    if (post.group && !(await isMemberOfGroup(post.group.id, userId))) {
+      throw new Error('youre not allowed to interact with this content');
     }
 
     post.likes = post.likes.filter((like) => like.user.id !== userId);

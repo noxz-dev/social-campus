@@ -2,7 +2,26 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark-700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10">
       <div
-        class="group z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark-700 dark:stroke-white stroke-black hover:stroke-brand"
+        class="
+          group
+          z-20
+          py-2
+          sticky
+          md:static
+          w-full
+          -top-10
+          cursor-pointer
+          dark:text-gray-50
+          text-gray-900
+          self-start
+          flex
+          items-center
+          bg-white
+          dark:bg-dark-700
+          dark:stroke-white
+          stroke-black
+          hover:stroke-brand
+        "
         @click="$router.back()"
       >
         <svg
@@ -32,7 +51,7 @@
         </svg>
         <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück</span>
       </div>
-      <div class="w-full mt-10 flex items-center flex-col">
+      <div class="w-full mt-10 flex items-center flex-col" v-if="postData?.postById">
         <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark-600" class="mb-3 md:mb-6" />
         <div class="border-b-2 border-dark-500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-3 md:mb-6" />
         <card>
@@ -42,7 +61,18 @@
               <textarea
                 ref="commentInput"
                 v-model="commentText"
-                class="dark:bg-dark-700 border-2 border-gray-700 h-24 resize-none rounded-lg w-full p-2 outline-none focus:ring-1 focus:ring-brand-500 focus:border-indigo-500"
+                class="
+                  dark:bg-dark-700
+                  border-2 border-gray-700
+                  h-24
+                  resize-none
+                  rounded-lg
+                  w-full
+                  p-2
+                  outline-none
+                  focus:ring-1 focus:ring-brand-500
+                  focus:border-indigo-500
+                "
                 placeholder="Kommentiere..."
               />
             </div>
@@ -51,7 +81,26 @@
             </div>
             <div class="self-end">
               <div
-                class="cursor-pointer mr-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-700 focus:ring-brand-500"
+                class="
+                  cursor-pointer
+                  mr-2
+                  inline-flex
+                  items-center
+                  px-4
+                  py-2
+                  border border-transparent
+                  text-sm
+                  font-medium
+                  rounded-md
+                  shadow-sm
+                  text-white
+                  bg-brand-500
+                  hover:bg-brand-600
+                  focus:outline-none
+                  focus:ring-2 focus:ring-offset-2
+                  dark:focus:ring-offset-dark-700
+                  focus:ring-brand-500
+                "
                 @click="newComment"
               >
                 Antworten

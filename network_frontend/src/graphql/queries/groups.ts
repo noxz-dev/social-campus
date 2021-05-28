@@ -7,6 +7,13 @@ export const groups = gql`
       name
       description
       numberOfMembers
+      type
+      members {
+        avatar {
+          name
+          blurhash
+        }
+      }
     }
   }
 `;

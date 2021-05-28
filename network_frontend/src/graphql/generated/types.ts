@@ -1168,7 +1168,14 @@ export type GroupsQuery = (
   { __typename?: 'Query' }
   & { groups: Array<(
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
+    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
+    & { members: Array<(
+      { __typename?: 'GroupMember' }
+      & { avatar?: Maybe<(
+        { __typename?: 'Media' }
+        & Pick<Media, 'name' | 'blurhash'>
+      )> }
+    )> }
   )> }
 );
 
@@ -2589,6 +2596,13 @@ export const GroupsDocument = gql`
     name
     description
     numberOfMembers
+    type
+    members {
+      avatar {
+        name
+        blurhash
+      }
+    }
   }
 }
     `;

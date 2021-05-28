@@ -92,7 +92,7 @@
                     <app-button
                       v-if="!showEditProfile"
                       @click="handleChatNav"
-                      class="mt-2 justify-center !border-2 !border-brand-500 bg-opacity-20"
+                      class="mt-2 justify-center !border-2 !border-brand-500 bg-opacity-60 dark:bg-opacity-20"
                     >
                       Nachricht senden
                     </app-button>
@@ -159,21 +159,27 @@
                   "
                 >
                   <router-link :to="{ name: 'ProfilePosts', params: { id: $route.params.id } }">
-                    <div class="py-1 px-2 rounded-lg">
+                    <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Posts</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.postCount }}</span>
+                      <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
+                        numberFormatter(stats?.postCount)
+                      }}</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'ProfileFollowers', params: { id: $route.params.id } }">
-                    <div class="py-1 px-2 rounded-lg">
+                    <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Followers</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.followerCount }}</span>
+                      <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
+                        numberFormatter(stats?.followerCount)
+                      }}</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'ProfileFollowing', params: { id: $route.params.id } }">
-                    <div class="py-1 px-2 rounded-lg">
+                    <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Folge Ich</span>
-                      <span class="ml-2 font-light dark:text-gray-50 text-gray-900">{{ stats?.followingCount }}</span>
+                      <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
+                        numberFormatter(stats?.followingCount)
+                      }}</span>
                     </div>
                   </router-link>
                 </div>
@@ -329,6 +335,7 @@ import PostList from '../components/Post/PostList.vue';
 import { useCreateChatMutation, useUserByUsernameQuery, useUserStatsQuery } from '../graphql/generated/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { numberFormatter } from '../utils/numberFormatter';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import Modal from '../components/Modal.vue';
@@ -443,6 +450,7 @@ export default defineComponent({
       handleChatNav,
       openAboutMe,
       breakpoints,
+      numberFormatter,
     };
   },
 });

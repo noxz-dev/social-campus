@@ -13,14 +13,23 @@ export class SearchResolver {
   async search(@Arg('searchString', () => String) searchString: string): Promise<Search> {
     const users = await getRepository(User).find({
       where: [{ firstname: ILike(`%${searchString}%`) }, { lastname: ILike(`%${searchString}%`) }],
+      order: {
+        firstname: 'DESC',
+      },
     });
 
     const tags = await getRepository(Tag).find({
       where: { name: ILike(`%${searchString}%`) },
+      order: {
+        name: 'DESC',
+      },
     });
 
     const groups = await getRepository(Group).find({
       where: { name: ILike(`%${searchString}%`) },
+      order: {
+        name: 'DESC',
+      },
     });
 
     const searchResult: Search = { users, tags, groups };

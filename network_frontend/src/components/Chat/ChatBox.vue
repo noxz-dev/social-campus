@@ -225,6 +225,7 @@ import { EmojiPickerElement } from 'unicode-emoji-picker';
 import 'unicode-emoji-picker';
 import { useRoute } from 'vue-router';
 import { useDropzone } from 'vue3-dropzone';
+import { myChats } from '../../graphql/queries/myChats';
 
 export default defineComponent({
   props: {},
@@ -266,6 +267,11 @@ export default defineComponent({
           file: file.value,
         },
       },
+      refetchQueries: [
+        {
+          query: myChats,
+        },
+      ],
       update: (cache, { data: { sendMessage } }) => {
         cache.modify({
           id: cache.identify(chat.value as Chat),

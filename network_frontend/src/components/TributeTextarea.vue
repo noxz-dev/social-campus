@@ -3,9 +3,11 @@
     <vue-tribute :options="autocompleteOptions" elementId="newPostTextArea">
       <div class="w-full relative">
         <textarea
+          ref="input"
+          :value="modelValue"
+          @input="onChanged"
           v-if="!showPreview"
           id="newPostTextArea"
-          v-model="message"
           class="
             w-full
             dark:bg-dark-600
@@ -18,13 +20,12 @@
             focus:ring-1 focus:ring-brand-500
             focus:border-indigo-500
           "
-          placeholder="Hey, was gibt's Neues ?"
-          @blur="v.message.$touch"
+          :placeholder="placeholderText"
         />
         <div
           class="markdown bg-gray-700 rounded-lg p-0.5"
           v-else
-          v-html="parseMarkdown(message).sanitizedContent"
+          v-html="parseMarkdown(modelValue).sanitizedContent"
         ></div>
         <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3" v-if="!showPreview">
           <div>
@@ -77,13 +78,23 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { parseMarkdown } from '../utils/postUtils';
-import VueTribute from '../VueTribute.vue';
+import VueTribute from '../components/VueTribute.vue';
+import 'unicode-emoji-picker';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 export default defineComponent({
   components: { VueTribute },
+  emits: ['update:modelValue', 'focus'],
   props: {
+    modelValue: {
+      type: String,
+      required: true,
+    },
+    placeholderText: {
+      type: String,
+      required: true,
+    },
     autocompleteOptions: {
       type: Object,
       required: true,
@@ -93,10 +104,23 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props, { emit }) {
     const emojiPicker = ref<EmojiPickerElement>();
     const emojiOpen = ref(false);
-    return { emojiOpen, parseMarkdown };
+    const input = ref();
+
+    const onChanged = (e: any) => {
+      emit('update:modelValue', e.currentTarget.value);
+    };
+
+    onMounted(() => {
+      emojiPicker.value?.addEventListener('emoji-pick', (event) => {
+        emit('update:modelValue', props.modelValue + event.detail.emoji);
+        emojiOpen.value = false;
+      });
+    });
+
+    return { emojiOpen, parseMarkdown, onChanged, input, emojiPicker };
   },
 });
 </script>

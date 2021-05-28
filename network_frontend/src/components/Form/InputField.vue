@@ -5,7 +5,22 @@
     </div>
     <input
       ref="input"
-      class="dark:text-gray-100 w-full border pr-28 md:pr-36 text-gray-900 dark:bg-dark-600 border-dark-500 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:border-brand-500 focus:ring-brand-500"
+      class="
+        dark:text-gray-100
+        w-full
+        border
+        pr-28
+        md:pr-36
+        text-gray-900
+        dark:bg-dark-600
+        border-dark-500
+        rounded-lg
+        placeholder-gray-400
+        focus:outline-none
+        focus:ring-1
+        focus:border-brand-500
+        focus:ring-brand-500
+      "
       :type="type"
       :value="modelValue"
       @input="onChanged"
@@ -26,7 +41,21 @@
     <button
       v-if="showButton"
       @click="emitClick"
-      class="inset-y-0 md:hidden cursor-pointer px-6 bg-brand-500 absolute text-center right-0 rounded-lg items-center justify-center font-medium duration-100"
+      class="
+        inset-y-0
+        md:hidden
+        cursor-pointer
+        px-6
+        bg-brand-500
+        absolute
+        text-center
+        right-0
+        rounded-lg
+        items-center
+        justify-center
+        font-medium
+        duration-100
+      "
     >
       <slot name="mobileIcon" />
     </button>
@@ -46,7 +75,7 @@ export default defineComponent({
   name: 'InputField',
   emits: ['update:modelValue', 'focus'],
   props: {
-    modelValue: String | Number,
+    modelValue: String,
     placeholder: String,
     name: String,
     type: {
@@ -91,7 +120,7 @@ export default defineComponent({
       return props.inputClasses + (hasIconSlot.value ? ' pl-' + props.inputInset : '');
     });
 
-    const onChanged = (e) => emit('update:modelValue', e.currentTarget.value);
+    const onChanged = (e: any) => emit('update:modelValue', e.currentTarget.value);
 
     const focus = () => {
       input.value.focus();

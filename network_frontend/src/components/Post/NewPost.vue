@@ -1,75 +1,11 @@
 <template>
   <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
-    <vue-tribute :options="autoCompleteOptions" elementId="newPostTextArea">
-      <div class="w-full relative">
-        <textarea
-          v-if="!showPreview"
-          id="newPostTextArea"
-          v-model="message"
-          class="
-            w-full
-            dark:bg-dark-600
-            border-2 border-gray-700
-            h-24
-            resize-none
-            rounded-lg
-            p-2
-            outline-none
-            focus:ring-1 focus:ring-brand-500
-            focus:border-indigo-500
-          "
-          placeholder="Hey, was gibt's Neues ?"
-          @blur="v.message.$touch"
-        />
-        <div class="markdown bg-gray-700 rounded-lg p-1" v-else v-html="parseMarkdown(message).sanitizedContent"></div>
-        <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3" v-if="!showPreview">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 256 256"
-              class="
-                hover:bg-dark-800
-                rounded-full
-                transition
-                fill-dark-600
-                dark:fill-white
-                stroke-black
-                dark:stroke-white
-              "
-              @click="emojiOpen = !emojiOpen"
-            >
-              <rect width="256" height="256" fill="none"></rect>
-              <circle
-                cx="128"
-                cy="128"
-                r="96"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
-              ></circle>
-              <path
-                d="M169.57812,151.99627a48.02731,48.02731,0,0,1-83.15624.00073"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
-              ></path>
-              <circle cx="92" cy="108" r="12"></circle>
-              <circle cx="164" cy="108" r="12"></circle>
-            </svg>
-          </div>
-          <unicode-emoji-picker
-            filters-position="left"
-            ref="emojiPicker"
-            class="absolute right-0 -mr-2 z-20"
-            v-show="emojiOpen"
-          ></unicode-emoji-picker>
-        </div>
-      </div>
-    </vue-tribute>
+    <tribute-textarea
+      :autocompleteOptions="autoCompleteOptions"
+      :showPreview="showPreview"
+      placeholder-text="Hey, was gibt's Neues ?"
+      v-model="message"
+    ></tribute-textarea>
     <div class="flex justify-between">
       <span
         class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center hover:underline"
@@ -212,8 +148,9 @@ import { useMagicKeys } from '@vueuse/core';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 import { parseMarkdown } from '../../utils/postUtils';
 import 'unicode-emoji-picker';
+import TributeTextarea from '../../components/TributeTextarea.vue';
 export default defineComponent({
-  components: { ToggleButton, VueTribute },
+  components: { ToggleButton, VueTribute, TributeTextarea },
   emits: ['close'],
   setup(props, { emit }) {
     const message = ref('');
@@ -232,6 +169,7 @@ export default defineComponent({
     watch(
       () => message.value,
       () => {
+        console.log('message changed');
         if (
           message.value.charAt(message.value.length - 1) === '#' ||
           message.value.charAt(message.value.length - 1) === '@'
@@ -352,12 +290,11 @@ export default defineComponent({
     };
 
     const post = async () => {
+      v.value.$touch();
+      if (v.value.$errors.length !== 0) {
+        if (!file.value) return;
+      }
       try {
-        v.value.$touch();
-        if (v.value.$errors.length !== 0) {
-          if (!file.value) return;
-        }
-
         let foundTags = message.value.match(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g);
         if (foundTags) {
           foundTags = foundTags?.map((tag) => tag.replace('#', ''));
@@ -441,13 +378,6 @@ export default defineComponent({
       autoCompleteOptions.collection[0].values.push(...users);
     });
 
-    onMounted(() => {
-      emojiPicker.value?.addEventListener('emoji-pick', (event) => {
-        message.value += event.detail.emoji;
-        emojiOpen.value = false;
-      });
-    });
-
     return {
       message,
       post,
@@ -462,7 +392,6 @@ export default defineComponent({
       openMarkdownDoku,
       emojiOpen,
       emojiPicker,
-
       loading,
       parseMarkdown,
       showPreview,

@@ -183,14 +183,19 @@
               v-model="newGroupPassword"
             />
           </div>
-          <div class="flex flex-row-reverse my-4">
-            <app-button class="ml-4" @click=""> Speichern </app-button>
-            <app-button class="!bg-dark-400 hover:!bg-red-700" @click="$emit('close')"> Abbrechen </app-button>
-          </div>
         </group-role-container>
-        <app-button class="w-full items-center justify-center bg-red-600 hover:bg-red-700 focus:ring-red-600 my-6">
+        <span class="font-semibold mt-4">Danger Zone</span>
+        <app-button class="w-full items-center justify-center bg-red-600 hover:bg-red-700 focus:ring-red-600 my-3">
           <span class="text-md">Gruppe Verlassen</span>
         </app-button>
+        <div class="flex flex-row-reverse my-4">
+          <group-role-container :groupId="groupId" :role="GroupRoles.Admin">
+            <app-button class="ml-4" @click=""> Speichern </app-button>
+          </group-role-container>
+          <app-button class="!bg-dark-400 hover:!bg-red-700" @click="$refs.groupSettingsModal.closeModal()">
+            Abbrechen
+          </app-button>
+        </div>
       </div>
     </modal>
   </div>

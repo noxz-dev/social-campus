@@ -7,6 +7,7 @@ import { GroupMember, User } from '../entity/user.entity';
 import { GroupAccess } from '../graphql_types/groupAccess';
 import { GroupRoleAccess } from '../graphql_types/groupRoleAccess';
 import { MyContext } from '../utils/interfaces/context.interface';
+import { UpdateGroupInput } from '../validators/updateGroup.validator';
 
 @Resolver(() => Group)
 export class GroupResolver {
@@ -309,6 +310,33 @@ export class GroupResolver {
     }
 
     return state;
+  }
+
+  @Authorized()
+  @Query(() => Group)
+  public async updateGroup(
+    @Ctx() ctx: MyContext,
+    @Arg('input', () => UpdateGroupInput) input: UpdateGroupInput,
+  ): Promise<Group> {
+    const userId = ctx.req.user.id;
+
+    const members = await getGroupMembersWithRoles(input.groupId);
+    const user = members.find((member) => member.id === userId);
+    if (!user) throw new Error('youre not a member of this group');
+
+    if (user.groupRole !== GroupRole.ADMIN) throw new Error('youre not allowed to do this');
+
+    const group = await getRepository(Group).findOne({ id: input.groupId });
+
+    //set the new values
+    group.name = input.name;
+    group.description = input.description ?? group.description;
+    group.password = input.password ?? group.password;
+    group.type = input.type;
+
+    const saved = await getRepository(Group).save(group);
+
+    return saved;
   }
 
   @Authorized()

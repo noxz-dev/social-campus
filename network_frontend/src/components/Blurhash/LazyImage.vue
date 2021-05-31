@@ -11,6 +11,7 @@
 
       <img
         ref="image"
+        alt="image, possibly profile or post content"
         v-bind="$attrs"
         class="absolute transition-opacity duration-500 w-full h-full object-cover"
         :class="isLoaded ? 'opacity-100' : 'opacity-0'"

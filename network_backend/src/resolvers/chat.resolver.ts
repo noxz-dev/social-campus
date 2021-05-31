@@ -56,8 +56,14 @@ export class ChatResolver {
     const userId = ctx.req.user.id;
     const chat = await getRepository(Chat).findOne({
       where: { id: chatId },
-      relations: ['members', 'messages', 'messages.sendBy'],
+      relations: ['members',],
     });
+
+    const messages = await getRepository(ChatMessage).find({where: {chat: chatId}, relations: ["sendBy"], order: {
+      createdAt: "ASC"
+    }})
+
+    chat.messages = messages
 
     if (!chat) throw Error('no chat found');
 

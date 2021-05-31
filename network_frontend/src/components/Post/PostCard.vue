@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, ref } from 'vue';
+import { defineComponent, onMounted, onUpdated, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation } from '../../graphql/generated/types';
@@ -101,6 +101,18 @@ export default defineComponent({
     let tagIds: string[] = [];
     let mentions: string[] = [];
     const content = ref('');
+
+    watch(
+      () => props.post,
+      () => {
+        const parsed = parseMarkdown(props.post.text);
+        tagIds = parsed.tagIds;
+        mentions = parsed.mentions;
+        content.value = parsed.sanitizedContent;
+
+        addTagAndMentionHandle();
+      }
+    );
 
     const addTagAndMentionHandle = () => {
       for (const tagId of tagIds) {

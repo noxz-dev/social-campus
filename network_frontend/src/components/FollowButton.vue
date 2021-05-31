@@ -54,7 +54,6 @@ export default defineComponent({
   },
   setup(props) {
     const followButtonText = ref('Folge Ich');
-    console.log(props.user);
     const { mutate: follow, loading: addFollowLoading } = useAddFollowerMutation(() => ({
       variables: {
         userID: props.user?.id as string,

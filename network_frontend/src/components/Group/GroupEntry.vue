@@ -60,6 +60,8 @@ import { defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';
 import { useRouter } from 'vue-router';
 import { useResult } from '@vue/apollo-composable';
+import { state } from '../../utils/state';
+
 export default defineComponent({
   components: { InputField },
   props: {
@@ -85,18 +87,20 @@ export default defineComponent({
 
     const group = useResult(result, null, (data) => data.groupById);
 
+    //TODO INPUT VALIDATION
     const joinGroup = async () => {
       console.log(groupPassword.value.length);
       if (groupPassword.value.length >= 3) {
-        joinGrp();
+        await joinGrp();
 
-        //TODO THIS SHOULD BE CHANGED TO A WAY BETTER MECHANISM XD
-        try {
-          await router.push({ name: 'Groups' });
-          router.push({ name: 'Group', params: { id: props.groupId } });
-        } catch (err) {
-          console.log('refresh triggerd');
-        }
+        // //TODO THIS SHOULD BE CHANGED TO A WAY BETTER MECHANISM XD
+        // try {
+        //   await router.push({ name: 'Groups' });
+        //   router.push({ name: 'Group', params: { id: props.groupId } });
+        // } catch (err) {
+        //   console.log('refresh triggerd');
+        // }
+        state.refreshGroup = true;
       }
     };
 

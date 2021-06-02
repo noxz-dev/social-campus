@@ -368,8 +368,8 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const selectedFaculty = ref(faculties.find((f) => f.name == props.user?.faculty) || faculties[1]);
-    const selectedCourse = ref(courses.find((c) => c.name == props.user?.studyCourse) || courses[1]);
+    const selectedFaculty = ref(faculties.find((f) => f.name == props.user?.faculty) || faculties[0]);
+    const selectedCourse = ref(courses.find((c) => c.name == props.user?.studyCourse) || courses[0]);
     const bio = ref(props.user?.bio || '');
     const faculty = ref(props.user?.faculty);
     const interests = ref(props.user?.interests);

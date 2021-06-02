@@ -157,6 +157,7 @@ export type Mutation = {
   joinGroup: Group;
   updateAboutGroup: Group;
   updateGroupRole: Group;
+  updateGroup: Group;
   /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
   /** likes an post */
@@ -221,6 +222,11 @@ export type MutationUpdateGroupRoleArgs = {
   groupRole: GroupRoles;
   groupId: Scalars['String'];
   memberId: Scalars['String'];
+};
+
+
+export type MutationUpdateGroupArgs = {
+  input: UpdateGroupInput;
 };
 
 
@@ -572,6 +578,14 @@ export type Tag = {
   posts: Array<Post>;
 };
 
+export type UpdateGroupInput = {
+  groupId: Scalars['String'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  type?: Maybe<GroupType>;
+  password?: Maybe<Scalars['String']>;
+};
+
 export type UpdateProfileInput = {
   bio: Scalars['String'];
   interests?: Maybe<Scalars['String']>;
@@ -878,6 +892,19 @@ export type UnlikePostMutation = (
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
     )> }
+  ) }
+);
+
+export type UpdateGroupMutationVariables = Exact<{
+  input: UpdateGroupInput;
+}>;
+
+
+export type UpdateGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { updateGroup: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'type' | 'id' | 'name' | 'description'>
   ) }
 );
 
@@ -2045,6 +2072,38 @@ export function useUnlikePostMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
 }
 export type UnlikePostMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnlikePostMutation, UnlikePostMutationVariables>;
+export const UpdateGroupDocument = gql`
+    mutation updateGroup($input: UpdateGroupInput!) {
+  updateGroup(input: $input) {
+    type
+    id
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useUpdateGroupMutation__
+ *
+ * To run a mutation, you first call `useUpdateGroupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateGroupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateGroupMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateGroupMutation(options: VueApolloComposable.UseMutationOptions<UpdateGroupMutation, UpdateGroupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateGroupMutation, UpdateGroupMutationVariables>>) {
+  return VueApolloComposable.useMutation<UpdateGroupMutation, UpdateGroupMutationVariables>(UpdateGroupDocument, options);
+}
+export type UpdateGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateGroupMutation, UpdateGroupMutationVariables>;
 export const UpdateAboutGroupDocument = gql`
     mutation updateAboutGroup($groupId: String!, $aboutContent: String!) {
   updateAboutGroup(groupId: $groupId, aboutContent: $aboutContent) {

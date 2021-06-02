@@ -17,8 +17,7 @@ export class UpdateGroupInput {
   @IsString()
   description: string;
 
-  @Field(() => String, { nullable: true })
-  @IsString()
+  @Field(() => GroupType, { nullable: true })
   type: GroupType;
 
   @Field(() => String, { nullable: true })

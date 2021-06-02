@@ -313,13 +313,14 @@ export class GroupResolver {
   }
 
   @Authorized()
-  @Query(() => Group)
+  @Mutation(() => Group)
   public async updateGroup(
     @Ctx() ctx: MyContext,
     @Arg('input', () => UpdateGroupInput) input: UpdateGroupInput,
   ): Promise<Group> {
     const userId = ctx.req.user.id;
 
+    //check the permissions
     const members = await getGroupMembersWithRoles(input.groupId);
     const user = members.find((member) => member.id === userId);
     if (!user) throw new Error('youre not a member of this group');
@@ -365,7 +366,7 @@ export class GroupResolver {
 /**
  * helper function to count all member of a group
  * @param groupId string
- * @returns number
+ * @returns Promise<number>
  */
 export const countMembers = async (groupId: string): Promise<number> => {
   const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
@@ -376,7 +377,7 @@ export const countMembers = async (groupId: string): Promise<number> => {
 /**
  * helper function to get all members of a group with their roles
  * @param groupId string
- * @returns number
+ * @returns Promise<GroupMember[]>
  */
 export const getGroupMembersWithRoles = async (groupId: string): Promise<GroupMember[]> => {
   const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members'] });
@@ -392,6 +393,12 @@ export const getGroupMembersWithRoles = async (groupId: string): Promise<GroupMe
   return group.members;
 };
 
+/**
+ * helper function to check if the user is part of a given Group
+ * @param groupId string
+ * @param userId string
+ * @returns boolean
+ */
 export const isMemberOfGroup = async (groupId: string, userId: string): Promise<boolean> => {
   const isMemberOfGroup = await getRepository(Group)
     .createQueryBuilder('group')

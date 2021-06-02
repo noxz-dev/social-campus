@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
+import { Brackets, getRepository } from 'typeorm';
 import { JwtToken } from '../entity/jwtToken.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -368,7 +368,13 @@ export class UserResolver {
       .createQueryBuilder('user')
       .where('user.id NOT IN (' + following.getSql() + ')')
       .andWhere('user.id != :id', { id: userId })
-      .andWhere('user.faculty = :faculty', { faculty: me.faculty })
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where('user.faculty = :faculty', { faculty: me.faculty }).orWhere('user.studyCourse = :course', {
+            course: me.studyCourse,
+          });
+        }),
+      )
       .leftJoinAndSelect('user.avatar', 'avatar')
       .orderBy('RANDOM()')
       .limit(3)
@@ -386,7 +392,7 @@ export class UserResolver {
         .limit(3)
         .getMany();
 
-      //fill up recommend with random users of the network
+      //fill up recommended with random users of the network, to allow more interaction opportunities
       recommended.push(...moreUsers.splice(0, 3 - recommended.length));
     }
 
@@ -414,7 +420,7 @@ export class UserResolver {
       .createQueryBuilder('user')
       .where('user.id NOT IN (' + following.getSql() + ')')
       .andWhere('user.id != :id', { id: userId })
-      .andWhere('user.faculty = :faculty', { faculty: me.faculty })
+      .andWhere('lower(user.interests) IN :interests', { interests: me.interests })
       .leftJoinAndSelect('user.avatar', 'avatar')
       .orderBy('RANDOM()')
       .limit(3)
@@ -432,7 +438,7 @@ export class UserResolver {
         .limit(3)
         .getMany();
 
-      //fill up recommend with random users of the network
+      //fill up recommended with random users of the network, to allow more interaction opportunities
       recommended.push(...moreUsers.splice(0, 3 - recommended.length));
     }
 

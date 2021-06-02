@@ -334,10 +334,38 @@ export class GroupResolver {
     group.description = input.description ?? group.description;
     group.password = input.password ?? group.password;
     group.type = input.type;
+    if (input.type === GroupType.PUBLIC) {
+      group.password = null;
+    }
 
     const saved = await getRepository(Group).save(group);
 
     return saved;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  public async leaveGroup(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<boolean> {
+    const userId = ctx.req.user.id;
+
+    //check the permissions
+    const members = await getGroupMembersWithRoles(groupId);
+    const user = members.find((member) => member.id === userId);
+    if (!user) throw new Error('youre not a member of this group');
+
+    if (user.groupRole === GroupRole.ADMIN) throw new Error('youre not allowed to do this');
+
+    //TODO USE TRANSACTION
+    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'memberRoles'] });
+    if (!group) throw new Error('group not found');
+    group.members = group.members.filter((member) => member.id !== userId);
+
+    const memberRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId, group: groupId } });
+    await getRepository(GroupMemberRole).remove(memberRole);
+
+    await getRepository(Group).save(group);
+
+    return true;
   }
 
   @Authorized()

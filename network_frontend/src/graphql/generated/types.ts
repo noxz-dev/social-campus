@@ -158,6 +158,7 @@ export type Mutation = {
   updateAboutGroup: Group;
   updateGroupRole: Group;
   updateGroup: Group;
+  leaveGroup: Scalars['Boolean'];
   /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
   /** likes an post */
@@ -227,6 +228,11 @@ export type MutationUpdateGroupRoleArgs = {
 
 export type MutationUpdateGroupArgs = {
   input: UpdateGroupInput;
+};
+
+
+export type MutationLeaveGroupArgs = {
+  groupId: Scalars['String'];
 };
 
 
@@ -778,6 +784,16 @@ export type JoinGroupMutation = (
     { __typename?: 'Group' }
     & Pick<Group, 'id' | 'name'>
   ) }
+);
+
+export type LeaveGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type LeaveGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'leaveGroup'>
 );
 
 export type LikePostMutationVariables = Exact<{
@@ -1829,6 +1845,33 @@ export function useJoinGroupMutation(options: VueApolloComposable.UseMutationOpt
   return VueApolloComposable.useMutation<JoinGroupMutation, JoinGroupMutationVariables>(JoinGroupDocument, options);
 }
 export type JoinGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<JoinGroupMutation, JoinGroupMutationVariables>;
+export const LeaveGroupDocument = gql`
+    mutation leaveGroup($groupId: String!) {
+  leaveGroup(groupId: $groupId)
+}
+    `;
+
+/**
+ * __useLeaveGroupMutation__
+ *
+ * To run a mutation, you first call `useLeaveGroupMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveGroupMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useLeaveGroupMutation({
+ *   variables: {
+ *     groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useLeaveGroupMutation(options: VueApolloComposable.UseMutationOptions<LeaveGroupMutation, LeaveGroupMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LeaveGroupMutation, LeaveGroupMutationVariables>>) {
+  return VueApolloComposable.useMutation<LeaveGroupMutation, LeaveGroupMutationVariables>(LeaveGroupDocument, options);
+}
+export type LeaveGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LeaveGroupMutation, LeaveGroupMutationVariables>;
 export const LikePostDocument = gql`
     mutation likePost($postID: String!) {
   likePost(postID: $postID) {

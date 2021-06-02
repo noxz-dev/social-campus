@@ -177,8 +177,7 @@ export class PostResolver {
     // push own user id to see also your own posts
     following.push(userId);
 
-    console.log(userGroups);
-    //fetch all posts from the users you follow
+    //fetch all posts from the users you follow and groups
     const posts = await getRepository(Post).find({
       where: [
         { user: In(following), group: In(userGroups) },

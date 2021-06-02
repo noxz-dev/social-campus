@@ -18,7 +18,7 @@
         border-dark-600
       "
     >
-      <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto p-4 py-3">
+      <infinite-scroll-wrapper :queryLoading="loading" @loadMore="() => {}" class="overflow-y-auto p-4 py-3">
         <group-header
           :groupId="$route.params.id"
           @switchComponent="switchComponent($event)"

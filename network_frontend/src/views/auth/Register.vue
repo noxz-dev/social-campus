@@ -173,7 +173,6 @@ import { useSignupMutation } from '../../graphql/generated/types';
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const route = useRoute();
     const emailForm = ref('');
     const password = ref('');
     const firstname = ref('');
@@ -230,7 +229,6 @@ export default defineComponent({
     const onSubmit = async () => {
       v.value.$touch();
       if (!v.value.$invalid) {
-        console.log('fine');
         await signup();
       }
     };

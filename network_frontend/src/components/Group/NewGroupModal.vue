@@ -160,6 +160,7 @@ export default defineComponent({
 
     const rules = computed(() => ({
       groupname: {
+        minLength: helpers.withMessage('Der Gruppenname muss eine minimale Länge von 3 haben', minLength(3)),
         required: helpers.withMessage('Gruppenname wird benötigt', required),
         maxLength: helpers.withMessage('Der Gruppenname darf maximal 30 Zeichen lang sein', maxLength(30)),
       },
@@ -200,7 +201,6 @@ export default defineComponent({
     const createGroup = async () => {
       v.value.$reset();
       v.value.$touch();
-      console.log(v.value);
       if (v.value.$errors.length === 0) {
         try {
           v.value.$reset();

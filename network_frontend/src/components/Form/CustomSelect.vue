@@ -82,12 +82,15 @@ export default defineComponent({
       type: Array,
       default: [],
     },
+    initalValue: {
+      type: String,
+    }
   },
   setup(props, { emit }) {
     if (props.options.length === 0) {
       props.options[0] = 'Kein Element zur Auswahl';
     }
-    const selected = ref(props.options[0]);
+    const selected = ref(props.initalValue || props.options[0]);
     const open = ref(false);
     const target = ref(null);
     const choose = (option) => {

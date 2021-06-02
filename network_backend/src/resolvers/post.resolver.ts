@@ -177,11 +177,13 @@ export class PostResolver {
     // push own user id to see also your own posts
     following.push(userId);
 
+    console.log(userGroups);
     //fetch all posts from the users you follow
     const posts = await getRepository(Post).find({
       where: [
         { user: In(following), group: In(userGroups) },
         { user: In(following), group: IsNull() },
+        { group: In(userGroups) },
       ],
       order: { createdAt: 'DESC' },
       relations: ['user', 'group', 'likes', 'likes.user'],

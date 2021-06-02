@@ -33,7 +33,7 @@
           <div class="sm:flex sm:items-start">
             <div class="sm:mt-0 sm:text-left w-full">
               <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">
-                <span v-if="group">Der Gruppe {{ group.name }} beitreten </span>
+                <span v-if="group">Der Gruppe <b>{{ group.name }}</b> beitreten </span>
               </h3>
               <div id="modal-headline" class="font-normal leading-6 text-gray-900 dark:text-gray-200 mt-4">
                 <span v-if="group">{{ group.description }} </span>

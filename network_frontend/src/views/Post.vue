@@ -2,26 +2,7 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark-700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10">
       <div
-        class="
-          group
-          z-20
-          py-2
-          sticky
-          md:static
-          w-full
-          -top-10
-          cursor-pointer
-          dark:text-gray-50
-          text-gray-900
-          self-start
-          flex
-          items-center
-          bg-white
-          dark:bg-dark-700
-          dark:stroke-white
-          stroke-black
-          hover:stroke-brand
-        "
+        class="group z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark-700 dark:stroke-white stroke-black hover:stroke-brand"
         @click="$router.back()"
       >
         <svg
@@ -58,22 +39,12 @@
           <div class="p-5 flex flex-col">
             <span class="pb-3">Schreibe einen Kommentar</span>
             <div class="mb-2">
-              <textarea
-                ref="commentInput"
+              <tribute-textarea
+                :autocomplete-options="autoCompleteOptions"
+                placeholder-text="Kommentiere..."
                 v-model="commentText"
-                class="
-                  dark:bg-dark-700
-                  border-2 border-gray-700
-                  h-24
-                  resize-none
-                  rounded-lg
-                  w-full
-                  p-2
-                  outline-none
-                  focus:ring-1 focus:ring-brand-500
-                  focus:border-indigo-500
-                "
-                placeholder="Kommentiere..."
+                :show-preview="false"
+                bg-color="dark-700"
               />
             </div>
             <div class="h-8">
@@ -81,26 +52,7 @@
             </div>
             <div class="self-end">
               <div
-                class="
-                  cursor-pointer
-                  mr-2
-                  inline-flex
-                  items-center
-                  px-4
-                  py-2
-                  border border-transparent
-                  text-sm
-                  font-medium
-                  rounded-md
-                  shadow-sm
-                  text-white
-                  bg-brand-500
-                  hover:bg-brand-600
-                  focus:outline-none
-                  focus:ring-2 focus:ring-offset-2
-                  dark:focus:ring-offset-dark-700
-                  focus:ring-brand-500
-                "
+                class="cursor-pointer mr-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-700 focus:ring-brand-500"
                 @click="newComment"
               >
                 Antworten
@@ -115,9 +67,7 @@
           </div>
           <card v-for="comment in postData.postById.comments" :key="comment.id" class="m-1 md:my-3">
             <card-header :comment="comment" bg-color-dark="bg-dark-600" />
-            <div class="p-5 pt-0">
-              {{ comment.text }}
-            </div>
+            <div class="p-5 pt-0" v-html="parseCommentText(comment.text)"></div>
           </card>
         </div>
       </div>
@@ -133,25 +83,32 @@
 
 <script lang="ts">
 import PostCard from '../components/Post/PostCard.vue';
-import { useAddCommentMutation, usePostByIdQuery } from '../graphql/generated/types';
+import { SearchDocument, useAddCommentMutation, usePostByIdQuery, useSearchQuery } from '../graphql/generated/types';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
-import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, defineComponent, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Card from '../components/Card/Card.vue';
 import CardHeader from '../components/Card/CardHeader.vue';
 import { postById } from '../graphql/queries/postById';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 import { useMagicKeys } from '@vueuse/core';
+import TributeTextarea from '../components/TributeTextarea.vue';
+import { parseTags } from '../utils/postUtils';
+import { useLazyQuery } from '@apollo/client';
+import gql from "graphql-tag"
+import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
-  components: { PostCard, Card, CardHeader },
+  components: { PostCard, Card, CardHeader, TributeTextarea },
   setup() {
     const commentText = ref('');
     const postData = ref<PostByIdQuery>();
     const route = useRoute();
     const { control_enter } = useMagicKeys();
     const commentInput = ref();
+    const router = useRouter();
+    const mentions = ref<string[]>([]);
 
     watch(control_enter, (v) => {
       if (v) newComment();
@@ -196,6 +153,26 @@ export default defineComponent({
       ],
     }));
 
+    const parseCommentText = (text: string) => {
+      const parsed = parseTags(text);
+
+      mentions.value.push(...parsed.mentions);
+
+      return parsed.parsedContent;
+    };
+
+    //update eventlistners for mentions
+    watch(mentions.value, () => {
+      for (const mention of mentions.value) {
+        document.querySelectorAll(`#${mention}`).forEach((item) => {
+          item.addEventListener('click', (e) => {
+            const { id } = e.target;
+            router.push({ name: 'Profile', params: { id } });
+          });
+        });
+      }
+    });
+
     const newComment = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
@@ -204,7 +181,34 @@ export default defineComponent({
       commentText.value = '';
     };
 
-    return { postData, commentText, newComment, loading, v, commentInput };
+    const { result } = useSearchQuery(() => ({
+      searchString: ""
+    }))
+
+
+    const foundUsers = useResult(result, [], data => data.search.users)
+
+    const autoCompleteOptions = {
+      noMatchTemplate() {
+        return '<li>Kein Benutzer gefunden</li>';
+      },
+      collection: [
+        {
+          trigger: '@',
+          values: async (text: any, cb:any) => {
+            const users = foundUsers.value.map(user => {
+              return { key: user.firstname + ' ' + user.lastname + ' @' + user.username, value: user.username }
+            });
+
+            
+            return cb(users)
+          },
+          positionMenu: true,
+        },
+      ],
+    };
+
+    return { postData, commentText, newComment, loading, v, commentInput, autoCompleteOptions, parseCommentText };
   },
 });
 </script>

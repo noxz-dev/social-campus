@@ -3,7 +3,7 @@
     <card-header :post="post" :bgColorDark="cardBgColor" />
     <div class="px-4" @click.self="handleNavigation">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
-        <div class="markdown whitespace-pre-wrap" v-html="content"></div>
+        <div class="markdown whitespace-pre-wrap font-" v-html="content"></div>
       </div>
       <div v-if="post.media" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <lazy-image
@@ -272,3 +272,4 @@ export default defineComponent({
 </script>
 
 <style></style>
+ 

@@ -7,10 +7,10 @@
           :value="modelValue"
           @input="onChanged"
           v-if="!showPreview"
+          :class="'dark:bg-' + bgColor"
           id="newPostTextArea"
           class="
             w-full
-            dark:bg-dark-600
             border-2 border-gray-700
             h-24
             resize-none
@@ -103,6 +103,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    bgColor: {
+      type: String,
+      default: 'dark-600'
+    }
   },
   setup(props, { emit }) {
     const emojiPicker = ref<EmojiPickerElement>();

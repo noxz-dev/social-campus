@@ -4,7 +4,7 @@
   <slot></slot>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 import Tribute from 'tributejs';
 
@@ -67,4 +67,10 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.tribute-container li {
+  @apply bg-dark-500;
+  @apply text-gray-50;
+}
+
+</style>

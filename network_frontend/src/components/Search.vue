@@ -196,10 +196,13 @@ export default defineComponent({
     const router = useRouter();
     const isFocus = ref(false);
 
-    //CALLS ON INIT .. could be not the best idea
+
+    //calls on component init, could be heavy
     const { result } = useSearchQuery(() => ({
-      searchString: searchString.value,
+      searchString: searchString.value || "abcdefghijklmopqrstuvwxyz",
     }));
+
+    stop()
 
     const searchResult = useResult(result, [], (data) => data.search);
 

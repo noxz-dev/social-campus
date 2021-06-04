@@ -24,6 +24,10 @@ export class User extends Base {
   @Column({ unique: true, type: 'varchar' })
   username: string;
 
+  @Field(() => Boolean)
+  @Column({ default: false, type: 'bool' })
+  activated: boolean;
+
   @Field(() => String)
   @Column({ unique: true, type: 'varchar' })
   email: string;

@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import crypto from 'crypto';
 import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Brackets, getRepository } from 'typeorm';
-import { JwtToken } from '../entity/jwtToken.entity';
+import { Token } from '../entity/token.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { UserStats } from '../graphql_types/userStats';
-import { generateAccessToken, generateRefreshToken } from '../utils/helpers/auth';
+import { generateAccessToken } from '../utils/helpers/auth';
 import { uploadFile, uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { sendEmail } from '../utils/helpers/sendMail';
 import { MyContext } from '../utils/interfaces/context.interface';
@@ -20,6 +21,7 @@ import { log } from '../utils/services/logger';
 import { UpdateProfileInput } from '../validators/updateProfile.validator';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
+import { redis } from '../utils/services/redis';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -68,7 +70,7 @@ export class UserResolver {
     user.followers = [];
     user.following = [];
 
-    //create a profile image
+    //create a default profile image
     const avatar = new Media();
     const profileImg = jdenticon.toPng(user.firstname, 300);
 
@@ -81,22 +83,31 @@ export class UserResolver {
 
     user.avatar = saved;
 
-    await getRepository(User).save(user);
+    const savedUser = await getRepository(User).save(user);
+
+    //generate a save token
+    const token = new Token(crypto.randomBytes(64).toString('hex'), savedUser.id);
+
+    await getRepository(Token).save(token);
+
     await sendEmail({
       email: input.email,
-      subject: 'Konto erstellt',
-      text: 'Willkommen zu SocialCampus, du kannst dich nun anmelden: https://social.noxz.dev/login',
+      subject: 'Aktiviere deinen Account',
+      text: `Willkommen zu SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
     });
+
     return true;
   }
 
-  @Mutation(() => Boolean, { description: 'logout an user to invalidate its refresh token' })
-  async logout(@Ctx() ctx: MyContext, @Arg('refreshToken', () => String) refreshToken: string): Promise<boolean> {
-    const jwtToken = await getRepository(JwtToken).findOne({ where: { token: refreshToken } });
-    if (!jwtToken) {
-      return null;
+  @Mutation(() => Boolean, { description: 'logout an user to invalidate the access token' })
+  async logout(@Ctx() ctx: MyContext, @Arg('access', () => String) accessToken: string): Promise<boolean> {
+    //TODO ADD TOKEN TO REDIS JWT BLACKLIST, needs middleware check
+
+    try {
+      redis.LPUSH('token', accessToken);
+    } catch (err) {
+      console.log(err);
     }
-    await getRepository(JwtToken).remove(jwtToken);
 
     return true;
   }
@@ -112,6 +123,8 @@ export class UserResolver {
       throw Error('found no user with this email');
     }
 
+    if (!user.activated) throw Error('account is not acitivated');
+
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
       throw Error('wrong email or password');
@@ -123,14 +136,9 @@ export class UserResolver {
       role: 'User',
     };
 
-    const refreshToken = generateRefreshToken(jwtUser);
-
-    const token = new JwtToken(refreshToken, user.id);
-    await getRepository(JwtToken).save(token);
-
     const accessToken = generateAccessToken(jwtUser);
 
-    const response = new JwtResponse(accessToken, refreshToken);
+    const response = new JwtResponse(accessToken);
 
     return response;
   }

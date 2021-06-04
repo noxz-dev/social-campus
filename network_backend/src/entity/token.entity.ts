@@ -2,7 +2,7 @@ import { Column, Entity } from 'typeorm';
 import { Base } from './base';
 
 @Entity()
-export class JwtToken extends Base {
+export class Token extends Base {
   @Column({ type: 'varchar' })
   userId: string;
 

@@ -1,5 +1,5 @@
 <template>
-  <modal ref="modal" content-text="" header-text="Neuer Post">
+  <modal ref="modal" content-text="" header-text="Post bearbeiten">
     <edit-post @close="modal?.closeModal()" :post="post" />
   </modal>
 </template>

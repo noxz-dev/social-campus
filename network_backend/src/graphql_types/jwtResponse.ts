@@ -5,11 +5,7 @@ export class JwtResponse {
   @Field(() => String)
   accessToken: string;
 
-  @Field(() => String)
-  refreshToken: string;
-
-  constructor(accessToken: string, refreshToken: string) {
+  constructor(accessToken: string) {
     this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
   }
 }

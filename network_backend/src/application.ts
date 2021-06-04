@@ -3,6 +3,7 @@ import { Base64Encode } from 'base64-stream';
 import compression from 'compression';
 import cors from 'cors';
 import 'dotenv/config';
+import { Token } from './entity/token.entity';
 import { EventEmitter } from 'events';
 import express from 'express';
 import 'express-async-errors';
@@ -14,7 +15,7 @@ import http, { Server } from 'http';
 import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { createConnection } from 'typeorm';
+import { createConnection, getRepository } from 'typeorm';
 import { MyWebSocket } from 'utils/types/apollo';
 import '../ormconfig';
 import {
@@ -29,13 +30,14 @@ import {
   UserResolver,
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
-import { customAuthChecker } from './utils/helpers/authChecker';
+import { customAuthChecker } from './utils/middlewares/resolverAuthCheck';
 import { OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
 import { MyContext } from './utils/interfaces/context.interface';
 import { JwtUser } from './utils/interfaces/jwtUser.interface';
 import { authenticateToken } from './utils/middlewares/auth';
 import { log } from './utils/services/logger';
 import { initS3, minioClient } from './utils/services/minio';
+import { User } from './entity/user.entity';
 
 export class Application {
   public host: express.Application;
@@ -184,6 +186,33 @@ export class Application {
           log.error('IMAGE PROXY', err);
           return res.sendStatus(500);
         }
+      });
+
+      app.get('/activate/:token', async (req, res) => {
+        const { token } = req.params;
+
+        console.log(token);
+
+        if (!token) return res.status(400).send('missing activation token');
+
+        const dbToken = await getRepository(Token).findOne({ where: { token: token } });
+
+        if (!dbToken) return res.status(400).send('activation token not valid');
+
+        const user = await getRepository(User).findOne({ where: { id: dbToken.userId } });
+
+        if (!dbToken) return res.status(400).send('no associated user found');
+
+        user.activated = true;
+
+        console.log(user, dbToken);
+
+        await getRepository(User).save(user);
+        await getRepository(Token).remove(dbToken);
+
+        // res.set('Content-Type', 'text/html');
+        // return res.send(Buffer.from('<h2>Test String</h2>'));
+        res.send('../login');
       });
 
       server.applyMiddleware({ app });

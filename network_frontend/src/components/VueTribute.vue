@@ -69,8 +69,12 @@ export default defineComponent({
 
 <style>
 .tribute-container li {
-  @apply bg-dark-500;
-  @apply text-gray-50;
+  @apply dark:bg-dark-700 bg-gray-100;
+  @apply dark:text-gray-50 text-gray-900 !important;
+}
+
+.tribute-container li.highlight {
+  @apply text-gray-50  !important;
 }
 
 </style>

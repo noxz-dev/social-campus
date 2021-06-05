@@ -25,6 +25,7 @@ export default defineConfig({
         name: 'SocialCampus',
         short_name: 'SocialCampus',
         theme_color: '#181A20',
+        background_color: '#191a20',
         icons: [
           {
             src: '/pwa-192x192.png',

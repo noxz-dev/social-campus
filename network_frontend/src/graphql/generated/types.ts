@@ -91,6 +91,7 @@ export type GroupMember = {
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   username: Scalars['String'];
+  activated: Scalars['Boolean'];
   email: Scalars['String'];
   avatar?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
@@ -125,7 +126,6 @@ export enum GroupType {
 export type JwtResponse = {
   __typename?: 'JwtResponse';
   accessToken: Scalars['String'];
-  refreshToken: Scalars['String'];
 };
 
 export type Like = {
@@ -181,7 +181,7 @@ export type Mutation = {
   removeRoleFromUser: User;
   /** creates a new user */
   register: Scalars['Boolean'];
-  /** logout an user to invalidate its refresh token */
+  /** logout an user to invalidate the access token */
   logout: Scalars['Boolean'];
   /** login to get a new auth token */
   login: JwtResponse;
@@ -320,7 +320,7 @@ export type MutationRegisterArgs = {
 
 
 export type MutationLogoutArgs = {
-  refreshToken: Scalars['String'];
+  access: Scalars['String'];
 };
 
 
@@ -608,6 +608,7 @@ export type User = {
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   username: Scalars['String'];
+  activated: Scalars['Boolean'];
   email: Scalars['String'];
   avatar?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
@@ -833,7 +834,7 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'JwtResponse' }
-    & Pick<JwtResponse, 'accessToken' | 'refreshToken'>
+    & Pick<JwtResponse, 'accessToken'>
   ) }
 );
 
@@ -1929,7 +1930,6 @@ export const LoginDocument = gql`
     mutation login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
     accessToken
-    refreshToken
   }
 }
     `;

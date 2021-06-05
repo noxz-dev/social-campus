@@ -12,6 +12,7 @@
               src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
               alt="Workflow"
             />
+
             <div
               v-if="breakpoints.is != 'md' && breakpoints.is != 'sm'"
               class="text-gray-900 dark:text-gray-50 ml-5 text-xl font-semibold"

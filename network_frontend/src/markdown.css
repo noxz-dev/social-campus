@@ -84,11 +84,12 @@ SOFTWARE. */
 }
 
 .markdown code {
-  @apply font-mono text-sm inline bg-gray-200 rounded px-1 pt-[0.25rem] pb-[0.25rem];
+  @apply font-mono text-sm inline bg-gray-300 dark:bg-dark-800 rounded px-1 pt-[0.25rem] pb-[0.25rem];
 }
 
 .markdown pre {
-  @apply bg-gray-100 rounded p-4;
+  white-space: pre-wrap;
+  @apply bg-gray-200 dark:bg-dark-800 rounded-xl p-4;
 }
 
 .markdown pre code {
@@ -121,5 +122,5 @@ SOFTWARE. */
 
 /* Override pygments style background color. */
 .markdown .highlight pre {
-  @apply bg-gray-100 !important;
+  @apply bg-gray-100 dark:bg-dark-600 !important;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5 w-full">
+  <div class="p-5 w-full pb-24 md:pb-0">
     <div class="mb-5">
       <span class="dark:text-red-400 text-red-500 dark:text-opacity-60 text-opacity-75 tracking-wider">ADMIN</span>
       <div class="mt-4">

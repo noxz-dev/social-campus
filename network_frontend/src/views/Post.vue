@@ -2,7 +2,26 @@
   <div class="flex h-full items-center pt-10 bg-white dark:bg-dark-700 flex-col rounded-3xl overflow-y-auto">
     <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10">
       <div
-        class="group z-20 py-2 sticky md:static w-full -top-10 cursor-pointer dark:text-gray-50 text-gray-900 self-start flex items-center bg-white dark:bg-dark-700 dark:stroke-white stroke-black hover:stroke-brand"
+        class="
+          group
+          z-20
+          py-2
+          sticky
+          md:static
+          w-full
+          -top-10
+          cursor-pointer
+          dark:text-gray-50
+          text-gray-900
+          self-start
+          flex
+          items-center
+          bg-white
+          dark:bg-dark-700
+          dark:stroke-white
+          stroke-black
+          hover:stroke-brand
+        "
         @click="$router.back()"
       >
         <svg
@@ -52,7 +71,26 @@
             </div>
             <div class="self-end">
               <div
-                class="cursor-pointer mr-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-700 focus:ring-brand-500"
+                class="
+                  cursor-pointer
+                  mr-2
+                  inline-flex
+                  items-center
+                  px-4
+                  py-2
+                  border border-transparent
+                  text-sm
+                  font-medium
+                  rounded-md
+                  shadow-sm
+                  text-white
+                  bg-brand-500
+                  hover:bg-brand-600
+                  focus:outline-none
+                  focus:ring-2 focus:ring-offset-2
+                  dark:focus:ring-offset-dark-700
+                  focus:ring-brand-500
+                "
                 @click="newComment"
               >
                 Antworten
@@ -95,8 +133,6 @@ import { minLength, required } from '@vuelidate/validators';
 import { useMagicKeys } from '@vueuse/core';
 import TributeTextarea from '../components/TributeTextarea.vue';
 import { parseTags } from '../utils/postUtils';
-import { useLazyQuery } from '@apollo/client';
-import gql from "graphql-tag"
 import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
@@ -182,11 +218,10 @@ export default defineComponent({
     };
 
     const { result } = useSearchQuery(() => ({
-      searchString: ""
-    }))
+      searchString: '',
+    }));
 
-
-    const foundUsers = useResult(result, [], data => data.search.users)
+    const foundUsers = useResult(result, [], (data) => data.search.users);
 
     const autoCompleteOptions = {
       noMatchTemplate() {
@@ -195,13 +230,12 @@ export default defineComponent({
       collection: [
         {
           trigger: '@',
-          values: async (text: any, cb:any) => {
-            const users = foundUsers.value.map(user => {
-              return { key: user.firstname + ' ' + user.lastname + ' @' + user.username, value: user.username }
+          values: async (text: any, cb: any) => {
+            const users = foundUsers.value.map((user) => {
+              return { key: user.firstname + ' ' + user.lastname + ' @' + user.username, value: user.username };
             });
 
-            
-            return cb(users)
+            return cb(users);
           },
           positionMenu: true,
         },

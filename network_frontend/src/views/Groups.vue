@@ -158,7 +158,12 @@ import { defineComponent, ref } from 'vue';
 import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
-import { Group, useFollowingGroupsQuery, useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
+import {
+  Group,
+  useFollowingGroupsQuery,
+  useGroupsQuery,
+  useMyGroupsQuery,
+} from '../graphql/generated/types';
 import GroupList from '../components/Group/GroupList.vue';
 import { takeStateGroups } from '../utils/groupsTake';
 import { useResizeObserver } from '@vueuse/core';
@@ -219,6 +224,7 @@ export default defineComponent({
     const { result: groupsResult, loading: followingGroupsLoading } = useFollowingGroupsQuery();
     const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
+
     return {
       groups,
       toggleGroups,
@@ -231,6 +237,7 @@ export default defineComponent({
       followingGroupsOpen,
       followingGroupsLoading,
       recoGroupsLoading,
+
     };
   },
 });

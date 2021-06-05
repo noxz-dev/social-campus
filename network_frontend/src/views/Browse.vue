@@ -31,9 +31,10 @@ import gql from 'graphql-tag';
 import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import ChipsInput from '../components/Form/ChipsInput.vue';
+import VueTribute from '../components/VueTribute.vue';
 
 export default defineComponent({
-  components: { PostList, InfiniteScrollWrapper, ChipsInput },
+  components: { PostList, InfiniteScrollWrapper, ChipsInput, VueTribute },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.userData.user);
@@ -79,7 +80,6 @@ export default defineComponent({
       () => chipInput.value?.chips,
       () => {
         tags.value = chipInput.value?.chips as string[];
-        console.log('called');
       },
       {
         deep: true,

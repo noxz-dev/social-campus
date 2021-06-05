@@ -68,13 +68,50 @@ export default defineComponent({
 </script>
 
 <style>
+.tribute-container {
+  z-index: 50;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+  display: block;
+  z-index: 999999;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(#000, 0.13);
+}
+.tribute-container ul {
+  border: 1px solid #111;
+  margin: 0;
+  margin-top: 2px;
+  padding: 0;
+  list-style: none;
+  border-radius: 4px;
+  border: 1px solid rgba(#000, 0.13);
+  background-clip: padding-box;
+  overflow: hidden;
+}
 .tribute-container li {
   @apply dark:bg-dark-700 bg-gray-100;
   @apply dark:text-gray-50 text-gray-900 !important;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
 }
-
-.tribute-container li.highlight {
-  @apply text-gray-50  !important;
+.tribute-container li.highlight,
+.tribute-container li:hover {
+  background: #3f5efb;
+  color: #fff !important;
 }
-
+.tribute-container li span {
+  font-weight: bold;
+}
+.tribute-container li.no-match {
+  cursor: default;
+}
+.tribute-container .menu-highlighted {
+  font-weight: bold;
+}
 </style>

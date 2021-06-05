@@ -31,34 +31,6 @@
               <group-permission-container :groupId="groupId">
                 <template v-slot:onlyMember>
                   <div class="flex flex-col">
-                    <!-- <app-button class="w-full items-center justify-center"
-                      ><svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
-                        <rect width="256" height="256" fill="none"></rect>
-                        <line
-                          x1="40"
-                          y1="128"
-                          x2="216"
-                          y2="128"
-                          fill="none"
-                          stroke="#fff"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="24"
-                        ></line>
-                        <line
-                          x1="128"
-                          y1="40"
-                          x2="128"
-                          y2="216"
-                          fill="none"
-                          stroke="#fff"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="24"
-                        ></line>
-                      </svg>
-                      <span class="text-md px-2">Einladen</span>
-                    </app-button> -->
                     <app-button
                       class="w-full items-center justify-center mt-2"
                       @click="$refs.groupSettingsModal.openModal()"
@@ -109,7 +81,7 @@
     <div class="w-full mt-6 py-4 text-lg font-semibold dark:text-gray-50 text-gray-900">
       <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row w-full justify-between md:justify-start">
         <div
-          class="py-1 px-2 rounded-lg cursor-pointer"
+          class="py-1 pr-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_ABOUT)"
           :class="{ 'bg-brand-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_ABOUT }"
         >
@@ -131,6 +103,14 @@
         >
           <span class="dark:text-gray-50 text-gray-900">Dateien</span>
         </div>
+        <div
+          v-if="breakpoints.is === 'sm'"
+          class="py-1 pl-2 rounded-lg cursor-pointer"
+          @click="$emit('switchComponent', GroupComponents.GROUP_MEMBER)"
+          :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_MEMBER }"
+        >
+          <span class="dark:text-gray-50 text-gray-900">Mitglieder</span>
+        </div>
       </div>
     </div>
     <modal ref="groupSettingsModal" headerText="Gruppe bearbeiten">
@@ -149,11 +129,12 @@ import { Group, GroupByIdQueryVariables, JoinGroupMutationVariables } from '../.
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
 import { useRouter } from 'vue-router';
 import { state } from '../../utils/state';
-import GroupEdit from "./GroupEdit.vue"
+import GroupEdit from './GroupEdit.vue';
 import Modal from '../../components/Modal.vue';
 import InputField from '../../components/Form/InputField.vue';
 import CustomSelect from '../../components/Form/CustomSelect.vue';
 import { GroupRoles } from '../../graphql/generated/types';
+import breakpoints from '../../utils/breakpoints';
 
 export default defineComponent({
   components: { LazyImage, GroupPermissionContainer, Modal, InputField, CustomSelect, GroupEdit },
@@ -195,14 +176,6 @@ export default defineComponent({
     const joinGroup = async () => {
       await joinGrp();
       state.refreshGroup = true;
-
-      //TODO THIS SHOULD BE CHANGED TO A WAY BETTER MECHANISM XD
-      // try {
-      //   await router.push({ name: 'Groups' });
-      //   router.push({ name: 'Group', params: { id: props.groupId } });
-      // } catch (err) {
-      //   console.log('refresh triggerd');
-      // }
     };
 
     return {
@@ -213,6 +186,7 @@ export default defineComponent({
       group,
       joinGroup,
       GroupRoles,
+      breakpoints,
     };
   },
 });

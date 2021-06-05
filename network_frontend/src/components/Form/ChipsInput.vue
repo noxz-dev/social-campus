@@ -9,7 +9,22 @@
       <button
         @click="deleteChip(i)"
         type="button"
-        class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-black hover:bg-red-200 hover:text-red-500 focus:outline-none focus:bg-red-500 focus:text-white"
+        class="
+          flex-shrink-0
+          ml-0.5
+          h-4
+          w-4
+          rounded-full
+          inline-flex
+          items-center
+          justify-center
+          text-black
+          hover:bg-red-200
+          hover:text-red-500
+          focus:outline-none
+          focus:bg-red-500
+          focus:text-white
+        "
       >
         <span class="sr-only">Remove tag</span>
         <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
@@ -17,20 +32,27 @@
         </svg>
       </button>
     </span>
-    <input
-      v-model="currentInput"
-      @keypress.enter="saveChip"
-      @keydown.delete="backspaceDelete"
-      class="dark:bg-dark-700 bg-white dark:text-gray-50"
-      :placeholder="inputPlaceholder"
-    />
+    <vue-tribute elementId="filterTagInput" :options="autoCompleteOptions">
+      <input
+        id="filterTagInput"
+        v-model="currentInput"
+        @keypress.enter="saveChip"
+        @keydown.delete="backspaceDelete"
+        class="dark:bg-dark-700 bg-white dark:text-gray-50"
+        :placeholder="inputPlaceholder"
+      />
+    </vue-tribute>
   </div>
 </template>
 
 <script lang="ts">
+import { useResult } from '@vue/apollo-composable';
+import { useSearchQuery } from '../../graphql/generated/types';
 import { defineComponent, ref, watch } from 'vue';
+import VueTribute from '../../components/VueTribute.vue';
 
 export default defineComponent({
+  components: { VueTribute },
   props: {
     set: {
       type: Boolean,
@@ -70,12 +92,40 @@ export default defineComponent({
       which == 8 && currentInput.value === '' && chips.value.splice(chips.value.length - 1);
     };
 
+    const { result: searchResult } = useSearchQuery(() => ({
+      searchString: '',
+    }));
+    const foundTags = useResult(searchResult, [], (data) => data.search.tags);
+
+    const autoCompleteOptions = {
+      noMatchTemplate() {
+        return '<li>Kein Tag gefunden</li>';
+      },
+      lookup: function (tag: any, mentionText: string) {
+        console.log(mentionText);
+        if (mentionText.includes('#')) {
+          return '#' + tag.value;
+        }
+        return tag.value;
+      },
+      autocompleteMode: true,
+      values: async (text: any, cb: any) => {
+        const tags = foundTags.value.map((tag) => {
+          return { key: tag.name, value: tag.name };
+        });
+
+        return cb(tags);
+      },
+      positionMenu: true,
+    };
+
     return {
       chips,
       currentInput,
       saveChip,
       deleteChip,
       backspaceDelete,
+      autoCompleteOptions,
     };
   },
 });

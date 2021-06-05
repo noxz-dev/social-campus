@@ -6,7 +6,7 @@
           ref="input"
           :value="modelValue"
           @input="onChanged"
-          v-if="!showPreview"
+          v-show="!showPreview"
           :class="'dark:bg-' + bgColor"
           id="newPostTextArea"
           class="
@@ -24,7 +24,7 @@
         />
         <div
           class="markdown bg-gray-700 rounded-lg p-0.5"
-          v-else
+          v-if="showPreview"
           v-html="parseMarkdown(modelValue).sanitizedContent"
         ></div>
         <div class="absolute rounded-full h-4 w-4 top-0 right-0 mt-1 mr-3" v-if="!showPreview">
@@ -105,8 +105,8 @@ export default defineComponent({
     },
     bgColor: {
       type: String,
-      default: 'dark-600'
-    }
+      default: 'dark-600',
+    },
   },
   setup(props, { emit }) {
     const emojiPicker = ref<EmojiPickerElement>();
@@ -129,51 +129,6 @@ export default defineComponent({
 });
 </script>
 <style>
-.tribute-container {
-  z-index: 50;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: auto;
-  max-height: 300px;
-  max-width: 500px;
-  overflow: auto;
-  display: block;
-  z-index: 999999;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(#000, 0.13);
-}
-.tribute-container ul {
-  margin: 0;
-  margin-top: 2px;
-  padding: 0;
-  list-style: none;
-  background: #fff;
-  border-radius: 4px;
-  border: 1px solid rgba(#000, 0.13);
-  background-clip: padding-box;
-  overflow: hidden;
-}
-.tribute-container li {
-  color: #3f5efb;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.tribute-container li.highlight,
-.tribute-container li:hover {
-  background: #3f5efb;
-  color: #fff;
-}
-.tribute-container li span {
-  font-weight: bold;
-}
-.tribute-container li.no-match {
-  cursor: default;
-}
-.tribute-container .menu-highlighted {
-  font-weight: bold;
-}
 unicode-emoji-picker {
   /* Because the component is built using the "em" unit, everything is scaled up from the font-size */
   /* So you should probably only change this value if you want to resize the component */

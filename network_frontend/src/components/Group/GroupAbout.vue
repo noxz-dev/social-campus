@@ -3,6 +3,7 @@
     <div
       class="editable markdown bg-gray-100 dark:bg-dark-600 dark:text-gray-50 rounded-lg mt-12 p-5 outline-none"
     ></div>
+    <group-role-container :groupId="$route.params.id" :role="GroupRoles.Admin"></group-role-container>
     <app-button class="mt-2 self-end" @click="saveAbout">Speichern</app-button>
   </div>
 </template>
@@ -13,7 +14,10 @@ import { useGroupAboutQuery, useUpdateAboutGroupMutation } from '../../graphql/g
 import { useRoute } from 'vue-router';
 import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
+import GroupRoleContainer from './GroupRoleContainer.vue';
+import { GroupRoles } from '../../graphql/generated/types';
 export default defineComponent({
+  components: { GroupRoleContainer },
   props: {},
   setup() {
     let editor: MediumEditor.MediumEditor;
@@ -48,19 +52,13 @@ export default defineComponent({
       }
     });
 
-    // const toggleEdit = () => {
-    //   if (editor.isActive) {
-    //     editor.destroy();
-    //   } else {
-    //     editor.setup();
-    //   }
-    // };
     onMounted(() => {
       editor = new MediumEditor('.editable');
     });
     return {
       relativeContainer,
       saveAbout,
+      GroupRoles,
     };
   },
 });

@@ -4,6 +4,7 @@
       class="
         flex
         h-full
+        flex-1
         lg:w-[80%]
         w-full
         items-center
@@ -40,7 +41,7 @@
       </infinite-scroll-wrapper>
     </div>
 
-    <div class="h-full hidden lg:flex w-80">
+    <div class="h-full hidden lg:flex min-w-[22rem]">
       <group-permission-container :groupId="$route.params.id">
         <template v-slot:isMemberAndPublic>
           <group-user-sidebar />
@@ -66,6 +67,7 @@ export enum GroupComponents {
   GROUP_FEED = 'GroupFeed',
   GROUP_ABOUT = 'GroupAbout',
   GROUP_FILES = 'GroupFiles',
+  GROUP_MEMBER = 'GroupUserSidebar',
 }
 
 export default defineComponent({

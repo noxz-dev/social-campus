@@ -1,3 +1,5 @@
+//Original by https://github.com/mirari/v-viewer license MIT, fixed and updated for vue3
+
 import { debounce } from 'throttle-debounce';
 import Viewer from 'viewerjs';
 import { App, nextTick, VNode, watch } from 'vue';
@@ -101,22 +103,16 @@ const install = (app: App, { name = 'viewer', debug = false }) => {
       const debouncedCreateViewer = debounce(50, createViewer);
       debouncedCreateViewer(el, binding.value);
 
-      // 创建watch监听options表达式变化
       createWatcher(el, binding, vnode, debouncedCreateViewer);
 
-      // 是否监听dom变化
       if (!binding.modifiers.static) {
-        // 增加dom变化监听
         createObserver(el, binding.value, debouncedCreateViewer, binding.modifiers.rebuild);
       }
     },
     beforeUnmount(el) {
       log('viewer unbind');
-      // 销毁dom变化监听
       destroyObserver(el);
-      // 销毁指令表达式监听
       destroyWatcher(el);
-      // 销毁viewer
       destroyViewer(el);
     },
   });

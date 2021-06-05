@@ -573,7 +573,7 @@
   </header>
 
   <floating-button
-    v-if="['Home', 'Browse'].includes($route.name) && !notifyOpen"
+    v-if="['Home', 'Browse'].includes($route.name) && !notifyOpen && !state.showNewPostFloatingButton"
     class="lg:hidden sm:block"
     text="Neuer Post"
     @click="modal.openModal()"
@@ -622,6 +622,7 @@ import GroupPermissionContainer from './Group/GroupPermissionContainer.vue';
 import { RecursivePartial } from '../utils/typeUtils';
 import LazyImage from './Blurhash/LazyImage.vue';
 import SettingsModal from './SettingsModal.vue';
+import { state } from '../utils/state';
 
 export default defineComponent({
   components: {
@@ -721,6 +722,7 @@ export default defineComponent({
       notifications,
       deleteNotification,
       modal,
+      state,
     };
   },
 });

@@ -55,24 +55,6 @@ export class Post extends Base {
   @Column({ default: false, type: 'bool' })
   edited: boolean;
 
-  // @Column({ nullable: true, type: 'varchar' })
-  // imageName: string;
-
-  // @Field(() => String, { nullable: true })
-  // imageLink: string;
-
-  // @AfterLoad()
-  // async generateImageLink(): Promise<void> {
-  //   if (this.imageName) {
-  //     minioClient.presignedGetObject('images', this.imageName, (err, url: string) => {
-  //       if (err) return log.error('link generation failed');
-
-  //       const editUrl = url.split('?')[0].replace('http://minio:9000', '');
-  //       this.imageLink = editUrl;
-  //     });
-  //   }
-  // }
-
   @AfterLoad()
   async countLikes(): Promise<void> {
     this.likesCount = await countLikes(this.id);

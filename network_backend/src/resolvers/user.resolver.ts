@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { Brackets, getRepository } from 'typeorm';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
+import { Brackets, getRepository, In } from 'typeorm';
 import { Token } from '../entity/token.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -85,7 +85,7 @@ export class UserResolver {
 
     const savedUser = await getRepository(User).save(user);
 
-    //generate a save token
+    //generate a cryptographic save token
     const token = new Token(crypto.randomBytes(64).toString('hex'), savedUser.id);
 
     await getRepository(Token).save(token);
@@ -281,7 +281,7 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => [User], { description: 'returns all users that the logged in user is following' })
-  async following(
+  async getFollowing(
     @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
@@ -307,7 +307,7 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => [User], { description: 'returns all followers of the user' })
-  async followers(
+  async getFollowers(
     @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
@@ -455,5 +455,19 @@ export class UserResolver {
     });
 
     return recommended;
+  }
+
+  @FieldResolver()
+  async followers(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['followers'] });
+
+    return u.followers;
+  }
+
+  @FieldResolver()
+  async following(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['following'] });
+
+    return u.following;
   }
 }

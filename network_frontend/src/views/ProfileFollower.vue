@@ -15,33 +15,31 @@
 
 <script lang="ts">
 import Card from '../components/Card/Card.vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import PostList from '../components/Post/PostList.vue';
-import { useFollowersQuery } from '../graphql/generated/types';
-import { FollowersQueryVariables } from '../graphql/generated/types';
+import { useGetFollowersQuery } from '../graphql/generated/types';
 import LazyImage from '../components/Blurhash/LazyImage.vue';
 import FollowUserCard from '../components/FollowUserCard.vue';
+import { useResult } from '@vue/apollo-composable';
+
 
 export default defineComponent({
   components: { PostList, Card, LazyImage, FollowUserCard },
   props: {
-    userId: String,
+    userId: {
+      type:String,
+      required: true
+    }
   },
   setup(props) {
-    const followers = ref();
-
-    const { onResult } = useFollowersQuery(
-      () =>
-        <FollowersQueryVariables>{
-          userId: props.userId,
-          take: 100,
-          skip: 0,
-        }
-    );
-
-    onResult(({ data }) => {
-      followers.value = data.followers;
-    });
+    const { result } = useGetFollowersQuery(() => ({
+      userId: props.userId,
+      take: 99999999,
+      skip: 0 
+    }));
+        
+    const followers = useResult(result, [], data => data.getFollowers)
+    
 
     return {
       followers,

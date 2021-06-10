@@ -1,5 +1,5 @@
 <template>
-  <card v-if="user.id">
+  <div v-if="user.id">
     <div class="flex items-center">
       <div class="h-10 rounded-full ml-2">
         <lazy-image
@@ -28,7 +28,7 @@
         ></follow-button>
       </div>
     </div>
-  </card>
+  </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent } from 'vue';

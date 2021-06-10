@@ -1,3 +1,4 @@
+import { PreviewGroup } from '../graphql_types/previewGroup';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository, In, Not } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
@@ -97,6 +98,8 @@ export class GroupResolver {
   @Query(() => Group)
   public async groupById(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<Group> {
     const userId = ctx.req.user.id;
+
+    if (!(await isMemberOfGroup(groupId, userId))) throw new Error('youre not allowed to access this');
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
       throw new Error('group not found');
@@ -105,6 +108,21 @@ export class GroupResolver {
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     group.members = await getGroupMembersWithRoles(group.id);
     return group;
+  }
+
+  @Authorized()
+  @Query(() => PreviewGroup)
+  public async groupByIdPreview(@Arg('groupId', () => String) groupId: string): Promise<PreviewGroup> {
+    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
+    if (!group) {
+      throw new Error('group not found');
+    }
+    group.numberOfMembers = group.members.length;
+    group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
+    group.members = await getGroupMembersWithRoles(group.id);
+
+    const previewGroup = new PreviewGroup(group);
+    return previewGroup;
   }
 
   @Authorized()
@@ -129,12 +147,12 @@ export class GroupResolver {
   }
 
   @Authorized()
-  @Query(() => [Group])
+  @Query(() => [PreviewGroup])
   public async groups(
     @Ctx() ctx: MyContext,
     @Arg('skip', () => Number) skip: number,
     @Arg('take', () => Number) take: number,
-  ): Promise<Group[]> {
+  ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
       where: {
@@ -162,16 +180,14 @@ export class GroupResolver {
       return g;
     });
 
-    for await (const group of groups) {
-      group.members = await getGroupMembersWithRoles(group.id);
-    }
+    const previewGroups = groups.map((group) => new PreviewGroup(group));
 
-    return groups;
+    return previewGroups;
   }
 
   @Authorized()
-  @Query(() => [Group])
-  public async myGroups(@Ctx() ctx: MyContext): Promise<Group[]> {
+  @Query(() => [PreviewGroup])
+  public async myGroups(@Ctx() ctx: MyContext): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({
@@ -216,12 +232,13 @@ export class GroupResolver {
       return new Date(b.posts[0].createdAt).getTime() - new Date(a.posts[0].createdAt).getTime();
     });
 
-    return user.groups;
+    const previewGroups = user.groups.map((group) => new PreviewGroup(group));
+    return previewGroups;
   }
 
   @Authorized()
-  @Query(() => [Group])
-  public async followingGroups(@Ctx() ctx: MyContext): Promise<Group[]> {
+  @Query(() => [PreviewGroup])
+  public async followingGroups(@Ctx() ctx: MyContext): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({
@@ -239,7 +256,7 @@ export class GroupResolver {
       groups.push(...following.groups);
     }
 
-    groups = groups.filter((group, i, arr) => arr.findIndex((t) => t.id === group.id) === i);
+    // groups = groups.filter((group, i, arr) => arr.findIndex((t) => t.id === group.id) === i);
 
     for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);
@@ -250,7 +267,8 @@ export class GroupResolver {
       return g;
     });
 
-    return groups;
+    const previewGroups = groups.map((group) => new PreviewGroup(group));
+    return previewGroups;
   }
 
   @Authorized()

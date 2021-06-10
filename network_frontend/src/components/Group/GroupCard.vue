@@ -11,20 +11,20 @@
       </div>
       <div class="p-3 pt-1 flex flex-col">
         <div class="line-clamp-2 h-12">
-          <span class="text-md break-words">{{ group.name }}</span>
+          <span class="text-md break-words font-semibold">{{ group.name }}</span>
         </div>
         <div class="flex flex-row-reverse items-center justify-between">
-          <div class="flex -space-x-1 overflow-hidden p-1 pr-1 min-h-[2rem]" v-if="group.members">
+          <div class="flex -space-x-1 overflow-hidden p-1 pr-1 min-h-[2rem]" v-if="group.previewAvatars">
             <div
               v-if="group.type === 'PUBLIC'"
-              v-for="member in previewMembers"
-              :key="member.id"
+              v-for="avatar in previewAvatars"
+              :key="avatar.id"
               class="inline-block h-6 w-6 rounded-full ring-2 ring-white"
             >
               <lazy-image
                 class="rounded-xl object-cover h-6 w-6"
-                :src="member.avatar.name"
-                :blurhash="member.avatar?.blurhash"
+                :src="avatar.name"
+                :blurhash="avatar?.blurhash"
                 rounded="full"
               />
             </div>
@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { Group } from '../../graphql/generated/types';
+import { Group, PreviewGroup } from '../../graphql/generated/types';
 import { computed, defineComponent, PropType } from 'vue';
 import Card from '../Card/Card.vue';
 import LazyImage from '../Blurhash/LazyImage.vue';
@@ -114,7 +114,7 @@ import { numberFormatter } from '../../utils/numberFormatter';
 export default defineComponent({
   props: {
     group: {
-      type: Object as PropType<Group>,
+      type: Object as PropType<PreviewGroup>,
       required: true,
     },
     isMemberOfGroup: {
@@ -130,13 +130,15 @@ export default defineComponent({
       'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
       'LGFFaXYk^6#M@-5c,1J5@[or[Q6.',
     ];
+
+
     const memberCount = computed(() => props.group.numberOfMembers || 0);
-    const previewMembers = computed(() => props.group.members.slice(0, 2));
+    const previewAvatars = computed(() => props.group.previewAvatars.slice(0, 2));
     return {
       numberFormatter,
       memberCount,
       blurhashes,
-      previewMembers,
+      previewAvatars,
     };
   },
 });

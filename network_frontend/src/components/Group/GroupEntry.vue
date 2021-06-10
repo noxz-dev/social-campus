@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated/types';
+import { useGroupByIdPreviewQuery, useJoinGroupMutation } from '../../graphql/generated/types';
 import { JoinGroupMutationVariables } from '../../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';
@@ -81,11 +81,11 @@ export default defineComponent({
       },
     }));
 
-    const { result } = useGroupByIdQuery(() => ({
+    const { result } = useGroupByIdPreviewQuery(() => ({
       groupId: props.groupId,
     }));
 
-    const group = useResult(result, null, (data) => data.groupById);
+    const group = useResult(result, null, (data) => data.groupByIdPreview);
 
     //TODO INPUT VALIDATION
     const joinGroup = async () => {

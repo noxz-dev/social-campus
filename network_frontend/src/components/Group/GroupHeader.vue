@@ -152,7 +152,6 @@ export default defineComponent({
     const group = ref<Group>();
     const numberOfPosts = ref(0);
     const numberOfMembers = ref(0);
-    const router = useRouter();
 
     const { onResult } = useGroupByIdQuery(
       () =>

@@ -8,11 +8,9 @@ export const myGroups = gql`
       description
       numberOfMembers
       type
-      members {
-        avatar {
-          name
-          blurhash
-        }
+      previewAvatars {
+        name
+        blurhash
       }
     }
   }

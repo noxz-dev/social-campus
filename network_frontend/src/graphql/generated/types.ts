@@ -382,13 +382,24 @@ export type Post = {
   edited?: Maybe<Scalars['Boolean']>;
 };
 
+export type PreviewGroup = {
+  __typename?: 'PreviewGroup';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  type: GroupType;
+  numberOfMembers?: Maybe<Scalars['Float']>;
+  previewAvatars?: Maybe<Array<Media>>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
   groupById: Group;
-  groups: Array<Group>;
-  myGroups: Array<Group>;
-  followingGroups: Array<Group>;
+  groupByIdPreview: PreviewGroup;
+  groups: Array<PreviewGroup>;
+  myGroups: Array<PreviewGroup>;
+  followingGroups: Array<PreviewGroup>;
   checkGroupAccess: GroupAccess;
   checkGroupRoleAccess: GroupRoleAccess;
   /** getPosts returns all posts for a given userID */
@@ -401,7 +412,7 @@ export type Query = {
   getFeed: Array<Post>;
   /** returns a specific post */
   postById: Post;
-  /** returns all posts that are not associated with groups, allows to be filterd via tags */
+  /** full text search for posts */
   searchPosts?: Maybe<Array<Post>>;
   myChats: Array<Chat>;
   chatById: Chat;
@@ -416,9 +427,9 @@ export type Query = {
   /** UserByUser returns a user based on the given user handle */
   userByUsername: User;
   /** returns all users that the logged in user is following */
-  following: Array<User>;
+  getFollowing: Array<User>;
   /** returns all followers of the user */
-  followers: Array<User>;
+  getFollowers: Array<User>;
   /** UserStats are some stats like follower count, post count ... */
   userStats: UserStats;
   /** recommeding users based on Faculty */
@@ -429,6 +440,11 @@ export type Query = {
 
 
 export type QueryGroupByIdArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type QueryGroupByIdPreviewArgs = {
   groupId: Scalars['String'];
 };
 
@@ -505,14 +521,14 @@ export type QueryUserByUsernameArgs = {
 };
 
 
-export type QueryFollowingArgs = {
+export type QueryGetFollowingArgs = {
   take: Scalars['Float'];
   skip: Scalars['Float'];
   userId: Scalars['String'];
 };
 
 
-export type QueryFollowersArgs = {
+export type QueryGetFollowersArgs = {
   take: Scalars['Float'];
   skip: Scalars['Float'];
   userId: Scalars['String'];
@@ -1036,16 +1052,16 @@ export type CheckGroupRoleAccessQuery = (
   ) }
 );
 
-export type FollowersQueryVariables = Exact<{
+export type GetFollowersQueryVariables = Exact<{
   userId: Scalars['String'];
   take: Scalars['Float'];
   skip: Scalars['Float'];
 }>;
 
 
-export type FollowersQuery = (
+export type GetFollowersQuery = (
   { __typename?: 'Query' }
-  & { followers: Array<(
+  & { getFollowers: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
@@ -1055,16 +1071,16 @@ export type FollowersQuery = (
   )> }
 );
 
-export type FollowingQueryVariables = Exact<{
+export type GetFollowingQueryVariables = Exact<{
   userId: Scalars['String'];
   take: Scalars['Float'];
   skip: Scalars['Float'];
 }>;
 
 
-export type FollowingQuery = (
+export type GetFollowingQuery = (
   { __typename?: 'Query' }
-  & { following: Array<(
+  & { getFollowing: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
@@ -1080,15 +1096,12 @@ export type FollowingGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 export type FollowingGroupsQuery = (
   { __typename?: 'Query' }
   & { followingGroups: Array<(
-    { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers'>
-    & { members: Array<(
-      { __typename?: 'GroupMember' }
-      & { avatar?: Maybe<(
-        { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
-      )> }
-    )> }
+    { __typename?: 'PreviewGroup' }
+    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'numberOfMembers'>
+    & { previewAvatars?: Maybe<Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>> }
   )> }
 );
 
@@ -1174,6 +1187,19 @@ export type GroupByIdQuery = (
   ) }
 );
 
+export type GroupByIdPreviewQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GroupByIdPreviewQuery = (
+  { __typename?: 'Query' }
+  & { groupByIdPreview: (
+    { __typename?: 'PreviewGroup' }
+    & Pick<PreviewGroup, 'type' | 'id' | 'name' | 'description' | 'numberOfMembers'>
+  ) }
+);
+
 export type GroupMembersQueryVariables = Exact<{
   groupId: Scalars['String'];
 }>;
@@ -1211,15 +1237,12 @@ export type GroupsQueryVariables = Exact<{
 export type GroupsQuery = (
   { __typename?: 'Query' }
   & { groups: Array<(
-    { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
-    & { members: Array<(
-      { __typename?: 'GroupMember' }
-      & { avatar?: Maybe<(
-        { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
-      )> }
-    )> }
+    { __typename?: 'PreviewGroup' }
+    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
+    & { previewAvatars?: Maybe<Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>> }
   )> }
 );
 
@@ -1269,15 +1292,12 @@ export type MyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 export type MyGroupsQuery = (
   { __typename?: 'Query' }
   & { myGroups: Array<(
-    { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
-    & { members: Array<(
-      { __typename?: 'GroupMember' }
-      & { avatar?: Maybe<(
-        { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
-      )> }
-    )> }
+    { __typename?: 'PreviewGroup' }
+    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
+    & { previewAvatars?: Maybe<Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>> }
   )> }
 );
 
@@ -2372,9 +2392,9 @@ export function useCheckGroupRoleAccessQuery(variables: CheckGroupRoleAccessQuer
   return VueApolloComposable.useQuery<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>(CheckGroupRoleAccessDocument, variables, options);
 }
 export type CheckGroupRoleAccessQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<CheckGroupRoleAccessQuery, CheckGroupRoleAccessQueryVariables>;
-export const FollowersDocument = gql`
-    query followers($userId: String!, $take: Float!, $skip: Float!) {
-  followers(userId: $userId, take: $take, skip: $skip) {
+export const GetFollowersDocument = gql`
+    query getFollowers($userId: String!, $take: Float!, $skip: Float!) {
+  getFollowers(userId: $userId, take: $take, skip: $skip) {
     id
     firstname
     lastname
@@ -2389,29 +2409,29 @@ export const FollowersDocument = gql`
     `;
 
 /**
- * __useFollowersQuery__
+ * __useGetFollowersQuery__
  *
- * To run a query within a Vue component, call `useFollowersQuery` and pass it any options that fit your needs.
- * When your component renders, `useFollowersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetFollowersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowersQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFollowersQuery({
+ * const { result, loading, error } = useGetFollowersQuery({
  *   userId: // value for 'userId'
  *   take: // value for 'take'
  *   skip: // value for 'skip'
  * });
  */
-export function useFollowersQuery(variables: FollowersQueryVariables | VueCompositionApi.Ref<FollowersQueryVariables> | ReactiveFunction<FollowersQueryVariables>, options: VueApolloComposable.UseQueryOptions<FollowersQuery, FollowersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FollowersQuery, FollowersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FollowersQuery, FollowersQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<FollowersQuery, FollowersQueryVariables>(FollowersDocument, variables, options);
+export function useGetFollowersQuery(variables: GetFollowersQueryVariables | VueCompositionApi.Ref<GetFollowersQueryVariables> | ReactiveFunction<GetFollowersQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetFollowersQuery, GetFollowersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFollowersQuery, GetFollowersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFollowersQuery, GetFollowersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options);
 }
-export type FollowersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowersQuery, FollowersQueryVariables>;
-export const FollowingDocument = gql`
-    query following($userId: String!, $take: Float!, $skip: Float!) {
-  following(userId: $userId, take: $take, skip: $skip) {
+export type GetFollowersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFollowersQuery, GetFollowersQueryVariables>;
+export const GetFollowingDocument = gql`
+    query getFollowing($userId: String!, $take: Float!, $skip: Float!) {
+  getFollowing(userId: $userId, take: $take, skip: $skip) {
     id
     firstname
     lastname
@@ -2426,26 +2446,26 @@ export const FollowingDocument = gql`
     `;
 
 /**
- * __useFollowingQuery__
+ * __useGetFollowingQuery__
  *
- * To run a query within a Vue component, call `useFollowingQuery` and pass it any options that fit your needs.
- * When your component renders, `useFollowingQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetFollowingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowingQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFollowingQuery({
+ * const { result, loading, error } = useGetFollowingQuery({
  *   userId: // value for 'userId'
  *   take: // value for 'take'
  *   skip: // value for 'skip'
  * });
  */
-export function useFollowingQuery(variables: FollowingQueryVariables | VueCompositionApi.Ref<FollowingQueryVariables> | ReactiveFunction<FollowingQueryVariables>, options: VueApolloComposable.UseQueryOptions<FollowingQuery, FollowingQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FollowingQuery, FollowingQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FollowingQuery, FollowingQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<FollowingQuery, FollowingQueryVariables>(FollowingDocument, variables, options);
+export function useGetFollowingQuery(variables: GetFollowingQueryVariables | VueCompositionApi.Ref<GetFollowingQueryVariables> | ReactiveFunction<GetFollowingQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetFollowingQuery, GetFollowingQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetFollowingQuery, GetFollowingQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetFollowingQuery, GetFollowingQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetFollowingQuery, GetFollowingQueryVariables>(GetFollowingDocument, variables, options);
 }
-export type FollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowingQuery, FollowingQueryVariables>;
+export type GetFollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFollowingQuery, GetFollowingQueryVariables>;
 export const FollowingGroupsDocument = gql`
     query followingGroups {
   followingGroups {
@@ -2453,11 +2473,9 @@ export const FollowingGroupsDocument = gql`
     name
     description
     numberOfMembers
-    members {
-      avatar {
-        name
-        blurhash
-      }
+    previewAvatars {
+      name
+      blurhash
     }
   }
 }
@@ -2641,6 +2659,37 @@ export function useGroupByIdQuery(variables: GroupByIdQueryVariables | VueCompos
   return VueApolloComposable.useQuery<GroupByIdQuery, GroupByIdQueryVariables>(GroupByIdDocument, variables, options);
 }
 export type GroupByIdQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupByIdQuery, GroupByIdQueryVariables>;
+export const GroupByIdPreviewDocument = gql`
+    query groupByIdPreview($groupId: String!) {
+  groupByIdPreview(groupId: $groupId) {
+    type
+    id
+    name
+    description
+    numberOfMembers
+  }
+}
+    `;
+
+/**
+ * __useGroupByIdPreviewQuery__
+ *
+ * To run a query within a Vue component, call `useGroupByIdPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupByIdPreviewQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGroupByIdPreviewQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useGroupByIdPreviewQuery(variables: GroupByIdPreviewQueryVariables | VueCompositionApi.Ref<GroupByIdPreviewQueryVariables> | ReactiveFunction<GroupByIdPreviewQueryVariables>, options: VueApolloComposable.UseQueryOptions<GroupByIdPreviewQuery, GroupByIdPreviewQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GroupByIdPreviewQuery, GroupByIdPreviewQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GroupByIdPreviewQuery, GroupByIdPreviewQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GroupByIdPreviewQuery, GroupByIdPreviewQueryVariables>(GroupByIdPreviewDocument, variables, options);
+}
+export type GroupByIdPreviewQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupByIdPreviewQuery, GroupByIdPreviewQueryVariables>;
 export const GroupMembersDocument = gql`
     query groupMembers($groupId: String!) {
   groupById(groupId: $groupId) {
@@ -2699,11 +2748,9 @@ export const GroupsDocument = gql`
     description
     numberOfMembers
     type
-    members {
-      avatar {
-        name
-        blurhash
-      }
+    previewAvatars {
+      name
+      blurhash
     }
   }
 }
@@ -2811,11 +2858,9 @@ export const MyGroupsDocument = gql`
     description
     numberOfMembers
     type
-    members {
-      avatar {
-        name
-        blurhash
-      }
+    previewAvatars {
+      name
+      blurhash
     }
   }
 }

@@ -6,9 +6,8 @@
     >
       <div class="p-4 pt-0 w-full rounded-lg">
         <div class="flex justify-between dark:text-gray-50 text-gray-900 items-center">
-          <div class="text-md font-semibold text-lg">Finde Gruppen</div>
+          <div class="text-md font-semibold text-2xl">Finde Gruppen</div>
           <div>
-            <div></div>
             <div>
               <app-button @click="newGroupModal?.openModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 256 256" class="mr-2 h-6">
@@ -36,7 +35,7 @@
                     stroke-width="24"
                   ></line>
                 </svg>
-                <span class="hidden md:block">Gruppe erstellen</span>
+                <span class="hidden md:block font-semibold">Gruppe erstellen</span>
                 <span class="sm:block md:hidden">
                   <svg
                     class="h-6"
@@ -73,80 +72,27 @@
           </div>
         </div>
       </div>
-      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
-        <div>
-          <div class="pb-2 flex justify-between px-4">
-            <span class="text-md md:text-lg">Deine Gruppen</span>
-
-            <app-button class="text-xs cursor-pointer !rounded-full !py-1" @click="myGroupsOpen = !myGroupsOpen"
-              >Zeige alle</app-button
-            >
-          </div>
-        </div>
-        <div
-          class="w-full p-1 flex flex-col items-center min-h-[24rem]"
-          ref="groupListContainer"
-          :class="myGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
-        >
-          <div class="w-full">
-            <div v-if="myGroups">
-              <div v-if="!myGroups" class="pt-40">Keine Gruppen gefunden, tritt doch welchen bei</div>
-              <group-list
-                v-if="myGroups.length > 0"
-                :groups="myGroups"
-                :isMemberOfGroup="true"
-                :loading="myGroupsLoading"
-              ></group-list>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
-        <div>
-          <div class="pb-2 flex justify-between px-4">
-            <span class="text-md md:text-lg">Empfohlene Gruppen</span>
-
-            <app-button class="text-xs cursor-pointer !rounded-full !py-1 h-8 md:h-auto" @click="toggleGroups"
-              >Zeige alle</app-button
-            >
-          </div>
-        </div>
-        <div class="w-full p-1 flex flex-col items-center min-h-[24rem]" ref="groupListContainer">
-          <group-list
-            v-if="groups.length > 0"
-            :groups="groups"
-            :isMemberOfGroup="false"
-            :loading="recoGroupsLoading"
-          ></group-list>
-          <div v-else class="pt-40">Keine Gruppen gefunden, erstell doch eine</div>
-        </div>
-      </div>
-      <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
-        <div>
-          <div class="pb-2 flex justify-between px-4">
-            <span class="text-md md:text-lg">Gruppen von Personen, denen du folgst</span>
-
-            <app-button
-              class="text-xs cursor-pointer !rounded-full !py-1 h-8 md:h-auto"
-              @click="followingGroupsOpen = !followingGroupsOpen"
-              >Zeige alle</app-button
-            >
-          </div>
-        </div>
-        <div
-          v-if="followingGroups"
-          class="w-full p-1 flex flex-col items-center min-h-[24rem]"
-          :class="followingGroupsOpen ? '' : 'max-h-[27rem] overflow-hidden'"
-        >
-          <group-list
-            v-if="followingGroups.length > 0"
-            :groups="followingGroups"
-            :isMemberOfGroup="false"
-            :loading="followingGroupsLoading"
-          ></group-list>
-          <div v-else class="pt-40">Keine Gruppen gefunden</div>
-        </div>
-      </div>
+      <group-list-container
+        header-text="Deine Gruppen"
+        emptyText="Ganz schön leer, erstell doch eine oder tritt einer Gruppe bei"
+        :is-loading="myGroupsLoading"
+        :isMember="true"
+        :groups="myGroups"
+      />
+      <group-list-container
+        header-text="Empfohlene Gruppen"
+        emptyText="Ganz schön leer, erstell doch eine und lade deine Freunde ein"
+        :is-loading="recoGroupsLoading"
+        :isMember="false"
+        :groups="groups"
+      />
+      <group-list-container
+        header-text="Gruppen von Personen, denen du folgst"
+        emptyText="Ganz schön leer, erstell doch eine und lade deine Freunde ein"
+        :is-loading="followingGroupsLoading"
+        :isMember="false"
+        :groups="followingGroups"
+      />
     </div>
     <new-group-modal ref="newGroupModal" />
   </div>
@@ -158,16 +104,12 @@ import { defineComponent, ref } from 'vue';
 import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
-import {
-  Group,
-  useFollowingGroupsQuery,
-  useGroupsQuery,
-  useMyGroupsQuery,
-} from '../graphql/generated/types';
+import { useFollowingGroupsQuery, useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
 import GroupList from '../components/Group/GroupList.vue';
 import { takeStateGroups } from '../utils/groupsTake';
 import { useResizeObserver } from '@vueuse/core';
 import { useResult } from '@vue/apollo-composable';
+import GroupListContainer from '../components/Group/GroupListContainer.vue';
 
 export default defineComponent({
   components: {
@@ -176,9 +118,9 @@ export default defineComponent({
     NewGroupModal,
     InputField,
     GroupList,
+    GroupListContainer,
   },
   setup() {
-    const groups = ref<Partial<Group>[]>([]);
     const groupListContainer = ref<HTMLDivElement>();
     const skip = ref(0);
     const allGroups = ref(false);
@@ -198,11 +140,12 @@ export default defineComponent({
       updateTake(entries);
     });
 
-    const { onResult, loading: recoGroupsLoading } = useGroupsQuery(() => ({
+    const { result: allGroupsResult, loading: recoGroupsLoading } = useGroupsQuery(() => ({
       take: takeStateGroups.take,
       skip: skip.value,
     }));
 
+    //TODO REFACTOR
     function toggleGroups(): void {
       if (!allGroups.value) {
         takeStateGroups.take = 200;
@@ -214,16 +157,16 @@ export default defineComponent({
       }
     }
 
-    onResult(({ data }) => {
-      groups.value = data.groups;
-    });
+    
 
+    //query all needed groups
     const { result, loading: myGroupsLoading } = useMyGroupsQuery();
     const myGroups = useResult(result, null, (data) => data.myGroups);
 
     const { result: groupsResult, loading: followingGroupsLoading } = useFollowingGroupsQuery();
     const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
+    const groups = useResult(allGroupsResult, null, (data) => data.groups);
 
     return {
       groups,
@@ -237,7 +180,6 @@ export default defineComponent({
       followingGroupsOpen,
       followingGroupsLoading,
       recoGroupsLoading,
-
     };
   },
 });

@@ -22,6 +22,9 @@ import { UpdateProfileInput } from '../validators/updateProfile.validator';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
 import { redis } from '../utils/services/redis';
+import { Role } from '../entity/role.entity';
+import { Group } from '../entity/group.entity';
+import { Chat } from '../entity/chat.entity';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -460,14 +463,36 @@ export class UserResolver {
   @FieldResolver()
   async followers(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
     const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['followers'] });
-
     return u.followers;
   }
 
   @FieldResolver()
   async following(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
     const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['following'] });
-
     return u.following;
+  }
+
+  @FieldResolver()
+  async avatar(@Root() user: User): Promise<Media> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['avatar'] });
+    return u.avatar;
+  }
+
+  @FieldResolver()
+  async roles(@Root() user: User): Promise<Role[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['roles'] });
+    return u.roles;
+  }
+
+  @FieldResolver()
+  async posts(@Root() user: User): Promise<Post[]> {
+    //shows only posts that are not from a group
+    return await getRepository(Post).find({ where: { user: user.id, group: null } });
+  }
+
+  @FieldResolver()
+  async groups(@Root() user: User): Promise<Group[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['groups'] });
+    return u.groups;
   }
 }

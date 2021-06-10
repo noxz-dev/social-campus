@@ -536,23 +536,25 @@ export class PostResolver {
   @FieldResolver()
   async liked(@Ctx() ctx: MyContext, @Root() post: Post): Promise<boolean> {
     const userId = ctx.req.user.id;
-
     return await checkLikeState(userId, post.id);
   }
 
-  @FieldResolver()
-  async user(@Root() post: Post): Promise<User> {
-    return await getRepository(User).findOne({ where: { id: post.user.id } });
-  }
+  // @FieldResolver()
+  // async user(@Root() post: Post): Promise<User> {
+  //   if (post.user) return post.user;
+  // }
 
-  @FieldResolver()
-  async group(@Root() post: Post): Promise<Group> {
-    return await getRepository(Group).findOne({ where: { id: post.group.id } });
-  }
+  // @FieldResolver()
+  // async group(@Root() post: Post): Promise<Group> {
+  //   if (post.group) return post.group;
+  //   const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['group'] });
+  //   return p.group;
+  // }
 
   @FieldResolver()
   async media(@Root() post: Post): Promise<Media> {
-    return await getRepository(Media).findOne({ where: { id: post.media.id } });
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
+    return p.media;
   }
 
   @FieldResolver()

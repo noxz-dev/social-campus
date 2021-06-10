@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import argon2 from 'argon2';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { Brackets, getRepository } from 'typeorm';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
+import { Brackets, getRepository, In } from 'typeorm';
 import { Token } from '../entity/token.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -22,6 +22,9 @@ import { UpdateProfileInput } from '../validators/updateProfile.validator';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
 import { redis } from '../utils/services/redis';
+import { Role } from '../entity/role.entity';
+import { Group } from '../entity/group.entity';
+import { Chat } from '../entity/chat.entity';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -85,7 +88,7 @@ export class UserResolver {
 
     const savedUser = await getRepository(User).save(user);
 
-    //generate a save token
+    //generate a cryptographic save token
     const token = new Token(crypto.randomBytes(64).toString('hex'), savedUser.id);
 
     await getRepository(Token).save(token);
@@ -281,7 +284,7 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => [User], { description: 'returns all users that the logged in user is following' })
-  async following(
+  async getFollowing(
     @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
@@ -307,7 +310,7 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => [User], { description: 'returns all followers of the user' })
-  async followers(
+  async getFollowers(
     @Ctx() ctx: MyContext,
     @Arg('userId', () => String) userId: string,
     @Arg('skip', () => Number) skip: number,
@@ -455,5 +458,41 @@ export class UserResolver {
     });
 
     return recommended;
+  }
+
+  @FieldResolver()
+  async followers(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['followers'] });
+    return u.followers;
+  }
+
+  @FieldResolver()
+  async following(@Ctx() ctx: MyContext, @Root() user: User): Promise<User[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['following'] });
+    return u.following;
+  }
+
+  @FieldResolver()
+  async avatar(@Root() user: User): Promise<Media> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['avatar'] });
+    return u.avatar;
+  }
+
+  @FieldResolver()
+  async roles(@Root() user: User): Promise<Role[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['roles'] });
+    return u.roles;
+  }
+
+  @FieldResolver()
+  async posts(@Root() user: User): Promise<Post[]> {
+    //shows only posts that are not from a group
+    return await getRepository(Post).find({ where: { user: user.id, group: null } });
+  }
+
+  @FieldResolver()
+  async groups(@Root() user: User): Promise<Group[]> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['groups'] });
+    return u.groups;
   }
 }

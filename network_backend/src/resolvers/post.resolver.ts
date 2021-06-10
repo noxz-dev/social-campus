@@ -1,5 +1,5 @@
 import { isUUID } from 'class-validator';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { EntityManager, getConnection, getManager, getRepository, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Group, GroupType } from '../entity/group.entity';
@@ -46,11 +46,6 @@ export class PostResolver {
     });
     if (!posts) {
       return null;
-    }
-
-    for await (const post of posts) {
-      const likeState = await checkLikeState(userId, post.id);
-      post.liked = likeState;
     }
 
     return posts;
@@ -113,10 +108,6 @@ export class PostResolver {
       post.tags = tagsFromPost;
     }
 
-    for await (const post of posts) {
-      const likeState = await checkLikeState(userId, post.id);
-      post.liked = likeState;
-    }
     log.info(`'User with the id: ${userId} called browsePosts'`);
     return posts;
   }
@@ -149,11 +140,6 @@ export class PostResolver {
     });
     if (!posts) {
       return null;
-    }
-
-    for await (const post of posts) {
-      const likeState = await checkLikeState(userId, post.id);
-      post.liked = likeState;
     }
 
     log.info(`'User with the id: ${userId} called getPostsFromGroup'`);
@@ -201,15 +187,6 @@ export class PostResolver {
         return p;
       }
     });
-    for (const post of feedPosts) {
-      const like = post.likes.find((like) => like.user.id === userId);
-      if (like) {
-        post.liked = true;
-      } else {
-        post.liked = false;
-      }
-    }
-
     log.info(`'User with the id: ${userId} called getFeed'`);
     return feedPosts;
   }
@@ -246,8 +223,6 @@ export class PostResolver {
       }
     }
 
-    const likeState = await checkLikeState(userId, post.id);
-    post.liked = likeState;
     log.info(`'User with the id: ${userId} called postById'`);
     return post;
   }
@@ -418,8 +393,6 @@ export class PostResolver {
     await getRepository(Like).save(like);
     await getRepository(Post).save(post);
 
-    const likeState = await checkLikeState(userId, post.id);
-    post.liked = likeState;
     log.info(`user with the id ${userId} liked the post ${postID}`);
     post.likesCount = await countLikes(post.id);
     await notify(
@@ -457,7 +430,6 @@ export class PostResolver {
     });
     if (!post) throw new Error('Post not found!');
 
-    //check if the post is associated with a group and enforce permission check
     if (post.group && !(await isMemberOfGroup(post.group.id, userId))) {
       throw new Error('youre not allowed to interact with this content');
     }
@@ -467,8 +439,6 @@ export class PostResolver {
     await getRepository(Like).delete(like);
     await getRepository(Post).save(post);
 
-    const likeState = await checkLikeState(userId, post.id);
-    post.liked = likeState;
     log.info(`user with the id ${userId} unliked the post ${postID}`);
     post.likesCount = await countLikes(post.id);
     return post;
@@ -527,7 +497,6 @@ export class PostResolver {
         log.info(`user with the id ${userId} edited the post ${postId}`);
         return savedPost;
       });
-      savedPost.liked = await checkLikeState(userId, postId);
       savedPost.likesCount = await countLikes(postId);
       savedPost.commentCount = await countComments(postId);
       await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: savedPost, userId: userId });
@@ -539,7 +508,7 @@ export class PostResolver {
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
-    description: 'returns all posts that are not associated with groups, allows to be filterd via tags',
+    description: 'full text search for posts',
   })
   public async searchPosts(
     @Ctx() ctx: MyContext,
@@ -551,18 +520,59 @@ export class PostResolver {
     const posts = await getRepository(Post)
       .createQueryBuilder('post')
       .where(`to_tsvector('simple', post.text) @@ to_tsquery('simple', :query)`, { query: `${searchString}:*` })
+      .andWhere('group = null')
       .getMany();
 
     if (!posts) {
       return [];
     }
 
-    for await (const post of posts) {
-      const likeState = await checkLikeState(userId, post.id);
-      post.liked = likeState;
-    }
     log.info(`'User with the id: ${userId} called searchPosts'`);
     return posts;
+  }
+
+  //FIELD RESOLVERS
+
+  @FieldResolver()
+  async liked(@Ctx() ctx: MyContext, @Root() post: Post): Promise<boolean> {
+    const userId = ctx.req.user.id;
+    return await checkLikeState(userId, post.id);
+  }
+
+  // @FieldResolver()
+  // async user(@Root() post: Post): Promise<User> {
+  //   if (post.user) return post.user;
+  // }
+
+  // @FieldResolver()
+  // async group(@Root() post: Post): Promise<Group> {
+  //   if (post.group) return post.group;
+  //   const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['group'] });
+  //   return p.group;
+  // }
+
+  @FieldResolver()
+  async media(@Root() post: Post): Promise<Media> {
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
+    return p.media;
+  }
+
+  @FieldResolver()
+  async tags(@Root() post: Post): Promise<Tag[]> {
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['tags'] });
+    return p.tags;
+  }
+
+  @FieldResolver()
+  async comments(@Root() post: Post): Promise<Comment[]> {
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['comments'] });
+    return p.comments;
+  }
+
+  @FieldResolver()
+  async likes(@Root() post: Post): Promise<Like[]> {
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['likes'] });
+    return p.likes;
   }
 }
 

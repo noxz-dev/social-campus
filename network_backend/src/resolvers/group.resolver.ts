@@ -239,6 +239,7 @@ export class GroupResolver {
       groups.push(...following.groups);
     }
 
+    //delete duplicates
     groups = groups.filter((group, i, arr) => arr.findIndex((t) => t.id === group.id) === i);
 
     for await (const group of groups) {

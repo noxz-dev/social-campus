@@ -598,7 +598,7 @@
   </modal>
   <edit-modal content-text="" header-text="Edit Post" />
 </template>
-
+  
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Modal from '@/components/Modal.vue';

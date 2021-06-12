@@ -24,8 +24,7 @@ import { notify } from './notification.resolver';
 import { redis } from '../utils/services/redis';
 import { Role } from '../entity/role.entity';
 import { Group } from '../entity/group.entity';
-import { Chat } from '../entity/chat.entity';
-import { UpdatePasswordInput } from 'validators/updatePassword.validator';
+import { UpdatePasswordInput } from '../validators/updatePassword.validator';
 
 @Resolver(() => User)
 export class UserResolver {

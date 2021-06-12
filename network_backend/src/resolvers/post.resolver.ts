@@ -552,7 +552,18 @@ export class PostResolver {
 
   @FieldResolver()
   async user(@Root() post: Post): Promise<User> {
-    if (post.user) return post.user;
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['user'] });
+    return p.user;
+  }
+
+  @FieldResolver()
+  async likesCount(@Root() post: Post): Promise<number> {
+    return await countLikes(post.id);
+  }
+
+  @FieldResolver()
+  async commentCount(@Root() post: Post): Promise<number> {
+    return await countComments(post.id);
   }
 
   @FieldResolver()
@@ -562,11 +573,11 @@ export class PostResolver {
     return p.group;
   }
 
-  // @FieldResolver()
-  // async media(@Root() post: Post): Promise<Media> {
-  //   const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
-  //   return p.media;
-  // }
+  @FieldResolver()
+  async media(@Root() post: Post): Promise<Media> {
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
+    return p.media;
+  }
 
   @FieldResolver()
   async tags(@Root() post: Post): Promise<Tag[]> {
@@ -576,8 +587,9 @@ export class PostResolver {
 
   @FieldResolver()
   async comments(@Root() post: Post): Promise<Comment[]> {
+    console.log('HEYHO');
     const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['comments'] });
-    return p.comments;
+    return p.comments.sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0));
   }
 
   @FieldResolver()
@@ -680,7 +692,7 @@ const createTags = async (user: User, tags: string[], manager: EntityManager): P
   return postTags;
 };
 
-//Helper functions to make some releational operations faster
+//Helper functions to make some relational operations faster
 
 export const queryWithRelations = async (
   id: string,

@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import crypto from 'crypto';
 import argon2 from 'argon2';
+import crypto from 'crypto';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
-import { Brackets, getRepository, In } from 'typeorm';
-import { Token } from '../entity/token.entity';
+import { Brackets, getRepository } from 'typeorm';
+import { Group } from '../entity/group.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
+import { Role } from '../entity/role.entity';
+import { Token } from '../entity/token.entity';
 import { User } from '../entity/user.entity';
 import { JwtResponse } from '../graphql_types/jwtResponse';
 import { UserStats } from '../graphql_types/userStats';
@@ -18,13 +20,11 @@ import { sendEmail } from '../utils/helpers/sendMail';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { JwtUser } from '../utils/interfaces/jwtUser.interface';
 import { log } from '../utils/services/logger';
+import { redis } from '../utils/services/redis';
+import { UpdatePasswordInput } from '../validators/updatePassword.validator';
 import { UpdateProfileInput } from '../validators/updateProfile.validator';
 import { UserValidator } from '../validators/user.validator';
 import { notify } from './notification.resolver';
-import { redis } from '../utils/services/redis';
-import { Role } from '../entity/role.entity';
-import { Group } from '../entity/group.entity';
-import { UpdatePasswordInput } from '../validators/updatePassword.validator';
 
 @Resolver(() => User)
 export class UserResolver {

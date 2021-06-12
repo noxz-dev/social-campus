@@ -1,5 +1,5 @@
-import { Group, GroupType } from '../entity/group.entity';
 import { Field, ObjectType } from 'type-graphql';
+import { Group, GroupType } from '../entity/group.entity';
 import { Media } from '../entity/media.entity';
 
 @ObjectType()
@@ -23,7 +23,7 @@ export class PreviewGroup {
   previewAvatars: Media[];
 
   constructor(group: Group) {
-    console.log(group);
+    console.log(group.members);
     this.id = group.id;
     this.name = group.name;
     this.description = group.description || '';

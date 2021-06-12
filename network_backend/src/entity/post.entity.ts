@@ -1,6 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AfterLoad, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from 'typeorm';
-import { countComments, countLikes } from '../resolvers/post.resolver';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Base } from './base';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
@@ -47,7 +46,7 @@ export class Post extends Base {
   liked: boolean;
 
   @Field(() => Media, { nullable: true })
-  @OneToOne(() => Media, { eager: true, nullable: true })
+  @OneToOne(() => Media, { nullable: true, eager: true })
   @JoinColumn()
   media: Media;
 
@@ -55,13 +54,13 @@ export class Post extends Base {
   @Column({ default: false, type: 'bool' })
   edited: boolean;
 
-  @AfterLoad()
-  async countLikes(): Promise<void> {
-    this.likesCount = await countLikes(this.id);
-  }
+  // @AfterLoad()
+  // async countLikes(): Promise<void> {
+  //   this.likesCount = await countLikes(this.id);
+  // }
 
-  @AfterLoad()
-  async countComments(): Promise<void> {
-    this.commentCount = await countComments(this.id);
-  }
+  // @AfterLoad()
+  // async countComments(): Promise<void> {
+  //   this.commentCount = await countComments(this.id);
+  // }
 }

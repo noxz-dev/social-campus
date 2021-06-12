@@ -550,23 +550,23 @@ export class PostResolver {
     return await checkLikeState(userId, post.id);
   }
 
-  // @FieldResolver()
-  // async user(@Root() post: Post): Promise<User> {
-  //   if (post.user) return post.user;
-  // }
-
-  // @FieldResolver()
-  // async group(@Root() post: Post): Promise<Group> {
-  //   if (post.group) return post.group;
-  //   const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['group'] });
-  //   return p.group;
-  // }
+  @FieldResolver()
+  async user(@Root() post: Post): Promise<User> {
+    if (post.user) return post.user;
+  }
 
   @FieldResolver()
-  async media(@Root() post: Post): Promise<Media> {
-    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
-    return p.media;
+  async group(@Root() post: Post): Promise<Group> {
+    if (post.group) return post.group;
+    const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['group'] });
+    return p.group;
   }
+
+  // @FieldResolver()
+  // async media(@Root() post: Post): Promise<Media> {
+  //   const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['media'] });
+  //   return p.media;
+  // }
 
   @FieldResolver()
   async tags(@Root() post: Post): Promise<Tag[]> {

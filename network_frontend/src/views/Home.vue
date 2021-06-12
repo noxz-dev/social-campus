@@ -11,7 +11,7 @@
         class="overflow-y-auto transform inline-block transition-all duration-300"
         :class="showSideView && 'translate-x-[-80%] overflow-y-hidden'"
       >
-        <div class="w-full flex jusitfy-center">
+        <div class="w-full flex flex-col">
           <div
             v-if="showSideView"
             class="absolute w-full h-full bg-black opacity-60 rounded-r-xl"

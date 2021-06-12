@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Resolver, Root } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Like } from '../entity/like.entity';
@@ -13,7 +13,7 @@ import { notify } from './notification.resolver';
 @Resolver(() => Comment)
 export class CommentResolver {
   @Authorized()
-  @Mutation(() => Comment)
+  @Mutation(() => Comment, { description: 'Creates a new comment and adds it to a post' })
   public async addComment(
     @Ctx() ctx: MyContext,
     @Arg('text', () => String) text: string,
@@ -149,5 +149,31 @@ export class CommentResolver {
 
     await getRepository(Comment).save(comment);
     return comment;
+  }
+
+  @Authorized()
+  @Mutation(() => Comment)
+  public async deleteComment(
+    @Ctx() ctx: MyContext,
+    @Arg('commentId', () => String) commentId: string,
+  ): Promise<Comment> {
+    const userId = ctx.req.user.id;
+    if (!userId) throw new Error('user not authenticated');
+
+    const comment = await getRepository(Comment).findOne({
+      relations: ['user', 'post'],
+      where: { id: commentId },
+    });
+    if (!comment) throw new Error('comment not found');
+
+    await getRepository(Comment).remove(comment);
+
+    return comment;
+  }
+
+  @FieldResolver()
+  async user(@Root() comment: Comment): Promise<User> {
+    const c = await getRepository(Comment).findOne({ where: { id: comment.id }, relations: ['user'] });
+    return c.user;
   }
 }

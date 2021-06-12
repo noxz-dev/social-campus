@@ -81,7 +81,7 @@
     <div class="w-full mt-6 py-4 text-lg font-semibold dark:text-gray-50 text-gray-900">
       <div class="flex sm:space-x-10 space-x-0 sm:space-y-0 sm:flex-row w-full justify-between md:justify-start">
         <div
-          class="py-1 pr-2 rounded-lg cursor-pointer"
+          class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_ABOUT)"
           :class="{ 'bg-brand-500 !text-gray-50 ': activeComponent == GroupComponents.GROUP_ABOUT }"
         >
@@ -105,7 +105,7 @@
         </div>
         <div
           v-if="breakpoints.is === 'sm'"
-          class="py-1 pl-2 rounded-lg cursor-pointer"
+          class="py-1 px-2 rounded-lg cursor-pointer"
           @click="$emit('switchComponent', GroupComponents.GROUP_MEMBER)"
           :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_MEMBER }"
         >

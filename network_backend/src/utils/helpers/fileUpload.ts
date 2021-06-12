@@ -14,6 +14,12 @@ interface UploadResponse {
   blurhash: string;
 }
 
+/**
+ *
+ * @param file file to be uploaded
+ * @param bucketName s3 bucketname
+ * @returns UploadResponse
+ */
 export const uploadFileGraphql = async (file: FileUpload, bucketName: string): Promise<UploadResponse> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
@@ -42,6 +48,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         .pipe(createWriteStream(destinationPath))
         .on('error', rej)
         .on('finish', async () => {
+          //generate blurhash for the preview
           blurhash = await generateBlurhash(destinationPath);
           minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
             if (err) {
@@ -63,7 +70,13 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         .pipe(createWriteStream(destinationPath))
         .on('error', rej)
         .on('finish', async () => {
-          blurhash = await generateBlurhash(destinationPath);
+          //generate a blurhash for previews, only if the file is an image
+          try {
+            if (!['pdf'].includes(fileEnding)) blurhash = await generateBlurhash(destinationPath);
+          } catch (err) {
+            log.error('blurhash couldnt be generated');
+          }
+
           minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
             if (err) {
               log.error(err.stack);
@@ -83,6 +96,12 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   return { filename: newFileName, blurhash };
 };
 
+/**
+ *
+ * @param file file to be uploaded
+ * @param bucketName s3 bucketname
+ * @returns UploadResponse
+ */
 export const uploadFile = async (file: Buffer, bucketName: string): Promise<UploadResponse> => {
   const metaData = {
     'Content-Type': 'application/octet-stream',
@@ -96,7 +115,13 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<Uplo
   const destinationPath = path.join(os.tmpdir(), newFileName);
   writeFileSync(destinationPath, file);
 
-  const blurhash = await generateBlurhash(destinationPath);
+  let blurhash;
+
+  try {
+    if (!['pdf'].includes(fileEnding)) blurhash = await generateBlurhash(destinationPath);
+  } catch (err) {
+    log.error('blurhash couldnt be generated');
+  }
 
   minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
     if (err) {

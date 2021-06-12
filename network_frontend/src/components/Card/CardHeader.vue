@@ -244,7 +244,7 @@ import { computed, defineComponent, PropType, ref } from 'vue';
 import dayjs from 'dayjs';
 import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from '../PermissionContainer.vue';
-import { useDeletePostMutation } from '../../graphql/generated/types';
+import { useDeleteCommentMutation, useDeletePostMutation } from '../../graphql/generated/types';
 import { DeletePostMutationVariables, Post } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { useRoute } from 'vue-router';
@@ -283,8 +283,8 @@ export default defineComponent({
     });
 
     const { mutate: delPost } = useDeletePostMutation(() => ({
-      variables: <DeletePostMutationVariables>{
-        postId: props.post?.id,
+      variables: {
+        postId: props.post?.id as string,
       },
       update: (cache, { data: { deletePost } }) => {
         if (route.name === 'Home') {
@@ -343,13 +343,33 @@ export default defineComponent({
       },
     }));
 
-    const deleteContent = () => {
+    const {mutate: delComment} = useDeleteCommentMutation(() => ({
+      variables: {
+        commentId: props.comment?.id
+      }, update: (cache, {data: {deleteComment}}) => {
+        cache.modify({
+          id: cache.identify(deleteComment.post as Post),
+          fields: {
+            comments(existingCommentRefs, { readField }) {
+              console.log(existingCommentRefs)
+
+              return existingCommentRefs.filter(comment => readField("id", comment) !== props.comment?.id)
+            }
+          }
+        })
+      }
+    }))
+
+    const deleteContent = async () => {
       if (props.post?.id) {
-        delPost();
+        await delPost();
         return;
       }
       if (props.comment) {
-        console.log('todo');
+        if(props.comment.id) {
+          await delComment();
+          return;
+        }
       }
     };
 

@@ -265,7 +265,9 @@ export class PostResolver {
     }
 
     if (input.image) {
+      //upload file to s3
       const { filename, blurhash } = await uploadFileGraphql(input.image, 'images');
+
       const media = new Media();
       media.blurhash = blurhash;
       media.name = filename;
@@ -275,7 +277,14 @@ export class PostResolver {
     }
 
     if (input.file) {
-      console.log('todo');
+      //upload file to s3
+      const { filename } = await uploadFileGraphql(input.file, 'images');
+
+      const media = new Media();
+      media.name = filename;
+      media.type = MediaType.FILE;
+      const savedMedia = await getRepository(Media).save(media);
+      post.media = savedMedia;
     }
 
     if (input.groupId && !group) {
@@ -297,6 +306,8 @@ export class PostResolver {
           if (!foundUser) continue;
         }
         if (!toUser) continue;
+
+        //send notification
         await notify(
           {
             type: NotificationType.MENTION,
@@ -311,7 +322,7 @@ export class PostResolver {
     }
 
     //fix circular strucutre
-    post.user.posts = post.user.posts.filter((p) => p.id !== dbPost.id);
+    // post.user.posts = post.user.posts.filter((p) => p.id !== dbPost.id);
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
     log.info(`'User with the id: ${id} added a new post'`);
     return dbPost;

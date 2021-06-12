@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import PostCard from '../components/Post/PostCard.vue';
-import { SearchDocument, useAddCommentMutation, usePostByIdQuery, useSearchQuery } from '../graphql/generated/types';
+import { useAddCommentMutation, usePostByIdQuery, useSearchQuery } from '../graphql/generated/types';
 import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -161,7 +161,7 @@ export default defineComponent({
 
     onResult(({ data }) => {
       postData.value = data;
-      if (firstload) commentInput.value.focus();
+      if (firstload && commentInput.value) commentInput.value.focus();
       firstload = false;
     });
 

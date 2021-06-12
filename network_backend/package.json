@@ -61,6 +61,7 @@
     "graphql-playground-middleware-express": "^1.7.22",
     "graphql-redis-subscriptions": "^2.3.1",
     "graphql-upload": "^11.0.0",
+    "helmet": "^4.6.0",
     "image-stream-compress": "^1.0.9",
     "ioredis": "^4.27.2",
     "jdenticon": "^3.1.0",

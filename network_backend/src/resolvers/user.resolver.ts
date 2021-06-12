@@ -25,6 +25,7 @@ import { redis } from '../utils/services/redis';
 import { Role } from '../entity/role.entity';
 import { Group } from '../entity/group.entity';
 import { Chat } from '../entity/chat.entity';
+import { UpdatePasswordInput } from 'validators/updatePassword.validator';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -263,15 +264,13 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => User, { description: 'UserByUser returns a user based on the given user handle' })
-  async userByUsername(@Ctx() ctx: MyContext, @Arg('username', () => String) username: string): Promise<User | null> {
+  @Query(() => User, { description: 'UserByUsername returns a user based on the given user handle' })
+  async userByUsername(@Ctx() ctx: MyContext, @Arg('username', () => String) username: string): Promise<User> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
       where: { username: username },
       relations: ['following', 'followers', 'roles'],
     });
-
-    //could be a bad idea .. maybe better to do via db
 
     if (!user) {
       throw Error('no user found');
@@ -280,6 +279,24 @@ export class UserResolver {
     const followState = user.followers.some((user) => user.id === userId);
     user.meFollowing = followState;
     return user;
+  }
+
+  @Authorized()
+  @Mutation(() => User, { description: 'updates the password' })
+  async updatePassword(
+    @Ctx() ctx: MyContext,
+    @Arg('input', () => UpdatePasswordInput) { password }: UpdatePasswordInput,
+  ): Promise<User> {
+    const userId = ctx.req.user.id;
+
+    const user = await getRepository(User).findOne({ where: { id: userId } });
+
+    const hashedPassword = await argon2.hash(password);
+
+    user.password = hashedPassword;
+
+    const saved = await getRepository(User).save(user);
+    return saved;
   }
 
   @Authorized()

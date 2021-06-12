@@ -20,6 +20,7 @@ export class Comment extends Base {
   @OneToMany(() => Like, (like) => like.comment)
   likes: Like[];
 
+  @Field(() => Post)
   @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
   post: Post;
 

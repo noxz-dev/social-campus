@@ -38,6 +38,7 @@ import { authenticateToken } from './utils/middlewares/auth';
 import { log } from './utils/services/logger';
 import { initS3, minioClient } from './utils/services/minio';
 import { User } from './entity/user.entity';
+import helmet from 'helmet';
 
 export class Application {
   public host: express.Application;
@@ -151,6 +152,7 @@ export class Application {
       );
 
       app.use(cors());
+      app.use(helmet());
       //authentication middleware
       app.use(authenticateToken);
       app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));

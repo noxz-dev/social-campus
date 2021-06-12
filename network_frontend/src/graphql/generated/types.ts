@@ -53,6 +53,7 @@ export type Comment = {
   user: User;
   text: Scalars['String'];
   likes: Array<Like>;
+  post: Post;
   likesCount: Scalars['Float'];
 };
 
@@ -172,9 +173,11 @@ export type Mutation = {
   sendMessage: ChatMessage;
   createChat: Chat;
   deleteChatMessage: Scalars['Boolean'];
+  /** Creates a new comment and adds it to a post */
   addComment: Comment;
   likeComment: Comment;
   unlikeComment: Comment;
+  deleteComment: Comment;
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -289,6 +292,11 @@ export type MutationLikeCommentArgs = {
 
 export type MutationUnlikeCommentArgs = {
   commentID: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['String'];
 };
 
 
@@ -739,6 +747,22 @@ export type CreateGroupMutation = (
   & { createGroup: (
     { __typename?: 'Group' }
     & Pick<Group, 'id' | 'name'>
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  commentId: Scalars['String'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteComment: (
+    { __typename?: 'Comment' }
+    & { post: (
+      { __typename?: 'Post' }
+      & Pick<Post, 'id'>
+    ) }
   ) }
 );
 
@@ -1729,6 +1753,37 @@ export function useCreateGroupMutation(options: VueApolloComposable.UseMutationO
   return VueApolloComposable.useMutation<CreateGroupMutation, CreateGroupMutationVariables>(CreateGroupDocument, options);
 }
 export type CreateGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateGroupMutation, CreateGroupMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation deleteComment($commentId: String!) {
+  deleteComment(commentId: $commentId) {
+    post {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteCommentMutation({
+ *   variables: {
+ *     commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(options: VueApolloComposable.UseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>>) {
+  return VueApolloComposable.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+}
+export type DeleteCommentMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const DeleteNotificationDocument = gql`
     mutation deleteNotification($notificationId: String!) {
   deleteNotification(notificationId: $notificationId)

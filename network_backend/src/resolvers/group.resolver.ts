@@ -1,4 +1,3 @@
-import { PreviewGroup } from '../graphql_types/previewGroup';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository, In, Not } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
@@ -7,6 +6,7 @@ import { Post } from '../entity/post.entity';
 import { GroupMember, User } from '../entity/user.entity';
 import { GroupAccess } from '../graphql_types/groupAccess';
 import { GroupRoleAccess } from '../graphql_types/groupRoleAccess';
+import { PreviewGroup } from '../graphql_types/previewGroup';
 import { MyContext } from '../utils/interfaces/context.interface';
 import { UpdateGroupInput } from '../validators/updateGroup.validator';
 
@@ -150,8 +150,8 @@ export class GroupResolver {
   @Query(() => [PreviewGroup])
   public async groups(
     @Ctx() ctx: MyContext,
-    @Arg('skip', () => Number) skip: number,
-    @Arg('take', () => Number) take: number,
+    @Arg('offset', () => Number) skip: number,
+    @Arg('limit', () => Number) take: number,
   ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({

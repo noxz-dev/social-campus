@@ -154,12 +154,20 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteNotification: Scalars['Boolean'];
+  sendMessage: ChatMessage;
+  createChat: Chat;
+  deleteChatMessage: Scalars['Boolean'];
   createGroup: Group;
   joinGroup: Group;
   updateAboutGroup: Group;
   updateGroupRole: Group;
   updateGroup: Group;
   leaveGroup: Scalars['Boolean'];
+  /** Creates a new comment and adds it to a post */
+  addComment: Comment;
+  likeComment: Comment;
+  unlikeComment: Comment;
+  deleteComment: Comment;
   /** addPost creates a new Post and pushes updates to all followers */
   addPost: Post;
   /** likes an post */
@@ -170,14 +178,6 @@ export type Mutation = {
   deletePost: Scalars['Boolean'];
   /** updates the content of a post */
   editPost: Post;
-  sendMessage: ChatMessage;
-  createChat: Chat;
-  deleteChatMessage: Scalars['Boolean'];
-  /** Creates a new comment and adds it to a post */
-  addComment: Comment;
-  likeComment: Comment;
-  unlikeComment: Comment;
-  deleteComment: Comment;
   addRole: Role;
   removeRole: Scalars['Boolean'];
   assignRoleToUser: User;
@@ -194,11 +194,28 @@ export type Mutation = {
   removeFollower: User;
   /** update the profile information of the loggedIn user */
   updateProfile: User;
+  /** updates the password */
+  updatePassword: User;
 };
 
 
 export type MutationDeleteNotificationArgs = {
   notificationId: Scalars['String'];
+};
+
+
+export type MutationSendMessageArgs = {
+  input: SendMessageInput;
+};
+
+
+export type MutationCreateChatArgs = {
+  memberId: Scalars['String'];
+};
+
+
+export type MutationDeleteChatMessageArgs = {
+  messageId: Scalars['String'];
 };
 
 
@@ -239,6 +256,27 @@ export type MutationLeaveGroupArgs = {
 };
 
 
+export type MutationAddCommentArgs = {
+  postID: Scalars['String'];
+  text: Scalars['String'];
+};
+
+
+export type MutationLikeCommentArgs = {
+  commentID: Scalars['String'];
+};
+
+
+export type MutationUnlikeCommentArgs = {
+  commentID: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['String'];
+};
+
+
 export type MutationAddPostArgs = {
   input: AddPostInput;
 };
@@ -261,42 +299,6 @@ export type MutationDeletePostArgs = {
 
 export type MutationEditPostArgs = {
   input: EditPostInput;
-};
-
-
-export type MutationSendMessageArgs = {
-  input: SendMessageInput;
-};
-
-
-export type MutationCreateChatArgs = {
-  memberId: Scalars['String'];
-};
-
-
-export type MutationDeleteChatMessageArgs = {
-  messageId: Scalars['String'];
-};
-
-
-export type MutationAddCommentArgs = {
-  postID: Scalars['String'];
-  text: Scalars['String'];
-};
-
-
-export type MutationLikeCommentArgs = {
-  commentID: Scalars['String'];
-};
-
-
-export type MutationUnlikeCommentArgs = {
-  commentID: Scalars['String'];
-};
-
-
-export type MutationDeleteCommentArgs = {
-  commentId: Scalars['String'];
 };
 
 
@@ -352,6 +354,11 @@ export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
 };
 
+
+export type MutationUpdatePasswordArgs = {
+  input: UpdatePasswordInput;
+};
+
 export type Notification = {
   __typename?: 'Notification';
   id: Scalars['String'];
@@ -403,6 +410,8 @@ export type PreviewGroup = {
 export type Query = {
   __typename?: 'Query';
   getNotifications: Array<Notification>;
+  myChats: Array<Chat>;
+  chatById: Chat;
   groupById: Group;
   groupByIdPreview: PreviewGroup;
   groups: Array<PreviewGroup>;
@@ -422,8 +431,6 @@ export type Query = {
   postById: Post;
   /** full text search for posts */
   searchPosts?: Maybe<Array<Post>>;
-  myChats: Array<Chat>;
-  chatById: Chat;
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -432,7 +439,7 @@ export type Query = {
   me?: Maybe<User>;
   /** UserById returns a user based on the given id */
   userById: User;
-  /** UserByUser returns a user based on the given user handle */
+  /** UserByUsername returns a user based on the given user handle */
   userByUsername: User;
   /** returns all users that the logged in user is following */
   getFollowing: Array<User>;
@@ -447,6 +454,11 @@ export type Query = {
 };
 
 
+export type QueryChatByIdArgs = {
+  chatId: Scalars['String'];
+};
+
+
 export type QueryGroupByIdArgs = {
   groupId: Scalars['String'];
 };
@@ -458,8 +470,8 @@ export type QueryGroupByIdPreviewArgs = {
 
 
 export type QueryGroupsArgs = {
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 };
 
 
@@ -506,11 +518,6 @@ export type QueryPostByIdArgs = {
 
 export type QuerySearchPostsArgs = {
   searchString: Scalars['String'];
-};
-
-
-export type QueryChatByIdArgs = {
-  chatId: Scalars['String'];
 };
 
 
@@ -577,9 +584,9 @@ export type SendMessageInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   notifications: Notification;
+  newMessage: ChatMessage;
   /** subscribe to new posts */
   newPost: Post;
-  newMessage: ChatMessage;
 };
 
 
@@ -588,15 +595,15 @@ export type SubscriptionNotificationsArgs = {
 };
 
 
+export type SubscriptionNewMessageArgs = {
+  chatId: Scalars['String'];
+};
+
+
 export type SubscriptionNewPostArgs = {
   groupId?: Maybe<Scalars['String']>;
   all: Scalars['Boolean'];
   userId: Scalars['String'];
-};
-
-
-export type SubscriptionNewMessageArgs = {
-  chatId: Scalars['String'];
 };
 
 export type Tag = {
@@ -614,6 +621,10 @@ export type UpdateGroupInput = {
   description?: Maybe<Scalars['String']>;
   type?: Maybe<GroupType>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePasswordInput = {
+  password: Scalars['String'];
 };
 
 export type UpdateProfileInput = {
@@ -1253,8 +1264,8 @@ export type GroupMembersQuery = (
 );
 
 export type GroupsQueryVariables = Exact<{
-  take: Scalars['Float'];
-  skip: Scalars['Float'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 }>;
 
 
@@ -2796,8 +2807,8 @@ export function useGroupMembersQuery(variables: GroupMembersQueryVariables | Vue
 }
 export type GroupMembersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GroupMembersQuery, GroupMembersQueryVariables>;
 export const GroupsDocument = gql`
-    query groups($take: Float!, $skip: Float!) {
-  groups(take: $take, skip: $skip) {
+    query groups($limit: Float!, $offset: Float!) {
+  groups(limit: $limit, offset: $offset) {
     id
     name
     description
@@ -2823,8 +2834,8 @@ export const GroupsDocument = gql`
  *
  * @example
  * const { result, loading, error } = useGroupsQuery({
- *   take: // value for 'take'
- *   skip: // value for 'skip'
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
  * });
  */
 export function useGroupsQuery(variables: GroupsQueryVariables | VueCompositionApi.Ref<GroupsQueryVariables> | ReactiveFunction<GroupsQueryVariables>, options: VueApolloComposable.UseQueryOptions<GroupsQuery, GroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GroupsQuery, GroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GroupsQuery, GroupsQueryVariables>> = {}) {

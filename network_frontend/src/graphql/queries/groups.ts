@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const groups = gql`
-  query groups($take: Float!, $skip: Float!) {
-    groups(take: $take, skip: $skip) {
+  query groups($limit: Float!, $offset: Float!) {
+    groups(limit: $limit, offset: $offset) {
       id
       name
       description

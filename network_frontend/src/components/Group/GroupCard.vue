@@ -1,7 +1,7 @@
 <template>
   <card class="flex flex-col justify-center" bgColorDark="bg-dark-500">
     <div class="p-1 pb-2 pt-2">
-      <div class="p-2 h-64">
+      <div class="p-2 h-32 md:h-64">
         <lazy-image
           class="rounded-xl object-cover w-full"
           src="https://picsum.photos/300/300"
@@ -11,7 +11,7 @@
       </div>
       <div class="p-3 pt-1 flex flex-col">
         <div class="line-clamp-2 h-12">
-          <span class="text-md break-words font-semibold">{{ group.name }}</span>
+          <span class="text-md md:text-lg break-words font-semibold">{{ group.name }}</span>
         </div>
         <div class="flex flex-row-reverse items-center justify-between">
           <div class="flex -space-x-1 overflow-hidden p-1 pr-1 min-h-[2rem]" v-if="group.previewAvatars">
@@ -29,11 +29,20 @@
               />
             </div>
           </div>
-          <span class="text-xs text-gray-400">
-            <span v-if="group.type === 'PUBLIC'"> Öffentlich</span><span v-else> Privat</span> -
-            <span class="font-mono">{{ numberFormatter(memberCount) }} </span>
-            <span v-if="memberCount === 1"> Mitglied</span><span v-else> Mitglieder</span>
-          </span>
+          <div class="text-xs text-gray-400 flex flex-col md:flex-row">
+            <span v-if="group.type === 'PUBLIC'"> Öffentlich </span><span v-else> Privat </span>
+            <div v-if="breakpoints.is !== 'sm'" class="flex">
+              <div class="font-mono ml-1">- {{ numberFormatter(memberCount) }}</div>
+              <div class="ml-1" v-if="memberCount === 1">Mitglied</div>
+              <div class="ml-1" v-else>Mitglieder</div>
+            </div>
+            <div v-else>
+              <p>
+                <span class="font-mono">{{ numberFormatter(memberCount) }} </span>
+                <span v-if="memberCount === 1"> Mitglied</span><span v-else> Mitglieder</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="mb-2 px-2">
@@ -109,6 +118,7 @@
 import { Group, PreviewGroup } from '../../graphql/generated/types';
 import { computed, defineComponent, PropType } from 'vue';
 import Card from '../Card/Card.vue';
+import breakpoints from '../../utils/breakpoints';
 import LazyImage from '../Blurhash/LazyImage.vue';
 import { numberFormatter } from '../../utils/numberFormatter';
 export default defineComponent({
@@ -131,7 +141,6 @@ export default defineComponent({
       'LGFFaXYk^6#M@-5c,1J5@[or[Q6.',
     ];
 
-
     const memberCount = computed(() => props.group.numberOfMembers || 0);
     const previewAvatars = computed(() => props.group.previewAvatars.slice(0, 2));
     return {
@@ -139,6 +148,7 @@ export default defineComponent({
       memberCount,
       blurhashes,
       previewAvatars,
+      breakpoints,
     };
   },
 });

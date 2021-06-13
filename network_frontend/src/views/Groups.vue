@@ -74,21 +74,22 @@
       </div>
       <group-list-container
         header-text="Deine Gruppen"
-        emptyText="Ganz schön leer, erstell doch eine oder tritt einer Gruppe bei"
+        emptyText="Ganz schön leer, erstell doch eine Gruppe oder tritt einer bei"
         :is-loading="myGroupsLoading"
         :isMember="true"
         :groups="myGroups"
       />
       <group-list-container
         header-text="Empfohlene Gruppen"
-        emptyText="Ganz schön leer, erstell doch eine und lade deine Freunde ein"
+        emptyText="Ganz schön leer, erstell doch eine Gruppe und lade deine Freunde ein"
         :is-loading="recoGroupsLoading"
         :isMember="false"
         :groups="groups"
+        @loadMore="loadMoreGroups"
       />
       <group-list-container
         header-text="Gruppen von Personen, denen du folgst"
-        emptyText="Ganz schön leer, erstell doch eine und lade deine Freunde ein"
+        emptyText="Ganz schön leer, erstell doch eine Gruppe und lade deine Freunde ein"
         :is-loading="followingGroupsLoading"
         :isMember="false"
         :groups="followingGroups"
@@ -140,9 +141,13 @@ export default defineComponent({
       updateTake(entries);
     });
 
-    const { result: allGroupsResult, loading: recoGroupsLoading } = useGroupsQuery(() => ({
-      take: takeStateGroups.take,
-      skip: skip.value,
+    const {
+      result: allGroupsResult,
+      loading: recoGroupsLoading,
+      fetchMore: fetchMoreAll,
+    } = useGroupsQuery(() => ({
+      limit: 7,
+      offset: skip.value,
     }));
 
     //TODO REFACTOR
@@ -157,19 +162,46 @@ export default defineComponent({
       }
     }
 
-    
-
     //query all needed groups
-    const { result, loading: myGroupsLoading } = useMyGroupsQuery();
+    const { result, loading: myGroupsLoading, fetchMore: fetchMoreMy } = useMyGroupsQuery();
     const myGroups = useResult(result, null, (data) => data.myGroups);
 
-    const { result: groupsResult, loading: followingGroupsLoading } = useFollowingGroupsQuery();
+    const {
+      result: groupsResult,
+      loading: followingGroupsLoading,
+      fetchMore: fetchMoreFollowing,
+    } = useFollowingGroupsQuery();
     const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
     const groups = useResult(allGroupsResult, null, (data) => data.groups);
 
+    const loadMoreGroups = async () => {
+      await fetchMoreAll({
+        variables: {
+          offset: groups.value?.length || 0,
+        },
+      });
+    };
+
+    const loadMoreMyGroups = async () => {
+      await fetchMoreMy({
+        variables: {
+          offset: groups.value?.length || 0,
+        },
+      });
+    };
+
+    const loadMoreFollowingGroups = async () => {
+      await fetchMoreFollowing({
+        variables: {
+          offset: groups.value?.length || 0,
+        },
+      });
+    };
+
     return {
       groups,
+      loadMoreGroups,
       toggleGroups,
       newGroupModal,
       groupListContainer,

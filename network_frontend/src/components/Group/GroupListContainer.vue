@@ -93,6 +93,10 @@ export default defineComponent({
           slidesPerView: 6,
           spaceBetween: 10,
         },
+        2000: {
+          slidesPerView: 8,
+          spaceBetween: 10,
+        },
       },
     };
 

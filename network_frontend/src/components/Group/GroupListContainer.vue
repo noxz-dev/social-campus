@@ -2,7 +2,7 @@
   <div class="mt-10 p-4 pb-2 w-full dark:bg-dark-600 bg-gray-200 rounded-xl dark:text-gray-50">
     <div>
       <div class="pb-2 flex justify-between px-4">
-        <span class="text-lg md:text-xl font-semibold" @click="next">{{ headerText }}</span>
+        <span class="text-lg md:text-xl font-semibold">{{ headerText }}</span>
       </div>
     </div>
     <div
@@ -11,6 +11,7 @@
       :class="groups && groups?.length === 0 && 'py-5 p-4'"
     >
       <swiper
+        v-if="groups && groups?.length > 0"
         :slides-per-view="6"
         :options="swiperOptions"
         :space-between="10"
@@ -21,10 +22,10 @@
         :breakpoints="swiperOptions.breakpoints"
       >
         <swiper-slide v-for="group in groups" :key="group.id" class="xl:w-64 md:w-72 w-full pb-5">
-          <group-card :group="group" :isMemberOfGroup="true"></group-card>
+          <group-card :group="group" :isMemberOfGroup="isMember"></group-card>
         </swiper-slide>
       </swiper>
-      <!-- <div v-else class="font-semibold">{{ emptyText}}</div> -->
+      <div v-else class="font-semibold">{{ emptyText }}</div>
     </div>
   </div>
 </template>
@@ -121,5 +122,9 @@ export default defineComponent({
 .swiper-button-next {
   color: white;
   @apply hidden md:block;
+}
+
+.swiper-button-disabled {
+  display: none;
 }
 </style>

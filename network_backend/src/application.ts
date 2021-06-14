@@ -152,7 +152,8 @@ export class Application {
       );
 
       app.use(cors());
-      app.use(helmet());
+      // app.use(helmet());
+      app.use(helmet({ contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false }));
       //authentication middleware
       app.use(authenticateToken);
       app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));

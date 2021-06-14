@@ -475,6 +475,18 @@ export type QueryGroupsArgs = {
 };
 
 
+export type QueryMyGroupsArgs = {
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
+};
+
+
+export type QueryFollowingGroupsArgs = {
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
+};
+
+
 export type QueryCheckGroupAccessArgs = {
   groupId: Scalars['String'];
 };
@@ -1125,14 +1137,17 @@ export type GetFollowingQuery = (
   )> }
 );
 
-export type FollowingGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+export type FollowingGroupsQueryVariables = Exact<{
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
+}>;
 
 
 export type FollowingGroupsQuery = (
   { __typename?: 'Query' }
   & { followingGroups: Array<(
     { __typename?: 'PreviewGroup' }
-    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'numberOfMembers'>
+    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'type' | 'numberOfMembers'>
     & { previewAvatars?: Maybe<Array<(
       { __typename?: 'Media' }
       & Pick<Media, 'name' | 'blurhash'>
@@ -1321,7 +1336,10 @@ export type MyChatsQuery = (
   )> }
 );
 
-export type MyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+export type MyGroupsQueryVariables = Exact<{
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
+}>;
 
 
 export type MyGroupsQuery = (
@@ -2533,11 +2551,12 @@ export function useGetFollowingQuery(variables: GetFollowingQueryVariables | Vue
 }
 export type GetFollowingQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFollowingQuery, GetFollowingQueryVariables>;
 export const FollowingGroupsDocument = gql`
-    query followingGroups {
-  followingGroups {
+    query followingGroups($limit: Float!, $offset: Float!) {
+  followingGroups(limit: $limit, offset: $offset) {
     id
     name
     description
+    type
     numberOfMembers
     previewAvatars {
       name
@@ -2554,13 +2573,17 @@ export const FollowingGroupsDocument = gql`
  * When your component renders, `useFollowingGroupsQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFollowingGroupsQuery();
+ * const { result, loading, error } = useFollowingGroupsQuery({
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
+ * });
  */
-export function useFollowingGroupsQuery(options: VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<FollowingGroupsQuery, FollowingGroupsQueryVariables>(FollowingGroupsDocument, {}, options);
+export function useFollowingGroupsQuery(variables: FollowingGroupsQueryVariables | VueCompositionApi.Ref<FollowingGroupsQueryVariables> | ReactiveFunction<FollowingGroupsQueryVariables>, options: VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<FollowingGroupsQuery, FollowingGroupsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<FollowingGroupsQuery, FollowingGroupsQueryVariables>(FollowingGroupsDocument, variables, options);
 }
 export type FollowingGroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<FollowingGroupsQuery, FollowingGroupsQueryVariables>;
 export const GetFeedDocument = gql`
@@ -2917,8 +2940,8 @@ export function useMyChatsQuery(options: VueApolloComposable.UseQueryOptions<MyC
 }
 export type MyChatsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MyChatsQuery, MyChatsQueryVariables>;
 export const MyGroupsDocument = gql`
-    query myGroups {
-  myGroups {
+    query myGroups($limit: Float!, $offset: Float!) {
+  myGroups(limit: $limit, offset: $offset) {
     id
     name
     description
@@ -2939,13 +2962,17 @@ export const MyGroupsDocument = gql`
  * When your component renders, `useMyGroupsQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
+ * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useMyGroupsQuery();
+ * const { result, loading, error } = useMyGroupsQuery({
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
+ * });
  */
-export function useMyGroupsQuery(options: VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<MyGroupsQuery, MyGroupsQueryVariables>(MyGroupsDocument, {}, options);
+export function useMyGroupsQuery(variables: MyGroupsQueryVariables | VueCompositionApi.Ref<MyGroupsQueryVariables> | ReactiveFunction<MyGroupsQueryVariables>, options: VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<MyGroupsQuery, MyGroupsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<MyGroupsQuery, MyGroupsQueryVariables>(MyGroupsDocument, variables, options);
 }
 export type MyGroupsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MyGroupsQuery, MyGroupsQueryVariables>;
 export const GetNotificationsDocument = gql`

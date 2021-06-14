@@ -78,10 +78,11 @@
         :is-loading="myGroupsLoading"
         :isMember="true"
         :groups="myGroups"
+        @loadMore="loadMoreMyGroups"
       />
       <group-list-container
         header-text="Empfohlene Gruppen"
-        emptyText="Ganz schön leer, erstell doch eine Gruppe und lade deine Freunde ein"
+        emptyText="Ganz schön leer, erstell doch eine Gruppe und lad deine Freunde ein"
         :is-loading="recoGroupsLoading"
         :isMember="false"
         :groups="groups"
@@ -89,10 +90,12 @@
       />
       <group-list-container
         header-text="Gruppen von Personen, denen du folgst"
-        emptyText="Ganz schön leer, erstell doch eine Gruppe und lade deine Freunde ein"
+        emptyText="Ganz schön leer, erstell doch eine Gruppe und lad deine Freunde ein"
         :is-loading="followingGroupsLoading"
         :isMember="false"
         :groups="followingGroups"
+        @loadMore="loadMoreFollowingGroups"
+
       />
     </div>
     <new-group-modal ref="newGroupModal" />
@@ -123,7 +126,6 @@ export default defineComponent({
   },
   setup() {
     const groupListContainer = ref<HTMLDivElement>();
-    const skip = ref(0);
     const allGroups = ref(false);
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
     const myGroupsOpen = ref(false);
@@ -147,7 +149,7 @@ export default defineComponent({
       fetchMore: fetchMoreAll,
     } = useGroupsQuery(() => ({
       limit: 7,
-      offset: skip.value,
+      offset: 0,
     }));
 
     //TODO REFACTOR
@@ -163,14 +165,20 @@ export default defineComponent({
     }
 
     //query all needed groups
-    const { result, loading: myGroupsLoading, fetchMore: fetchMoreMy } = useMyGroupsQuery();
+    const { result, loading: myGroupsLoading, fetchMore: fetchMoreMy } = useMyGroupsQuery(() => ({
+      limit: 7,
+      offset: 0
+    }));
     const myGroups = useResult(result, null, (data) => data.myGroups);
 
     const {
       result: groupsResult,
       loading: followingGroupsLoading,
       fetchMore: fetchMoreFollowing,
-    } = useFollowingGroupsQuery();
+    } = useFollowingGroupsQuery(() => ({
+      limit: 7,
+      offset: 0
+    }));
     const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
     const groups = useResult(allGroupsResult, null, (data) => data.groups);
@@ -186,7 +194,7 @@ export default defineComponent({
     const loadMoreMyGroups = async () => {
       await fetchMoreMy({
         variables: {
-          offset: groups.value?.length || 0,
+          offset: myGroups.value?.length || 0,
         },
       });
     };
@@ -194,7 +202,7 @@ export default defineComponent({
     const loadMoreFollowingGroups = async () => {
       await fetchMoreFollowing({
         variables: {
-          offset: groups.value?.length || 0,
+          offset: followingGroups.value?.length || 0,
         },
       });
     };
@@ -212,6 +220,8 @@ export default defineComponent({
       followingGroupsOpen,
       followingGroupsLoading,
       recoGroupsLoading,
+      loadMoreMyGroups,
+      loadMoreFollowingGroups
     };
   },
 });

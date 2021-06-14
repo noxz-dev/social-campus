@@ -84,7 +84,7 @@ SOFTWARE. */
 }
 
 .markdown code {
-  @apply font-mono text-sm inline bg-gray-300 dark:bg-dark-800 rounded px-1 pt-[0.25rem] pb-[0.25rem];
+  @apply font-mono text-sm inline bg-gray-300 dark:bg-dark-800 rounded px-1 pt-1 pb-1;
 }
 
 .markdown pre {
@@ -105,7 +105,7 @@ SOFTWARE. */
 }
 
 .markdown kbd {
-  @apply text-xs inline-block rounded border px-1 pt-[0.25rem] pb-[0.25rem] align-middle font-normal font-mono shadow;
+  @apply text-xs inline-block rounded border px-1 pt-1 pb-1 align-middle font-normal font-mono shadow;
 }
 
 .markdown table {

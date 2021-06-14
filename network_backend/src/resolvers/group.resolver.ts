@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository, In, Not } from 'typeorm';
+import { getManager, getRepository, In, Not } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
 import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
 import { Post } from '../entity/post.entity';
@@ -187,28 +187,40 @@ export class GroupResolver {
 
   @Authorized()
   @Query(() => [PreviewGroup])
-  public async myGroups(@Ctx() ctx: MyContext): Promise<PreviewGroup[]> {
+  public async myGroups(
+    @Ctx() ctx: MyContext,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
+  ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
 
-    const user = await getRepository(User).findOne({
-      where: { id: userId },
-      relations: ['groups', 'groups.members', 'groups.createdBy', 'groups.posts'],
-    });
-    if (!user.groups) {
-      return [];
-    }
+    //get all groupIds
+    const foundGroups = (await getManager().query(
+      `SELECT * from group_members_user WHERE "userId" = $1 LIMIT ${limit} OFFSET ${offset}`,
+      [userId],
+    )) as Group[];
 
-    for await (const group of user.groups) {
+      const groupIds = foundGroups.map((g) => g.groupId);
+
+    //fetch all groups from the database
+    let groups = await getRepository(Group).find({
+      where: {
+        id: In(groupIds),
+      },
+    });
+
+    for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);
       group.posts = await getRepository(Post).find({ where: { group: group.id } });
     }
-    user.groups = user.groups.map((g) => {
+
+    groups = groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
     });
 
     //sort groups after post activity
-    user.groups.sort((a, b) => {
+    groups.sort((a, b) => {
       a.posts.sort((a, b) => {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       });
@@ -232,28 +244,43 @@ export class GroupResolver {
       return new Date(b.posts[0].createdAt).getTime() - new Date(a.posts[0].createdAt).getTime();
     });
 
-    const previewGroups = user.groups.map((group) => new PreviewGroup(group));
+    const previewGroups = groups.map((group) => new PreviewGroup(group));
     return previewGroups;
   }
 
   @Authorized()
   @Query(() => [PreviewGroup])
-  public async followingGroups(@Ctx() ctx: MyContext): Promise<PreviewGroup[]> {
+  public async followingGroups(
+    @Ctx() ctx: MyContext,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
+  ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
 
     const user = await getRepository(User).findOne({
       where: { id: userId },
-      relations: ['following', 'following.groups'],
+      relations: ['following'],
+    });
+
+    const followingIds = user.following.map((u) => u.id);
+
+    //get all groupIds
+    const foundGroups = (await getManager().query(
+      `SELECT * from group_members_user WHERE "userId" IN($1) LIMIT ${limit} OFFSET ${offset}`,
+      [...followingIds],
+    )) as Group[];
+
+    const groupIds = foundGroups.map((g) => g.groupId);
+
+    //fetch all groups from the database
+    let groups = await getRepository(Group).find({
+      where: {
+        id: In(groupIds),
+      },
     });
 
     if (!user) {
       return [];
-    }
-
-    let groups: Group[] = [];
-
-    for (const following of user.following) {
-      groups.push(...following.groups);
     }
 
     //delete duplicates

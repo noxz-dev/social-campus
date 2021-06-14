@@ -195,12 +195,12 @@ export class GroupResolver {
     const userId = ctx.req.user.id;
 
     //get all groupIds
-    const foundGroups = (await getManager().query(
+    const foundGroups = await getManager().query(
       `SELECT * from group_members_user WHERE "userId" = $1 LIMIT ${limit} OFFSET ${offset}`,
       [userId],
-    )) as Group[];
+    );
 
-      const groupIds = foundGroups.map((g) => g.groupId);
+    const groupIds = foundGroups.map((g) => g.groupId);
 
     //fetch all groups from the database
     let groups = await getRepository(Group).find({
@@ -265,10 +265,10 @@ export class GroupResolver {
     const followingIds = user.following.map((u) => u.id);
 
     //get all groupIds
-    const foundGroups = (await getManager().query(
+    const foundGroups = await getManager().query(
       `SELECT * from group_members_user WHERE "userId" IN($1) LIMIT ${limit} OFFSET ${offset}`,
       [...followingIds],
-    )) as Group[];
+    );
 
     const groupIds = foundGroups.map((g) => g.groupId);
 

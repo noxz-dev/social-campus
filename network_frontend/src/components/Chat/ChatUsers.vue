@@ -101,7 +101,6 @@ export default defineComponent({
     const setActiveChat = (chatId: string) => {
       router.push({ name: 'ChatBox', params: { id: chatId } });
       emit('user-choosen');
-      console.log(chatId);
     };
 
     return { chats, modal, refetch, setActiveChat, user };

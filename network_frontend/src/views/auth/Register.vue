@@ -1,7 +1,18 @@
 <template>
   <div class="flex justify-center items-center h-full w-full">
     <div
-      class="md:min-h-screen bg-gray-50 dark:bg-dark-700 flex flex-col justify-center py-26 md:py-12 sm:px-6 lg:px-8 w-full"
+      class="
+        md:min-h-screen
+        bg-gray-50
+        dark:bg-dark-700
+        flex flex-col
+        justify-center
+        py-26
+        md:py-12
+        sm:px-6
+        lg:px-8
+        w-full
+      "
     >
       <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
         <img
@@ -14,7 +25,20 @@
 
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
         <div
-          class="bg-white py-8 pb-2 px-4 shadow sm:rounded-lg sm:px-10 md:dark:bg-dark-600 dark:bg-dark-700 border dark:md:border-dark-600 dark:border-dark-700"
+          class="
+            bg-white
+            py-8
+            pb-4
+            px-4
+            shadow
+            sm:rounded-lg
+            sm:px-10
+            md:dark:bg-dark-600
+            dark:bg-dark-700
+            border
+            dark:md:border-dark-600
+            dark:border-dark-700
+          "
         >
           <form class="space-y-6" action="#" method="POST" @submit.prevent="onSubmit({ email, password })">
             <div>
@@ -28,7 +52,25 @@
                   v-model="firstname"
                   autocomplete="given-name"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.firstname.$error" class="text-red-500 mt-0.5 text-sm">
@@ -49,7 +91,25 @@
                   v-model="lastname"
                   autocomplete="family-name"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.lastname.$error" class="text-red-500 mt-0.5 text-sm">
@@ -68,7 +128,25 @@
                   v-model="emailForm"
                   autocomplete="email"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">Das ist keine gültige Email</div>
@@ -85,7 +163,25 @@
                   placeholder="legend27"
                   v-model.trim="username"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.username.$error" class="text-red-500 mt-0.5 text-sm">
@@ -105,7 +201,25 @@
                   type="password"
                   autocomplete="current-password"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.password.$error" class="text-red-500 mt-0.5 text-sm">
@@ -125,7 +239,25 @@
                   name="confirmPassword"
                   type="password"
                   required
-                  class="appearance-none block w-full px-3 py-2 border dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-500 focus:border-indigo-500 sm:text-sm"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    px-3
+                    py-2
+                    border
+                    dark:text-gray-100
+                    dark:bg-dark-700
+                    dark:border-dark-600
+                    border-gray-300
+                    rounded-md
+                    shadow-sm
+                    placeholder-gray-400
+                    focus:outline-none
+                    focus:ring-brand-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
                 />
               </div>
               <div v-if="v.confirmPassword.$error" class="text-red-500 mt-0.5 text-sm">
@@ -144,19 +276,41 @@
             <div>
               <button
                 type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+                class="
+                  w-full
+                  flex
+                  justify-center
+                  py-2
+                  px-4
+                  border border-transparent
+                  rounded-md
+                  shadow-sm
+                  text-sm
+                  font-medium
+                  text-white
+                  bg-brand-600
+                  hover:bg-brand-700
+                  focus:outline-none
+                  focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
+                "
               >
                 Konto erstellen
               </button>
             </div>
           </form>
           <div class="flex justify-center dark:text-gray-50 text-gray-900 mt-3 text-sm">
-            <span
-              >Du besitzt schon ein Konto?
-              <span class="text-highlight-500 underline cursor-pointer" @click="$router.push('/login')">
-                Anmelden</span
-              ></span
-            >
+            <div class="flex">
+              <div>Du besitzt schon ein Konto?</div>
+              <div
+                role="button"
+                tabindex="0"
+                class="text-highlight-500 underline cursor-pointer ml-2"
+                @click="$router.push('/login')"
+                @keydown="$router.push('/login')"
+              >
+                Anmelden
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -213,7 +367,11 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { emailForm, password, firstname, lastname, username, confirmPassword });
 
-    const { mutate: signup, onDone, error } = useSignupMutation(() => ({
+    const {
+      mutate: signup,
+      onDone,
+      error,
+    } = useSignupMutation(() => ({
       variables: {
         input: {
           firstName: firstname.value,

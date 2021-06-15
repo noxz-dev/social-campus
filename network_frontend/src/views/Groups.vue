@@ -83,7 +83,7 @@
       <group-list-container
         header-text="Empfohlene Gruppen"
         emptyText="Ganz schön leer, erstell doch eine Gruppe und lad deine Freunde ein"
-        :is-loading="recoGroupsLoading"
+        :is-loading="allGroupsLoading"
         :isMember="false"
         :groups="groups"
         @loadMore="loadMoreGroups"
@@ -110,8 +110,6 @@ import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
 import { useFollowingGroupsQuery, useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
 import GroupList from '../components/Group/GroupList.vue';
-import { takeStateGroups } from '../utils/groupsTake';
-import { useResizeObserver } from '@vueuse/core';
 import { useResult } from '@vue/apollo-composable';
 import GroupListContainer from '../components/Group/GroupListContainer.vue';
 
@@ -126,50 +124,28 @@ export default defineComponent({
   },
   setup() {
     const groupListContainer = ref<HTMLDivElement>();
-    const allGroups = ref(false);
     const newGroupModal = ref<InstanceType<typeof NewGroupModal>>();
     const myGroupsOpen = ref(false);
     const followingGroupsOpen = ref(false);
 
-    function updateTake([entry]: any) {
-      if (takeStateGroups.take < 200) {
-        const { width } = entry.contentRect;
-
-        takeStateGroups.take = Math.floor(width / 260);
-      }
-    }
-
-    useResizeObserver(groupListContainer, (entries) => {
-      updateTake(entries);
-    });
-
     const {
       result: allGroupsResult,
-      loading: recoGroupsLoading,
+      loading: allGroupsLoading,
       fetchMore: fetchMoreAll,
     } = useGroupsQuery(() => ({
       limit: 7,
       offset: 0,
     }));
 
-    //TODO REFACTOR
-    function toggleGroups(): void {
-      if (!allGroups.value) {
-        takeStateGroups.take = 200;
-        allGroups.value = !allGroups.value;
-      } else {
-        const { width } = groupListContainer.value?.getBoundingClientRect()!;
-        takeStateGroups.take = Math.floor(width / 260);
-        allGroups.value = !allGroups.value;
-      }
-    }
+    const groups = useResult(allGroupsResult, [], (data) => data.groups);
 
     //query all needed groups
     const { result, loading: myGroupsLoading, fetchMore: fetchMoreMy } = useMyGroupsQuery(() => ({
       limit: 7,
       offset: 0
     }));
-    const myGroups = useResult(result, null, (data) => data.myGroups);
+    const myGroups = useResult(result, [], (data) => data.myGroups);
+
 
     const {
       result: groupsResult,
@@ -179,10 +155,10 @@ export default defineComponent({
       limit: 7,
       offset: 0
     }));
-    const followingGroups = useResult(groupsResult, null, (data) => data.followingGroups);
 
-    const groups = useResult(allGroupsResult, null, (data) => data.groups);
+    const followingGroups = useResult(groupsResult, [], (data) => data.followingGroups);
 
+    
     const loadMoreGroups = async () => {
       await fetchMoreAll({
         variables: {
@@ -194,7 +170,7 @@ export default defineComponent({
     const loadMoreMyGroups = async () => {
       await fetchMoreMy({
         variables: {
-          offset: myGroups.value?.length || 0,
+          offset: myGroups.value?.length!,
         },
       });
     };
@@ -210,7 +186,6 @@ export default defineComponent({
     return {
       groups,
       loadMoreGroups,
-      toggleGroups,
       newGroupModal,
       groupListContainer,
       myGroups,
@@ -219,7 +194,7 @@ export default defineComponent({
       followingGroups,
       followingGroupsOpen,
       followingGroupsLoading,
-      recoGroupsLoading,
+      allGroupsLoading,
       loadMoreMyGroups,
       loadMoreFollowingGroups
     };

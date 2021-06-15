@@ -137,6 +137,7 @@ import useVuelidate from '@vuelidate/core';
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue';
 import { myGroups } from '../../graphql/queries/myGroups';
 import { minLength, required, maxLength, helpers } from '@vuelidate/validators';
+import gql from 'graphql-tag';
 export default defineComponent({
   components: { InputField, CustomSelect, TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle },
   props: {
@@ -185,26 +186,50 @@ export default defineComponent({
     };
 
     const { mutate: createGrp } = useCreateGroupMutation(() => ({
-      variables: <CreateGroupMutationVariables>{
+      variables: {
         name: groupname.value,
         groupType: groupType.value,
         description: description.value,
         password: groupPassword.value,
       },
-      refetchQueries: [
-        {
-          query: myGroups,
-        },
-      ],
+      update: (cache, { data: { createGroup } }) => {
+
+
+        //add the newly created group to the exisiting cache
+        cache.modify({
+          fields: {
+            myGroups(existingGroups) {
+              const newGroupRef = cache.writeFragment({
+                data: createGroup,
+                fragment: gql`
+                  fragment NewGroup on PreviewGroup {
+                    id
+                    name
+                    description
+                    numberOfMembers
+                    type
+                    previewAvatars {
+                      name
+                      blurhash
+                    }
+                  }
+                `,
+              });
+
+
+              return [newGroupRef, ...existingGroups];
+            },
+          },
+        });
+      },
     }));
 
     const createGroup = async () => {
-      v.value.$reset();
-      v.value.$touch();
+      await v.value.$validate();
       if (v.value.$errors.length === 0) {
         try {
-          v.value.$reset();
           await createGrp();
+          v.value.$reset()
           groupname.value = '';
           description.value = '';
           groupPassword.value = '';

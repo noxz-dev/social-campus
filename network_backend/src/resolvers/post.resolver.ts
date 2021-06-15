@@ -587,7 +587,6 @@ export class PostResolver {
 
   @FieldResolver()
   async comments(@Root() post: Post): Promise<Comment[]> {
-    console.log('HEYHO');
     const p = await getRepository(Post).findOne({ where: { id: post.id }, relations: ['comments'] });
     return p.comments.sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0));
   }

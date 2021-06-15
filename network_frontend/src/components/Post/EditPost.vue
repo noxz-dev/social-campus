@@ -164,15 +164,6 @@ export default defineComponent({
         },
         {
           trigger: '#',
-          // values: async (text, cb) => {
-          //   const response = await getTags();
-          //   console.log(response.data.getAllTags);
-          //   cb(
-          //     response.data.getAllTags.map((tag: Tag) => {
-          //       return { key: tag.name, value: tag.name };
-          //     })
-          //   );
-          // },
           values: [] as string[],
           positionMenu: true,
         },

@@ -109,7 +109,6 @@ export default defineComponent({
     });
 
     const onReachEnd = (event: any) => {
-      console.log(event);
       emit('loadMore');
     };
 

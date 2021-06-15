@@ -5,6 +5,13 @@ export const createGroup = gql`
     createGroup(name: $name, groupType: $groupType, description: $description, password: $password) {
       id
       name
+      description
+      numberOfMembers
+      type
+      previewAvatars {
+        name
+        blurhash
+      }
     }
   }
 `;

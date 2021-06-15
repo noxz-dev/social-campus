@@ -23,7 +23,6 @@ export class PreviewGroup {
   previewAvatars: Media[];
 
   constructor(group: Group) {
-    console.log(group.members);
     this.id = group.id;
     this.name = group.name;
     this.description = group.description || '';

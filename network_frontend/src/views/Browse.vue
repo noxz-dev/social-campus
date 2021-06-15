@@ -95,7 +95,6 @@ export default defineComponent({
 
     //TODO update query in fetchmore is deprecated .. needs a redo
     const loadMore = () => {
-      console.log('load triggerd');
       fetchMore({
         variables: {
           skip: posts.value.length,

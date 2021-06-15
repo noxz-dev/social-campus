@@ -102,7 +102,6 @@ export default defineComponent({
         return '<li>Kein Tag gefunden</li>';
       },
       lookup: function (tag: any, mentionText: string) {
-        console.log(mentionText);
         if (mentionText.includes('#')) {
           return '#' + tag.value;
         }

@@ -37,7 +37,6 @@ export default defineComponent({
     };
     onMounted(() => {
       document.querySelector('#scrollContainer')?.addEventListener('scroll', handleScroll);
-      console.log(document.querySelector('#scrollContainer'))
     });
 
     return {

@@ -75,7 +75,6 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    console.log(props.group);
     const groupPassword = ref();
     const description = ref(props.group.description);
     const groupname = ref(props.group.name);
@@ -139,12 +138,8 @@ export default defineComponent({
 
     async function updateGroup() {
       await v.value.$validate()
-      console.log();
       
-    console.log(type.value === GroupType.Private && props.group.type === GroupType.Public);
-
       if (groupPassword.value === '') groupPassword.value = null;
-      console.log(v.value.$errors)
       if (v.value.$errors.length === 0) {
         try {
           await update();

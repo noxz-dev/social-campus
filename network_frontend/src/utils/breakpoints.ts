@@ -43,7 +43,6 @@ const breakpoints = reactive({
 window.addEventListener(
   'resize',
   debounce(() => {
-    // console.log(getBreakpoint(window.innerWidth))
 
     breakpoints.w = window.innerWidth;
     breakpoints.h = window.innerHeight;

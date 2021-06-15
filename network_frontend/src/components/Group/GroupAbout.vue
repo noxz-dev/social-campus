@@ -41,7 +41,6 @@ export default defineComponent({
     const saveAbout = () => {
       const serialized = editor.serialize();
       about.value = serialized['element-0'].value;
-      console.log(about.value);
       updateAbout();
     };
 

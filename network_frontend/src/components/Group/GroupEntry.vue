@@ -89,17 +89,8 @@ export default defineComponent({
 
     //TODO INPUT VALIDATION
     const joinGroup = async () => {
-      console.log(groupPassword.value.length);
       if (groupPassword.value.length >= 3) {
         await joinGrp();
-
-        // //TODO THIS SHOULD BE CHANGED TO A WAY BETTER MECHANISM XD
-        // try {
-        //   await router.push({ name: 'Groups' });
-        //   router.push({ name: 'Group', params: { id: props.groupId } });
-        // } catch (err) {
-        //   console.log('refresh triggerd');
-        // }
         state.refreshGroup = true;
       }
     };

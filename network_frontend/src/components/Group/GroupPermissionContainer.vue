@@ -28,6 +28,7 @@ export default defineComponent({
       () => state.refreshGroup,
       async () => {
         await refetch();
+        state.refreshGroup = false;
       }
     );
 

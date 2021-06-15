@@ -157,7 +157,7 @@ export type Mutation = {
   sendMessage: ChatMessage;
   createChat: Chat;
   deleteChatMessage: Scalars['Boolean'];
-  createGroup: Group;
+  createGroup: PreviewGroup;
   joinGroup: Group;
   updateAboutGroup: Group;
   updateGroupRole: Group;
@@ -768,8 +768,12 @@ export type CreateGroupMutationVariables = Exact<{
 export type CreateGroupMutation = (
   { __typename?: 'Mutation' }
   & { createGroup: (
-    { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name'>
+    { __typename?: 'PreviewGroup' }
+    & Pick<PreviewGroup, 'id' | 'name' | 'description' | 'numberOfMembers' | 'type'>
+    & { previewAvatars?: Maybe<Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )>> }
   ) }
 );
 
@@ -1754,6 +1758,13 @@ export const CreateGroupDocument = gql`
   ) {
     id
     name
+    description
+    numberOfMembers
+    type
+    previewAvatars {
+      name
+      blurhash
+    }
   }
 }
     `;

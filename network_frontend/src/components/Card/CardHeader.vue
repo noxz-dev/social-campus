@@ -351,7 +351,6 @@ export default defineComponent({
           id: cache.identify(deleteComment.post as Post),
           fields: {
             comments(existingCommentRefs, { readField }) {
-              console.log(existingCommentRefs)
 
               return existingCommentRefs.filter(comment => readField("id", comment) !== props.comment?.id)
             }

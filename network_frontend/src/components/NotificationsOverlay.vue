@@ -39,7 +39,6 @@ export default defineComponent({
     );
 
     onResult(async ({ data }) => {
-      console.log('sub', data);
       if (data?.notifications.type === NotificationType.NewChatMessage) {
         let sound = new Howl({
           src: ['/notification.mp3'],

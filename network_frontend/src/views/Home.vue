@@ -361,7 +361,6 @@ export default defineComponent({
     //lazy load more posts
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
-      console.log('load triggerd');
       const data = await fetchMore({
         variables: {
           offset: posts.value.length,

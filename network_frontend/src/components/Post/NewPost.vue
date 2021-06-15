@@ -169,13 +169,11 @@ export default defineComponent({
     watch(
       () => message.value,
       () => {
-        console.log('message changed');
         if (
           message.value.charAt(message.value.length - 1) === '#' ||
           message.value.charAt(message.value.length - 1) === '@'
         ) {
           activeTrigger.value = message.value.charAt(message.value.length - 1);
-          console.log(activeTrigger.value);
         }
       }
     );

@@ -40,7 +40,6 @@ export default defineComponent({
       const foundUser = users.value?.find((u) => u.username === username);
       if (!foundUser) return;
       choosenId.value = foundUser.id;
-      console.log(choosenId.value);
     };
 
     const createChat = () => {

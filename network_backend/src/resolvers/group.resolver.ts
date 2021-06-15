@@ -13,23 +13,19 @@ import { UpdateGroupInput } from '../validators/updateGroup.validator';
 @Resolver(() => Group)
 export class GroupResolver {
   @Authorized()
-  @Mutation(() => Group)
+  @Mutation(() => PreviewGroup)
   public async createGroup(
     @Ctx() ctx: MyContext,
     @Arg('name', () => String) name: string,
     @Arg('description', () => String, { nullable: true }) description: string,
     @Arg('groupType', () => GroupType) groupType: GroupType,
     @Arg('password', () => String, { nullable: true }) password: string,
-  ): Promise<Group | null> {
+  ): Promise<PreviewGroup> {
     const userId = ctx.req.user.id;
-    if (!userId) {
-      return null;
-    }
+    if (!userId) throw new Error('user not authenticated');
 
     const user = await getRepository(User).findOne({ where: { id: userId } });
-    if (!user) {
-      return null;
-    }
+    if (!user) throw new Error('user not found');
 
     const group = new Group();
     group.members = [];
@@ -46,7 +42,8 @@ export class GroupResolver {
     groupRole.user = user;
     groupRole.role = GroupRole.ADMIN;
     await getRepository(GroupMemberRole).save(groupRole);
-    return saved;
+
+    return new PreviewGroup(group);
   }
 
   @Authorized()
@@ -150,8 +147,8 @@ export class GroupResolver {
   @Query(() => [PreviewGroup])
   public async groups(
     @Ctx() ctx: MyContext,
-    @Arg('offset', () => Number) skip: number,
-    @Arg('limit', () => Number) take: number,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
   ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
     const user = await getRepository(User).findOne({
@@ -166,8 +163,8 @@ export class GroupResolver {
       where: {
         id: Not(In(ids)),
       },
-      skip,
-      take,
+      skip: offset,
+      take: limit,
       relations: ['members', 'createdBy'],
       order: { createdAt: 'DESC' },
     });
@@ -211,7 +208,7 @@ export class GroupResolver {
 
     for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);
-      group.posts = await getRepository(Post).find({ where: { group: group.id } });
+      group.posts = await getRepository(Post).find({ where: { group: group.id }, take: 2 });
     }
 
     groups = groups.map((g) => {

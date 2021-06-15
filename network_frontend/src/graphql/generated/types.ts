@@ -615,7 +615,6 @@ export type SubscriptionNewMessageArgs = {
 export type SubscriptionNewPostArgs = {
   groupId?: Maybe<Scalars['String']>;
   all: Scalars['Boolean'];
-  userId: Scalars['String'];
 };
 
 export type Tag = {

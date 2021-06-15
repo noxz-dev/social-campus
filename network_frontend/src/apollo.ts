@@ -13,12 +13,12 @@ const errorLink = onError((error) => {
     // logErrorMessages(error);
     console.log(error);
   }
-  if (error.networkError?.name === 'ServerParseError') {
+  if (error.networkError?.name === 'ServerParseError' || error.networkError?.name === 'ERR_NAME_NOT_RESOLVED') {
     localStorage.removeItem('apollo-token');
     router.push('login');
   }
   error.graphQLErrors?.forEach((err) => {
-    if (err.message.includes('Access denied!')) {
+    if (err.message.includes('Access denied!' || err.message.includes('ERR_NAME_NOT_RESOLVED'))) {
       localStorage.removeItem('apollo-token');
       router.push('login');
     }

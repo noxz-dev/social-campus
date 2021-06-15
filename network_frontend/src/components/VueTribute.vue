@@ -25,7 +25,6 @@ export default defineComponent({
       deep: true,
       handler() {
         if (this.tribute) {
-          console.log('options changed');
           setTimeout(() => {
             let $el = document.querySelector('#' + this.elementId);
             this.tribute.detach($el);

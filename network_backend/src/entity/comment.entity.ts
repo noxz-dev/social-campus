@@ -25,16 +25,24 @@ export class Comment extends Base {
   post: Post;
 
   @Field(() => Number)
-  likesCount: number;
-
-  @AfterLoad()
-  async countLikes(): Promise<void> {
+  async likesCount(): Promise<number> {
     const { count } = await getRepository(Like)
       .createQueryBuilder('like')
       .where('like.comment = :id', { id: this.id })
       .select('COUNT(*)', 'count')
       .getRawOne();
 
-    this.likesCount = count;
+    return count;
   }
+
+  // @AfterLoad()
+  // async countLikes(): Promise<void> {
+  //   const { count } = await getRepository(Like)
+  //     .createQueryBuilder('like')
+  //     .where('like.comment = :id', { id: this.id })
+  //     .select('COUNT(*)', 'count')
+  //     .getRawOne();
+
+  //   this.likesCount = count;
+  // }
 }

@@ -262,10 +262,12 @@ export class GroupResolver {
     const followingIds = user.following.map((u) => u.id);
 
     //get all groupIds
-    const foundGroups = await getManager().query(
+    let foundGroups = await getManager().query(
       `SELECT * from group_members_user WHERE "userId" IN($1) LIMIT ${limit} OFFSET ${offset}`,
       [...followingIds],
     );
+
+    foundGroups = foundGroups.filter((g) => g.userId !== userId);
 
     const groupIds = foundGroups.map((g) => g.groupId);
 

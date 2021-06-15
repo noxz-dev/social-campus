@@ -331,36 +331,38 @@ export class PostResolver {
   @Subscription(() => Post, {
     topics: SUB_TOPICS.NEW_POST,
     description: 'subscribe to new posts',
-    filter: async ({ payload, args }) => {
+    filter: async ({ payload, args, context }) => {
       if (args.all) return true;
       if (args.groupId) {
         const group = await getRepository(Group).findOne({ where: { id: args.groupId }, relations: ['members'] });
         const ids = group.members.map((m) => m.id);
 
-        return ids.includes(args.userId);
+        return ids.includes(context.user.id);
       }
+
       const user = await getRepository(User).findOne({
         where: {
           id: payload.userId,
         },
         relations: ['followers'],
       });
+
       //add user to auto update also the same user on two devices
       user.followers.push(user);
 
       const ids = user.followers.map((u) => u.id);
-      return ids.includes(args.userId);
+      return ids.includes(context.user.id);
     },
   })
   public async newPost(
     @Ctx() ctx: MyContext,
     @Root() payload: NewPostPayload,
-    @Arg('userId', () => String) userId: string,
     @Arg('all', () => Boolean) all: boolean,
     @Arg('groupId', () => String, { nullable: true }) groupId: string,
   ): Promise<Post> {
     log.info('new post subscription fired');
     payload.post.createdAt = new Date(payload.post.createdAt);
+
     return payload.post;
   }
 
@@ -546,6 +548,7 @@ export class PostResolver {
 
   @FieldResolver()
   async liked(@Ctx() ctx: MyContext, @Root() post: Post): Promise<boolean> {
+    if (!ctx.req?.user) return false;
     const userId = ctx.req.user.id;
     return await checkLikeState(userId, post.id);
   }

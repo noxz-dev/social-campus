@@ -303,7 +303,6 @@ export default defineComponent({
       feedQueryEnabled.value = true;
     }
 
-
     //get the inital feed
     const { result, error, subscribeToMore, fetchMore, loading } = useGetFeedQuery(
       {
@@ -314,18 +313,16 @@ export default defineComponent({
     );
     const posts = useResult(result);
 
-
     //fill up the recommending components
     const { result: recommendUsersFaculty } = useRecommendedUsersFacultyQuery();
 
     const recommendUsers = useResult(recommendUsersFaculty, null, (data) => data.recommendedUsersFaculty);
 
-
     //subscribe to new posts, to update the ui
     subscribeToMore(() => ({
       document: gql`
-        subscription newPost($userId: String!, $all: Boolean!) {
-          newPost(userId: $userId, all: $all) {
+        subscription newPost($all: Boolean!) {
+          newPost(all: $all) {
             id
             liked
             media {
@@ -350,14 +347,19 @@ export default defineComponent({
         }
       `,
       variables: {
-        userId: user.value.id,
         all: false,
       },
+      updateQuery(prev, {subscriptionData: {data}}) {
+
+        //update the exisiting data with new from the subscription
+        return Object.assign({}, prev, {
+          getFeed: [data, ...prev.getFeed]
+        })
+      }
     }));
 
     let lastResponseLength = 1;
 
-  
     //lazy load more posts
     const loadMore = async () => {
       if (lastResponseLength === 0) return;

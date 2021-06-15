@@ -26,8 +26,8 @@
         <span v-if="(file && error.$validator !== 'required') || !file">{{ error.$message }}</span>
       </div>
     </div>
-    <div v-if="!previewUrl" class="flex my-4">
-      <div class="mr-4">Bild Hochladen?</div>
+    <div v-if="!previewUrl && showToggle" class="flex my-4">
+      <div class="mr-4">Bild oder Datei Hochladen?</div>
       <toggle-button @toggleStateUpdate="toggle" />
     </div>
     <div v-if="showImageUpload">
@@ -38,7 +38,7 @@
       >
         <input v-bind="getInputProps()" />
         <p v-if="isDragActive">Lass einfach los</p>
-        <p v-else-if="!isDragActive && !previewUrl">Ziehe ein Bild hierher, oder klicke um ein Bild auszuwählen</p>
+        <p v-else-if="!isDragActive && !previewUrl">Ziehe eine Datei hierher, oder klicke um eine Datei auszuwählen</p>
       </div>
     </div>
     <div v-if="previewUrl" id="preview" class="flex flex-col items-center relative">
@@ -79,6 +79,67 @@
           </g>
         </svg>
       </button>
+    </div>
+    <div v-if="showFilePreview">
+      <div class="py-5 relative border rounded-xl">
+        <button
+          @click="
+            () => {
+              previewUrl = '';
+              dataFile = undefined;
+              showFilePreview = false;
+              showToggle = true;
+            }
+          "
+          class="
+            z-50
+            absolute
+            right-2
+            top-2
+            bg-black
+            text-white
+            bg-opacity-80
+            hover:opacity-75
+            transition
+            shadow
+            rounded-full
+            h-8
+            w-8
+            flex
+            items-center
+            justify-center
+            focus:outline-none
+            focus:ring-2 focus:ring-white
+          "
+        >
+          <svg viewBox="0 0 24 24" class="fill-white">
+            <g>
+              <path
+                d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
+              ></path>
+            </g>
+          </svg>
+        </button>
+        <svg class="w-20 stroke-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M14.7367 2.7619H8.08369C6.02469 2.7619 4.24969 4.4309 4.24969 6.4909V17.2039C4.24969 19.3799 5.90869 21.1149 8.08369 21.1149H16.0727C18.1327 21.1149 19.8017 19.2649 19.8017 17.2039V8.0379L14.7367 2.7619Z"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M14.474 2.75021V5.65921C14.474 7.07921 15.623 8.23121 17.042 8.23421C18.359 8.23721 19.706 8.23821 19.797 8.23221"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path d="M14.284 15.5578H8.88699" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="truncate pt-4 ml-2">{{ file?.name }}</div>
+      </div>
     </div>
   </div>
   <div class="flex flex-row-reverse">
@@ -164,7 +225,10 @@ export default defineComponent({
     const emojiOpen = ref(false);
     const emojiPicker = ref<EmojiPickerElement>();
     const showPreview = ref(false);
+    const showFilePreview = ref(false);
     const activeTrigger = ref('#');
+    const showToggle = ref(true);
+    const dataFile = ref<File>();
 
     watch(
       () => message.value,
@@ -209,26 +273,68 @@ export default defineComponent({
           image: file.value,
           groupId: groupId.value,
           tags: tags.value,
+          file: dataFile.value,
         },
       },
       context: {
         hasUpload: true,
       },
       update: (cache, { data: { addPost } }) => {
+        //add the new post to the cache
         try {
           if (route.path === '/home') {
-            const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
-            cache.writeQuery({
-              query: getFeed,
-              variables: {
-                skip: 0,
-                take: 10,
-              },
-              data: {
-                ...dataInStore,
-                getFeed: [...dataInStore.getFeed, addPost],
+            cache.modify({
+              fields: {
+                getFeed(existingPosts) {
+                  const newPost = cache.writeFragment({
+                    data: addPost,
+                    fragment: gql`
+                      fragment NewPost on Post {
+                        id
+                        liked
+                        media {
+                          name
+                          blurhash
+                        }
+                        user {
+                          firstname
+                          lastname
+                          avatar {
+                            name
+                            blurhash
+                          }
+                          username
+                        }
+                        text
+                        likesCount
+                        commentCount
+                        createdAt
+                        edited
+                        group {
+                          id
+                          name
+                        }
+                      }
+                    `,
+                  });
+
+                  return [newPost, ...existingPosts];
+                },
               },
             });
+            // const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
+            // cache.writeQuery({
+            //   query: getFeed,
+            //   variables: {
+            //     skip: 0,
+            //     take: 10,
+            //   },
+            //   data: {
+            //     ...dataInStore,
+            //     getFeed: [...dataInStore.getFeed, addPost],
+            //   },
+            // });
+
           } else if (route.path.includes('/user')) {
             const dataInStoreProfile: any = cache.readQuery({
               query: getPostsFromUser,
@@ -282,15 +388,22 @@ export default defineComponent({
     }));
 
     const onDrop = (acceptFiles: any[], rejectReasons: any[]) => {
-      previewUrl.value = URL.createObjectURL(acceptFiles[0]);
-      file.value = acceptFiles[0];
-      showImageUpload.value = false;
+      if (acceptFiles[0].type.includes('pdf')) {
+        showImageUpload.value = false;
+        showFilePreview.value = true;
+        showToggle.value = false;
+        dataFile.value = acceptFiles[0];
+      } else {
+        previewUrl.value = URL.createObjectURL(acceptFiles[0]);
+        file.value = acceptFiles[0];
+        showImageUpload.value = false;
+      }
     };
 
     const post = async () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) {
-        if (!file.value) return;
+        if (!file.value && !dataFile.value) return;
       }
       try {
         let foundTags = message.value.match(/#[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g);
@@ -311,10 +424,10 @@ export default defineComponent({
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({
       onDrop,
-      accept: 'image/jpeg, image/png, image/gif',
+      accept: 'image/jpeg, image/png, image/gif, .pdf',
     });
 
-    const { refetch: getTags, onResult: onTags } = useQuery(gql`
+    const { onResult: onTags } = useQuery(gql`
       query {
         getAllTags {
           id
@@ -385,6 +498,9 @@ export default defineComponent({
       parseMarkdown,
       showPreview,
       file,
+      showFilePreview,
+      showToggle,
+      dataFile,
     };
   },
 });

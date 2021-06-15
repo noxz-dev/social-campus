@@ -114,8 +114,8 @@ export default defineComponent({
 
     subscribeToMore(() => ({
       document: gql`
-        subscription newPost($userId: String!, $all: Boolean!) {
-          newPost(userId: $userId, all: $all) {
+        subscription newPost($all: Boolean!) {
+          newPost(all: $all) {
             id
             liked
             media {
@@ -140,8 +140,13 @@ export default defineComponent({
         }
       `,
       variables: {
-        userId: user.value.id,
         all: true,
+      },
+      updateQuery(prev, { subscriptionData: { data } }) {
+        //update the exisiting data with new from the subscription
+        return Object.assign({}, prev, {
+          browsePosts: [data, ...prev.browsePosts!],
+        });
       },
     }));
 

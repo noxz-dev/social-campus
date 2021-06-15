@@ -8,6 +8,7 @@ export const browsePosts = gql`
       media {
         name
         blurhash
+        type
       }
       user {
         id

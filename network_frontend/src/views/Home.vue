@@ -62,7 +62,7 @@
             </svg>
           </app-button>
           <div class="w-full flex justify-center">
-            <div class="h-full hidden xl:block w-[34%]"></div>
+            <div class="h-full hidden 2xl:block w-[34%]"></div>
             <div class="w-full flex justify-center">
               <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-[80%] mb-10 mt-4">
                 <div class="flex flex-col dark:text-gray-50 text-gray-900">

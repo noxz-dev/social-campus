@@ -8,6 +8,7 @@ export const getFeed = gql`
       media {
         name
         blurhash
+        type
       }
       user {
         id

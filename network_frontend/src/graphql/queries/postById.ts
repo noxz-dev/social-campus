@@ -8,6 +8,7 @@ export const postById = gql`
       media {
         name
         blurhash
+        type
       }
       text
       likesCount

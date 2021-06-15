@@ -8,6 +8,7 @@ export const getPostsFromGroup = gql`
       media {
         name
         blurhash
+        type
       }
       user {
         id

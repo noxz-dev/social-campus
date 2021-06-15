@@ -138,7 +138,7 @@
           <path d="M14.284 15.5578H8.88699" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <div class="truncate pt-4 ml-2">{{ file?.name }}</div>
+        <div class="truncate pt-4 ml-2">{{ dataFile?.name }}</div>
       </div>
     </div>
   </div>

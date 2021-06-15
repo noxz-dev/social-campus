@@ -1036,7 +1036,7 @@ export type BrowsePostsQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1171,7 +1171,7 @@ export type GetFeedQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1198,7 +1198,7 @@ export type GetPostsFromGroupQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1404,7 +1404,7 @@ export type PostByIdQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1444,7 +1444,7 @@ export type GetPostsFromUserQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -2345,6 +2345,7 @@ export const BrowsePostsDocument = gql`
     media {
       name
       blurhash
+      type
     }
     user {
       id
@@ -2604,6 +2605,7 @@ export const GetFeedDocument = gql`
     media {
       name
       blurhash
+      type
     }
     user {
       id
@@ -2656,6 +2658,7 @@ export const GetPostsFromGroupDocument = gql`
     media {
       name
       blurhash
+      type
     }
     user {
       id
@@ -3045,6 +3048,7 @@ export const PostByIdDocument = gql`
     media {
       name
       blurhash
+      type
     }
     text
     likesCount
@@ -3111,6 +3115,7 @@ export const GetPostsFromUserDocument = gql`
     media {
       name
       blurhash
+      type
     }
     user {
       id

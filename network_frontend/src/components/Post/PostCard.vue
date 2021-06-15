@@ -5,13 +5,16 @@
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown whitespace-pre-wrap prettyprint" v-html="content"></div>
       </div>
-      <div v-if="post.media" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
+      <div v-if="post.media && post.media.type === MediaType.Image" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
         <lazy-image
           class="h-[28rem] 4xl:h-[38rem] w-full rounded-xl m-2"
           :src="post.media.name"
           alt=""
           :blurhash="post.media.blurhash || 'abcdefghijklmn'"
         />
+      </div>
+      <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center cursor-pointer">
+        [TODO] POST WITH A FILE 
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
@@ -73,7 +76,7 @@
 import { defineComponent, nextTick, onMounted, onUpdated, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useLikePostMutation, useUnlikePostMutation } from '../../graphql/generated/types';
+import { useLikePostMutation, useUnlikePostMutation, MediaType } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import CardHeader from '../Card/CardHeader.vue';
 import { LikePostMutationVariables, UnlikePostMutationVariables } from '../../graphql/generated/types';
@@ -265,6 +268,7 @@ export default defineComponent({
       handleNavigation,
       parseMarkdown,
       viewerOptions,
+      MediaType
     };
   },
 });

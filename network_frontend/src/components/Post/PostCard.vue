@@ -17,7 +17,7 @@
           :blurhash="post.media.blurhash || 'abcdefghijklmn'"
         />
       </div>
-      <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center cursor-pointer">
+      <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center">
         <div class="dark:bg-dark-700 bg-gray-200  p-5 rounded-lg w-[70%]">
           <div class="flex justify-between w-full items-center">
             <div>
@@ -41,7 +41,7 @@
               </svg>
             </div>
             <div class="truncate p-2">{{ post.media.name }}</div>
-            <div class="p-2 border dark:border-white border-black rounded-full hover:opacity-50" @click="downloadFile">
+            <div role="button" tabindex="0" @keydown.enter="downloadFile" class="p-2 border dark:border-white border-black rounded-full hover:opacity-50" @click="downloadFile">
               <svg class="dark:stroke-white stroke-black w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   fill-rule="evenodd"
@@ -71,7 +71,7 @@
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
-          <div class="flex cursor-pointer" @click.stop="likePost">
+          <div class="flex cursor-pointer" @click.stop="likePost" role="button" tabindex="0" @keydown.enter="likePost">
             <svg
               class="h-6 hover:stroke-red duration-200 stroke-current"
               :class="{
@@ -101,7 +101,7 @@
             </svg>
             <span class="px-2 font-mono dark:text-gray-50 text-gray-900">{{ post.likesCount }}</span>
           </div>
-          <div class="flex cursor-pointer" @click="handleNavigation">
+          <div class="flex cursor-pointer" @click="handleNavigation" role="button" tabindex="0" @keydown.enter="handleNavigation">
             <svg
               class="duration-200 h-6 dark:stroke-grayLight stroke-black hover:!stroke-grayDark"
               xmlns="http://www.w3.org/2000/svg"

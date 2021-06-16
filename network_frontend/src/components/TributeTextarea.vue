@@ -23,7 +23,7 @@
           :placeholder="placeholderText"
         />
         <div
-          class="markdown bg-gray-700 rounded-lg p-0.5"
+          class="markdown dark:bg-gray-700 bg-gray-200 rounded-lg p-0.5"
           v-if="showPreview"
           v-html="parseMarkdown(modelValue).sanitizedContent"
         ></div>

@@ -70,31 +70,11 @@
               <div v-if="v.commentText.$error" class="text-red-400">Du musst schon was eingeben...</div>
             </div>
             <div class="self-end">
-              <div
-                class="
-                  cursor-pointer
-                  mr-2
-                  inline-flex
-                  items-center
-                  px-4
-                  py-2
-                  border border-transparent
-                  text-sm
-                  font-medium
-                  rounded-md
-                  shadow-sm
-                  text-white
-                  bg-brand-500
-                  hover:bg-brand-600
-                  focus:outline-none
-                  focus:ring-2 focus:ring-offset-2
-                  dark:focus:ring-offset-dark-700
-                  focus:ring-brand-500
-                "
+              <app-button
                 @click="newComment"
               >
                 Antworten
-              </div>
+              </app-button>
             </div>
           </div>
         </card>

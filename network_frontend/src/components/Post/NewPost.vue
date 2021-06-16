@@ -59,8 +59,8 @@
           text-white
           bg-opacity-80
           hover:stroke-red
-            hover:fill-red
-            fill-white
+          hover:fill-red
+          fill-white
           transition
           shadow
           rounded-full
@@ -83,68 +83,73 @@
       </button>
     </div>
     <div v-if="showFilePreview">
-      <div class="py-5 relative border rounded-xl">
-        <button
-          @click="
-            () => {
+      <div class="dark:bg-dark-600 bg-gray-200 p-5 rounded-lg w-full">
+        <div class="flex justify-between w-full items-center">
+          <div>
+            <svg
+              class="w-10 h-10 dark:stroke-white stroke-black"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M14.7367 2.7619H8.08369C6.02469 2.7619 4.24969 4.4309 4.24969 6.4909V17.2039C4.24969 19.3799 5.90869 21.1149 8.08369 21.1149H16.0727C18.1327 21.1149 19.8017 19.2649 19.8017 17.2039V8.0379L14.7367 2.7619Z"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M14.474 2.75021V5.65921C14.474 7.07921 15.623 8.23121 17.042 8.23421C18.359 8.23721 19.706 8.23821 19.797 8.23221"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path d="M14.284 15.5578H8.88699" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="truncate p-2">{{ dataFile?.name }}</div>
+          <div
+            role="button"
+            tabindex="0"
+            @keydown.enter="() => {
               previewUrl = '';
               dataFile = undefined;
               showFilePreview = false;
               showToggle = true;
-            }
-          "
-          class="
-            z-50
-            absolute
-            right-2
-            top-2
-            bg-black
-            bg-opacity-80
-            hover:stroke-red
-            hover:fill-red
-            fill-white
-            transition
-            shadow
-            rounded-full
-            h-8
-            w-8
-            flex
+            }"
+            class="
+              p-2
+              border
+              dark:border-white
+              border-black
+              rounded-full
+              hover:stroke-red
+              hover:fill-red
+              transition-all
+              dark:fill-white
+              flex
             items-center
             justify-center
-            focus:outline-none
-            focus:ring-2 focus:ring-white
-          "
-        >
-          <svg viewBox="0 0 24 24" class="">
-            <g>
-              <path
-                d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
-              ></path>
-            </g>
-          </svg>
-        </button>
-        <div class="flex items-center">
-          <svg class="w-20 stroke-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M14.7367 2.7619H8.08369C6.02469 2.7619 4.24969 4.4309 4.24969 6.4909V17.2039C4.24969 19.3799 5.90869 21.1149 8.08369 21.1149H16.0727C18.1327 21.1149 19.8017 19.2649 19.8017 17.2039V8.0379L14.7367 2.7619Z"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M14.474 2.75021V5.65921C14.474 7.07921 15.623 8.23121 17.042 8.23421C18.359 8.23721 19.706 8.23821 19.797 8.23221"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path d="M14.284 15.5578H8.88699" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <div class="truncate pt-4 ml-2">{{ dataFile?.name }}</div>
+            "
+            @click="() => {
+              previewUrl = '';
+              dataFile = undefined;
+              showFilePreview = false;
+              showToggle = true;
+            }"
+          >
+            <svg viewBox="0 0 24 24" class="w-6">
+              <g>
+                <path
+                  d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
+                ></path>
+              </g>
+            </svg>
+          </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -340,7 +345,6 @@ export default defineComponent({
             //     getFeed: [...dataInStore.getFeed, addPost],
             //   },
             // });
-
           } else if (route.path.includes('/user')) {
             const dataInStoreProfile: any = cache.readQuery({
               query: getPostsFromUser,

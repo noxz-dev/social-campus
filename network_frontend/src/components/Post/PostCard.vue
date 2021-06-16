@@ -18,7 +18,7 @@
         />
       </div>
       <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center">
-        <div class="dark:bg-dark-700 bg-gray-200  p-5 rounded-lg w-[70%]">
+        <div class="dark:bg-[#1f2129] bg-gray-200  p-5 rounded-xl w-[70%]">
           <div class="flex justify-between w-full items-center">
             <div>
               <svg class="w-10 h-10 dark:stroke-white stroke-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

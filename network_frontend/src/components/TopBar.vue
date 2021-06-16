@@ -684,6 +684,12 @@ export default defineComponent({
         variables: {
           userId: me?.id,
         },
+        updateQuery(prev, { subscriptionData: { data } }) {
+          //update the exisiting data with new from the subscription
+          return Object.assign({}, prev, {
+            getNotifications: [data, ...prev.getNotifications],
+          });
+        },
       }));
 
       onNotifications(({ data }) => {

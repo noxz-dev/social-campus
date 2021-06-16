@@ -84,11 +84,11 @@
             alt=""
           />
         </div>
-        <div class="flex flex-col flex-1 ml-2 items-start">
-          <span class="flex-1 dark:text-gray-50 text-gray-900 text-sm">{{ notify.message }}</span>
-          <span v-if="notify.chatMessage" class="flex-1 dark:text-gray-300 text-gray-900 text-sm">{{
+        <div class="flex flex-col flex-1 ml-2 items-start truncate">
+          <div class="flex-1 dark:text-gray-50 text-gray-900 text-sm">{{ notify.message }}</div>
+          <div v-if="notify.chatMessage" class="flex-1 dark:text-gray-300 text-gray-900 text-sm">{{
             notify.chatMessage.content
-          }}</span>
+          }}</div>
         </div>
         <div class="rounded" @click.stop="deleteNotification(notify.id)">
           <svg

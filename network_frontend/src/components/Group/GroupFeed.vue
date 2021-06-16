@@ -35,8 +35,8 @@ export default defineComponent({
 
     subscribeToMore(() => ({
       document: gql`
-        subscription newPost($userId: String!, $all: Boolean!, $groupId: String) {
-          newPost(userId: $userId, all: $all, groupId: $groupId) {
+        subscription newPost($all: Boolean!, $groupId: String) {
+          newPost(all: $all, groupId: $groupId) {
             id
             liked
             media {
@@ -60,7 +60,6 @@ export default defineComponent({
         }
       `,
       variables: {
-        userId: user.value.id,
         groupId: route.params.id,
         all: false,
       },

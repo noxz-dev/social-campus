@@ -45,24 +45,28 @@ a.router-link-exact-active div {
   @apply border-indigo-500;
 }
 .highlight path,
-.highlight polyline,
 .highlight polygon,
 a.router-link-exact-active path,
-a.router-link-exact-active polyline,
 a.router-link-exact-active polygon {
   @apply fill-brand !important;
-  @apply stroke-brand;
+  @apply stroke-brand !important;
 }
 
 .highlight:hover path,
-.highlight:hover polyline,
 .highlight:hover polygon,
 a:hover path,
-a:hover polyline,
 a:hover polygon {
   @apply fill-brand !important;
-  @apply stroke-brand;
+  @apply stroke-brand !important;
 }
+
+
+.highlight:hover polyline,
+a.router-link-exact-active polyline,
+a:hover polyline {
+  @apply stroke-brand !important;
+}
+
 @screen md {
   .dark .highlight div,
   .dark a.router-link-exact-active div {

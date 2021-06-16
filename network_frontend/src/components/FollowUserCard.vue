@@ -18,14 +18,14 @@
           <span class="text-xs font-medium">@{{ user.username }}</span>
         </div>
       </div>
-      <div class="min-w-[6.5rem] mr-2">
-        <follow-button
+      <div class="mr-2">
+        <follow-button-small
           v-if="user.id !== userFromStore.id"
           :user="user"
           :following="user.meFollowing"
           class="mr-2 rounded-xl w-full"
           :class="'!text-' + buttonTextSize"
-        ></follow-button>
+        ></follow-button-small>
       </div>
     </div>
   </div>
@@ -34,8 +34,9 @@
 import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import FollowButton from './FollowButton.vue';
+import FollowButtonSmall from './FollowButtonSmall.vue';
 export default defineComponent({
-  components: { FollowButton },
+  components: { FollowButton, FollowButtonSmall },
   props: {
     buttonTextSize: {
       type: String,

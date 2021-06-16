@@ -91,12 +91,13 @@
 
             <div class="h-full hidden lg:block w-[34%] dark:text-gray-50 text-gray-900">
               <div class="relative">
-                <div class="p-5 pl-0 fixed right-1 min-w-[19%]">
+                <div class="p-3 pt-6 pl-0 fixed right-1 min-w-[19%]">
                   <div
                     class="
                       p-3
                       w-full
                       min-h-[15rem]
+                      min-w-[20rem]
                       dark:bg-dark-600
                       bg-gray-100
                       rounded-xl

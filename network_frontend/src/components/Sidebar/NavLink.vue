@@ -60,6 +60,10 @@ a:hover polygon {
   @apply stroke-brand !important;
 }
 
+.highlight #topMessage,
+a.router-link-exact-active #topMessage {
+  transform: translateY(-2px);
+}
 
 .highlight:hover polyline,
 a.router-link-exact-active polyline,

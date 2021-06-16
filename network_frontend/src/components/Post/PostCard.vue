@@ -5,7 +5,11 @@
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown whitespace-pre-wrap prettyprint" v-html="content"></div>
       </div>
-      <div v-if="post.media && post.media.type === MediaType.Image" class="flex justify-center cursor-pointer" v-viewer="viewerOptions">
+      <div
+        v-if="post.media && post.media.type === MediaType.Image"
+        class="flex justify-center cursor-pointer"
+        v-viewer="viewerOptions"
+      >
         <lazy-image
           class="h-[28rem] 4xl:h-[38rem] w-full rounded-xl m-2"
           :src="post.media.name"
@@ -14,7 +18,56 @@
         />
       </div>
       <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center cursor-pointer">
-        [TODO] POST WITH A FILE 
+        <div class="dark:bg-dark-700 bg-gray-200  p-5 rounded-lg w-[70%]">
+          <div class="flex justify-between w-full items-center">
+            <div>
+              <svg class="w-10 h-10 dark:stroke-white stroke-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M14.7367 2.7619H8.08369C6.02469 2.7619 4.24969 4.4309 4.24969 6.4909V17.2039C4.24969 19.3799 5.90869 21.1149 8.08369 21.1149H16.0727C18.1327 21.1149 19.8017 19.2649 19.8017 17.2039V8.0379L14.7367 2.7619Z"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M14.474 2.75021V5.65921C14.474 7.07921 15.623 8.23121 17.042 8.23421C18.359 8.23721 19.706 8.23821 19.797 8.23221"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path d="M14.284 15.5578H8.88699" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="truncate p-2">{{ post.media.name }}</div>
+            <div class="p-2 border dark:border-white border-black rounded-full hover:opacity-50" @click="downloadFile">
+              <svg class="dark:stroke-white stroke-black w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M14.7364 2.7619H8.08443C6.02543 2.7619 4.25043 4.4309 4.25043 6.4909V17.2279C4.25043 19.4039 5.90843 21.1149 8.08443 21.1149H16.0724C18.1324 21.1149 19.8024 19.2879 19.8024 17.2279V8.0379L14.7364 2.7619Z"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M14.4738 2.75021V5.65921C14.4738 7.07921 15.6228 8.23121 17.0428 8.23421C18.3588 8.23721 19.7058 8.23821 19.7968 8.23221"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path d="M11.6407 16.0138V9.44083" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                  d="M8.80231 13.1632L11.6403 16.0142L14.4793 13.1632"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="flex items-center justify-between p-2 pb-3 cursor-default" @click.stop>
         <div class="flex">
@@ -73,10 +126,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, onUpdated, ref, watch } from 'vue';
+import { defineComponent, nextTick, onMounted, onUpdated, PropType, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useLikePostMutation, useUnlikePostMutation, MediaType } from '../../graphql/generated/types';
+import { useLikePostMutation, useUnlikePostMutation, MediaType, Post } from '../../graphql/generated/types';
 import { getFeed } from '../../graphql/queries/getFeed';
 import CardHeader from '../Card/CardHeader.vue';
 import { LikePostMutationVariables, UnlikePostMutationVariables } from '../../graphql/generated/types';
@@ -84,6 +137,9 @@ import Card from '../Card/Card.vue';
 import { useRouter } from 'vue-router';
 import { parseMarkdown } from '../../utils/postUtils';
 import LazyImage from '../Blurhash/LazyImage.vue';
+import axios from 'axios';
+import { Buffer } from 'buffer';
+import { loadProxyFile } from '../../utils/loadProxyImage';
 
 dayjs.extend(relativeTime);
 
@@ -91,7 +147,7 @@ export default defineComponent({
   components: { CardHeader, Card, LazyImage },
   props: {
     post: {
-      type: Object,
+      type: Object as PropType<Post>,
       required: true,
     },
     cardBgColor: {
@@ -247,6 +303,24 @@ export default defineComponent({
       router.push({ name: 'DetailPost', params: { id: props.post.id } });
     };
 
+    //download the file attached to the post
+    const downloadFile = async () => {
+
+      //get the image from the file proxy
+      // const response = await axios({
+      //   url: `/api/files/${props.post.media?.name}`,
+      //   method: 'GET',
+      //   responseType: 'arraybuffer',
+      // });
+      // const b64encoded = Buffer.from(response.data, 'base64');
+      const link = document.createElement('a');
+      link.href = await loadProxyFile(props.post.media?.name!);
+      link.download = props.post.media?.name!;
+      link.click();
+      URL.revokeObjectURL(link.href);
+
+    }
+
     const viewerOptions = {
       inline: false,
       button: false,
@@ -268,7 +342,8 @@ export default defineComponent({
       handleNavigation,
       parseMarkdown,
       viewerOptions,
-      MediaType
+      MediaType,
+      downloadFile
     };
   },
 });

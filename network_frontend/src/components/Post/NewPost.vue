@@ -58,7 +58,9 @@
           bg-black
           text-white
           bg-opacity-80
-          hover:opacity-75
+          hover:stroke-red
+            hover:fill-red
+            fill-white
           transition
           shadow
           rounded-full
@@ -71,7 +73,7 @@
           focus:ring-2 focus:ring-white
         "
       >
-        <svg viewBox="0 0 24 24" class="fill-white">
+        <svg viewBox="0 0 24 24" class="">
           <g>
             <path
               d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
@@ -97,9 +99,10 @@
             right-2
             top-2
             bg-black
-            text-white
             bg-opacity-80
-            hover:opacity-75
+            hover:stroke-red
+            hover:fill-red
+            fill-white
             transition
             shadow
             rounded-full
@@ -112,7 +115,7 @@
             focus:ring-2 focus:ring-white
           "
         >
-          <svg viewBox="0 0 24 24" class="fill-white">
+          <svg viewBox="0 0 24 24" class="">
             <g>
               <path
                 d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"
@@ -120,7 +123,8 @@
             </g>
           </svg>
         </button>
-        <svg class="w-20 stroke-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="flex items-center">
+          <svg class="w-20 stroke-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
@@ -139,6 +143,8 @@
           <path d="M12.2425 10.6056H8.88651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <div class="truncate pt-4 ml-2">{{ dataFile?.name }}</div>
+        </div>
+
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-3/4 mb-10 mt-10">
     <div v-for="index in 3" :key="index">
-      <post-card-placeholder />
+      <post-card-placeholder class="mt-4"/>
     </div>
   </div>
 </template>

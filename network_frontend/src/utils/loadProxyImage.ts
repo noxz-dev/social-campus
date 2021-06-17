@@ -4,6 +4,9 @@ import { Buffer } from 'buffer';
 export const loadProxyImage = async (filename: string): Promise<string> => {
   const response = await axios({
     url: `/api/files/${filename}`,
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem("apollo-token")
+    },
     method: 'GET',
     responseType: 'arraybuffer',
   });
@@ -15,6 +18,9 @@ export const loadProxyImage = async (filename: string): Promise<string> => {
 export const loadProxyFile = async (filename: string): Promise<string> => {
   const response = await axios({
     url: `/api/files/${filename}`,
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem("apollo-token")
+    },
     method: 'GET',
     responseType: 'arraybuffer',
   });

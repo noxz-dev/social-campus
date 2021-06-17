@@ -325,6 +325,7 @@ export default defineComponent({
         subscription newPost($all: Boolean!) {
           newPost(all: $all) {
             id
+            
             liked
             media {
               name

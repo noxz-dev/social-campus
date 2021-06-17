@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtUser } from '../interfaces/jwtUser.interface';
-import { log } from '../services/logger';
+import { JwtUser } from '../utils/interfaces/jwtUser.interface';
+import { log } from '../utils/services/logger';
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   if (req.headers.hasOwnProperty('authorization')) {

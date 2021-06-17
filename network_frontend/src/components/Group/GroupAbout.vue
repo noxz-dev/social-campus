@@ -8,7 +8,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import MediumEditor from 'medium-editor';
 import { useGroupAboutQuery, useUpdateAboutGroupMutation } from '../../graphql/generated/types';
 import { useRoute } from 'vue-router';
@@ -38,10 +38,10 @@ export default defineComponent({
       },
     }));
 
-    const saveAbout = () => {
+    const saveAbout = async () => {      
       const serialized = editor.serialize();
       about.value = serialized['element-0'].value;
-      updateAbout();
+      await updateAbout();
     };
 
     onResult(() => {

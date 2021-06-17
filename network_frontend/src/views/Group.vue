@@ -58,7 +58,7 @@
 <script lang="ts">
 import PostList from '../components/Post/PostList.vue';
 import { GroupType } from '../graphql/generated/types';
-import { defineComponent, ref, defineAsyncComponent, watch, computed, PropType } from 'vue';
+import { defineComponent, ref, defineAsyncComponent, computed } from 'vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import GroupPermissionContainer from '../components/Group/GroupPermissionContainer.vue';
 import GroupEntry from '../components/Group/GroupEntry.vue';

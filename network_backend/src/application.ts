@@ -30,11 +30,11 @@ import {
   UserResolver,
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
-import { customAuthChecker } from './utils/middlewares/resolverAuthCheck';
+import { customAuthChecker } from './middlewares/resolverAuthCheck';
 import { OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
 import { MyContext } from './utils/interfaces/context.interface';
 import { JwtUser } from './utils/interfaces/jwtUser.interface';
-import { authenticateToken } from './utils/middlewares/auth';
+import { authenticateToken } from './middlewares/auth';
 import { log } from './utils/services/logger';
 import { initS3, minioClient } from './utils/services/minio';
 import { User } from './entity/user.entity';
@@ -169,11 +169,10 @@ export class Application {
       );
 
       //register file proxy
-      app.get('/files/:filename', async (req, res) => {
-        // if (!req.user) return res.sendStatus(403);
+      app.get('/files/:filename', authenticateToken, async (req: express.Request, res: express.Response) => {
+        if (!req.user) return res.sendStatus(403);
         try {
           const { filename } = req.params;
-
           if (!filename) return res.status(400).send('missing file name');
 
           minioClient.getObject('images', filename, (err, dataStream) => {

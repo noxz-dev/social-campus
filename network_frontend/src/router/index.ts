@@ -1,3 +1,4 @@
+import { state } from '../utils/state';
 import { createRouter, createWebHistory } from 'vue-router';
 import { navState } from '../utils/NavState';
 
@@ -122,6 +123,8 @@ router.beforeEach((to, from, next) => {
   if (loggedIn && onlyWhenLoggedOut) {
     return next('/');
   }
+
+  state.groupError = false;
 
   next();
 });

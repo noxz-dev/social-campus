@@ -6,33 +6,28 @@
 
 <script lang="ts">
 import gql from 'graphql-tag';
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, getCurrentInstance, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
 import { useGetPostsFromGroupQuery } from '../../graphql/generated/types';
-import { GetPostsFromGroupQueryVariables } from '../../graphql/generated/types';
 import PostList from '../Post/PostList.vue';
+import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
   components: {
     PostList,
   },
   setup() {
-    const posts = ref();
-    const take = ref(3);
     const route = useRoute();
-    const skip = ref(0);
-    const store = useStore();
 
-    const user = computed(() => store.state.userData.user);
 
-    const { onResult, subscribeToMore } = useGetPostsFromGroupQuery(
-      () =>
-        <GetPostsFromGroupQueryVariables>{
-          groupId: route.params.id,
-        }
-    );
+    //fetch the inital group feed
+    const { result, subscribeToMore, loading, fetchMore } = useGetPostsFromGroupQuery(() => ({
+      groupId: route.params.id as string,
+      limit: 10,
+      offset: 0,
+    }));
 
+    //subscripte to new post, to update the ui in realtime
     subscribeToMore(() => ({
       document: gql`
         subscription newPost($all: Boolean!, $groupId: String) {
@@ -65,9 +60,33 @@ export default defineComponent({
       },
     }));
 
-    onResult(({ data }) => {
-      posts.value = data.getPostsFromGroup;
-    });
+    const posts = useResult(result, [], (data) => data.getPostsFromGroup);
+
+    //register eventbus to listen for the scroll event
+    const internalInstance = getCurrentInstance();
+    if (internalInstance) {
+      const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
+      eventbus?.on('loadMoreGroupPosts', () => loadMore());
+      watch(
+        () => loading.value,
+        () => {
+          eventbus?.emit('GroupPostsLoadingUpdate', loading.value);
+        }
+      );
+    }
+
+    let lastResponseLength = 1;
+
+    //fetch more posts with an offset
+    const loadMore = async () => {
+      if (lastResponseLength === 0) return;
+      const response = await fetchMore({
+        variables: {
+          offset: posts.value!.length,
+        },
+      });
+      lastResponseLength = response.data.getPostsFromGroup!.length;
+    };
 
     return { posts };
   },

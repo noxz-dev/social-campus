@@ -125,9 +125,8 @@ import LazyImage from '../Blurhash/LazyImage.vue';
 import { numberFormatter } from '../../utils/numberFormatter';
 import { GroupComponents } from '../../views/Group.vue';
 import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated/types';
-import { Group, GroupByIdQueryVariables, JoinGroupMutationVariables } from '../../graphql/generated/types';
+import { Group } from '../../graphql/generated/types';
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
-import { useRouter } from 'vue-router';
 import { state } from '../../utils/state';
 import GroupEdit from './GroupEdit.vue';
 import Modal from '../../components/Modal.vue';
@@ -155,9 +154,9 @@ export default defineComponent({
 
     const { onResult } = useGroupByIdQuery(
       () =>
-        <GroupByIdQueryVariables>{
+        ({
           groupId: props.groupId,
-        }
+        })
     );
 
     onResult(({ data }) => {
@@ -167,7 +166,7 @@ export default defineComponent({
     });
 
     const { mutate: joinGrp } = useJoinGroupMutation(() => ({
-      variables: <JoinGroupMutationVariables>{
+      variables: {
         groupId: props.groupId,
       },
     }));

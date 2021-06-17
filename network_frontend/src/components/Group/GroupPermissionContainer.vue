@@ -40,6 +40,7 @@ export default defineComponent({
 
     onError(() => {
       console.log('error');
+      state.groupError = true;
     });
 
     return { groupState, GroupType };

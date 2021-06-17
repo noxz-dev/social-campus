@@ -119,6 +119,8 @@ export class PostResolver {
   })
   public async getPostsFromGroup(
     @Ctx() ctx: MyContext,
+    @Arg('offset', () => Number) offset: number,
+    @Arg('limit', () => Number) limit: number,
     @Arg('groupId', () => String) groupId: string,
   ): Promise<Post[] | null> {
     const userId = ctx.req.user.id;
@@ -135,6 +137,8 @@ export class PostResolver {
         'comments.likes',
         'comments.likes.user',
       ],
+      take: limit,
+      skip: offset,
       where: { group: { id: groupId } },
       order: { createdAt: 'DESC' },
     });

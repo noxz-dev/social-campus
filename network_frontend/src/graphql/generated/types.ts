@@ -514,6 +514,8 @@ export type QueryBrowsePostsArgs = {
 
 export type QueryGetPostsFromGroupArgs = {
   groupId: Scalars['String'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 };
 
 
@@ -1188,6 +1190,8 @@ export type GetFeedQuery = (
 
 export type GetPostsFromGroupQueryVariables = Exact<{
   groupId: Scalars['String'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 }>;
 
 
@@ -2651,8 +2655,8 @@ export function useGetFeedQuery(variables: GetFeedQueryVariables | VueCompositio
 }
 export type GetFeedQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetFeedQuery, GetFeedQueryVariables>;
 export const GetPostsFromGroupDocument = gql`
-    query getPostsFromGroup($groupId: String!) {
-  getPostsFromGroup(groupId: $groupId) {
+    query getPostsFromGroup($groupId: String!, $limit: Float!, $offset: Float!) {
+  getPostsFromGroup(groupId: $groupId, limit: $limit, offset: $offset) {
     id
     liked
     media {
@@ -2692,6 +2696,8 @@ export const GetPostsFromGroupDocument = gql`
  * @example
  * const { result, loading, error } = useGetPostsFromGroupQuery({
  *   groupId: // value for 'groupId'
+ *   limit: // value for 'limit'
+ *   offset: // value for 'offset'
  * });
  */
 export function useGetPostsFromGroupQuery(variables: GetPostsFromGroupQueryVariables | VueCompositionApi.Ref<GetPostsFromGroupQueryVariables> | ReactiveFunction<GetPostsFromGroupQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetPostsFromGroupQuery, GetPostsFromGroupQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetPostsFromGroupQuery, GetPostsFromGroupQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetPostsFromGroupQuery, GetPostsFromGroupQueryVariables>> = {}) {

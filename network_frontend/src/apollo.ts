@@ -71,6 +71,7 @@ export const defaultClient = new ApolloClient({
       Query: {
         fields: {
           getFeed: offsetLimitPagination(),
+          getPostsFromGroup: offsetLimitPagination(),
           groups: offsetLimitPagination(),
           myGroups: offsetLimitPagination(),
           followingGroups: offsetLimitPagination(),

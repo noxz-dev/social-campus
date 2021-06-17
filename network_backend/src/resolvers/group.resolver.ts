@@ -191,57 +191,29 @@ export class GroupResolver {
   ): Promise<PreviewGroup[]> {
     const userId = ctx.req.user.id;
 
-    //get all groupIds
-    const foundGroups = await getManager().query(
-      `SELECT * from group_members_user WHERE "userId" = $1 LIMIT ${limit} OFFSET ${offset}`,
+    //some magic to get all relevant groups and sort by last interaction
+    const groups = (await getManager().query(
+      `SELECT  "group".*
+      from (SELECT * FROM group_members_user WHERE "userId" = $1) AS groupuser 
+      JOIN  "group" ON (groupuser."groupId" =  "group"."id")
+      LEFT JOIN (SELECT "post"."groupId", MAX("post"."updated_at") AS updated_at FROM "post" WHERE "post"."groupId" IS NOT NULL GROUP BY "post"."groupId") as newposts 
+      ON "groupuser"."groupId" = "newposts"."groupId" 
+      ORDER BY greatest("newposts".updated_at, "group".updated_at) DESC 
+      LIMIT ${limit} 
+      OFFSET ${offset};`,
       [userId],
-    );
-
-    const groupIds = foundGroups.map((g) => g.groupId);
-
-    //fetch all groups from the database
-    let groups = await getRepository(Group).find({
-      where: {
-        id: In(groupIds),
-      },
-    });
+    )) as Group[];
 
     for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);
-      group.posts = await getRepository(Post).find({ where: { group: group.id }, take: 2 });
     }
 
-    groups = groups.map((g) => {
+    const updatedGroups = groups.map((g) => {
       g.numberOfMembers = g.members.length;
       return g;
     });
 
-    //sort groups after post activity
-    groups.sort((a, b) => {
-      a.posts.sort((a, b) => {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      });
-
-      b.posts.sort((a, b) => {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      });
-
-      if (!a.posts[0] && b.posts[0]) {
-        return new Date(b.posts[0].createdAt).getTime() - 0;
-      }
-
-      if (!b.posts[0] && a.posts[0]) {
-        return 0 - new Date(a.posts[0].createdAt).getTime();
-      }
-
-      if (!b.posts[0] && !a.posts[0]) {
-        return 0 - 0;
-      }
-
-      return new Date(b.posts[0].createdAt).getTime() - new Date(a.posts[0].createdAt).getTime();
-    });
-
-    const previewGroups = groups.map((group) => new PreviewGroup(group));
+    const previewGroups = updatedGroups.map((group) => new PreviewGroup(group));
     return previewGroups;
   }
 
@@ -259,31 +231,26 @@ export class GroupResolver {
       relations: ['following'],
     });
 
-    const followingIds = user.following.map((u) => u.id);
-
-    //get all groupIds
-    let foundGroups = await getManager().query(
-      `SELECT * from group_members_user WHERE "userId" IN($1) LIMIT ${limit} OFFSET ${offset}`,
-      [...followingIds],
-    );
-
-    foundGroups = foundGroups.filter((g) => g.userId !== userId);
-
-    const groupIds = foundGroups.map((g) => g.groupId);
-
-    //fetch all groups from the database
-    let groups = await getRepository(Group).find({
-      where: {
-        id: In(groupIds),
-      },
-    });
-
     if (!user) {
       return [];
     }
 
-    //delete duplicates
-    groups = groups.filter((group, i, arr) => arr.findIndex((t) => t.id === group.id) === i);
+    const followingIds = user.following.map((u) => u.id);
+
+    const stringIds = [];
+
+    for (const id of followingIds) {
+      stringIds.push("'" + id + "'");
+    }
+
+    const parsed = stringIds.toString().replace('[', '').replace(']', '');
+
+    //get all groups from the followers
+    let groups = (await getManager().query(
+      `SELECT "group".* FROM "group" 
+      JOIN (SELECT "groupId" FROM "group_members_user" WHERE "userId" IN(${parsed}) AND "groupId" NOT IN (SELECT DISTINCT "groupId" FROM "group_members_user" WHERE "userId" = '${userId}')) as notmember 
+      ON "group"."id" = "notmember"."groupId" ORDER BY "group".updated_at DESC LIMIT ${limit} OFFSET ${offset};`,
+    )) as Group[];
 
     for await (const group of groups) {
       group.members = await getGroupMembersWithRoles(group.id);

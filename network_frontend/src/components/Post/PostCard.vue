@@ -18,10 +18,15 @@
         />
       </div>
       <div v-else-if="post.media && post.media.type === MediaType.File" class="flex justify-center">
-        <div class="dark:bg-[#1f2129] bg-gray-200  p-5 rounded-xl w-[70%]">
+        <div class="dark:bg-[#1f2129] bg-gray-200 p-5 rounded-xl w-[70%]">
           <div class="flex justify-between w-full items-center">
             <div>
-              <svg class="w-10 h-10 dark:stroke-white stroke-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                class="w-10 h-10 dark:stroke-white stroke-black"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -41,8 +46,19 @@
               </svg>
             </div>
             <div class="truncate p-2">{{ post.media.name }}</div>
-            <div role="button" tabindex="0" @keydown.enter="downloadFile" class="p-2 border dark:border-white border-black rounded-full hover:opacity-50" @click="downloadFile">
-              <svg class="dark:stroke-white stroke-black w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div
+              role="button"
+              tabindex="0"
+              @keydown.enter="downloadFile"
+              class="p-2 border dark:border-white border-black rounded-full hover:opacity-50"
+              @click="downloadFile"
+            >
+              <svg
+                class="dark:stroke-white stroke-black w-8 h-8"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -101,7 +117,13 @@
             </svg>
             <span class="px-2 font-mono dark:text-gray-50 text-gray-900">{{ post.likesCount }}</span>
           </div>
-          <div class="flex cursor-pointer" @click="handleNavigation" role="button" tabindex="0" @keydown.enter="handleNavigation">
+          <div
+            class="flex cursor-pointer"
+            @click="handleNavigation"
+            role="button"
+            tabindex="0"
+            @keydown.enter="handleNavigation"
+          >
             <svg
               class="duration-200 h-6 dark:stroke-grayLight stroke-black hover:!stroke-grayDark"
               xmlns="http://www.w3.org/2000/svg"
@@ -137,9 +159,8 @@ import Card from '../Card/Card.vue';
 import { useRouter } from 'vue-router';
 import { parseMarkdown } from '../../utils/postUtils';
 import LazyImage from '../Blurhash/LazyImage.vue';
-import axios from 'axios';
-import { Buffer } from 'buffer';
 import { loadProxyFile } from '../../utils/loadProxyImage';
+import hljs from 'highlight.js';
 
 dayjs.extend(relativeTime);
 
@@ -202,6 +223,7 @@ export default defineComponent({
 
       nextTick(() => {
         addTagAndMentionHandle();
+        hljs.highlightAll()
       });
     });
 
@@ -305,21 +327,12 @@ export default defineComponent({
 
     //download the file attached to the post
     const downloadFile = async () => {
-
-      //get the image from the file proxy
-      // const response = await axios({
-      //   url: `/api/files/${props.post.media?.name}`,
-      //   method: 'GET',
-      //   responseType: 'arraybuffer',
-      // });
-      // const b64encoded = Buffer.from(response.data, 'base64');
       const link = document.createElement('a');
       link.href = await loadProxyFile(props.post.media?.name!);
       link.download = props.post.media?.name!;
       link.click();
       URL.revokeObjectURL(link.href);
-
-    }
+    };
 
     const viewerOptions = {
       inline: false,
@@ -343,10 +356,167 @@ export default defineComponent({
       parseMarkdown,
       viewerOptions,
       MediaType,
-      downloadFile
+      downloadFile,
     };
   },
 });
 </script>
 
-<style></style>
+<style>
+  /*
+Highlight Js Themes from https://github.com/highlightjs/highlight.js/tree/main/src/styles
+
+Atom-One-Dark & Atom-One-Light
+*/
+
+
+.hljs {
+  color: #383a42;
+  background: #fafafa;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #a0a1a7;
+  font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #a626a4;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e45649;
+}
+
+.hljs-literal {
+  color: #0184bb;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #50a14f;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #986801;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #4078f2;
+}
+
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #c18401;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}
+
+.dark .hljs {
+  color: #abb2bf;
+  background: #282c34;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.dark .hljs-doctag,
+.dark .hljs-keyword,
+.dark .hljs-formula {
+  color: #c678dd;
+}
+
+.dark .hljs-section,
+.dark .hljs-name,
+.dark .hljs-selector-tag,
+.dark .hljs-deletion,
+.dark .hljs-subst {
+  color: #e06c75;
+}
+
+.dark .hljs-literal {
+  color: #56b6c2;
+}
+
+.dark .hljs-string,
+.dark .hljs-regexp,
+.dark .hljs-addition,
+.dark .hljs-attribute,
+.dark .hljs-meta .hljs-string {
+  color: #98c379;
+}
+
+.dark .hljs-attr,
+.dark .hljs-variable,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-selector-class,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-pseudo,
+.dark .hljs-number {
+  color: #d19a66;
+}
+
+.dark .hljs-symbol,
+.dark .hljs-bullet,
+.dark .hljs-link,
+.dark .hljs-meta,
+.dark .hljs-selector-id,
+.dark .hljs-title {
+  color: #61aeee;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-title.class_,
+.dark .hljs-class .hljs-title {
+  color: #e6c07b;
+}
+
+.dark .hljs-emphasis {
+  font-style: italic;
+}
+
+.dark .hljs-strong {
+  font-weight: bold;
+}
+
+.dark .hljs-link {
+  text-decoration: underline;
+}
+</style>

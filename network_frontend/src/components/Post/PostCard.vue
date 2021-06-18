@@ -152,9 +152,7 @@ import { defineComponent, nextTick, onMounted, onUpdated, PropType, ref, watch }
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useLikePostMutation, useUnlikePostMutation, MediaType, Post } from '../../graphql/generated/types';
-import { getFeed } from '../../graphql/queries/getFeed';
 import CardHeader from '../Card/CardHeader.vue';
-import { LikePostMutationVariables, UnlikePostMutationVariables } from '../../graphql/generated/types';
 import Card from '../Card/Card.vue';
 import { useRouter } from 'vue-router';
 import { parseMarkdown } from '../../utils/postUtils';
@@ -196,6 +194,7 @@ export default defineComponent({
       }
     );
 
+    //generate click listners for the handles
     const addTagAndMentionHandle = () => {
       for (const tagId of tagIds) {
         document.querySelectorAll(`#${tagId}`).forEach((item) => {
@@ -215,6 +214,7 @@ export default defineComponent({
       }
     };
 
+    //parse the content of the post and add navigation handles
     onMounted(() => {
       const parsed = parseMarkdown(props.post.text);
       tagIds = parsed.tagIds;
@@ -223,7 +223,7 @@ export default defineComponent({
 
       nextTick(() => {
         addTagAndMentionHandle();
-        hljs.highlightAll()
+        hljs.highlightAll();
       });
     });
 
@@ -231,40 +231,33 @@ export default defineComponent({
       addTagAndMentionHandle();
     });
 
+    //route to the discover section with the active filter
     const handleTagClick = (tag: string) => {
       router.push({ name: 'Browse', query: { tag } });
     };
 
+    //route to the specific user mentioned
     const handleMentionClick = (mention: string) => {
       router.push({ name: 'Profile', params: { id: mention } });
     };
 
-    const { mutate: like } = useLikePostMutation({
-      variables: <LikePostMutationVariables>{ postID: props.post.id },
+    //route to the comment section
+    const handleNavigation = () => {
+      if (!props.post.id) return;
+      router.push({ name: 'DetailPost', params: { id: props.post.id } });
+    };
+
+    //like the given post and update the cache
+    const { mutate: like, loading: likeLoading } = useLikePostMutation({
+      variables: { postID: props.post.id },
       update: (cache, { data: { likePost } }) => {
         try {
-          const dataInStore: any = cache.readQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-          });
-          const getFeedData = [...dataInStore.getFeed];
-          getFeedData.forEach((post) => {
-            if (post.id === likePost.id) {
-              post = likePost;
-            }
-          });
-          cache.writeQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-            data: {
-              ...dataInStore,
-              getFeed: [...getFeedData],
+          cache.modify({
+            id: cache.identify(props.post),
+            fields: {
+              liked() {
+                return likePost.liked;
+              },
             },
           });
         } catch (err) {
@@ -273,32 +266,17 @@ export default defineComponent({
       },
     });
 
-    const { mutate: unlike } = useUnlikePostMutation({
-      variables: <UnlikePostMutationVariables>{ postID: props.post.id },
+    //Unlike the given post and update the cache
+    const { mutate: unlike, loading: unlikeLoading } = useUnlikePostMutation({
+      variables: { postID: props.post.id },
       update: (cache, { data: { unlikePost } }) => {
         try {
-          const dataInStore: any = cache.readQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-          });
-          const getFeedData = [...dataInStore.getFeed];
-          getFeedData.forEach((post) => {
-            if (post.id === unlikePost.id) {
-              post = unlikePost;
-            }
-          });
-          cache.writeQuery({
-            query: getFeed,
-            variables: {
-              skip: 0,
-              take: 10,
-            },
-            data: {
-              ...dataInStore,
-              getFeed: [...getFeedData],
+          cache.modify({
+            id: cache.identify(props.post),
+            fields: {
+              liked() {
+                return unlikePost.liked;
+              },
             },
           });
         } catch (err) {
@@ -307,22 +285,20 @@ export default defineComponent({
       },
     });
 
+    //call either like or unlike based on state
     const likePost = async () => {
       try {
         if (props.post.liked) {
+          if (unlikeLoading.value) return;
           await unlike();
         } else {
+          if (likeLoading.value) return;
           await like();
         }
       } catch (err) {
         console.log(err);
         console.log('couldnt like/unlike the post');
       }
-    };
-
-    const handleNavigation = () => {
-      if (!props.post.id) return;
-      router.push({ name: 'DetailPost', params: { id: props.post.id } });
     };
 
     //download the file attached to the post
@@ -363,12 +339,11 @@ export default defineComponent({
 </script>
 
 <style>
-  /*
+/*
 Highlight Js Themes from https://github.com/highlightjs/highlight.js/tree/main/src/styles
 
 Atom-One-Dark & Atom-One-Light
 */
-
 
 .hljs {
   color: #383a42;

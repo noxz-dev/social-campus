@@ -9,7 +9,7 @@ import { useResult } from '@vue/apollo-composable';
 export default defineComponent({
   props: {
     groupId: { type: String, required: true },
-    role: { type: Object as PropType<GroupRoles>, required: true },
+    role: { type: String as PropType<GroupRoles>, required: true },
   },
   setup(props) {
     //check if the user has the needed permission to view this content

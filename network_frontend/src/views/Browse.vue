@@ -93,7 +93,6 @@ export default defineComponent({
       }
     );
 
-    //TODO update query in fetchmore is deprecated .. needs a redo
     const loadMore = () => {
       fetchMore({
         variables: {

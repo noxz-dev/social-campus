@@ -207,7 +207,6 @@
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
-import { Emitter } from 'mitt';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required, maxLength, helpers } from '@vuelidate/validators';
 import { getPostsFromUser } from '../../graphql/queries/postFromUser';
@@ -265,12 +264,8 @@ export default defineComponent({
       showImageUpload.value = !showImageUpload.value;
     };
 
-    let eventbus: Emitter;
-    const internalInstance = getCurrentInstance();
-    if (internalInstance) {
-      eventbus = internalInstance.appContext.config.globalProperties.eventbus;
-    }
 
+    //validation rules
     const rules = computed(() => ({
       message: {
         required: helpers.withMessage('Du musst schon was eingeben...', required),
@@ -298,48 +293,6 @@ export default defineComponent({
         //add the new post to the cache
         try {
           if (route.path === '/home') {
-            // cache.modify({
-            //   fields: {
-            //     getFeed(existingPosts) {
-            //       if (existingPosts.some((p) => p.id === addPost.id)) {
-            //         console.log('existing');
-            //       }
-            //       const newPost = cache.writeFragment({
-            //         data: addPost,
-            //         fragment: gql`
-            //           fragment NewPost on Post {
-            //             id
-            //             liked
-            //             media {
-            //               name
-            //               blurhash
-            //             }
-            //             user {
-            //               firstname
-            //               lastname
-            //               avatar {
-            //                 name
-            //                 blurhash
-            //               }
-            //               username
-            //             }
-            //             text
-            //             likesCount
-            //             commentCount
-            //             createdAt
-            //             edited
-            //             group {
-            //               id
-            //               name
-            //             }
-            //           }
-            //         `,
-            //       });
-
-            //       return [newPost, ...existingPosts];
-            //     },
-            //   },
-            // });
             const dataInStore: any = cache.readQuery({ query: getFeed, variables: { offset: 0, limit: 10 } });
             cache.writeQuery({
               query: getFeed,
@@ -417,6 +370,8 @@ export default defineComponent({
       }
     };
 
+
+    //find all tags and post the post
     const post = async () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) {
@@ -439,6 +394,8 @@ export default defineComponent({
       window.open('https://guides.github.com/features/mastering-markdown/');
     };
 
+
+    //setup the file dropzone
     const { getRootProps, getInputProps, ...rest } = useDropzone({
       onDrop,
       accept: 'image/jpeg, image/png, image/gif, .pdf',
@@ -453,6 +410,8 @@ export default defineComponent({
       }
     `);
 
+
+    //set tags and update the format
     onTags(({ data: { getAllTags } }) => {
       const tags = getAllTags.map((tag: Tag) => {
         return { key: tag.name, value: tag.name };
@@ -460,6 +419,8 @@ export default defineComponent({
       autoCompleteOptions.collection[1].values.push(...tags);
     });
 
+
+    //options for tag, mention autocomplete
     const autoCompleteOptions = {
       noMatchTemplate() {
         if (activeTrigger.value === '#') return '<li>Kein Tag gefunden - Tag wird erstellt</li>';
@@ -490,6 +451,7 @@ export default defineComponent({
       }
     `);
 
+    //set users and change format for the auto complete
     onUsers(({ data: { getUsers } }) => {
       const users = getUsers.map((user: User) => {
         return { key: user.firstname + ' ' + user.lastname + ' @' + user.username, value: user.username };

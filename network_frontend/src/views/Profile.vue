@@ -162,7 +162,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Posts</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.postCount)
+                        numberFormatter(stats?.postCount || 0)
                       }}</span>
                     </div>
                   </router-link>
@@ -170,7 +170,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Followers</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.followerCount)
+                        numberFormatter(stats?.followerCount || 0)
                       }}</span>
                     </div>
                   </router-link>
@@ -178,7 +178,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Folge Ich</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.followingCount)
+                        numberFormatter(stats?.followingCount || 0)
                       }}</span>
                     </div>
                   </router-link>

@@ -61,6 +61,11 @@ export class UserResolver {
     @Arg('input', () => UserValidator) input: UserValidator,
     @Ctx() ctx: MyContext,
   ): Promise<boolean | null> {
+    //validate the email, to check if it is a valid university email
+    // if (!input.email.endsWith('@hs-hannover.de') || input.email.endsWith('@stud.hs-hannover.de')) {
+    //   throw new Error('only university email allowed');
+    // }
+
     const hashedPassword = await argon2.hash(input.password);
     const result = await getRepository(User).findOne({
       where: {

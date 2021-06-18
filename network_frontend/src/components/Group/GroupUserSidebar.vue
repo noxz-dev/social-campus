@@ -62,13 +62,15 @@ export default defineComponent({
   setup() {
     const route = useRoute();
 
+    //fetch all relevant data to show the members of the group
     const { result } = useGroupMembersQuery(
       () => ({
         groupId: route.params.id as string,
       }),
-      { pollInterval: 10000 }
+      { pollInterval: 5000 }
     );
 
+    
     const admins = useResult(result, null, (data) =>
       result.value.groupById.members.filter((m) => m.groupRole === GroupRoles.Admin && m.onlineStatus == true)
     );

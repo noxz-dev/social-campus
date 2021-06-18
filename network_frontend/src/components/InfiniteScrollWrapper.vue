@@ -23,6 +23,9 @@ export default defineComponent({
       loadStarted.value = props.queryLoading;
     });
 
+    /**
+     * triggers a scroll event if the end is reached, used for lazy loading
+     */
     const handleScroll = () => {
       if (scrollContainer.value) {
         const element: HTMLElement = scrollContainer.value;
@@ -35,6 +38,9 @@ export default defineComponent({
         }
       }
     };
+
+
+    //register the scroll listener
     onMounted(() => {
       document.querySelector('#scrollContainer')?.addEventListener('scroll', handleScroll);
     });

@@ -1,6 +1,10 @@
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 
+/**
+ * Generates tags, markdown from the input and purifys it for safety reasons
+ * @param value input content
+ */
 export const parseMarkdown = (value: string) => {
   const content = parseTags(value);
   return {
@@ -11,6 +15,11 @@ export const parseMarkdown = (value: string) => {
   };
 };
 
+/**
+ * extracts emails from text
+ * @param text text
+ * @returns the matched result
+ */
 function extractEmails(text: string) {
   return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
 }
@@ -21,6 +30,10 @@ interface ParseTagsResult {
   mentions: string[];
 }
 
+/**
+ * generate visual tags from a given text 
+ * @param content 
+ */
 export const parseTags = (content: string): ParseTagsResult => {
   const tagIds: string[] = [];
   const mentions: string[] = [];

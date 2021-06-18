@@ -1,3 +1,7 @@
+/**
+ * UNIVSERSITY DATA - USED FOR THE SELECTION IN PROFILE
+ */
+
 //Faculties - Hochschule Hannover
 export const faculties = [
   { id: 1, name: '‎‏‏‎ ‎' },

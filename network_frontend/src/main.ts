@@ -13,7 +13,7 @@ import router from './router';
 import store from './store';
 import vViewer from './utils/vViewer';
 
-//create event bus
+//create an event bus
 const eventbus = mitt();
 
 const notificationConfig = {
@@ -22,6 +22,7 @@ const notificationConfig = {
   class: 'notification',
 };
 
+//create the vue app instance and register plugins
 const app = createApp({
   setup() {
     provideApolloClient(defaultClient);

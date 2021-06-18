@@ -78,9 +78,12 @@ export default defineComponent({
         }
       );
     });
+
+    /** 
+      replace placeholder with the real image
+    */
     const onEnter = async () => {
       isVisible.value = true;
-      // const imageData = props.src;
 
       if (props.onLoad) image.value.src = await loadProxyImage(props.src);
       image.value.onload = () => {

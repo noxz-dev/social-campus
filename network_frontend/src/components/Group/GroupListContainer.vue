@@ -32,7 +32,6 @@
 <script lang="ts">
 import { Group } from '../../graphql/generated/types';
 import { defineComponent, onMounted, PropType, ref } from 'vue';
-import GroupList from './GroupList.vue';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
@@ -46,7 +45,6 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export default defineComponent({
   emits: ['loadMore'],
   components: {
-    GroupList,
     Swiper,
     SwiperSlide,
     GroupCard,
@@ -108,6 +106,7 @@ export default defineComponent({
       }, 200);
     });
 
+    //lazy load more groups when the scroll end is reached
     const onReachEnd = (event: any) => {
       emit('loadMore');
     };

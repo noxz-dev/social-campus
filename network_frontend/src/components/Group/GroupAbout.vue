@@ -31,6 +31,8 @@ export default defineComponent({
     }));
 
     const group = useResult(result, null, (data) => data.groupById);
+
+    //create the update about mutation
     const { mutate: updateAbout } = useUpdateAboutGroupMutation(() => ({
       variables: {
         groupId: route.params.id as string,
@@ -38,12 +40,15 @@ export default defineComponent({
       },
     }));
 
+
+    //serializes the content of the editor and saves it
     const saveAbout = async () => {      
       const serialized = editor.serialize();
       about.value = serialized['element-0'].value;
       await updateAbout();
     };
 
+    //destroys the editor
     onResult(() => {
       editor.setContent(group.value?.about);
       if (editor.isActive && user.value.id !== group.value?.createdBy.id) {
@@ -51,6 +56,7 @@ export default defineComponent({
       }
     });
 
+    //create a new editor
     onMounted(() => {
       editor = new MediumEditor('.editable');
     });

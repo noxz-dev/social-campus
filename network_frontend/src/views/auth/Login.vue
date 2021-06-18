@@ -190,6 +190,7 @@ export default defineComponent({
 
     const validEmail = (value) => value.endsWidth("@hs-hannover.de");
 
+    //input validation rules
     const rules = computed(() => ({
       emailForm: {
         required: helpers.withMessage('Email wird benötigt', required),
@@ -204,6 +205,7 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { emailForm, password });
 
+    //create login mutation
     const {
       mutate: login,
       onDone,
@@ -215,10 +217,14 @@ export default defineComponent({
       },
     }));
 
+
+    /**
+     * validates the input and loggs the user in
+     */
     const onSubmit = async () => {
       await v.value.$validate()
       if (!v.value.$invalid) {
-        login();
+        await login();
       }
     };
 

@@ -130,11 +130,12 @@ export default defineComponent({
       if (v) newComment();
     });
 
+    //fetch a post with comments
     const { onResult, loading } = usePostByIdQuery(
       () =>
-        <PostByIdQueryVariables>{
-          postId: route.params.id,
-        }
+        ({
+          postId: route.params.id as string,
+        })
     );
 
     let firstload = true;
@@ -145,6 +146,7 @@ export default defineComponent({
       firstload = false;
     });
 
+    //input validation rules
     const rules = computed(() => ({
       commentText: {
         required,
@@ -154,10 +156,11 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { commentText });
 
+    //create create comment mutation
     const { mutate: commentPost } = useAddCommentMutation(() => ({
-      variables: <AddCommentMutationVariables>{
+      variables: {
         text: commentText.value,
-        postID: route.params.id,
+        postID: route.params.id as string,
       },
       refetchQueries: [
         {
@@ -177,7 +180,7 @@ export default defineComponent({
       return parsed.parsedContent;
     };
 
-    //update eventlistners for mentions
+    //update eventlisteners for mentions
     watch(mentions.value, () => {
       for (const mention of mentions.value) {
         document.querySelectorAll(`#${mention}`).forEach((item) => {
@@ -189,6 +192,9 @@ export default defineComponent({
       }
     });
 
+    /**
+     * validates the input and creates new comment if the check passed
+     */
     const newComment = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
@@ -203,6 +209,7 @@ export default defineComponent({
 
     const foundUsers = useResult(result, [], (data) => data.search.users);
 
+    //autocomplete options for mentions 
     const autoCompleteOptions = {
       noMatchTemplate() {
         return '<li>Kein Benutzer gefunden</li>';

@@ -71,10 +71,16 @@ export default defineComponent({
   setup() {
     const open = ref(false);
 
+    /** 
+     * opens the modal
+    */
     const openModal = (payload?: any) => {
       open.value = true;
     };
 
+    /**
+     * closes the modal
+     */
     const closeModal = () => {
       open.value = false;
     };

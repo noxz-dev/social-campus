@@ -1,22 +1,6 @@
 <template>
   <div class="flex w-full rounded-lg dark:text-white flex-col mb-8 transition-all duration-1000">
     <span class="my-4">Ändere den Text deines Posts</span>
-    <!-- <textarea
-      v-model="message"
-      class="
-        dark:bg-dark-600
-        border-2 border-gray-700
-        h-24
-        resize-none
-        rounded-lg
-        p-2
-        outline-none
-        focus:ring-1 focus:ring-brand-500
-        focus:border-indigo-500
-      "
-      placeholder="Hey, was gibt's Neues ?"
-      @blur="v.message.$touch"
-    /> -->
     <tribute-textarea
       :autocompleteOptions="autoCompleteOptions"
       :showPreview="false"
@@ -80,16 +64,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, PropType, ref } from 'vue';
-import { Emitter } from 'mitt';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 import { useEditPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { Post } from '../../graphql/generated/types';
-import { getFeed } from '../../graphql/queries/getFeed';
-import { useRoute } from 'vue-router';
-import { browsePosts } from '../../graphql/queries/browsePosts';
 import TributeTextarea from '../../components/TributeTextarea.vue';
 export default defineComponent({
   emits: ['close'],
@@ -102,22 +82,11 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const message = ref(props.post?.text);
-    const file = ref<File>();
     const previewUrl = ref();
-    const showImageUpload = ref(false);
-    const route = useRoute();
     const activeTrigger = ref('#');
 
-    const toggle = () => {
-      showImageUpload.value = !showImageUpload.value;
-    };
 
-    let eventbus: Emitter;
-    const internalInstance = getCurrentInstance();
-    if (internalInstance) {
-      eventbus = internalInstance.appContext.config.globalProperties.eventbus;
-    }
-
+    //input validation rules
     const rules = computed(() => ({
       message: {
         required,
@@ -127,6 +96,7 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { message });
 
+    //register the mutation to edit the post
     const { mutate: editPost } = useEditPostMutation(() => ({
       variables: {
         input: {
@@ -170,6 +140,9 @@ export default defineComponent({
       ],
     };
 
+    /**
+     * validates the input and updates the post with the new content
+     */
     const updatePost = () => {
       v.value.$touch();
       if (v.value.$errors.length !== 0) return;
@@ -181,9 +154,7 @@ export default defineComponent({
       message,
       updatePost,
       v,
-      showImageUpload,
       previewUrl,
-      toggle,
       autoCompleteOptions,
     };
   },

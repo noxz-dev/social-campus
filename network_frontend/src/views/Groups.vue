@@ -109,7 +109,6 @@ import GroupCard from '../components/Group/GroupCard.vue';
 import NewGroupModal from '../components/Group/NewGroupModal.vue';
 import InputField from '../components/Form/InputField.vue';
 import { useFollowingGroupsQuery, useGroupsQuery, useMyGroupsQuery } from '../graphql/generated/types';
-import GroupList from '../components/Group/GroupList.vue';
 import { useResult } from '@vue/apollo-composable';
 import GroupListContainer from '../components/Group/GroupListContainer.vue';
 
@@ -119,7 +118,6 @@ export default defineComponent({
     GroupCard,
     NewGroupModal,
     InputField,
-    GroupList,
     GroupListContainer,
   },
   setup() {

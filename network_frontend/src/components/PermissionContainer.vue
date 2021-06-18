@@ -14,6 +14,7 @@ export default defineComponent({
     const isOwner = ref(false);
     const user = computed(() => store.state.userData.user);
 
+    //validates if the user is the owner of the content
     if (user.value.id === props.userId) {
       isOwner.value = true;
     }

@@ -24,6 +24,7 @@ export default defineComponent({
         }
     );
 
+    //refreshes the content of the group if the state is set
     watch(
       () => state.refreshGroup,
       async () => {
@@ -32,12 +33,14 @@ export default defineComponent({
       }
     );
 
+    //validates the access permissions for a given group
     onResult(({ data }) => {
       if (data) {
         groupState.value = data.checkGroupAccess;
       }
     });
 
+    //sets the error state of the group
     onError(() => {
       console.log('error');
       state.groupError = true;

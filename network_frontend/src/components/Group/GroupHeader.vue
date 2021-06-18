@@ -171,6 +171,9 @@ export default defineComponent({
       },
     }));
 
+    /**
+     * Join a group and refresh its content
+     */
     const joinGroup = async () => {
       await joinGrp();
       state.refreshGroup = true;

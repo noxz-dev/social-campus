@@ -197,7 +197,7 @@ export default defineComponent({
     const isFocus = ref(false);
 
 
-    //calls on component init, could be heavy
+    //calls on component init, could be heavy inputs a string with properly no response
     const { result } = useSearchQuery(() => ({
       searchString: searchString.value || "abcdefghijklmopqrstuvwxyz",
     }));
@@ -211,6 +211,9 @@ export default defineComponent({
       isFocus.value = false;
     });
 
+    /**
+     * route to the found content in search
+     */
     const handleRouting = (type: string, payload: string) => {
       switch (type) {
         case 'USERS':

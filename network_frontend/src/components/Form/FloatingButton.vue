@@ -46,6 +46,8 @@ export default defineComponent({
     const scrolledDown = ref(false);
     const route = useRoute();
 
+
+    //change state on scrolling
     watch(
       () => route.name,
       () => {

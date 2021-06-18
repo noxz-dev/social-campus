@@ -28,6 +28,7 @@ export default defineComponent({
     const modal = ref<InstanceType<typeof Modal>>();
     const post = ref();
 
+    //register an eventbus to open or closse the modal if needed
     const internalInstance = getCurrentInstance();
     if (internalInstance) {
       const eventbus = internalInstance.appContext.config.globalProperties.eventbus;

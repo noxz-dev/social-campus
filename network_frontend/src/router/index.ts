@@ -104,6 +104,9 @@ const router = createRouter({
   },
 });
 
+/**
+ * validate the login state, and check if the user is allowed to access the requested content
+ */
 router.beforeEach((to, from, next) => {
   if (['Home', 'Groups', 'Chats', 'Browse'].includes(to.name as string)) {
     navState.lastView = to.path as string;

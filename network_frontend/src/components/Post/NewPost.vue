@@ -256,6 +256,7 @@ export default defineComponent({
       }
     );
 
+    //register key handler to send the post with ctrl + enter
     watch(control_enter, (v) => {
       if (v) post();
     });
@@ -357,6 +358,9 @@ export default defineComponent({
       },
     }));
 
+    /**
+     * dropzone file callback, to handle the droped file
+     */
     const onDrop = (acceptFiles: any[], rejectReasons: any[]) => {
       if (acceptFiles[0].type.includes('pdf')) {
         showImageUpload.value = false;

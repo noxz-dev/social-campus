@@ -117,12 +117,15 @@ export default defineComponent({
     const store = useStore();
     const loggedInUser = computed(() => store.state.userData.user);
 
+
+    //creates a new chat if not allready created
     const { mutate: createChat } = useCreateChatMutation(() => ({
       variables: {
         memberId: props.userId,
       },
     }));
 
+    //navigate to the chat with the selected user
     const handleNav = async () => {
       const response = await createChat();
       router.push({ name: 'ChatBox', params: { id: response.data?.createChat.id! } });

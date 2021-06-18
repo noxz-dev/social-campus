@@ -54,6 +54,8 @@ export default defineComponent({
   },
   setup(props) {
     const followButtonText = ref('Folge Ich');
+
+    //create the add follow mutation
     const { mutate: follow, loading: addFollowLoading } = useAddFollowerMutation(() => ({
       variables: {
         userID: props.user?.id as string,
@@ -70,6 +72,7 @@ export default defineComponent({
       },
     }));
 
+    //create the remove follow mutation
     const { mutate: unfollow, loading: removeFollowLoading } = useRemoveFollowerMutation(() => ({
       variables: {
         userID: props.user?.id as string,
@@ -86,17 +89,23 @@ export default defineComponent({
       },
     }));
 
+    /**
+     * follows a user
+     */
     const followUser = async () => {
       try {
-        const data = await follow();
+        await follow();
       } catch (err) {
         console.log(err);
       }
     };
 
+    /**
+     * unfollows a user
+     */
     const unfollowUser = async () => {
       try {
-        const data = unfollow();
+        await unfollow();
       } catch (err) {
         console.log(err);
       }

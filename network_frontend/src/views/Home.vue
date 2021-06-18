@@ -366,7 +366,9 @@ export default defineComponent({
 
     let lastResponseLength = 1;
 
-    //lazy load more posts
+    /**
+     * lazy load more posts
+     */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
       const data = await fetchMore({

@@ -1,5 +1,9 @@
 import { reactive } from 'vue';
 
+/**
+ * Makes CSS Breakpoints, reactiv accessible via code
+ */
+
 const screens = {
   sm: 640,
   md: 768,

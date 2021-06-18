@@ -23,6 +23,7 @@ export default defineComponent({
 
     const user = computed(() => store.state.userData.user);
 
+    //search users
     const { result } = useSearchQuery(() => ({
       searchString: '',
     }));
@@ -35,6 +36,9 @@ export default defineComponent({
 
     const choosenId = ref('');
 
+    /**
+     * sets the selected user from the dropdown
+     */
     const setUser = (user: string) => {
       const username = user.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)[0].replace('@', '');
       const foundUser = users.value?.find((u) => u.username === username);
@@ -42,6 +46,9 @@ export default defineComponent({
       choosenId.value = foundUser.id;
     };
 
+    /**
+     * creates a new chat with the selected user
+     */
     const createChat = () => {
       createNewChat();
       emit('close');

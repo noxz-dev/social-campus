@@ -92,6 +92,7 @@ export default defineComponent({
         },
       },
       update: (cache, { data }) => {
+        //update the existing group data with the updated ones
         cache.modify({
           id: cache.identify(props.group),
           fields: {
@@ -109,6 +110,7 @@ export default defineComponent({
       },
     }));
 
+
     const { mutate: leave } = useLeaveGroupMutation(() => ({
       variables: {
         groupId: props.group.id,
@@ -118,6 +120,7 @@ export default defineComponent({
     
     const pwRequired = (value) => (((type.value === GroupType.Private) && (props.group.type === GroupType.Public)) ? helpers.req(value) : !helpers.req(value));
 
+    //input validation rules
     const rules = computed(() => ({
       groupname: {
         required: helpers.withMessage('Gruppenname wird benötigt', required),
@@ -136,6 +139,9 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { groupname, description, groupPassword });
 
+    /**
+     * validate the input and update the group if the input is correct
+     */
     async function updateGroup() {
       await v.value.$validate()
       
@@ -149,6 +155,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * leave a group and route back to the overview page
+     */
     async function leaveGroup() {
       await leave();
       router.push('/groups');

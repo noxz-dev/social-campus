@@ -19,6 +19,7 @@ export default defineConfig({
         },
       },
     }),
+    //create a service worker and manifest to use the webapp as a pwa
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {

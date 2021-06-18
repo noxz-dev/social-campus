@@ -71,6 +71,7 @@ export default defineComponent({
     const chips = ref<string[]>(props.startTags);
     const currentInput = ref('');
 
+    //set the inital tags
     watch(
       () => props.startTags,
       () => {
@@ -78,25 +79,38 @@ export default defineComponent({
       }
     );
 
+    /**
+     * create a new chip and add it to the input
+     */
     const saveChip = () => {
       const input = currentInput.value.replaceAll('#', '').replaceAll(' ', '');
       if (input === '') return;
       ((props.set && chips.value.indexOf(currentInput.value) === -1) || !props.set) && chips.value.push(input);
       currentInput.value = '';
     };
+
+    /**
+     * delete a chip from the input
+     */
     const deleteChip = (index: number) => {
       chips.value.splice(index, 1);
     };
 
+    /**
+     * delete a full chip on single backspace
+     */
     const backspaceDelete = ({ which }) => {
       which == 8 && currentInput.value === '' && chips.value.splice(chips.value.length - 1);
     };
 
+    //search for tags
     const { result: searchResult } = useSearchQuery(() => ({
       searchString: '',
     }));
     const foundTags = useResult(searchResult, [], (data) => data.search.tags);
 
+
+    //create the autoComplete options for the tag autocompletion
     const autoCompleteOptions = {
       noMatchTemplate() {
         return '<li>Kein Tag gefunden</li>';

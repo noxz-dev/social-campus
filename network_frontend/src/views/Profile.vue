@@ -403,6 +403,7 @@ export default defineComponent({
       }
     );
 
+    //fetch the user stats
     const { result: statsResult } = useUserStatsQuery(
       () => ({
         userId: user.value?.id as string,
@@ -424,13 +425,16 @@ export default defineComponent({
       qloading.value = loadingState;
     });
 
+    //create a new chat if not exist
     const { mutate: createChat } = useCreateChatMutation(() => ({
       variables: {
         memberId: user.value?.id as string,
       },
     }));
 
-    //create a chat with the user and navigate to the new chat
+    /**
+     * creates a chat with the user and navigates to the new chat
+     */
     const handleChatNav = async () => {
       const response = await createChat();
       router.push({ name: 'ChatBox', params: { id: response.data?.createChat.id! } });

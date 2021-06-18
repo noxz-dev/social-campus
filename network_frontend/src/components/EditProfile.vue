@@ -394,6 +394,8 @@ export default defineComponent({
     const newProfileImage = ref();
     const studycourse = ref(props.user?.studyCourse);
     const file = ref<File>();
+
+    //create the mutation to update the profile
     const { mutate: update, loading } = useUpdateProfileMutation(() => ({
       variables: {
         input: {
@@ -430,6 +432,9 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { bio, studycourse, interests });
 
+    /**
+     * generates a preview for the image if choosen
+     */
     const onFileChange = (e: any) => {
       const files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
@@ -437,6 +442,9 @@ export default defineComponent({
       newProfileImage.value = URL.createObjectURL(files[0]);
     };
 
+    /**
+     * validates the input and updates the post
+     */
     const updateProfile = async () => {
       v.value.$touch();
       if (v.value.$errors.length === 0) {

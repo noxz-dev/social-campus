@@ -1,4 +1,4 @@
-/** Original by https://github.com/syropian/vue-tribute license MIT Rewritten in Vue3 with some extras */
+/** Original by https://github.com/syropian/vue-tribute license MIT - Rewritten in Vue3 with some extras */
 
 <template>
   <slot></slot>
@@ -40,6 +40,7 @@ export default defineComponent({
       },
     },
   },
+  //create the tribute instance
   mounted() {
     if (typeof Tribute === 'undefined') {
       throw new Error('[vue-tribute] cannot locate tributejs!');
@@ -56,6 +57,7 @@ export default defineComponent({
     });
   },
 
+  //destroy the tribute instance
   beforeUnmount() {
     const $el = document.querySelector('#' + this.elementId);
 

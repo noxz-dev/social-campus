@@ -15,7 +15,7 @@
   </button>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'InputField',
@@ -28,6 +28,10 @@ export default defineComponent({
   },
   setup(props, { emit, slots }) {
     const toggleState = ref(props.initalState);
+
+    /** 
+     * toggles the state of the button
+    */
     const toggle = () => {
       toggleState.value = !toggleState.value;
       emit('toggleStateUpdate', toggleState.value);

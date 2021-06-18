@@ -245,10 +245,8 @@ import dayjs from 'dayjs';
 import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from '../PermissionContainer.vue';
 import { useDeleteCommentMutation, useDeletePostMutation } from '../../graphql/generated/types';
-import { DeletePostMutationVariables, Post } from '../../graphql/generated/types';
-import { getFeed } from '../../graphql/queries/getFeed';
+import { Post } from '../../graphql/generated/types';
 import { useRoute } from 'vue-router';
-import { browsePosts } from '../../graphql/queries/browsePosts';
 import LazyImage from '../../components/Blurhash/LazyImage.vue';
 
 export default defineComponent({
@@ -282,6 +280,9 @@ export default defineComponent({
       optionsOpen.value = false;
     });
 
+
+    
+    //create the delete post mutation
     const { mutate: delPost } = useDeletePostMutation(() => ({
       variables: {
         postId: props.post?.id as string,
@@ -293,6 +294,8 @@ export default defineComponent({
       },
     }));
 
+
+    //create the delete comment mutation
     const {mutate: delComment} = useDeleteCommentMutation(() => ({
       variables: {
         commentId: props.comment?.id
@@ -309,6 +312,9 @@ export default defineComponent({
       }
     }))
 
+    /**
+     * executes the delete mutations to delete either a comment or post
+     */
     const deleteContent = async () => {
       if (props.post?.id) {
         await delPost();

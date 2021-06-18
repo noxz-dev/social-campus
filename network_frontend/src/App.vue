@@ -32,6 +32,8 @@ export default defineComponent({
   },
   setup() {
     dayjs.locale('de');
+
+    //set the theme of the app
     if (
       localStorage.theme === 'dark' ||
       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)

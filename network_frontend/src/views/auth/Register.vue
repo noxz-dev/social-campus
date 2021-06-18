@@ -361,6 +361,7 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { emailForm, password, firstname, lastname, username, confirmPassword });
 
+    //create signup mutation
     const {
       mutate: signup,
       onDone,
@@ -377,7 +378,9 @@ export default defineComponent({
       },
     }));
 
-    //create a new user if input validation is fine
+    /**
+     * creates a new user if input validation is fine
+     */
     const onSubmit = async () => {
       v.value.$touch();
       if (!v.value.$invalid) {

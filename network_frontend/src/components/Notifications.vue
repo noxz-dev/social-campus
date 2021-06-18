@@ -154,12 +154,16 @@ export default defineComponent({
       }
     );
 
+    //create delete notifcation mutation
     const { mutate: deleteNotify } = useDeleteNotificationMutation(() => ({
       variables: {
         notificationId: tobeDeleted.value,
       },
     }));
 
+    /**
+     * deletes an notification
+     */
     const deleteNotification = async (id: string) => {
       tobeDeleted.value = id;
       await deleteNotify();
@@ -167,6 +171,9 @@ export default defineComponent({
       tobeDeleted.value = '';
     };
 
+    /**
+     * route to specifiy content for each type of notification
+     */
     const handleNotificationClick = (notify: Notification) => {
       if (notify.type === NotificationType.NewFollower) {
         router.push({

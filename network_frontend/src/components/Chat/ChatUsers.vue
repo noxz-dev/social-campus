@@ -81,13 +81,17 @@ export default defineComponent({
   emits: ['user-choosen'],
   components: { NewChat, Modal, LazyImage },
   props: {},
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
     const user = computed(() => store.state.userData.user);
 
     const modal = ref<InstanceType<typeof Modal>>();
+    
+
+    
+    //fetch all chats from the user
     const { result, refetch, onResult } = useMyChatsQuery();
 
     const chats = useResult(result, null, (data) => data.myChats);
@@ -98,6 +102,10 @@ export default defineComponent({
       firstload = false;
     });
 
+
+    /**
+     * sets the active chat after clicked on a chatbox
+     */
     const setActiveChat = (chatId: string) => {
       router.push({ name: 'ChatBox', params: { id: chatId } });
       emit('user-choosen');

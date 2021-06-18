@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { Buffer } from 'buffer';
 
+/**
+ * loads a image from the file proxy
+ * @param filename filename of the image 
+ * @returns srcUrl 
+ */
 export const loadProxyImage = async (filename: string): Promise<string> => {
   const response = await axios({
     url: `/api/files/${filename}`,
@@ -15,6 +20,11 @@ export const loadProxyImage = async (filename: string): Promise<string> => {
   return srcUrl;
 };
 
+/**
+ * loads a file from the file proxy
+ * @param filename filename of the file
+ * @returns srcUrl
+ */
 export const loadProxyFile = async (filename: string): Promise<string> => {
   const response = await axios({
     url: `/api/files/${filename}`,

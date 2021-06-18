@@ -71,6 +71,7 @@ export default defineComponent({
     const groupsActive = ref(false);
     const isDarkMode = ref(false);
 
+    //exisiting routes for the sidebar, autogenerates new entires based on this list
     const routes = [
       {
         to: '/home',
@@ -116,6 +117,8 @@ export default defineComponent({
       console.log(breakpoints.is);
     });
 
+    
+    //dark light theme handler
     if (
       localStorage.theme === 'dark' ||
       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -125,6 +128,9 @@ export default defineComponent({
       if (localStorage.theme !== 'dark') isDarkMode.value = false;
     }
 
+    /**
+     * toggles the theme of the application
+     */
     const toggle = () => {
       isDarkMode.value = !isDarkMode.value;
       if (isDarkMode.value) localStorage.theme = 'dark';
@@ -139,21 +145,7 @@ export default defineComponent({
       }
     };
 
-    const handleRouting = (state: string) => {
-      switch (state) {
-        case 'home':
-          router.push('/home');
-          homeActive.value = true;
-          groupsActive.value = false;
-          break;
-        case 'groups':
-          router.push('/groups');
-          homeActive.value = false;
-          groupsActive.value = true;
-          break;
-      }
-    };
-    return { show, homeActive, groupsActive, handleRouting, breakpoints, routes, toggle, isDarkMode };
+    return { show, homeActive, groupsActive, breakpoints, routes, toggle, isDarkMode };
   },
 });
 </script>

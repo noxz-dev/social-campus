@@ -244,21 +244,24 @@ export default defineComponent({
     const input = ref();
     const dragover = ref(false);
 
+    //register key watcher to send message on enter
     watch(enter, (v) => {
       if (v) sendMessage();
     });
 
-    const chatQueryEnabled = ref(true);
-
+    
+    //fetch a chat by a given id
     const { result, onResult } = useChatByIdQuery(
       () => ({
         chatId: route.params.id as string,
       }),
-      () => ({ enabled: chatQueryEnabled.value })
     );
 
     const chat = useResult(result, null, (data) => data.chatById);
 
+
+    
+    //register the send message mutation
     const { mutate: send } = useSendMessageMutation(() => ({
       variables: {
         input: {
@@ -273,6 +276,7 @@ export default defineComponent({
         },
       ],
       update: (cache, { data: { sendMessage } }) => {
+        //add the new message to the cache
         cache.modify({
           id: cache.identify(chat.value as Chat),
           fields: {
@@ -301,12 +305,16 @@ export default defineComponent({
       },
     }));
 
+    /**
+     * on file drop callback
+     */
     const onDrop = (acceptFiles: any[], rejectReasons: any[]) => {
       previewUrl.value = URL.createObjectURL(acceptFiles[0]);
       file.value = acceptFiles[0];
-      // showImageUpload.value = false;
     };
 
+    
+    //register file dropzone
     const { acceptedFiles, getRootProps, getInputProps, ...dropUtils } = useDropzone({
       onDrop,
       noClick: true,
@@ -314,6 +322,10 @@ export default defineComponent({
       maxFiles: 1,
     });
 
+
+    /**
+     * validate the state and sends the chat message
+     */
     async function sendMessage() {
       scrollDown();
       if (newMessage.value.length > 0 || file.value) {
@@ -332,6 +344,9 @@ export default defineComponent({
       dropUtils.open();
     };
 
+    /**
+     * scrolls automaticly down to the newst message
+     */
     function scrollDown() {
       chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
     }

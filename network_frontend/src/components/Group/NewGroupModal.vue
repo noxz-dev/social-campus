@@ -159,6 +159,7 @@ export default defineComponent({
 
     const pwRequired = (value) => (groupType.value === GroupType.Private ? helpers.req(value) : !helpers.req(value));
 
+    //input validation rules
     const rules = computed(() => ({
       groupname: {
         minLength: helpers.withMessage('Der Gruppenname muss eine minimale Länge von 3 haben', minLength(3)),
@@ -177,14 +178,21 @@ export default defineComponent({
 
     const v = useVuelidate(rules, { groupname, description, groupPassword });
 
+    /**
+     * open the modal
+     */
     const openModal = () => {
       isOpen.value = true;
     };
 
+    /**
+     * closes the modal
+     */
     const closeModal = () => {
       isOpen.value = false;
     };
 
+    //register the create group mutation
     const { mutate: createGrp } = useCreateGroupMutation(() => ({
       variables: {
         name: groupname.value,
@@ -193,7 +201,6 @@ export default defineComponent({
         password: groupPassword.value,
       },
       update: (cache, { data: { createGroup } }) => {
-
 
         //add the newly created group to the exisiting cache
         cache.modify({
@@ -224,6 +231,9 @@ export default defineComponent({
       },
     }));
 
+    /**
+     * validates the input, and creates a new group if the check passed
+     */
     const createGroup = async () => {
       await v.value.$validate();
       if (v.value.$errors.length === 0) {
@@ -240,6 +250,9 @@ export default defineComponent({
       }
     };
 
+    /**
+     * sets the type of the group from the dropdown
+     */
     const setType = (val: GroupType) => {
       if (val == GroupType.Public) groupType.value = GroupType.Public;
       if (val == GroupType.Private) groupType.value = GroupType.Private;

@@ -29,6 +29,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const slot = ref<HTMLDivElement>();
     let observer: IntersectionObserver;
+
+    //register intersection observer to check if the content is in the viewport
     onMounted(() => {
       observer = new IntersectionObserver(
         (entries) => {

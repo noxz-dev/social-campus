@@ -7,7 +7,7 @@ import { getMainDefinition, offsetLimitPagination } from '@apollo/client/utiliti
 import { createUploadLink } from 'apollo-upload-client';
 import router from './router';
 
-// auth interceptor
+//Auth interceptor
 const errorLink = onError((error) => {
   if (process.env.NODE_ENV !== 'production') {
     // logErrorMessages(error);

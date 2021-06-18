@@ -28,6 +28,8 @@ export default {
       type: String,
     },
   },
+
+  //generate the placeholder image via the given blurhash string
   mounted() {
     const pixels = decode(this.hash, 32, 32);
     const imageData = new ImageData(pixels, 32, 32);

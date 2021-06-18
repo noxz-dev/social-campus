@@ -72,22 +72,22 @@ export default defineComponent({
   },
   setup(props) {
     const groupPassword = ref('');
-    const router = useRouter();
 
     const { mutate: joinGrp } = useJoinGroupMutation(() => ({
-      variables: <JoinGroupMutationVariables>{
+      variables: ({
         groupId: props.groupId,
         password: groupPassword.value,
-      },
+      }),
     }));
 
+    //fetch the preview view of the group
     const { result } = useGroupByIdPreviewQuery(() => ({
       groupId: props.groupId,
     }));
 
     const group = useResult(result, null, (data) => data.groupByIdPreview);
 
-    //TODO INPUT VALIDATION
+    //TODO INPUT VALIDATION AND FEEDBACK
     const joinGroup = async () => {
       if (groupPassword.value.length >= 3) {
         await joinGrp();

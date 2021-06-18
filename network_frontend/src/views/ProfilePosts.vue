@@ -34,6 +34,8 @@ export default defineComponent({
     userId: String,
   },
   setup(props) {
+
+    //fetch the inital profile feed
     const { result, loading, fetchMore } = useGetPostsFromUserQuery(() => ({
       userID: props.userId as string,
       limit: 10,
@@ -42,6 +44,7 @@ export default defineComponent({
 
     const posts = useResult(result, null, (data) => data.getPostsFromUser);
 
+    //register the eventbus to communicate with the scroll wrapper for lazy loading
     const internalInstance = getCurrentInstance();
     if (internalInstance) {
       const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
@@ -63,6 +66,9 @@ export default defineComponent({
       }
     );
 
+    /**
+     * lazy load more posts
+     */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
       const data = await fetchMore({

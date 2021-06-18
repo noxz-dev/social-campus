@@ -1,5 +1,6 @@
 const colors = require('tailwindcss/colors');
 
+//change this color to update the highlight color everywhere
 const brandColor = colors.indigo;
 
 module.exports = {
@@ -14,7 +15,6 @@ module.exports = {
   },
   theme: {
     aspectRatio: {
-      // defaults to {}
       none: 0,
       square: [1, 1], // or 1 / 1, or simply 1
       '16/9': [16, 9], // or 16 / 9

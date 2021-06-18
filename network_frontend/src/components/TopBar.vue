@@ -638,7 +638,7 @@ export default defineComponent({
     LazyImage,
     SettingsModal,
   },
-  setup(props) {
+  setup() {
     const showProfileMenu = ref(false);
     const showMobileMenu = ref(false);
     const show = ref(true);
@@ -651,10 +651,12 @@ export default defineComponent({
     const store = useStore();
     const modal = ref<InstanceType<typeof Modal>>();
 
+    //close the profile menu, on click outside
     onClickOutside(target, (event) => {
       showProfileMenu.value = false;
     });
 
+    //close the notifcation, on click outside
     onClickOutside(notifyTarget, (event) => {
       if (notifyOpen.value && !showMobileMenu.value) {
         notifyOpen.value = false;
@@ -662,6 +664,7 @@ export default defineComponent({
       }
     });
 
+    //close the mobile notifciation menu, on click outside
     onClickOutside(mobileNotifyTarget, (event) => {
       if (notifyOpen.value && showMobileMenu.value) {
         notifyOpen.value = false;
@@ -674,6 +677,7 @@ export default defineComponent({
     const user = useResult(result, null, (data) => data.me);
     const profileImage = ref('');
 
+    //gets the logged in user, and sets it to the global store
     onResult(({ data: { me } }) => {
       store.dispatch('userData/setUser', me);
       profileImage.value = me?.avatar.name || '';
@@ -697,6 +701,9 @@ export default defineComponent({
       });
     });
 
+    /**
+     * deletes an notification by id
+     */
     const deleteNotification = (id: string) => {
       notifications.value = notifications.value.filter((n) => n.id != id);
     };
@@ -707,6 +714,9 @@ export default defineComponent({
       showMobileMenu.value = !showMobileMenu.value;
     };
 
+    /**
+     * logs the user out
+     */
     const logout = async () => {
       await router.go(0);
       onLogout();

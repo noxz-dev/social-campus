@@ -117,6 +117,7 @@ export default defineComponent({
       emit('update:modelValue', e.currentTarget.value);
     };
 
+    //register emoji picker event
     onMounted(() => {
       emojiPicker.value?.addEventListener('emoji-pick', (event) => {
         emit('update:modelValue', props.modelValue + event.detail.emoji);

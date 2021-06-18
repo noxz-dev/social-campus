@@ -28,7 +28,8 @@ export default defineComponent({
         }
       }
     );
-
+    
+    //register notification subscription
     const { onResult } = useNotificationsSubscription(
       () => ({
         userId: user.value.id,
@@ -38,6 +39,7 @@ export default defineComponent({
       })
     );
 
+    //show a notification, on receive
     onResult(async ({ data }) => {
       if (data?.notifications.type === NotificationType.NewChatMessage) {
         let sound = new Howl({

@@ -46,6 +46,7 @@ export default defineComponent({
 
     const browseQueryEnabled = ref(false);
 
+    //sets inital tags if some were given trough url query
     if (route.query.tag) {
       inputTags.value.push(route.query.tag as string);
       tags.value.push(route.query.tag as string);
@@ -64,6 +65,7 @@ export default defineComponent({
       browseQueryEnabled.value = true;
     }
 
+    //get all posts for the discover page
     const { result, error, subscribeToMore, fetchMore, loading } = useBrowsePostsQuery(
       () => ({
         take: 10,
@@ -93,6 +95,9 @@ export default defineComponent({
       }
     );
 
+    /**
+     * lazy loads more posts if needed
+     */
     const loadMore = () => {
       fetchMore({
         variables: {

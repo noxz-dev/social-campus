@@ -126,7 +126,7 @@ export class UserResolver {
       throw Error('found no user with this email');
     }
 
-    if (!user.activated) throw Error('account is not acitivated');
+    if (!user.activated) throw Error('account is not activated');
 
     const valid = await argon2.verify(user.password, password);
     if (!valid) {

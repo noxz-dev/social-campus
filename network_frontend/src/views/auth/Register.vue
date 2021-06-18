@@ -149,7 +149,7 @@
                   "
                 />
               </div>
-              <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">Das ist keine gültige Email</div>
+              <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">Das ist keine gültige Email, nur Hochschul-Emails erlaubt</div>
             </div>
             <div>
               <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
@@ -264,15 +264,6 @@
                 Die Passwörter stimmen nicht überein
               </div>
             </div>
-
-            <div class="flex items-center justify-between">
-              <div class="flex items-center"></div>
-
-              <!-- <div class="text-sm">
-                <a href="#" class="font-medium text-brand-600 hover:text-brand-500"> Forgot your password? </a>
-              </div> -->
-            </div>
-
             <div>
               <button
                 type="submit"
@@ -320,7 +311,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import { required, minLength, email, sameAs, alpha, alphaNum } from '@vuelidate/validators';
+import { required, minLength, email, sameAs, alpha, alphaNum, helpers } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useSignupMutation } from '../../graphql/generated/types';
@@ -334,11 +325,14 @@ export default defineComponent({
     const username = ref('');
     const confirmPassword = ref('');
 
+    const validEmail = (value) => value.endsWidth("@hs-hannover.de");
+
     //input validation rules
     const rules = computed(() => ({
       emailForm: {
         required,
         email,
+        // validEmail: helpers.withMessage('Nur Hochschul-Emails sind erlaubt', validEmail)
       },
       password: {
         required,

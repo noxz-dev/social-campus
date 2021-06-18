@@ -112,6 +112,7 @@
               <div class="flex items-center">
                 <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
                 {{ error.$message }}
+                {{ }}
               </div>
               </div>
             </div>
@@ -157,7 +158,13 @@
           </div>
         </div>
         <div
-          v-if="error"
+          v-if="error && error?.message.includes('activated')"
+          class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 mt-5 left-1/2 transform -translate-x-1/2"
+        >
+          Dein Account ist nicht aktiviert
+        </div>
+        <div
+          v-else-if="error"
           class="bg-red-500 h-10 text-white rounded-xl p-2 px-10 absolute my-0 mt-5 left-1/2 transform -translate-x-1/2"
         >
           Falsche E-Mail oder Passwort!
@@ -181,13 +188,16 @@ export default defineComponent({
     const emailForm = ref('');
     const password = ref('');
 
+    const validEmail = (value) => value.endsWidth("@hs-hannover.de");
+
     const rules = computed(() => ({
       emailForm: {
-        required,
-        email,
+        required: helpers.withMessage('Email wird benötigt', required),
+        email: helpers.withMessage('Keine gültige Email', email),
+        // validEmail: helpers.withMessage('Nur Hochschul-Emails sind erlaubt', validEmail)
       },
       password: {
-        required,
+        required: helpers.withMessage('Passwort wird benötigt', required),
         minLength: helpers.withMessage('Das Passwort muss mindestens 5 Zeichen lang sein', minLength(5)),
       },
     }));

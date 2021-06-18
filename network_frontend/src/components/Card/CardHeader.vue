@@ -287,59 +287,9 @@ export default defineComponent({
         postId: props.post?.id as string,
       },
       update: (cache, { data: { deletePost } }) => {
-        if (route.name === 'Home') {
-          try {
-            const dataInStore: any = cache.readQuery({
-              query: getFeed,
-              variables: {
-                skip: 0,
-                take: 10,
-              },
-            });
-            let getFeedData = [...dataInStore.getFeed];
-            getFeedData = getFeedData.filter((post) => post.id != props.post?.id);
-            cache.writeQuery({
-              query: getFeed,
-              variables: {
-                skip: 0,
-                take: 10,
-              },
-              data: {
-                ...dataInStore,
-                getFeed: [...getFeedData],
-              },
-            });
-          } catch (err) {
-            console.log(err);
-          }
-        } else {
-          try {
-            const dataInStore: any = cache.readQuery({
-              query: browsePosts,
-              variables: {
-                skip: 0,
-                take: 10,
-                tags: [],
-              },
-            });
-            let getBrowseData = [...dataInStore.browsePosts];
-            getBrowseData = getBrowseData.filter((post) => post.id != props.post?.id);
-            cache.writeQuery({
-              query: browsePosts,
-              variables: {
-                skip: 0,
-                take: 10,
-                tags: [],
-              },
-              data: {
-                ...dataInStore,
-                browsePosts: [...getBrowseData],
-              },
-            });
-          } catch (err) {
-            console.log(err);
-          }
-        }
+        const normalizedId = cache.identify(props.post);
+        cache.evict({ id: normalizedId });
+        cache.gc();
       },
     }));
 

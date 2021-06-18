@@ -1,3 +1,6 @@
+/**
+ * fix issues with the vue apollo package
+ */
 const fs = require('fs');
 const path = require('path');
 

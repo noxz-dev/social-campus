@@ -353,6 +353,10 @@ export default defineComponent({
       },
       updateQuery(prev, {subscriptionData: {data}}) {
 
+        if(prev.getFeed.some(p => p.id == data.newPost.id)) {
+          return prev;
+        }
+
         //update the exisiting data with new from the subscription
         return Object.assign({}, prev, {
           getFeed: [data, ...prev.getFeed]

@@ -114,12 +114,14 @@
           <div
             role="button"
             tabindex="0"
-            @keydown.enter="() => {
-              previewUrl = '';
-              dataFile = undefined;
-              showFilePreview = false;
-              showToggle = true;
-            }"
+            @keydown.enter="
+              () => {
+                previewUrl = '';
+                dataFile = undefined;
+                showFilePreview = false;
+                showToggle = true;
+              }
+            "
             class="
               p-2
               border
@@ -131,15 +133,17 @@
               transition-all
               dark:fill-white
               flex
-            items-center
-            justify-center
+              items-center
+              justify-center
             "
-            @click="() => {
-              previewUrl = '';
-              dataFile = undefined;
-              showFilePreview = false;
-              showToggle = true;
-            }"
+            @click="
+              () => {
+                previewUrl = '';
+                dataFile = undefined;
+                showFilePreview = false;
+                showToggle = true;
+              }
+            "
           >
             <svg viewBox="0 0 24 24" class="w-6">
               <g>
@@ -294,57 +298,60 @@ export default defineComponent({
         //add the new post to the cache
         try {
           if (route.path === '/home') {
-            cache.modify({
-              fields: {
-                getFeed(existingPosts) {
-                  const newPost = cache.writeFragment({
-                    data: addPost,
-                    fragment: gql`
-                      fragment NewPost on Post {
-                        id
-                        liked
-                        media {
-                          name
-                          blurhash
-                        }
-                        user {
-                          firstname
-                          lastname
-                          avatar {
-                            name
-                            blurhash
-                          }
-                          username
-                        }
-                        text
-                        likesCount
-                        commentCount
-                        createdAt
-                        edited
-                        group {
-                          id
-                          name
-                        }
-                      }
-                    `,
-                  });
+            // cache.modify({
+            //   fields: {
+            //     getFeed(existingPosts) {
+            //       if (existingPosts.some((p) => p.id === addPost.id)) {
+            //         console.log('existing');
+            //       }
+            //       const newPost = cache.writeFragment({
+            //         data: addPost,
+            //         fragment: gql`
+            //           fragment NewPost on Post {
+            //             id
+            //             liked
+            //             media {
+            //               name
+            //               blurhash
+            //             }
+            //             user {
+            //               firstname
+            //               lastname
+            //               avatar {
+            //                 name
+            //                 blurhash
+            //               }
+            //               username
+            //             }
+            //             text
+            //             likesCount
+            //             commentCount
+            //             createdAt
+            //             edited
+            //             group {
+            //               id
+            //               name
+            //             }
+            //           }
+            //         `,
+            //       });
 
-                  return [newPost, ...existingPosts];
-                },
-              },
-            });
-            // const dataInStore: any = cache.readQuery({ query: getFeed, variables: { skip: 0, take: 10 } });
-            // cache.writeQuery({
-            //   query: getFeed,
-            //   variables: {
-            //     skip: 0,
-            //     take: 10,
-            //   },
-            //   data: {
-            //     ...dataInStore,
-            //     getFeed: [...dataInStore.getFeed, addPost],
+            //       return [newPost, ...existingPosts];
+            //     },
             //   },
             // });
+            const dataInStore: any = cache.readQuery({ query: getFeed, variables: { offset: 0, limit: 10 } });
+            cache.writeQuery({
+              query: getFeed,
+              variables: {
+                offset: 0,
+                limit: 10,
+              },
+              data: {
+                ...dataInStore,
+                getFeed: [...dataInStore.getFeed, addPost],
+              },
+            });
           } else if (route.path.includes('/user')) {
             const dataInStoreProfile: any = cache.readQuery({
               query: getPostsFromUser,

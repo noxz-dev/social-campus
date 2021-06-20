@@ -285,7 +285,6 @@
                 Interessen
               </label>
               <input-field id="interests" class="!mt-2" v-model="interests" inputClasses="!pr-0"></input-field>
-
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Profilbanner </label>
                 <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
@@ -335,6 +334,7 @@
             <div>
               <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
                 {{ error.$message }}
+                <span v-if="v.interests.$error">aktuell: {{ interests.length }}</span>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 dark:bg-dark-700 text-right sm:px-6">
@@ -426,7 +426,7 @@ export default defineComponent({
         maxLength: helpers.withMessage('Der Studiengang hat eine maximale Länge von 75 Zeichen', maxLength(75)),
       },
       interests: {
-        maxLength: helpers.withMessage(`Dieses Feld darf maximal 100 Zeichen beinhalten`, maxLength(100)),
+        maxLength: helpers.withMessage(`Dieses Feld darf maximal 100 Zeichen beinhalten,`, maxLength(100)),
       },
     }));
 

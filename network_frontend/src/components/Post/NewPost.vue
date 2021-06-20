@@ -23,7 +23,10 @@
 
     <div class="h-8">
       <div class="text-red-400" v-for="(error, index) in v.message.$errors" :key="index">
-        <span v-if="(file && error.$validator !== 'required') || !file">{{ error.$message }}</span>
+        <span v-if="(file && error.$validator !== 'required') || !file"
+          >{{ error.$message
+          }}<span v-if="v.message.$errors && message.length > 1000">aktuell {{ message.length }}</span></span
+        >
       </div>
     </div>
     <div v-if="!previewUrl && showToggle" class="flex my-4">
@@ -204,7 +207,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 import { getFeed } from '../../graphql/queries/getFeed';
 import useVuelidate from '@vuelidate/core';
@@ -270,7 +273,7 @@ export default defineComponent({
       message: {
         required: helpers.withMessage('Du musst schon was eingeben...', required),
         minLength: helpers.withMessage('Du musst schon was eingeben...', minLength(1)),
-        maxLength: helpers.withMessage('Maximal 1500 Zeichen', maxLength(1500)),
+        maxLength: helpers.withMessage('Maximal 1500 Zeichen, ', maxLength(1500)),
       },
     }));
 

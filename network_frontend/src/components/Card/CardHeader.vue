@@ -287,7 +287,6 @@ export default defineComponent({
       update: (cache, { data: { deletePost } }) => {
         const normalizedId = cache.identify(props.post);
         cache.evict({ id: normalizedId });
-        cache.gc();
       },
     }));
 

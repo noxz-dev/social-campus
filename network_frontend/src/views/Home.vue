@@ -96,8 +96,7 @@
                     class="
                       p-3
                       w-full
-                      min-h-[15rem]
-                      min-w-[20rem]
+                      min-h-[15rem] min-w-[20rem]
                       dark:bg-dark-600
                       bg-gray-100
                       rounded-xl
@@ -109,7 +108,7 @@
                       font-semibold
                     "
                   >
-                    Personen die du vielleicht kennst
+                    Personen, die du vielleicht kennst
                     <div
                       class="h-full flex flex-col gap-2 mt-4 items-center"
                       v-if="recommendUsers"
@@ -209,7 +208,7 @@
                 font-semibold
               "
             >
-              Personen die du vielleicht kennst
+              Personen, die du vielleicht kennst
               <div
                 class="h-full flex flex-col gap-2 mt-4 items-center"
                 v-if="recommendUsers"
@@ -325,7 +324,7 @@ export default defineComponent({
         subscription newPost($all: Boolean!) {
           newPost(all: $all) {
             id
-            
+
             liked
             media {
               name
@@ -351,17 +350,16 @@ export default defineComponent({
       variables: {
         all: false,
       },
-      updateQuery(prev, {subscriptionData: {data}}) {
-
-        if(prev.getFeed.some(p => p.id == data.newPost.id)) {
+      updateQuery(prev, { subscriptionData: { data } }) {
+        if (prev.getFeed.some((p) => p.id == data.newPost.id)) {
           return prev;
         }
 
         //update the exisiting data with new from the subscription
         return Object.assign({}, prev, {
-          getFeed: [data, ...prev.getFeed]
-        })
-      }
+          getFeed: [data, ...prev.getFeed],
+        });
+      },
     }));
 
     let lastResponseLength = 1;
@@ -374,6 +372,16 @@ export default defineComponent({
       const data = await fetchMore({
         variables: {
           offset: posts.value.length,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          // No new  posts
+          if (!fetchMoreResult) return previousResult;
+
+          // Concat previous posts with new posts
+          return {
+            ...previousResult,
+            getFeed: [...previousResult.getFeed, ...fetchMoreResult.getFeed],
+          };
         },
       });
 

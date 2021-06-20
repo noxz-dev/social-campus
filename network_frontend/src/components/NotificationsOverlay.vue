@@ -20,14 +20,14 @@ export default defineComponent({
 
     const subscriptionEnabled = ref(false);
 
-    watch(
-      () => store.state.userData.user,
-      () => {
-        if (user.value.id) {
-          subscriptionEnabled.value = true;
-        }
-      }
-    );
+    // watch(
+    //   () => store.state.userData.user,
+    //   () => {
+    //     if (user.value.id) {
+    //       subscriptionEnabled.value = true;
+    //     }
+    //   }
+    // );
 
     //register notification subscription
     const { onResult } = useNotificationsSubscription(

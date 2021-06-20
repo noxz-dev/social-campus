@@ -23,7 +23,7 @@
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
               <div class="flex w-full z-10">
-                <div class="rounded-full" v-if="!user">
+                <div class="rounded-full w-24 h-24 md:w-44 md:h-44" v-if="!user">
                   <div
                     class="
                       z-10
@@ -41,7 +41,7 @@
                     "
                   ></div>
                 </div>
-                <div class="rounded-full" v-if="user">
+                <div class="rounded-full w-24 h-24 md:w-44 md:h-44" v-if="user">
                   <lazy-image
                     :blurhash="user.avatar.blurhash"
                     class="

@@ -723,23 +723,23 @@ export default defineComponent({
       store.dispatch('userData/setUser', me);
       profileImage.value = me?.avatar.name || '';
 
-      // const { onResult: onNotifications, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
-      // subscribeToMore(() => ({
-      //   document: notificationsSubscription,
-      //   variables: {
-      //     userId: me?.id,
-      //   },
-      //   updateQuery(prev, { subscriptionData: { data } }) {
-      //     //update the exisiting data with new from the subscription
-      //     return Object.assign({}, prev, {
-      //       getNotifications: [data, ...prev.getNotifications],
-      //     });
-      //   },
-      // }));
+      const { onResult: onNotifications, subscribeToMore, loading: notificationsLoading } = useGetNotificationsQuery();
+      subscribeToMore(() => ({
+        document: notificationsSubscription,
+        variables: {
+          userId: me?.id,
+        },
+        updateQuery(prev, { subscriptionData: { data } }) {
+          //update the exisiting data with new from the subscription
+          return Object.assign({}, prev, {
+            getNotifications: [data, ...prev.getNotifications],
+          });
+        },
+      }));
 
-      // onNotifications(({ data }) => {
-      //   notifications.value = data.getNotifications;
-      // });
+      onNotifications(({ data }) => {
+        notifications.value = data.getNotifications;
+      });
     });
 
     /**

@@ -29,17 +29,17 @@ export default defineConfig({
         background_color: '#191a20',
         icons: [
           {
-            src: '/pwa-192x192.png',
+            src: '/campus_192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/campus_512.png',
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/campus_512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',

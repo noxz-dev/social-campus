@@ -61,6 +61,27 @@ export default defineComponent({
 </script>
 
 <style>
+@font-face {
+  font-family: 'Poppins';
+  src: url(/fonts/Poppins/Poppins-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url(/fonts/Poppins/Poppins-Bold.ttf) format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url(/fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }

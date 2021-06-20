@@ -64,17 +64,14 @@
                 v-model="commentText"
                 :show-preview="false"
                 bg-color="dark-700"
+                ref="commentInput"
               />
             </div>
             <div class="h-8">
               <div v-if="v.commentText.$error" class="text-red-400">Du musst schon was eingeben...</div>
             </div>
             <div class="self-end">
-              <app-button
-                @click="newComment"
-              >
-                Antworten
-              </app-button>
+              <app-button @click="newComment"> Antworten </app-button>
             </div>
           </div>
         </card>
@@ -102,8 +99,8 @@
 <script lang="ts">
 import PostCard from '../components/Post/PostCard.vue';
 import { useAddCommentMutation, usePostByIdQuery, useSearchQuery } from '../graphql/generated/types';
-import { AddCommentMutationVariables, PostByIdQuery, PostByIdQueryVariables } from '../graphql/generated/types';
-import { computed, defineComponent, ref, watch } from 'vue';
+import { PostByIdQuery } from '../graphql/generated/types';
+import { computed, defineComponent, nextTick, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Card from '../components/Card/Card.vue';
 import CardHeader from '../components/Card/CardHeader.vue';
@@ -131,19 +128,19 @@ export default defineComponent({
     });
 
     //fetch a post with comments
-    const { onResult, loading } = usePostByIdQuery(
-      () =>
-        ({
-          postId: route.params.id as string,
-        })
-    );
+    const { onResult, loading } = usePostByIdQuery(() => ({
+      postId: route.params.id as string,
+    }));
 
     let firstload = true;
 
+    //set the post data and focus the input field
     onResult(({ data }) => {
       postData.value = data;
-      if (firstload && commentInput.value) commentInput.value.focus();
-      firstload = false;
+      nextTick(() => {
+        if (firstload && commentInput.value) commentInput.value.focus();
+        firstload = false;
+      });
     });
 
     //input validation rules
@@ -209,7 +206,7 @@ export default defineComponent({
 
     const foundUsers = useResult(result, [], (data) => data.search.users);
 
-    //autocomplete options for mentions 
+    //autocomplete options for mentions
     const autoCompleteOptions = {
       noMatchTemplate() {
         return '<li>Kein Benutzer gefunden</li>';

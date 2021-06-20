@@ -125,7 +125,11 @@ export default defineComponent({
       });
     });
 
-    return { emojiOpen, parseMarkdown, onChanged, input, emojiPicker };
+    const focus = () => {
+      input.value.focus();
+    };
+
+    return { emojiOpen, parseMarkdown, onChanged, input, emojiPicker, focus };
   },
 });
 </script>

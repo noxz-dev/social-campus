@@ -265,7 +265,6 @@ export default defineComponent({
   setup(props) {
     const optionsOpen = ref(false);
     const target = ref(null);
-    const route = useRoute();
 
     const firstname = computed(() => props.post?.user.firstname || props.comment?.user.firstname);
     const lastname = computed(() => props.post?.user.lastname || props.comment?.user.lastname);
@@ -280,8 +279,6 @@ export default defineComponent({
       optionsOpen.value = false;
     });
 
-
-    
     //create the delete post mutation
     const { mutate: delPost } = useDeletePostMutation(() => ({
       variables: {
@@ -294,23 +291,23 @@ export default defineComponent({
       },
     }));
 
-
     //create the delete comment mutation
-    const {mutate: delComment} = useDeleteCommentMutation(() => ({
+    const { mutate: delComment } = useDeleteCommentMutation(() => ({
       variables: {
-        commentId: props.comment?.id
-      }, update: (cache, {data: {deleteComment}}) => {
+        commentId: props.comment?.id,
+      },
+      update: (cache, { data: { deleteComment } }) => {
+        console.log('HERE NOT');
         cache.modify({
           id: cache.identify(deleteComment.post as Post),
           fields: {
             comments(existingCommentRefs, { readField }) {
-
-              return existingCommentRefs.filter(comment => readField("id", comment) !== props.comment?.id)
-            }
-          }
-        })
-      }
-    }))
+              return existingCommentRefs.filter((comment) => readField('id', comment) !== props.comment?.id);
+            },
+          },
+        });
+      },
+    }));
 
     /**
      * executes the delete mutations to delete either a comment or post
@@ -321,7 +318,7 @@ export default defineComponent({
         return;
       }
       if (props.comment) {
-        if(props.comment.id) {
+        if (props.comment.id) {
           await delComment();
           return;
         }

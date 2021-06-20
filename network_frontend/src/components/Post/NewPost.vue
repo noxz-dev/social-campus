@@ -265,7 +265,6 @@ export default defineComponent({
       showImageUpload.value = !showImageUpload.value;
     };
 
-
     //validation rules
     const rules = computed(() => ({
       message: {
@@ -374,7 +373,6 @@ export default defineComponent({
       }
     };
 
-
     //find all tags and post the post
     const post = async () => {
       v.value.$touch();
@@ -398,7 +396,6 @@ export default defineComponent({
       window.open('https://guides.github.com/features/mastering-markdown/');
     };
 
-
     //setup the file dropzone
     const { getRootProps, getInputProps, ...rest } = useDropzone({
       onDrop,
@@ -414,7 +411,6 @@ export default defineComponent({
       }
     `);
 
-
     //set tags and update the format
     onTags(({ data: { getAllTags } }) => {
       const tags = getAllTags.map((tag: Tag) => {
@@ -422,7 +418,6 @@ export default defineComponent({
       });
       autoCompleteOptions.collection[1].values.push(...tags);
     });
-
 
     //options for tag, mention autocomplete
     const autoCompleteOptions = {

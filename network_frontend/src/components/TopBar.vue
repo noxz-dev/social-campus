@@ -13,7 +13,7 @@
               alt=""
             /> -->
             <svg
-              class="h-6 md:h-12 fill-white mt-2"
+              class="h-6 lg:h-12 fill-white mt-2"
               viewBox="0 0 681 286"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

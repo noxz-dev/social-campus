@@ -15,11 +15,6 @@
       "
     >
       <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
-        <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-          alt="Workflow"
-        />
         <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Login SocialCampus</h2>
       </div>
 
@@ -111,9 +106,9 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
-                {{ error.$message }}
-                {{ }}
-              </div>
+                  {{ error.$message }}
+                  {{}}
+                </div>
               </div>
             </div>
 
@@ -188,7 +183,7 @@ export default defineComponent({
     const emailForm = ref('');
     const password = ref('');
 
-    const validEmail = (value) => value.endsWidth("@hs-hannover.de");
+    const validEmail = (value) => value.endsWidth('@hs-hannover.de');
 
     //input validation rules
     const rules = computed(() => ({
@@ -217,12 +212,11 @@ export default defineComponent({
       },
     }));
 
-
     /**
      * validates the input and loggs the user in
      */
     const onSubmit = async () => {
-      await v.value.$validate()
+      await v.value.$validate();
       if (!v.value.$invalid) {
         await login();
       }

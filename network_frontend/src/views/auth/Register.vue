@@ -15,11 +15,6 @@
       "
     >
       <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-lg">
-        <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-          alt="Workflow"
-        />
         <h2 class="mt-6 text-center dark:text-gray-50 text-3xl font-extrabold text-gray-900">Erstelle ein Konto</h2>
       </div>
 
@@ -149,7 +144,9 @@
                   "
                 />
               </div>
-              <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">Das ist keine gültige Email, nur Hochschul-Emails erlaubt</div>
+              <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">
+                Das ist keine gültige Email, nur Hochschul-Emails erlaubt
+              </div>
             </div>
             <div>
               <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
@@ -325,7 +322,7 @@ export default defineComponent({
     const username = ref('');
     const confirmPassword = ref('');
 
-    const validEmail = (value) => value.endsWidth("@hs-hannover.de");
+    const validEmail = (value) => value.endsWidth('@hs-hannover.de');
 
     //input validation rules
     const rules = computed(() => ({

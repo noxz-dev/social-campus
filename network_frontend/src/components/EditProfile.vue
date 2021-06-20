@@ -284,7 +284,7 @@
               <label for="interests" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !mt-2 text-left">
                 Interessen
               </label>
-              <input-field id="interests" class="!mt-2" v-model="interests"></input-field>
+              <input-field id="interests" class="!mt-2" v-model="interests" inputClasses="!pr-0"></input-field>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-50"> Profilbanner </label>
@@ -339,23 +339,23 @@
             </div>
             <div class="px-4 py-3 bg-gray-50 dark:bg-dark-700 text-right sm:px-6">
               <app-button type="submit" class="bg-dark-400 mr-2 hover:bg-red-600"> Abbrechen</app-button>
-              <app-button type="submit" :disabled="loading"> 
+              <app-button type="submit" :disabled="loading">
                 Speichern
                 <svg
-        class="animate-spin ml-2 mr-1 h-5 w-5 text-white"
-        v-if="loading"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-                 </app-button>
+                  class="animate-spin ml-2 mr-1 h-5 w-5 text-white"
+                  v-if="loading"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </app-button>
             </div>
           </div>
         </form>
@@ -426,7 +426,7 @@ export default defineComponent({
         maxLength: helpers.withMessage('Der Studiengang hat eine maximale Länge von 75 Zeichen', maxLength(75)),
       },
       interests: {
-        maxLength: helpers.withMessage('Das Passwort kann maximal 16 Zeichen lang sein', maxLength(100)),
+        maxLength: helpers.withMessage(`Dieses Feld darf maximal 100 Zeichen beinhalten`, maxLength(100)),
       },
     }));
 

@@ -24,7 +24,7 @@
       <input v-bind="getInputProps()" />
       <p v-if="isDragActive" class="text-xl">Ziehe Datei hierhin</p>
     </div>
-    <div class="rounded-full h-28 w-28 fixed bottom-32 mb-1 md:bottom-24 pl-2" v-if="previewUrl">
+    <div class="rounded-full h-28 w-28 fixed bottom-32 mb-1 md:bottom-24 pl-2 z-40" v-if="previewUrl">
       <img :src="previewUrl" class="rounded-xl h-28 w-28 object-cover" />
       <div>
         <button
@@ -94,6 +94,7 @@
     <div class="w-full pb-32 md:pb-0">
       <div class="pb-4 md:pb-5 p-2 pt-1 w-full mb-14 md:mb-0 fixed md:static bottom-0 dark:bg-dark-700 bg-white">
         <input-field
+          :showExtraButton="true"
           :showButton="true"
           v-model="newMessage"
           :iconPadding="4"
@@ -249,18 +250,39 @@ export default defineComponent({
       if (v) sendMessage();
     });
 
-    
     //fetch a chat by a given id
-    const { result, onResult } = useChatByIdQuery(
-      () => ({
-        chatId: route.params.id as string,
-      }),
-    );
+    const { result, onResult, subscribeToMore } = useChatByIdQuery(() => ({
+      chatId: route.params.id as string,
+    }));
 
     const chat = useResult(result, null, (data) => data.chatById);
 
+    subscribeToMore(() => ({
+      document: gql`
+        subscription newMessage($chatId: String!) {
+          newMessage(chatId: $chatId) {
+            id
+            content
+            createdAt
+            sendBy {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        chatId: route.params.id,
+      },
+      updateQuery(prev, { subscriptionData: { data } }) {
+        if (prev.chatById.messages.some((p) => p.id == data.newMessage.id)) {
+          return prev;
+        }
+        return Object.assign({}, prev, {
+          chatById: [data.newMessage, prev.chatById.messages!],
+        });
+      },
+    }));
 
-    
     //register the send message mutation
     const { mutate: send } = useSendMessageMutation(() => ({
       variables: {
@@ -313,7 +335,6 @@ export default defineComponent({
       file.value = acceptFiles[0];
     };
 
-    
     //register file dropzone
     const { acceptedFiles, getRootProps, getInputProps, ...dropUtils } = useDropzone({
       onDrop,
@@ -321,7 +342,6 @@ export default defineComponent({
       accept: 'image/jpeg, image/png, image/gif',
       maxFiles: 1,
     });
-
 
     /**
      * validate the state and sends the chat message

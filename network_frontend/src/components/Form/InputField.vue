@@ -33,6 +33,7 @@
     />
 
     <div
+      v-if="showExtraButton"
       class="my-2 px-4 inset-y-0 flex cursor-pointer absolute md:right-24 right-16 rounded-xl text-white items-center"
     >
       <slot name="extraButton"></slot>
@@ -108,6 +109,10 @@ export default defineComponent({
     },
     showButton: {
       type: Boolean,
+    },
+    showExtraButton: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit, slots }) {

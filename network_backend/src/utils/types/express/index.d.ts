@@ -1,5 +1,5 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { JwtUser } from '../../interfaces/jwtUser.interface';
+import { JwtUser } from '../../interfaces/interfaces';
 
 declare module 'express' {
   interface Request {

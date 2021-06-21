@@ -10,7 +10,7 @@ import { Post } from '../entity/post.entity';
 import { Tag } from '../entity/tag.entity';
 import { User } from '../entity/user.entity';
 import { uploadFileGraphql } from '../utils/helpers/fileUpload';
-import { MyContext } from '../utils/interfaces/context.interface';
+import { MyContext } from '../utils/interfaces/interfaces';
 import { log } from '../utils/services/logger';
 import { AddPostInput } from '../validators/addPost.validator';
 import { EditPostInput } from '../validators/editPost.validator';

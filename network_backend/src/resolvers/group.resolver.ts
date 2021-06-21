@@ -7,7 +7,7 @@ import { GroupMember, User } from '../entity/user.entity';
 import { GroupAccess } from '../graphql_types/groupAccess';
 import { GroupRoleAccess } from '../graphql_types/groupRoleAccess';
 import { PreviewGroup } from '../graphql_types/previewGroup';
-import { MyContext } from '../utils/interfaces/context.interface';
+import { MyContext } from '../utils/interfaces/interfaces';
 import { UpdateGroupInput } from '../validators/updateGroup.validator';
 
 @Resolver(() => Group)

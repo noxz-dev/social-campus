@@ -10,7 +10,7 @@
         />
       </div>
       <div class="p-3 pt-1 flex flex-col">
-        <div class="line-clamp-2 h-12">
+        <div class="line-clamp-2 h-12 md:h-14 ">
           <span class="text-md md:text-lg break-words font-semibold">{{ group.name }}</span>
         </div>
         <div class="flex flex-row-reverse items-center justify-between">
@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts">
-import { Group, PreviewGroup } from '../../graphql/generated/types';
+import { PreviewGroup } from '../../graphql/generated/types';
 import { computed, defineComponent, PropType } from 'vue';
 import Card from '../Card/Card.vue';
 import breakpoints from '../../utils/breakpoints';

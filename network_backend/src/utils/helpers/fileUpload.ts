@@ -15,7 +15,7 @@ interface UploadResponse {
 }
 
 /**
- *
+ * File Upload for file that are coming from the GraphQL-API
  * @param file file to be uploaded
  * @param bucketName s3 bucketname
  * @returns UploadResponse
@@ -34,6 +34,8 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
 
   const destinationPath = path.join(os.tmpdir(), filename);
   let blurhash: string;
+
+  //setup a compression utility to reduce the filesize
   let compress;
   if (fileEnding === 'png') {
     compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
@@ -77,6 +79,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
             log.error('blurhash couldnt be generated');
           }
 
+          //upload file to s3
           minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
             if (err) {
               log.error(err.stack);
@@ -97,7 +100,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
 };
 
 /**
- *
+ * File Upload from the Backend
  * @param file file to be uploaded
  * @param bucketName s3 bucketname
  * @returns UploadResponse
@@ -123,6 +126,7 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<Uplo
     log.error('blurhash couldnt be generated');
   }
 
+  //upload file to s3
   minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
     if (err) {
       log.error(err.stack);

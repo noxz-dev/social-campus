@@ -33,16 +33,43 @@
           <div class="sm:flex sm:items-start">
             <div class="sm:mt-0 sm:text-left w-full">
               <h3 id="modal-headline" class="text-2xl leading-6 font-medium text-gray-900 dark:text-gray-200">
-                <span v-if="group">Der Gruppe <b>{{ group.name }}</b> beitreten </span>
+                <span v-if="group"
+                  >Der Gruppe <b>{{ group.name }}</b> beitreten
+                </span>
               </h3>
               <div id="modal-headline" class="font-normal leading-6 text-gray-900 dark:text-gray-200 mt-4">
                 <span v-if="group">{{ group.description }} </span>
               </div>
-              <div class="mt-20">
-                <div class="dark:text-gray-50 text-gray-900 mb-4">Gruppen Passwort</div>
-                <input-field placeholder="passwort1234" v-model="groupPassword" />
+              <div class="">
+                <div class="py-10">
+                  <div class="dark:text-gray-50 text-gray-900 mb-4">Gruppen Passwort</div>
+                  <input-field
+                    placeholder="passwort1234"
+                    inputClasses="!pr-0"
+                    v-model="groupPassword"
+                    @keypress.enter="joinGroup"
+                  />
+                  <div v-if="error" class="text-red-500">Falsches Passwort, versuche es erneut</div>
+                </div>
                 <div class="flex justify-end">
-                  <app-button @click="joinGroup" class="mt-4">Beitreten</app-button>
+                  <app-button @click="joinGroup" class="mt-4">
+                    <svg
+                      class="animate-spin mr-3 h-5 w-5 text-white"
+                      v-if="loading"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Beitreten
+                   
+                  </app-button>
                 </div>
               </div>
             </div>
@@ -55,10 +82,8 @@
 
 <script lang="ts">
 import { useGroupByIdPreviewQuery, useJoinGroupMutation } from '../../graphql/generated/types';
-import { JoinGroupMutationVariables } from '../../graphql/generated/types';
 import { defineComponent, ref } from 'vue';
 import InputField from '../Form/InputField.vue';
-import { useRouter } from 'vue-router';
 import { useResult } from '@vue/apollo-composable';
 import { state } from '../../utils/state';
 
@@ -73,11 +98,11 @@ export default defineComponent({
   setup(props) {
     const groupPassword = ref('');
 
-    const { mutate: joinGrp } = useJoinGroupMutation(() => ({
-      variables: ({
+    const { mutate: joinGrp, error,loading } = useJoinGroupMutation(() => ({
+      variables: {
         groupId: props.groupId,
         password: groupPassword.value,
-      }),
+      },
     }));
 
     //fetch the preview view of the group
@@ -100,6 +125,8 @@ export default defineComponent({
       groupPassword,
       joinGroup,
       group,
+      error,
+      loading
     };
   },
 });

@@ -7,7 +7,7 @@ import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { User } from '../entity/user.entity';
 import { uploadFileGraphql } from '../utils/helpers/fileUpload';
-import { MyContext } from '../utils/interfaces/context.interface';
+import { MyContext } from '../utils/interfaces/interfaces';
 import { log } from '../utils/services/logger';
 import { SendMessageInput } from '../validators/sendMessage.validator';
 import { notify, SUB_TOPICS } from './notification.resolver';

@@ -7,6 +7,9 @@ interface SendEmail {
   html?: string;
 }
 
+/**
+ * Sends Mails
+ */
 export async function sendEmail({ email, subject, text, html }: SendEmail): Promise<void> {
   try {
     const transporter = nodemailer.createTransport({
@@ -19,8 +22,6 @@ export async function sendEmail({ email, subject, text, html }: SendEmail): Prom
       },
     });
 
-    // console.log('transport', transporter);
-
     await transporter.sendMail({
       from: `"SocialCampus" <${process.env.EMAIL_USER}>`, // sender address
       to: email, // to.join(),
@@ -30,7 +31,6 @@ export async function sendEmail({ email, subject, text, html }: SendEmail): Prom
     });
 
     console.log('⚠️  Sent Email to: %s', email);
-    // Preview only available when sending through an Ethereal account
   } catch (err) {
     console.log(err);
   }

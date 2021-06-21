@@ -6,7 +6,7 @@ import { Like } from '../entity/like.entity';
 import { NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
-import { MyContext } from '../utils/interfaces/context.interface';
+import { MyContext } from '../utils/interfaces/interfaces';
 import { isMemberOfGroup } from './group.resolver';
 import { notify } from './notification.resolver';
 

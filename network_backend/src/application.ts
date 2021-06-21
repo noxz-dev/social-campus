@@ -3,8 +3,6 @@ import { Base64Encode } from 'base64-stream';
 import compression from 'compression';
 import cors from 'cors';
 import 'dotenv/config';
-import { Token } from './entity/token.entity';
-import { EventEmitter } from 'events';
 import express from 'express';
 import 'express-async-errors';
 import { parse, stringify } from 'flatted';
@@ -31,14 +29,14 @@ import {
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
 import { customAuthChecker } from './middlewares/resolverAuthCheck';
-import { OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
-import { MyContext } from './utils/interfaces/context.interface';
-import { JwtUser } from './utils/interfaces/jwtUser.interface';
+import { activateAccount, OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
+import { MyContext } from './utils/interfaces/interfaces';
+import { JwtUser } from './utils/interfaces/interfaces';
 import { authenticateToken } from './middlewares/auth';
 import { log } from './utils/services/logger';
 import { initS3, minioClient } from './utils/services/minio';
-import { User } from './entity/user.entity';
 import helmet from 'helmet';
+import { Role } from './entity/role.entity';
 
 export class Application {
   public host: express.Application;
@@ -58,9 +56,6 @@ export class Application {
   // initialize express
   public init = async (): Promise<void> => {
     const app = express();
-    const em = new EventEmitter();
-    em.setMaxListeners(30);
-    // this.pubsub = new PubSub({ eventEmitter: em });
 
     const options: Redis.RedisOptions = {
       host: process.env.REDIS_HOST,
@@ -75,7 +70,22 @@ export class Application {
       deserializer: parse,
     });
 
+    //Initizalize the S3-Client and Buckets
     initS3();
+
+    //init roles
+    const roleExists = await getRepository(Role).find({ where: { name: 'STUDENT' } });
+    if (!roleExists) {
+      log.info('role created');
+      const role = new Role({ name: 'STUDENT' });
+      await getRepository(Role).save(role);
+    }
+    const roleExists2 = await getRepository(Role).find({ where: { name: 'STUDENT' } });
+    if (!roleExists2) {
+      log.info('role created');
+      const role = new Role({ name: 'PROFESSOR' });
+      await getRepository(Role).save(role);
+    }
 
     try {
       // initialize schema and register resolvers
@@ -95,7 +105,7 @@ export class Application {
         authChecker: customAuthChecker,
       });
 
-      //initialize graphql server
+      //initialize the graphql server
       const server = new ApolloServer({
         schema,
         subscriptions: {
@@ -152,16 +162,22 @@ export class Application {
       );
 
       app.use(cors());
-      // app.use(helmet());
+
+      //sets important security headers
       app.use(helmet({ contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false }));
+
       //authentication middleware
       app.use(authenticateToken);
+
       app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
+      //add the pubsub to the context
       app.use((req: express.Request, _res: express.Response, next: express.NextFunction): void => {
         req.pubsub = this.pubsub;
         next();
       });
+
+      //add an compression middleware, to reduce the size of the results via gzip
       app.use(
         compression({
           threshold: 0, // Byte threshold (0 means compress everything)
@@ -190,31 +206,18 @@ export class Application {
         }
       });
 
-      app.get('/activate/:token', async (req, res) => {
+      //endpoint, to activate the account from the token send via email
+      app.get('/activate/:token', async (req: express.Request, res: express.Response) => {
         const { token } = req.params;
-
-        console.log(token);
-
         if (!token) return res.status(400).send('missing activation token');
 
-        const dbToken = await getRepository(Token).findOne({ where: { token: token } });
+        try {
+          await activateAccount(token);
+        } catch (err) {
+          res.status(400).send(err);
+        }
 
-        if (!dbToken) return res.status(400).send('activation token not valid');
-
-        const user = await getRepository(User).findOne({ where: { id: dbToken.userId } });
-
-        if (!dbToken) return res.status(400).send('no associated user found');
-
-        user.activated = true;
-
-        console.log(user, dbToken);
-
-        await getRepository(User).save(user);
-        await getRepository(Token).remove(dbToken);
-
-        // res.set('Content-Type', 'text/html');
-        // return res.send(Buffer.from('<h2>Test String</h2>'));
-        res.send('../login');
+        res.redirect('../../login');
       });
 
       server.applyMiddleware({ app });

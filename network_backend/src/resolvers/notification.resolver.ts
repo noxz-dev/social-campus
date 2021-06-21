@@ -7,7 +7,7 @@ import { Comment } from '../entity/comment.entity';
 import { Notification, NotificationType } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import { User } from '../entity/user.entity';
-import { MyContext } from '../utils/interfaces/context.interface';
+import { MyContext } from '../utils/interfaces/interfaces';
 import { log } from '../utils/services/logger';
 
 export enum SUB_TOPICS {

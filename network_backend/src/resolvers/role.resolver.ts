@@ -39,10 +39,14 @@ export class RoleResolver {
     @Arg('roleName', () => String) roleName: string,
     @Arg('email', () => String) email: string,
   ): Promise<User | null> {
+    //disable the ability to assign the admin group via this call
+    if (roleName.toLocaleLowerCase() === 'admin') throw new Error('youre not allowed to do this');
+
     const role = await getRepository(Role).findOne({ name: roleName });
     if (!role) throw new Error('Role not found!');
     const user = await getRepository(User).findOne({ relations: ['roles'], where: { email } });
     if (!user) throw new Error('User not found!');
+
     user.roles.push(role);
     await getRepository(User).save(user);
     return user;

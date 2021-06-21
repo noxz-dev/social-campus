@@ -25,13 +25,15 @@ const errorLink = onError((error) => {
   });
 });
 
+const getToken = () => localStorage.getItem('apollo-token');
+
 //subscriptions
 const wsLink = new WebSocketLink({
   uri: `${import.meta.env.VITE_WS_URL}`,
   options: {
     reconnect: true,
     connectionParams: {
-      campusToken: localStorage.getItem('apollo-token'),
+      campusToken: getToken(),
     },
   },
 });
@@ -86,6 +88,9 @@ export const defaultClient = new ApolloClient({
   },
 });
 
+/**
+ * clears the cache on logout, and removes the auth token from localStorage
+ */
 export async function onLogout() {
   if (typeof localStorage !== 'undefined') {
     localStorage.removeItem('apollo-token');

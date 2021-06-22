@@ -370,7 +370,7 @@ export default defineComponent({
      */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
-      customLoading.value = false;
+      customLoading.value = true;
       const data = await fetchMore({
         variables: {
           offset: posts.value.length,

@@ -18,6 +18,8 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
+    let lastResponseLength = 1;
+    const customLoading = ref(false);
 
     //fetch the inital group feed
     const { result, subscribeToMore, loading, fetchMore } = useGetPostsFromGroupQuery(() => ({
@@ -67,15 +69,12 @@ export default defineComponent({
       const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
       eventbus?.on('loadMoreGroupPosts', () => loadMore());
       watch(
-        () => loading.value,
+        () => customLoading.value,
         () => {
-          eventbus?.emit('GroupPostsLoadingUpdate', loading.value);
+          eventbus?.emit('GroupPostsLoadingUpdate', customLoading.value);
         }
       );
     }
-
-    let lastResponseLength = 1;
-    const customLoading = ref(false);
 
     //fetch more posts with an offset
     const loadMore = async () => {

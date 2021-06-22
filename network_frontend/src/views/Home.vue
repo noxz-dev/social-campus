@@ -3,7 +3,16 @@
     <div
       id="home"
       ref="home"
-      class="flex h-full justify-center bg-white dark:bg-dark-700 md:rounded-3xl transform overflow-x-hidden"
+      class="
+        flex
+        h-full
+        justify-center
+        bg-white
+        dark:bg-dark-700
+        md:rounded-3xl md:rounded-r-none
+        transform
+        overflow-x-hidden
+      "
     >
       <infinite-scroll-wrapper
         :queryLoading="customLoading"

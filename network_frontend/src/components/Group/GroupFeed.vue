@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import gql from 'graphql-tag';
-import { defineComponent, getCurrentInstance, watch } from 'vue';
+import { defineComponent, getCurrentInstance, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGetPostsFromGroupQuery } from '../../graphql/generated/types';
 import PostList from '../Post/PostList.vue';
@@ -18,7 +18,6 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-
 
     //fetch the inital group feed
     const { result, subscribeToMore, loading, fetchMore } = useGetPostsFromGroupQuery(() => ({
@@ -76,16 +75,29 @@ export default defineComponent({
     }
 
     let lastResponseLength = 1;
+    const customLoading = ref(false);
 
     //fetch more posts with an offset
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
+      customLoading.value = true;
       const response = await fetchMore({
         variables: {
           offset: posts.value!.length,
         },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          // No new  posts
+          if (!fetchMoreResult) return previousResult;
+
+          // Concat previous posts with new posts
+          return {
+            ...previousResult,
+            getPostsFromGroup: [...previousResult.getPostsFromGroup!, ...fetchMoreResult.getPostsFromGroup!],
+          };
+        },
       });
       lastResponseLength = response.data.getPostsFromGroup!.length;
+      customLoading.value = false;
     };
 
     return { posts };

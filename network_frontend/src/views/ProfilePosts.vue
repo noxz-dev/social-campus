@@ -34,6 +34,9 @@ export default defineComponent({
     userId: String,
   },
   setup(props) {
+    const customLoading = ref(false);
+    let lastResponseLength = 1;
+
     //fetch the inital profile feed
     const { result, loading, fetchMore } = useGetPostsFromUserQuery(() => ({
       userID: props.userId as string,
@@ -49,15 +52,12 @@ export default defineComponent({
       const eventbus = internalInstance.appContext.config.globalProperties.eventbus;
       eventbus?.on('loadMoreProfilePosts', () => loadMore());
       watch(
-        () => loading.value,
+        () => customLoading.value,
         () => {
-          eventbus?.emit('ProfilePostsLoadingUpdate', loading.value);
+          eventbus?.emit('ProfilePostsLoadingUpdate', customLoading.value);
         }
       );
     }
-
-    const customLoading = ref(false);
-    let lastResponseLength = 1;
 
     watch(
       () => props.userId,
@@ -90,7 +90,7 @@ export default defineComponent({
       customLoading.value = false;
     };
 
-    return { posts, loading, loadMore };
+    return { posts, loading, loadMore, customLoading };
   },
 });
 </script>

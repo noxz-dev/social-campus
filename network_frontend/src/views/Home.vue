@@ -6,7 +6,7 @@
       class="flex h-full justify-center bg-white dark:bg-dark-700 md:rounded-3xl transform overflow-x-hidden"
     >
       <infinite-scroll-wrapper
-        :queryLoading="loading"
+        :queryLoading="customLoading"
         @loadMore="loadMore()"
         class="overflow-y-auto transform inline-block transition-all duration-300"
         :class="showSideView && 'translate-x-[-80%] overflow-y-hidden'"
@@ -391,7 +391,7 @@ export default defineComponent({
       customLoading.value = false;
     };
 
-    return { posts, error, home, loadMore, loading, recommendUsers, showSideView, breakpoints };
+    return { posts, error, home, loadMore, loading, recommendUsers, showSideView, breakpoints, customLoading };
   },
 });
 </script>

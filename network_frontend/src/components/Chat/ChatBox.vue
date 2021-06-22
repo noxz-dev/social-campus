@@ -24,8 +24,8 @@
       <input v-bind="getInputProps()" />
       <p v-if="isDragActive" class="text-xl">Ziehe Datei hierhin</p>
     </div>
-    <div class="rounded-full h-28 w-28 fixed bottom-32 mb-1 md:bottom-24 pl-2 z-40" v-if="previewUrl">
-      <img :src="previewUrl" class="rounded-xl h-28 w-28 object-cover" />
+    <div class="h-28 w-28 fixed bottom-32 mb-1 md:bottom-24 pl-2 z-40" v-if="previewUrl">
+      <img :src="previewUrl" class="rounded-xl h-28 w-28 object-cover border-2 shadow-2xl" />
       <div>
         <button
           @click="

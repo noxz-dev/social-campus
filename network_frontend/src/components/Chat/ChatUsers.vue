@@ -47,7 +47,7 @@
                     chat.members.filter((m) => m.id !== user.id)[0].lastname
                   }}
                 </p>
-                <p class="text-sm text-gray-400 truncate">{{ chat.lastMessage?.content }}</p>
+                <p class="text-sm text-gray-400 truncate">{{ chat.lastMessage?.content || 'Bild' }}</p>
               </div>
             </div>
           </div>
@@ -88,9 +88,7 @@ export default defineComponent({
     const user = computed(() => store.state.userData.user);
 
     const modal = ref<InstanceType<typeof Modal>>();
-    
 
-    
     //fetch all chats from the user
     const { result, refetch, onResult } = useMyChatsQuery();
 
@@ -101,7 +99,6 @@ export default defineComponent({
         router.push({ name: 'ChatBox', params: { id: chats.value[0].id } });
       firstload = false;
     });
-
 
     /**
      * sets the active chat after clicked on a chatbox

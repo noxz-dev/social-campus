@@ -309,7 +309,7 @@ export default defineComponent({
         limit: 10,
         offset: 0,
       },
-      () => ({ enabled: feedQueryEnabled.value })
+      () => ({ enabled: feedQueryEnabled.value, fetchPolicy: 'cache-and-network' })
     );
     const posts = useResult(result);
 

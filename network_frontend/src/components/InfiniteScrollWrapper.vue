@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watchEffect } from 'vue';
+import { defineComponent, onMounted, ref, watch, watchEffect } from 'vue';
 
 export default defineComponent({
   props: {
@@ -19,9 +19,13 @@ export default defineComponent({
     const scrollContainer = ref<HTMLElement>();
     const loadStarted = ref(false);
 
-    watchEffect(() => {
-      loadStarted.value = props.queryLoading;
-    });
+    watch(
+      () => props.queryLoading,
+      () => {
+        console.log('watch', props.queryLoading);
+        loadStarted.value = props.queryLoading;
+      }
+    );
 
     /**
      * triggers a scroll event if the end is reached, used for lazy loading
@@ -31,14 +35,12 @@ export default defineComponent({
         const element: HTMLElement = scrollContainer.value;
         if (element?.scrollTop > element.scrollHeight - 1500) {
           if (!loadStarted.value) {
-            
             loadStarted.value = true;
             emit('loadMore');
           }
         }
       }
     };
-
 
     //register the scroll listener
     onMounted(() => {

@@ -35,7 +35,8 @@
               height="25"
               viewBox="0 0 256 256"
               class="
-                hover:bg-dark-800
+                dark:hover:bg-dark-800
+                hover:bg-gray-200
                 rounded-full
                 transition
                 fill-dark-600

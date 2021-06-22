@@ -73,10 +73,18 @@ export default defineComponent({
         tags: tags.value,
       }),
       () => ({
+        fetchPolicy: 'cache-and-network',
         enabled: browseQueryEnabled.value,
       })
     );
     const posts = useResult(result);
+
+    watch(
+      () => loading.value,
+      () => {
+        console.log('loading changed', loading.value);
+      }
+    );
 
     watch(
       () => chipInput.value?.chips,
@@ -95,11 +103,14 @@ export default defineComponent({
       }
     );
 
+    let lastResponseLength = 1;
+
     /**
      * lazy loads more posts if needed
      */
-    const loadMore = () => {
-      fetchMore({
+    const loadMore = async () => {
+      if (lastResponseLength === 0) return;
+      const data = await fetchMore({
         variables: {
           skip: posts.value.length,
         },
@@ -114,6 +125,7 @@ export default defineComponent({
           };
         },
       });
+      lastResponseLength = data.data.browsePosts.length;
     };
 
     subscribeToMore(() => ({

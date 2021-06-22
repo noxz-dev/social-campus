@@ -67,7 +67,7 @@ export default defineComponent({
 }
 
 .dk__toast-section {
-  @apply mt-20;
+  @apply mt-14;
 }
 
 .dk__toast-mobile-section {

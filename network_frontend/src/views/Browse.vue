@@ -73,7 +73,6 @@ export default defineComponent({
         tags: tags.value,
       }),
       () => ({
-        fetchPolicy: 'cache-and-network',
         enabled: browseQueryEnabled.value,
       })
     );

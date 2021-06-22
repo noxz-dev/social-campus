@@ -34,7 +34,6 @@ export default defineComponent({
     userId: String,
   },
   setup(props) {
-
     //fetch the inital profile feed
     const { result, loading, fetchMore } = useGetPostsFromUserQuery(() => ({
       userID: props.userId as string,

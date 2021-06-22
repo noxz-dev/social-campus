@@ -34,10 +34,7 @@ export default defineComponent({
       if (scrollContainer.value) {
         const element: HTMLElement = scrollContainer.value;
         if (element?.scrollTop > element.scrollHeight - 1500) {
-          if (!loadStarted.value) {
-            loadStarted.value = true;
-            emit('loadMore');
-          }
+          emit('loadMore');
         }
       }
     };

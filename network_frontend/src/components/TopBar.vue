@@ -642,7 +642,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import Modal from '@/components/Modal.vue';
+import Modal from '../components/Modal.vue';
 import NewPost from './Post/NewPost.vue';
 import EditPost from './Post/EditPost.vue';
 import breakpoints from '../utils/breakpoints';

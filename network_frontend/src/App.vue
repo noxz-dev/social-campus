@@ -15,9 +15,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import Contentview from '@/views/Contentview.vue';
+import Contentview from './views/Contentview.vue';
 import SideBar from './components/Sidebar/Sidebar.vue';
-import TopBar from '@/components/TopBar.vue';
+import TopBar from './components/TopBar.vue';
 import { useRoute } from 'vue-router';
 import NotificationsOverlay from './components/NotificationsOverlay.vue';
 import dayjs from 'dayjs';

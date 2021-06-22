@@ -1,6 +1,6 @@
-import { state } from '../utils/state';
 import { createRouter, createWebHistory } from 'vue-router';
 import { navState } from '../utils/NavState';
+import { state } from '../utils/state';
 
 const routes = [
   {
@@ -11,37 +11,37 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/Home.vue'),
+    component: () => import('../views/Home.vue'),
   },
   {
     path: '/groups',
     name: 'Groups',
-    component: () => import('@/views/Groups.vue'),
+    component: () => import('../views/Groups.vue'),
   },
   {
     path: '/groups/:id',
     name: 'Group',
-    component: () => import('@/views/Group.vue'),
+    component: () => import('../views/Group.vue'),
   },
   {
     path: '/post/:id',
     name: 'DetailPost',
-    component: () => import('@/views/Post.vue'),
+    component: () => import('../views/Post.vue'),
   },
   {
     path: '/browse',
     name: 'Browse',
-    component: () => import('@/views/Browse.vue'),
+    component: () => import('../views/Browse.vue'),
   },
   {
     path: '/chats',
     name: 'Chats',
-    component: () => import('@/views/Chat.vue'),
+    component: () => import('../views/Chat.vue'),
     children: [
       {
         path: ':id',
         name: 'ChatBox',
-        component: () => import('@/components/Chat/ChatBox.vue'),
+        component: () => import('../components/Chat/ChatBox.vue'),
       },
     ],
   },
@@ -52,7 +52,7 @@ const routes = [
       public: true,
       onlyWhenLoggedOut: true,
     },
-    component: () => import('@/views/auth/Login.vue'),
+    component: () => import('../views/auth/Login.vue'),
   },
   {
     path: '/signup',
@@ -61,28 +61,28 @@ const routes = [
       public: true,
       onlyWhenLoggedOut: true,
     },
-    component: () => import('@/views/auth/Register.vue'),
+    component: () => import('../views/auth/Register.vue'),
   },
   {
     path: '/user/:id',
     name: 'Profile',
     redirect: { name: 'ProfilePosts' },
-    component: () => import('@/views/Profile.vue'),
+    component: () => import('../views/Profile.vue'),
     children: [
       {
         path: 'posts',
         name: 'ProfilePosts',
-        component: () => import('@/views/ProfilePosts.vue'),
+        component: () => import('../views/ProfilePosts.vue'),
       },
       {
         path: 'followers',
         name: 'ProfileFollowers',
-        component: () => import('@/views/ProfileFollower.vue'),
+        component: () => import('../views/ProfileFollower.vue'),
       },
       {
         path: 'following',
         name: 'ProfileFollowing',
-        component: () => import('@/views/ProfileFollowing.vue'),
+        component: () => import('../views/ProfileFollowing.vue'),
       },
     ],
   },

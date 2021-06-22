@@ -296,7 +296,6 @@ export default defineComponent({
         commentId: props.comment?.id,
       },
       update: (cache, { data: { deleteComment } }) => {
-        console.log('HERE NOT');
         cache.modify({
           id: cache.identify(deleteComment.post as Post),
           fields: {

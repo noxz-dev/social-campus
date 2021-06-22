@@ -363,12 +363,14 @@ export default defineComponent({
     }));
 
     let lastResponseLength = 1;
+    const customLoading = ref(false);
 
     /**
      * lazy load more posts
      */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
+      customLoading.value = false;
       const data = await fetchMore({
         variables: {
           offset: posts.value.length,
@@ -386,6 +388,7 @@ export default defineComponent({
       });
 
       lastResponseLength = data.data.getFeed.length;
+      customLoading.value = false;
     };
 
     return { posts, error, home, loadMore, loading, recommendUsers, showSideView, breakpoints };

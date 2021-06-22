@@ -102,6 +102,7 @@ export default defineComponent({
       }
     );
 
+    //is needed to handle the buch of triggered events, caused by the scroll handler for lazyloading
     let lastResponseLength = 1;
     const customLoading = ref(false);
 

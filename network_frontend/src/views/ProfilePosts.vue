@@ -56,6 +56,7 @@ export default defineComponent({
       );
     }
 
+    const customLoading = ref(false);
     let lastResponseLength = 1;
 
     watch(
@@ -70,6 +71,7 @@ export default defineComponent({
      */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
+      customLoading.value = true;
       const data = await fetchMore({
         variables: {
           offset: posts.value.length,
@@ -85,6 +87,7 @@ export default defineComponent({
         },
       });
       lastResponseLength = data.data.getPostsFromUser.length;
+      customLoading.value = false;
     };
 
     return { posts, loading, loadMore };

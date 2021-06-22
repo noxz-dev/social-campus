@@ -51,8 +51,8 @@
         </svg>
         <span class="font-semibold text-lg ml-2 group-hover:text-highlight-500">Zurück</span>
       </div>
-      <div class="w-full mt-10 flex items-center flex-col" v-if="postData?.postById">
-        <post-card v-if="postData" :post="postData.postById" cardBgColor="bg-dark-600" class="mb-3 md:mb-6" />
+      <div class="w-full mt-10 flex items-center flex-col" v-if="postData">
+        <post-card v-if="postData" :post="postData" cardBgColor="bg-dark-600" class="mb-3 md:mb-6" />
         <div class="border-b-2 border-dark-500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-3 md:mb-6" />
         <card>
           <div class="p-5 flex flex-col">
@@ -77,10 +77,10 @@
         </card>
         <div class="border-b-2 border-dark-500 w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-3 md:mb-6 mt-3 md:mt-6" />
         <div v-if="postData" class="w-full flex flex-col items-center mb-20">
-          <div v-if="postData.postById.comments.length === 0" class="dark:text-gray-50">
+          <div v-if="postData.comments.length === 0" class="dark:text-gray-50">
             <p>Noch keine Kommentare vorhanden</p>
           </div>
-          <card v-for="comment in postData.postById.comments" :key="comment.id" class="m-1 md:my-3">
+          <card v-for="comment in postData.comments" :key="comment.id" class="m-1 md:my-3">
             <card-header :comment="comment" bg-color-dark="bg-dark-600" />
             <div class="p-5 pt-0" v-html="parseCommentText(comment.text)"></div>
           </card>
@@ -116,7 +116,7 @@ export default defineComponent({
   components: { PostCard, Card, CardHeader, TributeTextarea },
   setup() {
     const commentText = ref('');
-    const postData = ref<PostByIdQuery>();
+    // const postData = ref<PostByIdQuery>();
     const route = useRoute();
     const { control_enter } = useMagicKeys();
     const commentInput = ref();
@@ -128,15 +128,20 @@ export default defineComponent({
     });
 
     //fetch a post with comments
-    const { onResult, loading } = usePostByIdQuery(() => ({
+    const {
+      onResult,
+      loading,
+      result: PostResult,
+    } = usePostByIdQuery(() => ({
       postId: route.params.id as string,
     }));
 
     let firstload = true;
 
+    const postData = useResult(PostResult, null, (data) => data.postById);
+
     //set the post data and focus the input field
     onResult(({ data }) => {
-      postData.value = data;
       nextTick(() => {
         if (firstload && commentInput.value) commentInput.value.focus();
         firstload = false;
@@ -169,6 +174,9 @@ export default defineComponent({
       ],
     }));
 
+    /**
+     * Extract mentions from the text
+     */
     const parseCommentText = (text: string) => {
       const parsed = parseTags(text);
 

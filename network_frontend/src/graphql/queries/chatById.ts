@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-
 export const chatById = gql`
   query chatById($chatId: String!) {
     chatById(chatId: $chatId) {
@@ -13,8 +12,10 @@ export const chatById = gql`
           id
         }
         media {
+          id
           name
           blurhash
+          type
         }
       }
     }

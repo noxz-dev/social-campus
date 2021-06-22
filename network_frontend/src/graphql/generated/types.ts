@@ -716,7 +716,7 @@ export type AddPostMutation = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
@@ -826,7 +826,7 @@ export type EditPostMutation = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'firstname' | 'lastname' | 'username'>
@@ -877,7 +877,7 @@ export type LikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -935,7 +935,7 @@ export type SendMessageMutation = (
     & Pick<ChatMessage, 'id' | 'content' | 'createdAt'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, sendBy: (
       { __typename?: 'User' }
       & Pick<User, 'id'>
@@ -965,7 +965,7 @@ export type UnlikePostMutation = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1038,7 +1038,7 @@ export type BrowsePostsQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash' | 'type'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1071,7 +1071,7 @@ export type ChatByIdQuery = (
         & Pick<User, 'id'>
       ), media?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
       )> }
     )> }
   ) }
@@ -1173,7 +1173,7 @@ export type GetFeedQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash' | 'type'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1202,7 +1202,7 @@ export type GetPostsFromGroupQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash' | 'type'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
@@ -1646,8 +1646,10 @@ export const AddPostDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
+      type
     }
     user {
       firstname
@@ -1887,8 +1889,10 @@ export const EditPostDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
+      type
     }
     user {
       firstname
@@ -1997,8 +2001,10 @@ export const LikePostDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
+      type
     }
     user {
       id
@@ -2121,8 +2127,10 @@ export const SendMessageDocument = gql`
     id
     content
     media {
+      id
       name
       blurhash
+      type
     }
     createdAt
     sendBy {
@@ -2186,8 +2194,10 @@ export const UnlikePostDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
+      type
     }
     user {
       id
@@ -2347,6 +2357,7 @@ export const BrowsePostsDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
       type
@@ -2407,8 +2418,10 @@ export const ChatByIdDocument = gql`
         id
       }
       media {
+        id
         name
         blurhash
+        type
       }
     }
   }
@@ -2607,6 +2620,7 @@ export const GetFeedDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
       type
@@ -2660,6 +2674,7 @@ export const GetPostsFromGroupDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
       type

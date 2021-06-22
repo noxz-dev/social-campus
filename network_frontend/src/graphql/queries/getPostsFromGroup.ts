@@ -6,6 +6,7 @@ export const getPostsFromGroup = gql`
       id
       liked
       media {
+        id
         name
         blurhash
         type

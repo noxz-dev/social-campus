@@ -132,9 +132,14 @@ export default defineComponent({
       onResult,
       loading,
       result: PostResult,
-    } = usePostByIdQuery(() => ({
-      postId: route.params.id as string,
-    }));
+    } = usePostByIdQuery(
+      () => ({
+        postId: route.params.id as string,
+      }),
+      {
+        fetchPolicy: 'cache-and-network',
+      }
+    );
 
     let firstload = true;
 

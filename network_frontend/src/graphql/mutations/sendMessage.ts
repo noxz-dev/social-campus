@@ -6,8 +6,10 @@ export const sendMessage = gql`
       id
       content
       media {
+        id
         name
         blurhash
+        type
       }
       createdAt
       sendBy {

@@ -6,8 +6,10 @@ export const editPost = gql`
       id
       liked
       media {
+        id
         name
         blurhash
+        type
       }
       user {
         firstname

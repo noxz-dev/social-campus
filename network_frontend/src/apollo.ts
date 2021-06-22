@@ -83,7 +83,8 @@ export const defaultClient = new ApolloClient({
   }),
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
     },
   },
 });

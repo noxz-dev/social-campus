@@ -320,7 +320,7 @@ export default defineComponent({
       },
       () => ({ enabled: feedQueryEnabled.value })
     );
-    const posts = useResult(result);
+    const posts = useResult(result, [], (data) => data.getFeed);
 
     //fill up the recommending components
     const { result: recommendUsersFaculty } = useRecommendedUsersFacultyQuery();

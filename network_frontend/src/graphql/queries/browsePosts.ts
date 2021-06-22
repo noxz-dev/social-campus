@@ -6,6 +6,7 @@ export const browsePosts = gql`
       id
       liked
       media {
+        id
         name
         blurhash
         type

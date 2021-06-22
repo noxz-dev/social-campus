@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="browse" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
-      <infinite-scroll-wrapper :queryLoading="loading" @loadMore="loadMore()" class="overflow-y-auto">
+      <infinite-scroll-wrapper :queryLoading="customLoading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
           <div class="h-10 w-full flex items-center mb-10 flex-col md:flex-row">
             <span class="text-xl font-semibold dark:text-gray-50 text-gray-900 mr-4 pb-4 md:pb-0">
@@ -103,12 +103,14 @@ export default defineComponent({
     );
 
     let lastResponseLength = 1;
+    const customLoading = ref(false);
 
     /**
      * lazy loads more posts if needed
      */
     const loadMore = async () => {
       if (lastResponseLength === 0) return;
+      customLoading.value = true;
       const data = await fetchMore({
         variables: {
           skip: posts.value.length,
@@ -124,7 +126,9 @@ export default defineComponent({
           };
         },
       });
+
       lastResponseLength = data.data.browsePosts.length;
+      customLoading.value = false;
     };
 
     subscribeToMore(() => ({
@@ -165,7 +169,7 @@ export default defineComponent({
       },
     }));
 
-    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags };
+    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags, customLoading };
   },
 });
 </script>

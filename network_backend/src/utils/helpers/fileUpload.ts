@@ -1,7 +1,6 @@
 import { encode } from 'blurhash';
 import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
-import { MozJPEG, PNGQuant } from 'image-stream-compress';
 import os from 'os';
 import path from 'path';
 import sharp from 'sharp';
@@ -36,14 +35,14 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   let blurhash: string;
 
   //setup a compression utility to reduce the filesize
-  let compress;
-  if (fileEnding === 'png') {
-    compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
-  } else if (['jpg', 'jpeg', 'JPG', 'JPEG'].includes(fileEnding)) {
-    compress = new MozJPEG();
-  }
+  // let compress;
+  // if (fileEnding === 'png') {
+  //   compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
+  // } else if (['jpg', 'jpeg', 'JPG', 'JPEG'].includes(fileEnding)) {
+  //   compress = new MozJPEG();
+  // }
 
-  if (compress) {
+  if (false) {
     await new Promise((res, rej) =>
       createReadStream()
         .pipe(compress)

@@ -4,9 +4,9 @@
 const fs = require('fs');
 const path = require('path');
 
-fs.rmdirSync(path.resolve(__dirname, '../node_modules/.vite_opt_cache'), {
-  recursive: true,
-});
+// fs.rmdirSync(path.resolve(__dirname, '../node_modules/.vite_opt_cache'), {
+//   recursive: true,
+// });
 
 const useQueryPath = path.resolve(__dirname, '../node_modules/@vue/apollo-composable/dist/useQuery.js');
 

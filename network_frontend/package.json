@@ -9,6 +9,7 @@
     "dev": "vite --force",
     "build": "vite build",
     "serve": "vite preview",
+    "postinstall": "node ./scripts/vue-apollo-patch.js",
     "generate": "graphql-codegen"
   },
   "dependencies": {

@@ -43,28 +43,27 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   // }
 
   if (false) {
-    await new Promise((res, rej) =>
-      createReadStream()
-        .pipe(compress)
-        .pipe(createWriteStream(destinationPath))
-        .on('error', rej)
-        .on('finish', async () => {
-          //generate blurhash for the preview
-          blurhash = await generateBlurhash(destinationPath);
-          minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-            if (err) {
-              log.error(err.stack);
-              throw Error('image upload failed');
-            }
-            log.info('File uploaded successfully.');
-
-            //Delete the tmp file uploaded
-            unlink(destinationPath, () => {
-              res('file upload complete');
-            });
-          });
-        }),
-    );
+    // await new Promise((res, rej) =>
+    //   createReadStream()
+    //     .pipe(compress)
+    //     .pipe(createWriteStream(destinationPath))
+    //     .on('error', rej)
+    //     .on('finish', async () => {
+    //       //generate blurhash for the preview
+    //       blurhash = await generateBlurhash(destinationPath);
+    //       minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
+    //         if (err) {
+    //           log.error(err.stack);
+    //           throw Error('image upload failed');
+    //         }
+    //         log.info('File uploaded successfully.');
+    //         //Delete the tmp file uploaded
+    //         unlink(destinationPath, () => {
+    //           res('file upload complete');
+    //         });
+    //       });
+    //     }),
+    // );
   } else {
     await new Promise((res, rej) =>
       createReadStream()

@@ -7,3 +7,4 @@ export * from './role.resolver';
 export * from './search.resolver';
 export * from './tags.resolver';
 export * from './user.resolver';
+export * from './media.resolver';

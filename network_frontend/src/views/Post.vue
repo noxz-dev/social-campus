@@ -99,7 +99,6 @@
 <script lang="ts">
 import PostCard from '../components/Post/PostCard.vue';
 import { useAddCommentMutation, usePostByIdQuery, useSearchQuery } from '../graphql/generated/types';
-import { PostByIdQuery } from '../graphql/generated/types';
 import { computed, defineComponent, nextTick, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Card from '../components/Card/Card.vue';
@@ -108,7 +107,7 @@ import { postById } from '../graphql/queries/postById';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 import { useMagicKeys } from '@vueuse/core';
-import TributeTextarea from '../components/TributeTextarea.vue';
+import TributeTextarea from '../components/Form/TributeTextarea.vue';
 import { parseTags } from '../utils/postUtils';
 import { useResult } from '@vue/apollo-composable';
 

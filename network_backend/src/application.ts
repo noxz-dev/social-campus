@@ -25,6 +25,7 @@ import {
   RoleResolver,
   SearchResolver,
   TagResolver,
+  MediaResolver,
   UserResolver,
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
@@ -99,6 +100,7 @@ export class Application {
           SearchResolver,
           TagResolver,
           ChatResolver,
+          MediaResolver,
           GroupResolver,
         ],
         pubSub: this.pubsub,

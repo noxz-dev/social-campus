@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@boost/log": "^2.2.3",
+    "@squoosh/lib": "^0.3.1",
     "apollo-server-express": "^2.21.0",
     "argon2": "^0.27.1",
     "axios": "^0.21.1",

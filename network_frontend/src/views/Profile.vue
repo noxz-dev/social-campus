@@ -330,7 +330,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, onMounted, watchEffect, getCurrentInstance } from 'vue';
+import { defineComponent, ref, computed, watch, watchEffect, getCurrentInstance } from 'vue';
 import PostList from '../components/Post/PostList.vue';
 import { useCreateChatMutation, useUserByUsernameQuery, useUserStatsQuery } from '../graphql/generated/types';
 import { useRoute, useRouter } from 'vue-router';
@@ -341,7 +341,7 @@ import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import Modal from '../components/Modal.vue';
 import EditProfile from '../components/EditProfile.vue';
 import { useResult } from '@vue/apollo-composable';
-import FollowButton from '../components/FollowButton.vue';
+import FollowButton from '../components/Form/FollowButton.vue';
 import breakpoints from '../utils/breakpoints';
 import RoleWrapper from '../components/RoleWrapper.vue';
 export default defineComponent({

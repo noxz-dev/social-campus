@@ -451,6 +451,7 @@ export type Query = {
   recommendedUsersFaculty: Array<User>;
   /** recommeding users based on Faculty */
   recommendedUsersInterests: Array<User>;
+  mediaFromGroup: Array<Media>;
 };
 
 
@@ -566,6 +567,11 @@ export type QueryGetFollowersArgs = {
 
 export type QueryUserStatsArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QueryMediaFromGroupArgs = {
+  groupId: Scalars['String'];
 };
 
 export type Role = {
@@ -1331,6 +1337,19 @@ export type MeQuery = (
       { __typename?: 'Role' }
       & Pick<Role, 'id' | 'name'>
     )> }
+  )> }
+);
+
+export type MediaFromGroupQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type MediaFromGroupQuery = (
+  { __typename?: 'Query' }
+  & { mediaFromGroup: Array<(
+    { __typename?: 'Media' }
+    & Pick<Media, 'id' | 'type' | 'name' | 'blurhash'>
   )> }
 );
 
@@ -2976,6 +2995,36 @@ export function useMeQuery(options: VueApolloComposable.UseQueryOptions<MeQuery,
   return VueApolloComposable.useQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const MediaFromGroupDocument = gql`
+    query mediaFromGroup($groupId: String!) {
+  mediaFromGroup(groupId: $groupId) {
+    id
+    type
+    name
+    blurhash
+  }
+}
+    `;
+
+/**
+ * __useMediaFromGroupQuery__
+ *
+ * To run a query within a Vue component, call `useMediaFromGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMediaFromGroupQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useMediaFromGroupQuery({
+ *   groupId: // value for 'groupId'
+ * });
+ */
+export function useMediaFromGroupQuery(variables: MediaFromGroupQueryVariables | VueCompositionApi.Ref<MediaFromGroupQueryVariables> | ReactiveFunction<MediaFromGroupQueryVariables>, options: VueApolloComposable.UseQueryOptions<MediaFromGroupQuery, MediaFromGroupQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<MediaFromGroupQuery, MediaFromGroupQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<MediaFromGroupQuery, MediaFromGroupQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<MediaFromGroupQuery, MediaFromGroupQueryVariables>(MediaFromGroupDocument, variables, options);
+}
+export type MediaFromGroupQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MediaFromGroupQuery, MediaFromGroupQueryVariables>;
 export const MyChatsDocument = gql`
     query myChats {
   myChats {

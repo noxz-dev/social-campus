@@ -70,7 +70,7 @@ import { minLength, required } from '@vuelidate/validators';
 import { useEditPostMutation } from '../../graphql/generated/types';
 import ToggleButton from '../Form/ToggleButton.vue';
 import { Post } from '../../graphql/generated/types';
-import TributeTextarea from '../../components/TributeTextarea.vue';
+import TributeTextarea from '../../components/Form/TributeTextarea.vue';
 export default defineComponent({
   emits: ['close'],
   components: { ToggleButton, TributeTextarea },

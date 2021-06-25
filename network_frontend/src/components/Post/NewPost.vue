@@ -226,7 +226,7 @@ import { useMagicKeys } from '@vueuse/core';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 import { parseMarkdown } from '../../utils/postUtils';
 import 'unicode-emoji-picker';
-import TributeTextarea from '../../components/TributeTextarea.vue';
+import TributeTextarea from '../../components/Form/TributeTextarea.vue';
 export default defineComponent({
   components: { ToggleButton, VueTribute, TributeTextarea },
   emits: ['close'],

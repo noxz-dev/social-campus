@@ -53,14 +53,4 @@ export class Post extends Base {
   @Field(() => Boolean, { nullable: true })
   @Column({ default: false, type: 'bool' })
   edited: boolean;
-
-  // @AfterLoad()
-  // async countLikes(): Promise<void> {
-  //   this.likesCount = await countLikes(this.id);
-  // }
-
-  // @AfterLoad()
-  // async countComments(): Promise<void> {
-  //   this.commentCount = await countComments(this.id);
-  // }
 }

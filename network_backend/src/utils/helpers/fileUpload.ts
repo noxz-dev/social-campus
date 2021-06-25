@@ -1,5 +1,5 @@
 import { encode } from 'blurhash';
-import { createWriteStream, unlink, writeFileSync } from 'fs';
+import { createWriteStream, fstat, unlink, writeFile, writeFileSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
 import os from 'os';
 import path from 'path';
@@ -7,6 +7,7 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { log } from '../services/logger';
 import { minioClient } from '../services/minio';
+import { ImagePool } from '@squoosh/lib';
 
 interface UploadResponse {
   filename: string;
@@ -34,67 +35,43 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
   const destinationPath = path.join(os.tmpdir(), filename);
   let blurhash: string;
 
-  //setup a compression utility to reduce the filesize
-  // let compress;
-  // if (fileEnding === 'png') {
-  //   compress = new PNGQuant([256, '--speed', 5, '--quality', '65-80']);
-  // } else if (['jpg', 'jpeg', 'JPG', 'JPEG'].includes(fileEnding)) {
-  //   compress = new MozJPEG();
-  // }
+  const uploadFileName = await new Promise<string>((res, rej) =>
+    createReadStream()
+      .pipe(createWriteStream(destinationPath))
+      .on('error', rej)
+      .on('finish', async () => {
+        //generate a blurhash for previews, only if the file is an image
+        try {
+          if (!['pdf'].includes(fileEnding)) blurhash = await generateBlurhash(destinationPath);
+        } catch (err) {
+          log.error('blurhash couldnt be generated');
+        }
+        let path = destinationPath;
+        let filename = newFileName;
+        if (!path.toLowerCase().endsWith('.pdf')) {
+          path = await compressImage(destinationPath);
+          filename = newFileName.split('.')[0] + '.jpg';
+        }
 
-  if (false) {
-    // await new Promise((res, rej) =>
-    //   createReadStream()
-    //     .pipe(compress)
-    //     .pipe(createWriteStream(destinationPath))
-    //     .on('error', rej)
-    //     .on('finish', async () => {
-    //       //generate blurhash for the preview
-    //       blurhash = await generateBlurhash(destinationPath);
-    //       minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-    //         if (err) {
-    //           log.error(err.stack);
-    //           throw Error('image upload failed');
-    //         }
-    //         log.info('File uploaded successfully.');
-    //         //Delete the tmp file uploaded
-    //         unlink(destinationPath, () => {
-    //           res('file upload complete');
-    //         });
-    //       });
-    //     }),
-    // );
-  } else {
-    await new Promise((res, rej) =>
-      createReadStream()
-        .pipe(createWriteStream(destinationPath))
-        .on('error', rej)
-        .on('finish', async () => {
-          //generate a blurhash for previews, only if the file is an image
-          try {
-            if (!['pdf'].includes(fileEnding)) blurhash = await generateBlurhash(destinationPath);
-          } catch (err) {
-            log.error('blurhash couldnt be generated');
+        console.log(path);
+
+        // upload file to s3
+        minioClient.fPutObject(bucketName, filename, path, metaData, (err, etag) => {
+          if (err) {
+            log.error(err.stack);
+            throw Error('image upload failed');
           }
+          log.info('File uploaded successfully.');
 
-          //upload file to s3
-          minioClient.fPutObject(bucketName, newFileName, destinationPath, metaData, (err, etag) => {
-            if (err) {
-              log.error(err.stack);
-              throw Error('image upload failed');
-            }
-            log.info('File uploaded successfully.');
-
-            //Delete the tmp file uploaded
-            unlink(destinationPath, () => {
-              res('file upload complete');
-            });
+          //Delete the tmp file uploaded
+          unlink(destinationPath, () => {
+            res(filename);
           });
-        }),
-    );
-  }
+        });
+      }),
+  );
 
-  return { filename: newFileName, blurhash };
+  return { filename: uploadFileName, blurhash };
 };
 
 /**
@@ -149,5 +126,19 @@ const generateBlurhash = async (path: string): Promise<string> => {
         if (err) return reject(err);
         resolve(encode(new Uint8ClampedArray(buffer), width, height, 4, 4));
       });
+  });
+};
+
+const compressImage = async (path: string): Promise<string> => {
+  return new Promise(async (resolve, reject) => {
+    const imagePool = new ImagePool();
+    const image = imagePool.ingestImage(path);
+    await image.decoded;
+    await image.encode({ mozjpeg: {} });
+    const newPath = path.split('.')[0] + '.jpg';
+    const rawEncodedImage = (await image.encodedWith.mozjpeg).binary;
+    writeFileSync(newPath, rawEncodedImage);
+    await imagePool.close();
+    resolve(newPath);
   });
 };

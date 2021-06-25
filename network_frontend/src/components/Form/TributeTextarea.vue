@@ -80,8 +80,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { parseMarkdown } from '../utils/postUtils';
-import VueTribute from '../components/VueTribute.vue';
+import { parseMarkdown } from '../../utils/postUtils';
+import VueTribute from '../../components/VueTribute.vue';
 import 'unicode-emoji-picker';
 import { EmojiPickerElement } from 'unicode-emoji-picker';
 export default defineComponent({

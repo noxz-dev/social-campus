@@ -33,8 +33,8 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
-import FollowButton from './FollowButton.vue';
-import FollowButtonSmall from './FollowButtonSmall.vue';
+import FollowButton from './Form/FollowButton.vue';
+import FollowButtonSmall from './Form/FollowButtonSmall.vue';
 export default defineComponent({
   components: { FollowButton, FollowButtonSmall },
   props: {

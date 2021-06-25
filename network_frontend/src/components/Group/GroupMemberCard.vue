@@ -85,7 +85,6 @@ import { computed, defineComponent } from 'vue';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import { useRouter } from 'vue-router';
 import { useCreateChatMutation } from '../../graphql/generated/types';
-import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
 import LazyImage from '../Blurhash/LazyImage.vue';
 export default defineComponent({

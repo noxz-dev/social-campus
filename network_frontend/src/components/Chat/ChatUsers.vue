@@ -31,7 +31,7 @@
           >
             <div class="flex-shrink-0 h-10 w-10" v-if="chat">
               <lazy-image
-                class="h-10 w-10 rounded-full object-cover"
+                class="h-10 w-10 rounded-full object-cover bg-dark-700"
                 :src="chat.members.filter((m) => m.id !== user.id)[0].avatar.name"
                 :blurhash="chat.members.filter((m) => m.id !== user.id)[0].avatar.blurhash"
                 rounded="full"

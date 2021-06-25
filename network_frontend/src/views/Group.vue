@@ -12,8 +12,8 @@
           bg-white
           dark:bg-dark-700
           flex-col
-          rounded-t-2xl
-          border-t-2 border-r-2
+          rounded-t-xl
+          border-r-2
           py-1
           pt-2
           pr-0.5

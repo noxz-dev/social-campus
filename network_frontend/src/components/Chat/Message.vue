@@ -9,7 +9,7 @@
           <div v-if="media" class="xl:min-w-[36rem] min-w-[20rem] border rounded-xl border-b-0 border-dark-500 rounded-b-none">
             <div class=" h-80">
               <lazy-image
-              class="rounded-tl-lg object-cover rounded-tr-lg cursor-pointer"
+              class="rounded-tl-xl object-cover rounded-tr-xl cursor-pointer"
               :src="media.name"
               :blurhash="media.blurhash"
               v-viewer="viewerOptions"
@@ -27,7 +27,7 @@
 
         <div v-else class="mr-2 max-w-xl bg-gray-500 rounded-br-2xl rounded-tl-2xl rounded-tr-xl text-white">
           <div v-if="media" class="xl:min-w-[36rem] min-w-[20rem] border rounded-xl border-b-0 border-dark-500 rounded-b-none">
-            <div class="aspect-w-4 aspect-h-3 h-80">
+            <div class="h-80">
               <lazy-image
               class="rounded-tl-xl object-cover rounded-tr-xl cursor-pointer"
               :src="media.name"

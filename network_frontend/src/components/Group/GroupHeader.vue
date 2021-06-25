@@ -101,7 +101,7 @@
           @click="$emit('switchComponent', GroupComponents.GROUP_FILES)"
           :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_FILES }"
         >
-          <span class="dark:text-gray-50 text-gray-900">Dateien</span>
+          <span class="dark:text-gray-50">Dateien</span>
         </div>
         <div
           v-if="breakpoints.is === 'sm'"
@@ -109,7 +109,7 @@
           @click="$emit('switchComponent', GroupComponents.GROUP_MEMBER)"
           :class="{ 'bg-brand-500 !text-gray-50  ': activeComponent == GroupComponents.GROUP_MEMBER }"
         >
-          <span class="dark:text-gray-50 text-gray-900">Mitglieder</span>
+          <span class="dark:text-gray-50">Mitglieder</span>
         </div>
       </div>
     </div>

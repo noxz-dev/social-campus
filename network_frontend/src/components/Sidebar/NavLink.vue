@@ -65,6 +65,7 @@ a.router-link-exact-active #topMessage {
   transform: translateY(-2px);
 }
 
+.highlight polyline,
 .highlight:hover polyline,
 a.router-link-exact-active polyline,
 a:hover polyline {

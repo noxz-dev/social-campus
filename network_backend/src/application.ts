@@ -9,6 +9,7 @@ import { parse, stringify } from 'flatted';
 import { GraphQLSchema } from 'graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { graphqlUploadExpress } from 'graphql-upload';
+import helmet from 'helmet';
 import http, { Server } from 'http';
 import Redis from 'ioredis';
 import 'reflect-metadata';
@@ -16,34 +17,33 @@ import { buildSchema } from 'type-graphql';
 import { createConnection, getRepository } from 'typeorm';
 import { MyWebSocket } from 'utils/types/apollo';
 import '../ormconfig';
+import { Role } from './entity/role.entity';
+import { authenticateToken } from './middlewares/auth';
+import { customAuthChecker } from './middlewares/resolverAuthCheck';
 import {
   ChatResolver,
   CommentResolver,
   GroupResolver,
+  MediaResolver,
   NotificationResolver,
   PostResolver,
   RoleResolver,
   SearchResolver,
   TagResolver,
-  MediaResolver,
   UserResolver,
 } from './resolvers';
 import { verifyAccessToken } from './utils/helpers/auth';
-import { customAuthChecker } from './middlewares/resolverAuthCheck';
 import { activateAccount, OnlineStatus, updateOnlineStatus } from './utils/helpers/utils';
-import { MyContext } from './utils/interfaces/interfaces';
-import { JwtUser } from './utils/interfaces/interfaces';
-import { authenticateToken } from './middlewares/auth';
+import { JwtUser, MyContext } from './utils/interfaces/interfaces';
 import { log } from './utils/services/logger';
 import { initS3, minioClient } from './utils/services/minio';
-import helmet from 'helmet';
-import { Role } from './entity/role.entity';
 
 export class Application {
   public host: express.Application;
   public server: Server;
   public pubsub: RedisPubSub;
 
+  //init database connection
   public connect = async (): Promise<void> => {
     try {
       const connection = await createConnection();
@@ -54,7 +54,7 @@ export class Application {
     }
   };
 
-  // initialize express
+  //initialize express
   public init = async (): Promise<void> => {
     const app = express();
 
@@ -163,6 +163,7 @@ export class Application {
         },
       );
 
+      //set cors headers correctly
       app.use(cors());
 
       //sets important security headers
@@ -215,11 +216,10 @@ export class Application {
 
         try {
           await activateAccount(token);
+          res.redirect('../../login');
         } catch (err) {
           res.status(400).send(err);
         }
-
-        res.redirect('../../login');
       });
 
       server.applyMiddleware({ app });

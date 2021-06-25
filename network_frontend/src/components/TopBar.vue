@@ -7,11 +7,6 @@
       <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
         <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
           <div class="flex-shrink-0 flex items-center flex-row cursor-pointer" @click="$router.push('/home')">
-            <!-- <img
-              class="block h-10 mr-2 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-              alt=""
-            /> -->
             <svg
               class="h-6 lg:h-12 dark:fill-white fill-dark-800 mt-2"
               viewBox="0 0 681 286"
@@ -96,8 +91,7 @@
               hover:bg-gray-100
               dark:hover:bg-dark-700
               hover:text-gray-500
-              focus:outline-none
-              focus:ring-2 focus:ring-inset focus:ring-brand-500
+              focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500
             "
             aria-expanded="false"
             @click="openMobileMenu"
@@ -213,8 +207,7 @@
                   p-1
                   rounded-full
                   flex
-                  focus:outline-none
-                  focus:ring-2 focus:ring-offset-2
+                  focus:outline-none focus:ring-2 focus:ring-offset-2
                   dark:focus:ring-offset-dark-700
                   focus:ring-brand-500
                 "
@@ -497,8 +490,7 @@
               p-1
               text-gray-400
               hover:text-highlight-500
-              focus:outline-none
-              focus:ring-2 focus:ring-offset-2
+              focus:outline-none focus:ring-2 focus:ring-offset-2
               dark:focus:ring-offset-dark-700
               focus:ring-brand-500
             "
@@ -560,10 +552,8 @@
               font-medium
               dark:text-gray-50
               text-gray-500
-              hover:bg-gray-50
-              hover:text-gray-900
-              dark:hover:text-gray-50
-              dark:hover:bg-dark-600
+              hover:bg-gray-50 hover:text-gray-900
+              dark:hover:text-gray-50 dark:hover:bg-dark-600
             "
           >
             Dein Profil
@@ -580,10 +570,8 @@
               font-medium
               dark:text-gray-50
               text-gray-500
-              hover:bg-gray-50
-              hover:text-gray-900
-              dark:hover:text-gray-50
-              dark:hover:bg-dark-600
+              hover:bg-gray-50 hover:text-gray-900
+              dark:hover:text-gray-50 dark:hover:bg-dark-600
             "
           >
             Einstellungen
@@ -600,10 +588,8 @@
               font-medium
               dark:text-gray-50
               text-gray-500
-              hover:bg-gray-50
-              hover:text-gray-900
-              dark:hover:text-gray-50
-              dark:hover:bg-dark-600
+              hover:bg-gray-50 hover:text-gray-900
+              dark:hover:text-gray-50 dark:hover:bg-dark-600
             "
           >
             Ausloggen
@@ -646,7 +632,7 @@ import Modal from '../components/Modal.vue';
 import NewPost from './Post/NewPost.vue';
 import EditPost from './Post/EditPost.vue';
 import breakpoints from '../utils/breakpoints';
-import { useGetNotificationsQuery, useMeQuery } from '../graphql/generated/types';
+import { useGetNotificationsQuery, useLogoutMutation, useMeQuery } from '../graphql/generated/types';
 import { useResult } from '@vue/apollo-composable';
 import { onLogout } from '../apollo';
 import { onClickOutside } from '@vueuse/core';
@@ -664,6 +650,7 @@ import { RecursivePartial } from '../utils/typeUtils';
 import LazyImage from './Blurhash/LazyImage.vue';
 import SettingsModal from './SettingsModal.vue';
 import { state } from '../utils/state';
+import { gql, useMutation } from '@apollo/client';
 
 export default defineComponent({
   components: {
@@ -691,7 +678,7 @@ export default defineComponent({
     const notifications = ref<RecursivePartial<Notification>[]>([]);
     const store = useStore();
     const modal = ref<InstanceType<typeof Modal>>();
-      const settingsModal = ref<InstanceType<typeof Modal>>();
+    const settingsModal = ref<InstanceType<typeof Modal>>();
 
     //close the profile menu, on click outside
     onClickOutside(target, (event) => {
@@ -756,10 +743,21 @@ export default defineComponent({
       showMobileMenu.value = !showMobileMenu.value;
     };
 
+    const { mutate: logoutUser } = useLogoutMutation(() => ({
+      variables: {
+        token: localStorage.getItem('apollo-token')!,
+      },
+    }));
+
     /**
      * logs the user out
      */
     const logout = async () => {
+      try {
+        await logoutUser();
+      } catch (err) {
+        console.log('logout failed', err);
+      }
       await router.go(0);
       onLogout();
     };
@@ -781,7 +779,7 @@ export default defineComponent({
       deleteNotification,
       modal,
       state,
-      settingsModal
+      settingsModal,
     };
   },
 });

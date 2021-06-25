@@ -912,6 +912,16 @@ export type LoginMutation = (
   ) }
 );
 
+export type LogoutMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
+);
+
 export type RemoveFollowerMutationVariables = Exact<{
   userID: Scalars['String'];
 }>;
@@ -2112,6 +2122,33 @@ export function useLoginMutation(options: VueApolloComposable.UseMutationOptions
   return VueApolloComposable.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
 }
 export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation logout($token: String!) {
+  logout(access: $token)
+}
+    `;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useLogoutMutation({
+ *   variables: {
+ *     token: // value for 'token'
+ *   },
+ * });
+ */
+export function useLogoutMutation(options: VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables>>) {
+  return VueApolloComposable.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+}
+export type LogoutMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LogoutMutation, LogoutMutationVariables>;
 export const RemoveFollowerDocument = gql`
     mutation removeFollower($userID: String!) {
   removeFollower(userID: $userID) {

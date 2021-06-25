@@ -30,8 +30,7 @@
                       w-24
                       h-24
                       rounded-full
-                      md:w-44
-                      md:h-44
+                      md:w-44 md:h-44
                       bg-dark-600
                       self-center
                       border-2
@@ -49,8 +48,7 @@
                       w-24
                       h-24
                       rounded-full
-                      md:w-44
-                      md:h-44
+                      md:w-44 md:h-44
                       bg-dark-600
                       self-center
                       border-2
@@ -151,8 +149,7 @@
                     justify-evenly
                     sm:space-x-10
                     space-x-0
-                    sm:space-y-0
-                    sm:flex-row
+                    sm:space-y-0 sm:flex-row
                     transition-all
                     duration-1000
                     w-full
@@ -218,8 +215,7 @@
             w-11/12
             lg:w-96
             rounded-lg
-            lg:mr-10
-            lg:flex
+            lg:mr-10 lg:flex
             flex-col
             mt-2
           "
@@ -506,5 +502,8 @@ a.router-link-exact-active div {
 
 a.router-link-exact-active span {
   @apply text-white !important;
+}
+
+.smartWordFormat {
 }
 </style>

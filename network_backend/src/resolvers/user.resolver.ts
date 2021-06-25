@@ -17,8 +17,7 @@ import { UserStats } from '../graphql_types/userStats';
 import { generateAccessToken } from '../utils/helpers/auth';
 import { uploadFile, uploadFileGraphql } from '../utils/helpers/fileUpload';
 import { sendEmail } from '../utils/helpers/sendMail';
-import { MyContext } from '../utils/interfaces/interfaces';
-import { JwtUser } from '../utils/interfaces/interfaces';
+import { JwtUser, MyContext } from '../utils/interfaces/interfaces';
 import { log } from '../utils/services/logger';
 import { redis } from '../utils/services/redis';
 import { UpdatePasswordInput } from '../validators/updatePassword.validator';
@@ -107,12 +106,12 @@ export class UserResolver {
     return true;
   }
 
+  @Authorized()
   @Mutation(() => Boolean, { description: 'logout an user to invalidate the access token' })
   async logout(@Ctx() ctx: MyContext, @Arg('access', () => String) accessToken: string): Promise<boolean> {
-    //TODO ADD TOKEN TO REDIS JWT BLACKLIST, needs middleware check
-
     try {
-      redis.LPUSH('token', accessToken);
+      //add token to blacklist
+      redis.lpush('token', accessToken);
     } catch (err) {
       console.log(err);
     }

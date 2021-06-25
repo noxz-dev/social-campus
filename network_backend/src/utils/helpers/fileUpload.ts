@@ -48,12 +48,12 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         }
         let path = destinationPath;
         let filename = newFileName;
+
+        //compress images and ignore pdf files or gif
         if (!path.toLowerCase().endsWith('.pdf') && !path.toLowerCase().endsWith('.gif')) {
           path = await compressImage(destinationPath);
           filename = newFileName.split('.')[0] + '.jpg';
         }
-
-        console.log(path);
 
         // upload file to s3
         minioClient.fPutObject(bucketName, filename, path, metaData, (err, etag) => {
@@ -95,6 +95,7 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<Uplo
 
   let blurhash;
 
+  //generate a blurhash for an image
   try {
     if (!['pdf'].includes(fileEnding)) blurhash = await generateBlurhash(destinationPath);
   } catch (err) {
@@ -116,6 +117,11 @@ export const uploadFile = async (file: Buffer, bucketName: string): Promise<Uplo
   return { filename: newFileName, blurhash };
 };
 
+/**
+ * Generate a Blurhash for an image
+ * @param path file path to the image
+ * @returns blurhash
+ */
 const generateBlurhash = async (path: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     sharp(path)
@@ -129,6 +135,11 @@ const generateBlurhash = async (path: string): Promise<string> => {
   });
 };
 
+/**
+ * Compress an Image, to reduce the filesize
+ * @param path file path to the image
+ * @returns filepath where the compressed image got saved
+ */
 const compressImage = async (path: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     const imagePool = new ImagePool();

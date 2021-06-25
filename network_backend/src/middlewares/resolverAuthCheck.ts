@@ -3,6 +3,10 @@ import { AuthChecker } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { MyContext } from '../utils/interfaces/interfaces';
+
+/**
+ * Resolver Authentication Middleware
+ */
 export const customAuthChecker: AuthChecker<MyContext> = async ({ context, info }, roles): Promise<boolean> => {
   if (!context.req.user) return null;
   const userId = context.req.user.id;

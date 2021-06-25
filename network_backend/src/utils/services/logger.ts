@@ -1,5 +1,7 @@
 import { ConsoleTransport, createLogger, FileTransport } from '@boost/log';
 import chalk from 'chalk';
+
+//setup logger
 export const log = createLogger({
   name: 'network_logger',
   labels: {

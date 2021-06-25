@@ -2,6 +2,7 @@ import { readFile } from 'fs/promises';
 import * as Minio from 'minio';
 import { log } from './logger';
 
+//setup minio client
 export const minioClient = new Minio.Client({
   endPoint: 'minio',
   port: 9000,
@@ -10,6 +11,9 @@ export const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY,
 });
 
+/**
+ * Inits the S3 Storag
+ */
 export const initS3 = async (): Promise<void> => {
   minioClient.bucketExists('images', async (err, exists) => {
     if (err) {
@@ -28,7 +32,7 @@ export const initS3 = async (): Promise<void> => {
         });
       });
     } else {
-      log.info('bucket already exisits');
+      log.info('no bucket created, buckets already exist');
     }
   });
 };

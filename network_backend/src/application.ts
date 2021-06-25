@@ -60,7 +60,7 @@ export class Application {
 
     const options: Redis.RedisOptions = {
       host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
+      port: Number(process.env.REDIS_PORT),
       retryStrategy: (times) => Math.max(times * 100, 3000),
     };
 

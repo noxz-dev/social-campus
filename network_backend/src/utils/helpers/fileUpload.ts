@@ -1,5 +1,6 @@
+import { ImagePool } from '@squoosh/lib';
 import { encode } from 'blurhash';
-import { createWriteStream, fstat, unlink, writeFile, writeFileSync } from 'fs';
+import { createWriteStream, unlink, writeFileSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
 import os from 'os';
 import path from 'path';
@@ -7,7 +8,6 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { log } from '../services/logger';
 import { minioClient } from '../services/minio';
-import { ImagePool } from '@squoosh/lib';
 
 interface UploadResponse {
   filename: string;
@@ -48,7 +48,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         }
         let path = destinationPath;
         let filename = newFileName;
-        if (!path.toLowerCase().endsWith('.pdf')) {
+        if (!path.toLowerCase().endsWith('.pdf') && !path.toLowerCase().endsWith('.gif')) {
           path = await compressImage(destinationPath);
           filename = newFileName.split('.')[0] + '.jpg';
         }

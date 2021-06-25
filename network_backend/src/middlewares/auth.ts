@@ -7,7 +7,7 @@ import { redis } from '../utils/services/redis';
 /**
  * Authentication Middleware, verify the jwt token
  */
-export const authenticateToken = async (req: Request, res: Response, next: NextFunction): void => {
+export const authenticateToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   if (req.headers.hasOwnProperty('authorization')) {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];

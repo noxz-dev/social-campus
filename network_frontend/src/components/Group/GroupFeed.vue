@@ -11,6 +11,7 @@ import { useRoute } from 'vue-router';
 import { useGetPostsFromGroupQuery } from '../../graphql/generated/types';
 import PostList from '../Post/PostList.vue';
 import { useResult } from '@vue/apollo-composable';
+import { useApolloClient } from '@vue/apollo-composable';
 
 export default defineComponent({
   components: {
@@ -21,8 +22,12 @@ export default defineComponent({
     let lastResponseLength = 1;
     const customLoading = ref(false);
 
+    //fix a caching bug
+    const { client } = useApolloClient();
+    client.resetStore();
+
     //fetch the inital group feed
-    const { result, subscribeToMore, loading, fetchMore } = useGetPostsFromGroupQuery(() => ({
+    const { result, subscribeToMore, fetchMore } = useGetPostsFromGroupQuery(() => ({
       groupId: route.params.id as string,
       limit: 10,
       offset: 0,
@@ -36,6 +41,8 @@ export default defineComponent({
             id
             liked
             media {
+              id
+              type
               name
               blurhash
             }
@@ -61,7 +68,7 @@ export default defineComponent({
       },
     }));
 
-    const posts = useResult(result, [], (data) => data.getPostsFromGroup);
+    const posts = useResult(result, null, (data) => data.getPostsFromGroup);
 
     //register eventbus to listen for the scroll event
     const internalInstance = getCurrentInstance();

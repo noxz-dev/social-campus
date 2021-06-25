@@ -162,7 +162,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Posts</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.postCount || 0)
+                        numberFormatter(postCount)
                       }}</span>
                     </div>
                   </router-link>
@@ -170,7 +170,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Followers</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.followerCount || 0)
+                        numberFormatter(followerCount)
                       }}</span>
                     </div>
                   </router-link>
@@ -178,7 +178,7 @@
                     <div class="py-1 px-1 rounded-lg !text-sm sm:!text-base">
                       <span class="dark:text-gray-50 text-gray-900">Folge Ich</span>
                       <span class="ml-2 font-mono dark:text-gray-50 text-gray-900">{{
-                        numberFormatter(stats?.followingCount || 0)
+                        numberFormatter(followingCount)
                       }}</span>
                     </div>
                   </router-link>
@@ -411,7 +411,9 @@ export default defineComponent({
       () => ({ enabled: userStatsEnabled.value })
     );
 
-    const stats = useResult(statsResult, null, (data) => data.userStats);
+    const postCount = useResult(statsResult, 0, (data) => data.userStats.postCount);
+    const followerCount = useResult(statsResult, 0, (data) => data.userStats.followerCount);
+    const followingCount = useResult(statsResult, 0, (data) => data.userStats.followingCount);
 
     //register eventbus event for the infintyscroll wrapper
     const internalInstance = getCurrentInstance();
@@ -446,7 +448,9 @@ export default defineComponent({
       profileImage,
       showEditProfile,
       followButtonText,
-      stats,
+      postCount,
+      followerCount,
+      followingCount,
       emitLoad,
       qloading,
       editProfileModal,

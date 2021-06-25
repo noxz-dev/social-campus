@@ -2,13 +2,13 @@ import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class UserStats {
-  @Field(() => String)
+  @Field(() => Number)
   postCount: number;
 
-  @Field(() => String)
+  @Field(() => Number)
   followerCount: number;
 
-  @Field(() => String)
+  @Field(() => Number)
   followingCount: number;
 
   constructor(postCount: number, followerCount: number, followingCount: number) {

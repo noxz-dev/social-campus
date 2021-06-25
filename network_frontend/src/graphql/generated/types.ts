@@ -674,9 +674,9 @@ export type User = {
 
 export type UserStats = {
   __typename?: 'UserStats';
-  postCount: Scalars['String'];
-  followerCount: Scalars['String'];
-  followingCount: Scalars['String'];
+  postCount: Scalars['Float'];
+  followerCount: Scalars['Float'];
+  followingCount: Scalars['Float'];
 };
 
 export type UserValidator = {

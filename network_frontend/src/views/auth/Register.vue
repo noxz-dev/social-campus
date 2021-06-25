@@ -310,7 +310,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import { required, minLength, email, sameAs, alpha, alphaNum, helpers } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useSignupMutation } from '../../graphql/generated/types';
 export default defineComponent({
   setup() {

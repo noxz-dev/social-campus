@@ -635,7 +635,7 @@
     <new-post @close="modal.closeModal()" />
   </modal>
   <modal ref="settingsModal" content-text="" header-text="Einstellungen">
-    <settings-modal @close="modal.closeModal()" />
+    <settings-modal @close="settingsModal.closeModal()" />
   </modal>
   <edit-modal content-text="" header-text="Edit Post" />
 </template>
@@ -691,6 +691,7 @@ export default defineComponent({
     const notifications = ref<RecursivePartial<Notification>[]>([]);
     const store = useStore();
     const modal = ref<InstanceType<typeof Modal>>();
+      const settingsModal = ref<InstanceType<typeof Modal>>();
 
     //close the profile menu, on click outside
     onClickOutside(target, (event) => {
@@ -780,6 +781,7 @@ export default defineComponent({
       deleteNotification,
       modal,
       state,
+      settingsModal
     };
   },
 });

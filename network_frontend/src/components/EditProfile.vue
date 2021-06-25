@@ -338,7 +338,7 @@
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 dark:bg-dark-700 text-right sm:px-6">
-              <app-button type="submit" class="bg-dark-400 mr-2 hover:bg-red-600"> Abbrechen</app-button>
+              <app-button type="submit" class="bg-dark-400 mr-2 hover:!bg-red-600"> Abbrechen</app-button>
               <app-button type="submit" :disabled="loading">
                 Speichern
                 <svg

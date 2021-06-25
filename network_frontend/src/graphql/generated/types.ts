@@ -1007,6 +1007,19 @@ export type UpdateAboutGroupMutation = (
   ) }
 );
 
+export type UpdatePasswordMutationVariables = Exact<{
+  input: UpdatePasswordInput;
+}>;
+
+
+export type UpdatePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePassword: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
 }>;
@@ -2310,6 +2323,35 @@ export function useUpdateAboutGroupMutation(options: VueApolloComposable.UseMuta
   return VueApolloComposable.useMutation<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>(UpdateAboutGroupDocument, options);
 }
 export type UpdateAboutGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>;
+export const UpdatePasswordDocument = gql`
+    mutation updatePassword($input: UpdatePasswordInput!) {
+  updatePassword(input: $input) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useUpdatePasswordMutation__
+ *
+ * To run a mutation, you first call `useUpdatePasswordMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePasswordMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdatePasswordMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePasswordMutation(options: VueApolloComposable.UseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>>) {
+  return VueApolloComposable.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+}
+export type UpdatePasswordMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const UpdateProfileDocument = gql`
     mutation updateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input) {

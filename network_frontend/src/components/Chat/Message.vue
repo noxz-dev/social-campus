@@ -7,7 +7,7 @@
           class="mr-2 max-w-xs md:max-w-xl bg-brand-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
         >
           <div v-if="media" class="relative xl:min-w-[36rem] min-w-[20rem]">
-            <div class="aspect-ratio-4/3"></div>
+            <div class="aspect-ratio-4/3 h-0"></div>
             <lazy-image
               class="rounded-tl-2xl absolute left-0 top-0 w-full h-full object-cover rounded-tr-xl cursor-pointer"
               :src="media.name"
@@ -24,7 +24,7 @@
         </div>
         <div v-else class="mr-2 max-w-xl bg-gray-500 rounded-br-2xl rounded-tl-2xl rounded-tr-xl text-white">
           <div v-if="media" class="relative xl:min-w-[36rem] min-w-[20rem]">
-            <div class="aspect-ratio-4/3"></div>
+            <div class="aspect-ratio-4/3 h-0"></div>
             <lazy-image
               class="rounded-tl-2xl absolute left-0 top-0 w-full h-full object-cover rounded-tr-xl cursor-pointer"
               :src="media.name"

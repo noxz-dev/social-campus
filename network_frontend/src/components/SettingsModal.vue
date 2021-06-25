@@ -3,7 +3,7 @@
     <label for="newPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !my-2 text-left">
       Neues Passwort
     </label>
-    <input-field id="newPassword" inputClasses="!pr-2" v-model="newPassword" type="password" autocomplete="off"></input-field>
+    <input-field id="newPassword" inputClasses="!pr-2" v-model="newPassword" type="password" autocomplete="new-password"></input-field>
     <label
       for="newPasswordRepeat"
       class="block text-sm font-medium text-gray-700 dark:text-gray-50 !my-2 !mt-4 text-left"

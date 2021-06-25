@@ -74,7 +74,7 @@
 import { computed, defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'InputField',
-  emits: ['update:modelValue', 'focus'],
+  emits: ['update:modelValue', 'focus', 'clicked'],
   props: {
     modelValue: String,
     placeholder: String,

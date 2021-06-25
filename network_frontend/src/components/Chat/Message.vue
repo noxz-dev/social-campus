@@ -4,35 +4,40 @@
       <div>
         <div
           v-if="positionRight"
-          class="mr-2 max-w-xs md:max-w-xl bg-brand-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
+          class="mr-2 max-w-xs md:max-w-xl rounded-bl-2xl rounded-tl-2xl rounded-tr-xl text-white"
         >
-          <div v-if="media" class="relative xl:min-w-[36rem] min-w-[20rem]">
-            <div class="aspect-ratio-4/3 h-0"></div>
-            <lazy-image
-              class="rounded-tl-2xl absolute left-0 top-0 w-full h-full object-cover rounded-tr-xl cursor-pointer"
+          <div v-if="media" class="xl:min-w-[36rem] min-w-[20rem] border rounded-xl border-b-0 border-dark-500 rounded-b-none">
+            <div class="aspect-w-4 aspect-h-3 h-80">
+              <lazy-image
+              class="rounded-tl-lg object-cover rounded-tr-lg cursor-pointer"
               :src="media.name"
               :blurhash="media.blurhash"
               v-viewer="viewerOptions"
             />
+            </div>
+           
           </div>
-          <div class="p-2">
+          <div class="p-2 bg-brand-500 rounded-bl-2xl " :class="!media && 'rounded-tl-2xl rounded-tr-xl'">
             <span class="break-words p-2">{{ message }}</span>
             <span class="ml-2 text-[0.7rem] text-gray-300 float-right pt-1">{{
               dayjs(createdAt).format('HH:mm')
             }}</span>
           </div>
         </div>
+
         <div v-else class="mr-2 max-w-xl bg-gray-500 rounded-br-2xl rounded-tl-2xl rounded-tr-xl text-white">
-          <div v-if="media" class="relative xl:min-w-[36rem] min-w-[20rem]">
-            <div class="aspect-ratio-4/3 h-0"></div>
-            <lazy-image
-              class="rounded-tl-2xl absolute left-0 top-0 w-full h-full object-cover rounded-tr-xl cursor-pointer"
+          <div v-if="media" class="xl:min-w-[36rem] min-w-[20rem] border rounded-xl border-b-0 border-dark-500 rounded-b-none">
+            <div class="aspect-w-4 aspect-h-3 h-80">
+              <lazy-image
+              class="rounded-tl-xl object-cover rounded-tr-xl cursor-pointer"
               :src="media.name"
               :blurhash="media.blurhash"
               v-viewer="viewerOptions"
             />
+            </div>
+           
           </div>
-          <div class="p-2">
+          <div class="p-2 bg-gray-500 rounded-bl-2xl rounded-br-2xl" :class="!media && 'rounded-tl-2xl rounded-tr-xl'">
             <span class="break-words p-2">{{ message }}</span>
             <span class="ml-2 text-[0.7rem] text-gray-300 float-right pt-1">{{
               dayjs(createdAt).format('HH:mm')

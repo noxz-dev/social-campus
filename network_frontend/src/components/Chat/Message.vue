@@ -18,7 +18,7 @@
            
           </div>
           <div class="p-2 bg-brand-500 rounded-bl-2xl " :class="!media && 'rounded-tl-2xl rounded-tr-xl'">
-            <span class="break-words p-2">{{ message }}</span>
+            <span class="break-words p-2" v-html="parseMessageText(message)"></span>
             <span class="ml-2 text-[0.7rem] text-gray-300 float-right pt-1">{{
               dayjs(createdAt).format('HH:mm')
             }}</span>
@@ -52,6 +52,9 @@
 import { defineComponent } from 'vue';
 import dayjs from 'dayjs';
 import LazyImage from '../../components/Blurhash/LazyImage.vue';
+import DOMPurify from 'dompurify';
+import linkifyHtml from "linkifyjs/html"
+
 export default defineComponent({
   components: {
     LazyImage,
@@ -88,9 +91,14 @@ export default defineComponent({
       transition: true,
       fullscreen: true,
     };
+
+    const parseMessageText = (messageText: string) => {
+      return linkifyHtml(DOMPurify.sanitize(messageText))
+    }
     return {
       dayjs,
       viewerOptions,
+      parseMessageText
     };
   },
 });

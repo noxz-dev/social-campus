@@ -30,6 +30,7 @@
     "highlight.js": "^10.7.2",
     "howler": "^2.2.1",
     "i": "^0.3.6",
+    "linkifyjs": "*",
     "marked": "^2.0.1",
     "medium-editor": "^5.23.3",
     "mitt": "^2.1.0",

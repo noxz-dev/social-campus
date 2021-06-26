@@ -7,6 +7,8 @@ export const mediaFromGroup = gql`
       type
       name
       blurhash
+      createdAt
+      createdByName
     }
   }
 `;

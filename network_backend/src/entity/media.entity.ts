@@ -27,3 +27,18 @@ export class Media extends Base {
   @Column({ type: 'varchar', nullable: true })
   blurhash: string;
 }
+
+@ObjectType()
+export class GroupMedia extends Media {
+  @Field(() => String)
+  createdByName: string;
+
+  constructor(media: Media, userName: string) {
+    super();
+    this.id = media.id;
+    this.name = media.name;
+    this.type = media.type;
+    this.blurhash = media.blurhash;
+    this.createdByName = userName;
+  }
+}

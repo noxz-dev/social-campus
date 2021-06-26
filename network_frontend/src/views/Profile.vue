@@ -21,7 +21,7 @@
             />
           </div>
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
-            <div class="-mt-12 md:-mt-20 sm:flex sm:items-center flex-col z-20">
+            <div class="-mt-12 md:-mt-20 flex items-center flex-col z-20">
               <div class="flex w-full z-10">
                 <div class="rounded-full w-24 h-24 md:w-44 md:h-44" v-if="!user">
                   <div
@@ -42,24 +42,13 @@
                     "
                   ></div>
                 </div>
-                <div class="rounded-full w-24 h-24 md:w-44 md:h-44" v-if="user">
+                <div
+                  class="rounded-full w-24 h-24 md:w-44 md:h-44 flex-shrink-0 p-2 bg-gray-100 dark:bg-dark-600"
+                  v-if="user"
+                >
                   <lazy-image
                     :blurhash="user.avatar.blurhash"
-                    class="
-                      z-10
-                      w-24
-                      h-24
-                      rounded-full
-                      md:w-44 md:h-44
-                      dark:bg-dark-600
-                      bg-white
-                      self-center
-                      border-2
-                      p-1
-                      object-cover
-                      border-white
-                      dark:border-dark-600
-                    "
+                    class="z-10 rounded-full self-center object-cover bg-dark-600"
                     :src="profileImage"
                     alt="profile image"
                     rounded="full"

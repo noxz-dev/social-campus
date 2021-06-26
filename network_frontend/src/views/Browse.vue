@@ -3,7 +3,7 @@
     <div id="browse" class="flex h-full items-center bg-white dark:bg-dark-700 flex-col rounded-3xl">
       <infinite-scroll-wrapper :queryLoading="customLoading" @loadMore="loadMore()" class="overflow-y-auto">
         <div class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-2/4 mb-10 mt-10">
-          <div class="h-10 w-full flex items-center mb-10 flex-col md:flex-row">
+          <div class="h-10 w-full flex items-center mb-2 flex-col md:flex-row">
             <span class="text-xl font-semibold dark:text-gray-50 text-gray-900 mr-4 pb-4 md:pb-0">
               Filter nach Tags:</span
             >
@@ -14,7 +14,40 @@
               inputPlaceholder="z.B. #hsh, #socialnetwork, #webtechnologien"
             ></chips-input>
           </div>
+          <div class="flex">
+            <div
+              class="bg-gray-400 rounded-xl p-1 pl-2 text-xs cursor-pointer flex text-white"
+              @click="showExtraSearch = !showExtraSearch"
+            >
+              Erweiterte Suche
+              <svg class="stroke-white h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 8.5L12 15.5L5 8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <input-field
+            v-if="showExtraSearch"
+            class="w-full my-4"
+            type="text"
+            placeholder="Suche nach einem Begriff"
+            inputClasses="!pr-0"
+          />
           <post-list :posts="posts" class="pt-10 md:pt-0" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
+          <div v-show="loading || customLoading" class="w-full flex justify-center">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </div>
         </div>
       </infinite-scroll-wrapper>
     </div>
@@ -32,9 +65,10 @@ import { useRoute } from 'vue-router';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import ChipsInput from '../components/Form/ChipsInput.vue';
 import VueTribute from '../components/VueTribute.vue';
+import InputField from '../components/Form/InputField.vue';
 
 export default defineComponent({
-  components: { PostList, InfiniteScrollWrapper, ChipsInput, VueTribute },
+  components: { PostList, InfiniteScrollWrapper, ChipsInput, VueTribute, InputField },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.userData.user);
@@ -43,7 +77,7 @@ export default defineComponent({
     const chipInput = ref<InstanceType<typeof ChipsInput>>();
     const tags = ref<string[]>([]);
     const inputTags = ref<string[]>([]);
-
+    const showExtraSearch = ref(false);
     const browseQueryEnabled = ref(false);
 
     //sets inital tags if some were given trough url query
@@ -170,7 +204,7 @@ export default defineComponent({
       },
     }));
 
-    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags, customLoading };
+    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags, customLoading, showExtraSearch };
   },
 });
 </script>

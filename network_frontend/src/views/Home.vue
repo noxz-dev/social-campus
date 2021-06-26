@@ -111,8 +111,7 @@
                       rounded-xl
                       border border-gray-200
                       shadow-lg
-                      dark:shadow-xl
-                      dark:border-dark-600
+                      dark:shadow-xl dark:border-dark-600
                       text-sm
                       font-semibold
                     "

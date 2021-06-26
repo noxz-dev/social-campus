@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex items-center flex-col pb-14" v-if="posts">
+  <div class="w-full flex items-center flex-col pb-14 md:pb-4" v-if="posts">
     <div class="dark:text-gray-50 text-gray-900 mt-20 font-semibold text-xl" v-if="posts?.length === 0">
       {{ emptyText }}
     </div>

@@ -6,32 +6,39 @@
       </div>
     </div>
     <div
-      class="w-full p-1 flex flex-col items-center"
+      class="w-full p-1 flex flex-col"
       ref="groupListContainer"
       :class="groups && groups?.length === 0 && 'py-5 p-4'"
     >
-      <swiper
-        v-if="groups && groups?.length > 0"
-        :slides-per-view="6"
-        :options="swiperOptions"
-        :space-between="10"
-        navigation
-        scrollbar
-        @reachEnd="onReachEnd"
-        class="w-full mb-2 rounded-xl"
-        :breakpoints="swiperOptions.breakpoints"
-      >
-        <swiper-slide v-for="group in groups" :key="group.id" class="xl:w-64 md:w-72 w-full pb-5">
-          <group-card :group="group" :isMemberOfGroup="isMember"></group-card>
-        </swiper-slide>
-      </swiper>
-      <div v-else class="font-semibold">{{ emptyText }}</div>
+      <div v-if="isLoading" class="flex gap-4 pb-5">
+        <div v-for="index in numberOfPlaceholder" :key="index" class="xl:w-64 w-40 md:w-64 bg-dark-600 animate-pulse">
+          <div class="w-full md:h-96 h-64 bg-dark-700 rounded-lg"></div>
+        </div>
+      </div>
+      <div v-else class="w-full">
+        <swiper
+          v-if="groups && groups?.length > 0"
+          :slides-per-view="6"
+          :options="swiperOptions"
+          :space-between="10"
+          navigation
+          scrollbar
+          @reachEnd="onReachEnd"
+          class="w-full mb-2 rounded-xl"
+          :breakpoints="swiperOptions.breakpoints"
+        >
+          <swiper-slide v-for="group in groups" :key="group.id" class="xl:w-64 md:w-72 w-full pb-5">
+            <group-card :group="group" :isMemberOfGroup="isMember"></group-card>
+          </swiper-slide>
+        </swiper>
+        <div v-else class="font-semibold">{{ emptyText }}</div>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Group } from '../../graphql/generated/types';
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
@@ -40,6 +47,7 @@ import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import GroupCard from './GroupCard.vue';
+import breakpoints from '../../utils/breakpoints';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export default defineComponent({
@@ -99,6 +107,8 @@ export default defineComponent({
       },
     };
 
+    const numberOfPlaceholder = computed(() => (breakpoints.is === 'sm' ? 2 : 4));
+
     onMounted(() => {
       //fix a weird bug, where the scrollbar is not showing up
       setTimeout(() => {
@@ -111,7 +121,7 @@ export default defineComponent({
       emit('loadMore');
     };
 
-    return { onReachEnd, swiperOptions };
+    return { onReachEnd, swiperOptions, numberOfPlaceholder };
   },
 });
 </script>

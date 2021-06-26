@@ -85,6 +85,16 @@ export type GroupAccess = {
   isMember: Scalars['Boolean'];
 };
 
+export type GroupMedia = {
+  __typename?: 'GroupMedia';
+  id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  type: MediaType;
+  name: Scalars['String'];
+  blurhash?: Maybe<Scalars['String']>;
+  createdByName: Scalars['String'];
+};
+
 export type GroupMember = {
   __typename?: 'GroupMember';
   id: Scalars['String'];
@@ -451,7 +461,7 @@ export type Query = {
   recommendedUsersFaculty: Array<User>;
   /** recommeding users based on Faculty */
   recommendedUsersInterests: Array<User>;
-  mediaFromGroup: Array<Media>;
+  mediaFromGroup: Array<GroupMedia>;
 };
 
 
@@ -1358,8 +1368,8 @@ export type MediaFromGroupQueryVariables = Exact<{
 export type MediaFromGroupQuery = (
   { __typename?: 'Query' }
   & { mediaFromGroup: Array<(
-    { __typename?: 'Media' }
-    & Pick<Media, 'id' | 'type' | 'name' | 'blurhash'>
+    { __typename?: 'GroupMedia' }
+    & Pick<GroupMedia, 'id' | 'type' | 'name' | 'blurhash' | 'createdAt' | 'createdByName'>
   )> }
 );
 
@@ -3039,6 +3049,8 @@ export const MediaFromGroupDocument = gql`
     type
     name
     blurhash
+    createdAt
+    createdByName
   }
 }
     `;

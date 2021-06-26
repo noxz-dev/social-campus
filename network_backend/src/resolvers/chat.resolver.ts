@@ -18,12 +18,14 @@ export interface NewChatMessagePayload {
 
 @Resolver(() => Chat)
 export class ChatResolver {
+  /**
+   * Query to get all chats from the logged in user
+   */
   @Authorized()
   @Query(() => [Chat])
   public async myChats(@Ctx() ctx: MyContext): Promise<Chat[]> {
     const userId = ctx.req.user.id;
 
-    //TODO Rewrite with querybuilder
     const user = await getRepository(User).findOne({
       where: { id: userId },
       relations: ['chats', 'chats.members'],
@@ -39,6 +41,7 @@ export class ChatResolver {
       if (messages[0]) {
         chat.lastMessage = messages[0];
       } else {
+        //mock a lastmessage if none exist
         const message = new ChatMessage(user, chat, 'neuer chat');
         message.id = uuidv4();
         message.createdAt = chat.createdAt;
@@ -50,20 +53,27 @@ export class ChatResolver {
     return user.chats;
   }
 
+  /**
+   * Query to get a chat by a given Id
+   */
   @Authorized()
   @Query(() => Chat)
   public async chatById(@Ctx() ctx: MyContext, @Arg('chatId', () => String) chatId: string): Promise<Chat> {
     const userId = ctx.req.user.id;
     const chat = await getRepository(Chat).findOne({
       where: { id: chatId },
-      relations: ['members',],
+      relations: ['members'],
     });
 
-    const messages = await getRepository(ChatMessage).find({where: {chat: chatId}, relations: ["sendBy"], order: {
-      createdAt: "ASC"
-    }})
+    const messages = await getRepository(ChatMessage).find({
+      where: { chat: chatId },
+      relations: ['sendBy'],
+      order: {
+        createdAt: 'ASC',
+      },
+    });
 
-    chat.messages = messages
+    chat.messages = messages;
 
     if (!chat) throw Error('no chat found');
 
@@ -72,6 +82,9 @@ export class ChatResolver {
     throw Error('youre not allowed to access this chat');
   }
 
+  /**
+   * Mutation, send a new chat message
+   */
   @Authorized()
   @Mutation(() => ChatMessage)
   public async sendMessage(
@@ -112,6 +125,8 @@ export class ChatResolver {
 
       return { savedMessage, user, toUser };
     });
+
+    //send notification
     await notify(
       {
         fromUser: result.user,
@@ -127,6 +142,9 @@ export class ChatResolver {
     return result.savedMessage;
   }
 
+  /**
+   * Mutation, to create a new chat with someone
+   */
   @Authorized()
   @Mutation(() => Chat)
   public async createChat(@Ctx() ctx: MyContext, @Arg('memberId', () => String) memberId: string): Promise<Chat> {
@@ -145,6 +163,9 @@ export class ChatResolver {
     return savedChat;
   }
 
+  /**
+   * Subscription to subscribe for new chat messages
+   */
   @Subscription(() => ChatMessage, {
     topics: SUB_TOPICS.NEW_CHAT_MESSAGE,
     filter: async ({ payload, args, context }) => {
@@ -162,6 +183,9 @@ export class ChatResolver {
     return payload.message;
   }
 
+  /**
+   * Delete a chat message
+   */
   @Authorized()
   @Mutation(() => Boolean)
   public async deleteChatMessage(
@@ -184,6 +208,9 @@ export class ChatResolver {
   }
 }
 
+/**
+ * check if an user is member of a chat
+ */
 const checkChatAccess = (members: User[], userId: string): boolean => {
   const user = members.find((member) => member.id === userId);
   if (user) return true;

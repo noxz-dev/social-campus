@@ -29,6 +29,9 @@ export interface NotificationPayload {
 
 @Resolver(() => Notification)
 export class NotificationResolver {
+  /**
+   * get all notifications
+   */
   @Authorized()
   @Query(() => [Notification])
   public async getNotifications(@Ctx() ctx: MyContext): Promise<Notification[] | null> {
@@ -59,6 +62,9 @@ export class NotificationResolver {
     return notifys;
   }
 
+  /**
+   * Subscribe to new notification
+   */
   @Subscription(() => Notification, {
     topics: SUB_TOPICS.NEW_NOTIFICATION,
     filter: ({ args, payload }) => {
@@ -77,6 +83,9 @@ export class NotificationResolver {
     return payload;
   }
 
+  /**
+   * Delete a notifiation
+   */
   @Authorized()
   @Mutation(() => Boolean)
   public async deleteNotification(
@@ -103,6 +112,9 @@ export class NotificationResolver {
   }
 }
 
+/**
+ * Helper Function to generate new notifcations from anywhere
+ */
 export const notify = async (payload: NotificationPayload, context: MyContext): Promise<void> => {
   if (context.req.user.id === payload.toUser.id) return;
   const notify = new Notification(payload);

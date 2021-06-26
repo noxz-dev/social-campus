@@ -8,6 +8,9 @@ import { isMemberOfGroup } from './group.resolver';
 
 @Resolver(() => Media)
 export class MediaResolver {
+  /**
+   * Get all the Media from posts in a group
+   */
   @Authorized()
   @Query(() => [Media])
   async mediaFromGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<Media[]> {

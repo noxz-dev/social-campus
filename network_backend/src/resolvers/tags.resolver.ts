@@ -5,6 +5,9 @@ import { Tag } from '../entity/tag.entity';
 
 @Resolver(() => Tag)
 export class TagResolver {
+  /**
+   * Get all existing Tags
+   */
   @Authorized()
   @Query(() => [Tag])
   async getAllTags(): Promise<Tag[]> {

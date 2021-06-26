@@ -6,12 +6,18 @@ import { RoleValidator } from '../validators/role.validator';
 
 @Resolver(() => Role)
 export class RoleResolver {
+  /**
+   * List all Roles
+   */
   @Authorized('ADMIN')
   @Query(() => [Role])
   public async getRoles(): Promise<Role[]> {
     return await getRepository(Role).find();
   }
 
+  /**
+   * Create an new Role
+   */
   @Authorized('ADMIN')
   @Mutation(() => Role)
   public async addRole(@Arg('input', () => RoleValidator) input: RoleValidator): Promise<Role> {
@@ -20,6 +26,9 @@ export class RoleResolver {
     return role;
   }
 
+  /**
+   * Remove an existing Role
+   */
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   public async removeRole(@Arg('name', () => String) name: string): Promise<boolean> {
@@ -33,6 +42,9 @@ export class RoleResolver {
     return true;
   }
 
+  /**
+   * assign a role to specific user
+   */
   @Authorized()
   @Mutation(() => User)
   public async assignRoleToUser(
@@ -41,7 +53,7 @@ export class RoleResolver {
   ): Promise<User | null> {
     //disable the ability to assign the admin group via this call
     if (roleName.toLocaleLowerCase() === 'admin') throw new Error('youre not allowed to do this');
-
+    //TODO MOVE EMAIL TO ID
     const role = await getRepository(Role).findOne({ name: roleName });
     if (!role) throw new Error('Role not found!');
     const user = await getRepository(User).findOne({ relations: ['roles'], where: { email } });
@@ -52,6 +64,9 @@ export class RoleResolver {
     return user;
   }
 
+  /**
+   * Remove an assigned role from a user
+   */
   @Authorized()
   @Mutation(() => User)
   public async removeRoleFromUser(

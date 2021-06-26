@@ -12,6 +12,9 @@ import { UpdateGroupInput } from '../validators/updateGroup.validator';
 
 @Resolver(() => Group)
 export class GroupResolver {
+  /**
+   * Mutation to create a new group
+   */
   @Authorized()
   @Mutation(() => PreviewGroup)
   public async createGroup(
@@ -21,6 +24,7 @@ export class GroupResolver {
     @Arg('groupType', () => GroupType) groupType: GroupType,
     @Arg('password', () => String, { nullable: true }) password: string,
   ): Promise<PreviewGroup> {
+    //TODO USE A INPUT
     const userId = ctx.req.user.id;
     if (!userId) throw new Error('user not authenticated');
 
@@ -46,6 +50,9 @@ export class GroupResolver {
     return new PreviewGroup(group);
   }
 
+  /**
+   * Mutation to join a new group
+   */
   @Authorized()
   @Mutation(() => Group)
   public async joinGroup(
@@ -91,6 +98,9 @@ export class GroupResolver {
     throw Error('could not join the group');
   }
 
+  /**
+   * Query to get a group by a given id
+   */
   @Authorized()
   @Query(() => Group)
   public async groupById(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<Group> {
@@ -107,6 +117,9 @@ export class GroupResolver {
     return group;
   }
 
+  /**
+   * Query to get a preview of a group
+   */
   @Authorized()
   @Query(() => PreviewGroup)
   public async groupByIdPreview(@Arg('groupId', () => String) groupId: string): Promise<PreviewGroup> {
@@ -122,6 +135,9 @@ export class GroupResolver {
     return previewGroup;
   }
 
+  /**
+   * Mutation to update the information of the group
+   */
   @Authorized()
   @Mutation(() => Group)
   public async updateAboutGroup(
@@ -129,6 +145,7 @@ export class GroupResolver {
     @Arg('groupId', () => String) groupId: string,
     @Arg('aboutContent', () => String) aboutContent: string,
   ): Promise<Group> {
+    //TODO NEEDS IS ALLOWED VALIDATION -> only if admin
     const userId = ctx.req.user.id;
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
@@ -143,6 +160,9 @@ export class GroupResolver {
     return group;
   }
 
+  /**
+   * get a preview of all exisiting groups
+   */
   @Authorized()
   @Query(() => [PreviewGroup])
   public async groups(
@@ -182,6 +202,9 @@ export class GroupResolver {
     return previewGroups;
   }
 
+  /**
+   * get a preview of all groups, where the logged in user is a member
+   */
   @Authorized()
   @Query(() => [PreviewGroup])
   public async myGroups(
@@ -217,6 +240,9 @@ export class GroupResolver {
     return previewGroups;
   }
 
+  /**
+   * get a preview of all groups where a person is member who is followed by the logged in user
+   */
   @Authorized()
   @Query(() => [PreviewGroup])
   public async followingGroups(
@@ -265,6 +291,9 @@ export class GroupResolver {
     return previewGroups;
   }
 
+  /**
+   * Update the Role of user within a group
+   */
   @Authorized()
   @Mutation(() => Group)
   public async updateGroupRole(
@@ -298,6 +327,9 @@ export class GroupResolver {
     return group;
   }
 
+  /**
+   * Check if youre allowed to interact with the content of a group
+   */
   @Authorized()
   @Query(() => GroupAccess)
   public async checkGroupAccess(
@@ -324,6 +356,9 @@ export class GroupResolver {
     return state;
   }
 
+  /**
+   * Mutation to update group information
+   */
   @Authorized()
   @Mutation(() => Group)
   public async updateGroup(
@@ -355,6 +390,9 @@ export class GroupResolver {
     return saved;
   }
 
+  /**
+   * Mutation to leave a group
+   */
   @Authorized()
   @Mutation(() => Boolean)
   public async leaveGroup(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<boolean> {
@@ -380,6 +418,9 @@ export class GroupResolver {
     return true;
   }
 
+  /**
+   * check the role access to some information
+   */
   @Authorized()
   @Query(() => GroupRoleAccess)
   public async checkGroupRoleAccess(

@@ -8,6 +8,9 @@ import { Search } from '../graphql_types/search';
 
 @Resolver(() => Search)
 export class SearchResolver {
+  /**
+   * Search to find information like tags, users and group
+   */
   @Authorized()
   @Query(() => Search)
   async search(@Arg('searchString', () => String) searchString: string): Promise<Search> {

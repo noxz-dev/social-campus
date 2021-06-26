@@ -12,6 +12,9 @@ import { notify } from './notification.resolver';
 
 @Resolver(() => Comment)
 export class CommentResolver {
+  /**
+   * Mutation to create an new comment for a specified post
+   */
   @Authorized()
   @Mutation(() => Comment, { description: 'Creates a new comment and adds it to a post' })
   public async addComment(
@@ -78,6 +81,9 @@ export class CommentResolver {
     return savedComment;
   }
 
+  /**
+   * Like an comment
+   */
   @Authorized()
   @Mutation(() => Comment)
   public async likeComment(
@@ -115,6 +121,9 @@ export class CommentResolver {
     return comment;
   }
 
+  /**
+   * Remove the like of an comment
+   */
   @Authorized()
   @Mutation(() => Comment)
   public async unlikeComment(
@@ -151,6 +160,9 @@ export class CommentResolver {
     return comment;
   }
 
+  /**
+   * Delete an Comment
+   */
   @Authorized()
   @Mutation(() => Comment)
   public async deleteComment(
@@ -171,6 +183,9 @@ export class CommentResolver {
     return comment;
   }
 
+  /**
+   * Field Resolver to resolve the user field from the comment
+   */
   @FieldResolver()
   async user(@Root() comment: Comment): Promise<User> {
     const c = await getRepository(Comment).findOne({ where: { id: comment.id }, relations: ['user'] });

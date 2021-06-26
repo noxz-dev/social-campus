@@ -46,7 +46,7 @@
       items-center
       justify-center
       px-3
-      py-0.5
+      py-1
       rounded-full
       text-sm
       font-medium

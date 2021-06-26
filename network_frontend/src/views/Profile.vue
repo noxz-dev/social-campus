@@ -66,7 +66,7 @@
                   />
                 </div>
 
-                <div class="flex w-full justify-end items-center mt-14">
+                <div class="flex w-full justify-end items-center mt-20">
                   <div class="flex flex-col">
                     <app-button @click="$refs.editProfileModal.openModal()" v-if="showEditProfile" class="">
                       <svg

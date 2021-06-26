@@ -21,7 +21,7 @@
             />
           </div>
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
-            <div class="-mt-12 sm:-mt-16 sm:flex sm:items-center flex-col z-20">
+            <div class="-mt-12 md:-mt-20 sm:flex sm:items-center flex-col z-20">
               <div class="flex w-full z-10">
                 <div class="rounded-full w-24 h-24 md:w-44 md:h-44" v-if="!user">
                   <div
@@ -31,12 +31,14 @@
                       h-24
                       rounded-full
                       md:w-44 md:h-44
-                      bg-dark-600
+                      dark:bg-dark-600
+                      bg-white
                       self-center
                       border-2
                       p-1
                       object-cover
                       border-white
+                      dark:border-dark-600
                     "
                   ></div>
                 </div>
@@ -49,12 +51,14 @@
                       h-24
                       rounded-full
                       md:w-44 md:h-44
-                      bg-dark-600
+                      dark:bg-dark-600
+                      bg-white
                       self-center
                       border-2
                       p-1
                       object-cover
                       border-white
+                      dark:border-dark-600
                     "
                     :src="profileImage"
                     alt="profile image"

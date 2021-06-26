@@ -16,7 +16,7 @@
           </div>
           <div class="flex">
             <div
-              class="bg-gray-400 rounded-xl p-1 pl-2 text-xs cursor-pointer flex text-white"
+              class="bg-gray-400 rounded-xl p-1 pl-2 mt-10 md:mt-0 text-xs cursor-pointer flex text-white"
               @click="showExtraSearch = !showExtraSearch"
             >
               Erweiterte Suche

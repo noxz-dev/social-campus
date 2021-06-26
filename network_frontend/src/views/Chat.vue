@@ -10,7 +10,6 @@
           <chat-users @user-choosen="usersActive = false" />
         </div>
         <div class="flex-1 dark:bg-dark-700 h-full">
-          <!-- <chat-box></chat-box> -->
           <router-view></router-view>
         </div>
       </div>
@@ -23,7 +22,6 @@ import { defineComponent, ref } from 'vue';
 import ChatUsers from '../components/Chat/ChatUsers.vue';
 import breakpoints from '../utils/breakpoints';
 import ChatBox from '../components/Chat/ChatBox.vue';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: { ChatUsers, ChatBox },

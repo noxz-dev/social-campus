@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-lg w-full" :class="'dark:' + bgColorDark">
+  <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-xl w-full" :class="'dark:' + bgColorDark">
     <div class="flex space-x-3">
       <div
         class="flex-shrink-0 cursor-pointer h-10 w-10"

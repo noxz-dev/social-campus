@@ -1,7 +1,7 @@
 <template>
   <card id="postcard" :bgColorDark="cardBgColor">
     <card-header :post="post" :bgColorDark="cardBgColor" />
-    <div class="px-4" @click.self="handleNavigation">
+    <div class="px-4">
       <div class="text-sm text-gray-700 px-2 mr-1 dark:text-white mb-3">
         <div class="markdown whitespace-pre-wrap prettyprint" v-html="content"></div>
       </div>

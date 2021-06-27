@@ -7,7 +7,7 @@ export default {
   database: 'network_db',
   synchronize: true,
   logging: false,
-  entities: process.env.NODE_ENV === 'production' ? ['./dist/**/*.entity.js'] : ['src/entity/**/*.ts'],
+  entities: process.env.NODE_ENV === 'production' ? [__dirname + '/dist/**/*.entity.js'] : ['src/entity/**/*.ts'],
   migrations: ['src/migration/**/*.ts'],
   subscribers: ['src/subscriber/**/*.ts'],
   cli: {

@@ -1,2 +1,4 @@
 .env
 redis_data/
+minio_data/
+network_db_data/

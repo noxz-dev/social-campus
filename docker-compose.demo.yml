@@ -5,7 +5,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./demo_network_db_data:/var/lib/postgresql
+      - ./network_db_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -15,7 +15,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - ./demo_minio_data:/data
+      - ./minio_data:/data
     environment:
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
@@ -52,7 +52,7 @@ services:
   redis:
     image: redis:latest
     volumes:
-      - './demo_redis_data:/data'
+      - './redis_data:/data'
     ports:
       - '6379:6379'
     command: ['redis-server', '--appendonly', 'yes']

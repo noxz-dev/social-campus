@@ -1,7 +1,3 @@
-import * as path from 'path';
-console.log(path.resolve(__dirname, '**/*.entity{.ts,.js}'));
-
-
 export default {
   type: 'postgres',
   host: 'postgres',
@@ -11,7 +7,7 @@ export default {
   database: 'network_db',
   synchronize: true,
   logging: false,
-  entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}')],
+  entities: process.env.NODE_ENV === 'production' ? [__dirname + '/dist/**/*.entity.js'] : ['src/entity/**/*.ts'],
   migrations: ['src/migration/**/*.ts'],
   subscribers: ['src/subscriber/**/*.ts'],
   cli: {

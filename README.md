@@ -13,15 +13,20 @@
 
 - install node 16.1.0
 
+
 - run: npm install in network_backend
 
 - run: npm install in network_frontend
 
 - add .env file to the root folder for container configuration (.env-sample is given)
 
+- set NODE_ENV=development in the .env file
+
 - run: docker-compose up -d
 
 ## Demo-Startup
+
+- set NODE_ENV=production in the .env file
 
 - run: docker-compose -f docker-compose.demo.yml up -d
 

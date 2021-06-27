@@ -2,3 +2,6 @@
 redis_data/
 minio_data/
 network_db_data/
+demo_minio_data
+demo_redis_data
+demo_network_db_data

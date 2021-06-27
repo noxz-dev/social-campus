@@ -166,7 +166,8 @@ import InputField from './Form/InputField.vue';
 import LazyImage from './Blurhash/LazyImage.vue';
 import { useResult } from '@vue/apollo-composable';
 export type MaybeRef<T> = Ref<T> | T;
-function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside: MaybeRef<boolean> = true) {
+
+export function useDebounceRef<T>(value: T, delay: MaybeRef<number> = 200, callOutside: MaybeRef<boolean> = true) {
   let timeout: NodeJS.Timeout;
   return customRef<T>((track, trigger) => {
     return {
@@ -196,13 +197,12 @@ export default defineComponent({
     const router = useRouter();
     const isFocus = ref(false);
 
-
     //calls on component init, could be heavy inputs a string with properly no response
     const { result } = useSearchQuery(() => ({
-      searchString: searchString.value || "abcdefghijklmopqrstuvwxyz",
+      searchString: searchString.value || 'abcdefghijklmopqrstuvwxyz',
     }));
 
-    stop()
+    stop();
 
     const searchResult = useResult(result, [], (data) => data.search);
 

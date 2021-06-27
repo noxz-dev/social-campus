@@ -26,8 +26,9 @@
             </div>
           </div>
           <input-field
+            v-model="searchString"
             v-if="showExtraSearch"
-            class="w-full my-4"
+            class="w-full my-4 search__customInputField"
             type="text"
             placeholder="Suche nach einem Begriff"
             inputClasses="!pr-0"
@@ -66,6 +67,7 @@ import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
 import ChipsInput from '../components/Form/ChipsInput.vue';
 import VueTribute from '../components/VueTribute.vue';
 import InputField from '../components/Form/InputField.vue';
+import { useDebounceRef } from '../components/Search.vue';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper, ChipsInput, VueTribute, InputField },
@@ -79,6 +81,8 @@ export default defineComponent({
     const inputTags = ref<string[]>([]);
     const showExtraSearch = ref(false);
     const browseQueryEnabled = ref(false);
+
+    const searchString = useDebounceRef('', 300, true);
 
     //sets inital tags if some were given trough url query
     if (route.query.tag) {
@@ -209,4 +213,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.search__customInputField input {
+  border-radius: 1.25rem !important;
+}
+</style>

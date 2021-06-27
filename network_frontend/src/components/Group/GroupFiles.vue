@@ -52,9 +52,9 @@
           <div
             role="button"
             tabindex="0"
-            @keydown.enter="downloadFile"
+            @keydown.enter="downloadFile(file.name, file.type)"
             class="p-2 border dark:border-white border-black rounded-full hover:opacity-50 r"
-            @click="downloadFile"
+            @click="downloadFile(file.name, file.type)"
           >
             <svg
               class="dark:stroke-white stroke-black w-8 h-8"
@@ -91,7 +91,7 @@
   </div>
 </template>
 <script lang="ts">
-import { useMediaFromGroupQuery } from '../../graphql/generated/types';
+import { MediaType, useMediaFromGroupQuery } from '../../graphql/generated/types';
 import { defineComponent } from 'vue';
 import { useResult } from '@vue/apollo-composable';
 import { useRoute } from 'vue-router';
@@ -111,24 +111,24 @@ export default defineComponent({
       return dayjs(date).format('ddd DD. MMM YYYY HH:mm');
     };
 
-    const downloadFile = async (name: string) => {
-      const link = document.createElement('a');
-      link.href = await loadProxyFile(name);
-      link.download = name;
-      link.click();
-      URL.revokeObjectURL(link.href);
-    };
-
-    const downloadImage = async (name: string) => {
-      const link = document.createElement('a');
-      link.href = await loadProxyImage(name);
-      link.download = name;
-      link.click();
-      URL.revokeObjectURL(link.href);
+    const downloadFile = async (name: string, fileType: MediaType) => {
+      if (fileType === MediaType.File) {
+        const link = document.createElement('a');
+        link.href = await loadProxyFile(name);
+        link.download = name;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      } else if (fileType === MediaType.Image) {
+        const link = document.createElement('a');
+        link.href = await loadProxyImage(name);
+        link.download = name;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
     };
 
     const files = useResult(result, [], (data) => data.mediaFromGroup);
-    return { files, formattedDate };
+    return { files, formattedDate, downloadFile };
   },
 });
 </script>

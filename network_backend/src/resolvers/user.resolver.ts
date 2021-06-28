@@ -452,8 +452,6 @@ export class UserResolver {
 
     const parsedInterests = stringInterests.toString().replace('[', '').replace(']', '');
 
-    console.log(parsedInterests);
-
     const followingIds = me.following.map((u) => u.id);
     followingIds.push(userId);
 
@@ -465,18 +463,15 @@ export class UserResolver {
 
     const parsedFollowingIds = stringFollowingIds.toString().replace('[', '').replace(']', '');
 
-    //TODO ITS NOT WORKING PROPPERLY ... RANDOM STUFF HAPPENS
     const recommendedUsers = await getConnection().query(
       `select count(*), "user".* 
       from "user", 
       unnest(array[${parsedInterests}]) u 
-      where string_to_array(regexp_replace(lower("user".interests), '[\s*]', '' , 'g'), ',','g') @> array[u]  
+      where string_to_array(regexp_replace(lower("user".interests), '[\\s*]', '' , 'g'), ',','g') @> array[u]  
       AND "user".id NOT IN (${parsedFollowingIds}) 
       group by "user".id
       order by 1 desc LIMIT 3;`,
     );
-
-    console.log(recommendedUsers);
 
     //delete key, only needed for ordering
     recommendedUsers.forEach((u) => {

@@ -16,7 +16,7 @@
           </div>
           <div class="flex">
             <div
-              class="bg-gray-400 rounded-xl p-1 pl-2 mt-10 md:mt-0 text-xs cursor-pointer flex text-white"
+              class="bg-gray-500 rounded-xl p-1 pl-2 mt-10 md:mt-0 text-xs cursor-pointer flex text-white"
               @click="showExtraSearch = !showExtraSearch"
             >
               Erweiterte Suche
@@ -109,6 +109,7 @@ export default defineComponent({
         take: 10,
         skip: 0,
         tags: tags.value,
+        searchString: searchString.value,
       }),
       () => ({
         enabled: browseQueryEnabled.value,
@@ -116,12 +117,9 @@ export default defineComponent({
     );
     const posts = useResult(result);
 
-    watch(
-      () => loading.value,
-      () => {
-        console.log('loading changed', loading.value);
-      }
-    );
+    watchEffect(() => {
+      console.log(searchString.value);
+    });
 
     watch(
       () => chipInput.value?.chips,
@@ -208,7 +206,19 @@ export default defineComponent({
       },
     }));
 
-    return { posts, error, home, loadMore, loading, chipInput, tags, inputTags, customLoading, showExtraSearch };
+    return {
+      posts,
+      error,
+      home,
+      loadMore,
+      loading,
+      chipInput,
+      tags,
+      inputTags,
+      customLoading,
+      showExtraSearch,
+      searchString,
+    };
   },
 });
 </script>

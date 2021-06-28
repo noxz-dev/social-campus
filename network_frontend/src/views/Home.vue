@@ -79,7 +79,7 @@
                     :posts="posts"
                     emptyText="Ganz schön leer hier, schreibe doch einen Post oder folge anderen!"
                   />
-                  <div v-if="loading" class="w-full flex justify-center">
+                  <div v-if="loading || customLoading" class="w-full flex justify-center">
                     <svg
                       class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
                       xmlns="http://www.w3.org/2000/svg"
@@ -119,17 +119,17 @@
                     Personen, die du vielleicht kennst
                     <div
                       class="h-full flex flex-col gap-2 mt-4 items-center"
-                      v-if="recommendUsers"
-                      :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                      v-if="recommendedUsersFac"
+                      :class="recommendedUsersFac.length == 0 ? 'justify-center' : 'justify-evenly'"
                     >
                       <follow-user-card
-                        v-for="user in recommendUsers"
+                        v-for="user in recommendedUsersFac"
                         :key="user.id"
                         :user="user"
                         class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                         buttonTextSize="xs"
                       ></follow-user-card>
-                      <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
+                      <div v-if="recommendedUsersFac.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
                     </div>
                   </div>
                   <div
@@ -153,17 +153,17 @@
 
                     <div
                       class="h-full flex flex-col gap-2 mt-4 items-center"
-                      v-if="recommendUsers"
-                      :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                      v-if="recommendedUsersInt"
+                      :class="recommendedUsersInt.length == 0 ? 'justify-center' : 'justify-evenly'"
                     >
                       <follow-user-card
-                        v-for="user in recommendUsers"
+                        v-for="user in recommendedUsersInt"
                         :key="user.id"
                         :user="user"
                         buttonTextSize="xs"
                         class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                       ></follow-user-card>
-                      <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
+                      <div v-if="recommendedUsersInt.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
                     </div>
                   </div>
                 </div>
@@ -219,17 +219,17 @@
               Personen, die du vielleicht kennst
               <div
                 class="h-full flex flex-col gap-2 mt-4 items-center"
-                v-if="recommendUsers"
-                :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                v-if="recommendedUsersFac"
+                :class="recommendedUsersFac.length == 0 ? 'justify-center' : 'justify-evenly'"
               >
                 <follow-user-card
-                  v-for="user in recommendUsers"
+                  v-for="user in recommendedUsersFac"
                   :key="user.id"
                   :user="user"
                   class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                   buttonTextSize="xs"
                 ></follow-user-card>
-                <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
+                <div v-if="recommendedUsersFac.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
               </div>
             </div>
             <div
@@ -249,17 +249,17 @@
 
               <div
                 class="h-full flex flex-col gap-2 mt-4 items-center"
-                v-if="recommendUsers"
-                :class="recommendUsers.length == 0 ? 'justify-center' : 'justify-evenly'"
+                v-if="recommendedUsersInt"
+                :class="recommendedUsersInt.length == 0 ? 'justify-center' : 'justify-evenly'"
               >
                 <follow-user-card
-                  v-for="user in recommendUsers"
+                  v-for="user in recommendedUsersInt"
                   :key="user.id"
                   :user="user"
                   buttonTextSize="xs"
                   class="dark:!bg-dark-700 bg-gray-200 rounded-lg py-2 w-full"
                 ></follow-user-card>
-                <div v-if="recommendUsers.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
+                <div v-if="recommendedUsersInt.length == 0" class="text-lg">Du folgst bereits allen 🎉</div>
               </div>
             </div>
           </div>
@@ -272,7 +272,11 @@
 <script lang="ts">
 import { useResult } from '@vue/apollo-composable';
 import { computed, defineComponent, ref, watch } from 'vue';
-import { useGetFeedQuery, useRecommendedUsersFacultyQuery } from '../graphql/generated/types';
+import {
+  useGetFeedQuery,
+  useRecommendedUsersFacultyQuery,
+  useRecommendedUsersInterestsQuery,
+} from '../graphql/generated/types';
 import PostList from '../components/Post/PostList.vue';
 import { useStore } from 'vuex';
 import gql from 'graphql-tag';
@@ -324,7 +328,11 @@ export default defineComponent({
     //fill up the recommending components
     const { result: recommendUsersFaculty } = useRecommendedUsersFacultyQuery();
 
-    const recommendUsers = useResult(recommendUsersFaculty, null, (data) => data.recommendedUsersFaculty);
+    const recommendedUsersFac = useResult(recommendUsersFaculty, null, (data) => data.recommendedUsersFaculty);
+
+    const { result: recommendedUsersInterests } = useRecommendedUsersInterestsQuery();
+
+    const recommendedUsersInt = useResult(recommendedUsersInterests, null, (data) => data.recommendedUsersInterests);
 
     //subscribe to new posts, to update the ui
     subscribeToMore(() => ({
@@ -399,7 +407,18 @@ export default defineComponent({
       customLoading.value = false;
     };
 
-    return { posts, error, home, loadMore, loading, recommendUsers, showSideView, breakpoints, customLoading };
+    return {
+      posts,
+      error,
+      home,
+      loadMore,
+      loading,
+      recommendedUsersFac,
+      recommendedUsersInt,
+      showSideView,
+      breakpoints,
+      customLoading,
+    };
   },
 });
 </script>

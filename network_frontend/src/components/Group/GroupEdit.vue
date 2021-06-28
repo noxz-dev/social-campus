@@ -1,5 +1,5 @@
 <template>
-  <div class="text-gray-900 dark:text-gray-50 flex flex-col justify-end">
+  <div v-if="!leaveGroupClicked" class="text-gray-900 dark:text-gray-50 flex flex-col justify-end">
     <group-role-container :groupId="group.id" :role="GroupRoles.Admin">
       <div class="flex-1 mt-2">
         <div class="my-4">
@@ -9,7 +9,23 @@
         <div class="my-4">
           <label for="groupname">Beschreibung</label>
           <textarea
-            class="dark:bg-dark-600 border placeholder-gray-400 dark:text-gray-50 text-gray-900 w-full mt-3 -mb-3 border-gray-700 h-24 resize-none rounded-lg p-2 outline-none focus:ring-1 focus:ring-brand-500 focus:border-indigo-500"
+            class="
+              dark:bg-dark-600
+              border
+              placeholder-gray-400
+              dark:text-gray-50
+              text-gray-900
+              w-full
+              mt-3
+              -mb-3
+              border-gray-700
+              h-24
+              resize-none
+              rounded-lg
+              p-2
+              outline-none
+              focus:ring-1 focus:ring-brand-500 focus:border-indigo-500
+            "
             placeholder="Gruppenbeschreibung"
             v-model="description"
           />
@@ -36,12 +52,10 @@
       </div>
     </group-role-container>
     <span class="font-semibold mt-4">Danger Zone</span>
-    <app-button
-      @click="leaveGroup"
-      class="w-full items-center justify-center bg-red-600 hover:bg-red-700 focus:ring-red-600 my-3"
-    >
+    <app-button @click="leaveGroupClicked = true" class="w-full items-center justify-center leaveButton my-3">
       <span class="text-md">Gruppe Verlassen</span>
     </app-button>
+
     <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
       {{ error.$message }}
     </div>
@@ -49,21 +63,49 @@
       <group-role-container :groupId="group.id" :role="GroupRoles.Admin">
         <app-button class="ml-4" @click="updateGroup"> Speichern </app-button>
       </group-role-container>
-      <app-button class="!bg-dark-400 hover:!bg-red-700 focus:ring-red-600" @click="$emit('close')"> Abbrechen </app-button>
+      <app-button class="!bg-dark-400 hover:!bg-red-700 focus:ring-red-600" @click="$emit('close')">
+        Abbrechen
+      </app-button>
+    </div>
+  </div>
+
+  <div v-else class="text-gray-900 dark:text-gray-50 flex flex-col justify-end">
+    <group-role-container :groupId="group.id" :role="GroupRoles.Admin" v-if="isLastAdmin">
+      <span class="my-4">Du bist der letzte Admin der Gruppe! Wähle einen neuen:</span>
+      <custom-select
+        @value-chosen="chooseAdmin($event)"
+        :options="members.map((u) => u.firstname + ' ' + u.lastname + ' @' + u.username)"
+      ></custom-select>
+    </group-role-container>
+
+    <div class="flex gap-4">
+      <app-button @click="leaveGroupClicked = false" class="w-full items-center justify-center backButton my-3 test">
+        <span class="text-md">Zurück</span>
+      </app-button>
+      <app-button @click="leaveGroup" class="w-full items-center justify-center leaveButton my-3">
+        <span class="text-md">Gruppe Verlassen</span>
+      </app-button>
     </div>
   </div>
 </template>
-<script lang='ts'>
-import { GroupRoles, useLeaveGroupMutation, useUpdateGroupMutation } from '../../graphql/generated/types';
+<script lang="ts">
+import {
+  GroupRoles,
+  useGroupMembersQuery,
+  useLeaveGroupMutation,
+  useUpdateGroupMutation,
+} from '../../graphql/generated/types';
 import { Group } from '../../graphql/generated/types';
 import { computed, defineComponent, PropType, ref } from 'vue';
 import GroupRoleContainer from './GroupRoleContainer.vue';
 import CustomSelect from '../../components/Form/CustomSelect.vue';
 import InputField from '../../components/Form/InputField.vue';
 import { GroupType } from '../../graphql/generated/types';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { maxLength, helpers, required, minLength } from '@vuelidate/validators';
+import { useResult } from '@vue/apollo-composable';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   components: { GroupRoleContainer, CustomSelect, InputField },
@@ -80,6 +122,12 @@ export default defineComponent({
     const groupname = ref(props.group.name);
     const type = ref(props.group.type);
     const router = useRouter();
+    const leaveGroupClicked = ref(false);
+    const route = useRoute();
+    const store = useStore();
+    const choosenAdmin = ref();
+
+    const user = computed(() => store.state.userData.user);
 
     const { mutate: update } = useUpdateGroupMutation(() => ({
       variables: {
@@ -110,6 +158,22 @@ export default defineComponent({
       },
     }));
 
+    const { result } = useGroupMembersQuery(
+      () => ({
+        groupId: route.params.id as string,
+      }),
+      { pollInterval: 5000 }
+    );
+
+    const members = useResult(result, [], (data) =>
+      data.groupById.members.filter((m) => m.groupRole === GroupRoles.Member && m.id != user.value.id)
+    );
+
+    const admins = useResult(result, [], (data) =>
+      result.value.groupById.members.filter((m) => m.groupRole === GroupRoles.Admin)
+    );
+
+    const isLastAdmin = computed(() => admins.value?.length == 1);
 
     const { mutate: leave } = useLeaveGroupMutation(() => ({
       variables: {
@@ -117,8 +181,10 @@ export default defineComponent({
       },
     }));
 
-    
-    const pwRequired = (value) => (((type.value === GroupType.Private) && (props.group.type === GroupType.Public)) ? helpers.req(value) : !helpers.req(value));
+    const pwRequired = (value) =>
+      type.value === GroupType.Private && props.group.type === GroupType.Public
+        ? helpers.req(value)
+        : !helpers.req(value);
 
     //input validation rules
     const rules = computed(() => ({
@@ -143,8 +209,8 @@ export default defineComponent({
      * validate the input and update the group if the input is correct
      */
     async function updateGroup() {
-      await v.value.$validate()
-      
+      await v.value.$validate();
+
       if (groupPassword.value === '') groupPassword.value = null;
       if (v.value.$errors.length === 0) {
         try {
@@ -156,19 +222,72 @@ export default defineComponent({
     }
 
     /**
+     * choose a new admin on leave group if the user is the last admin
+     */
+    function chooseAdmin(newAdmin: string) {
+      const username = newAdmin.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)![0].replace('@', '');
+      const foundUser = members.value?.find((u) => u.username === username);
+      if (!foundUser) return;
+      choosenAdmin.value = foundUser.id;
+    }
+
+    /**
      * leave a group and route back to the overview page
      */
     async function leaveGroup() {
-      await leave();
-      router.push('/groups');
+      if (isLastAdmin) {
+        if (choosenAdmin.value) {
+          //TODO CHANGE ROLE OF A MEMBER OF THE GROUP HERE
+          await leave();
+          router.push('/groups');
+        } else {
+          // TODO ERROR MESSAGE FOR NOT CHOOSING ADMIN AND CLICKING THE BUTTON
+        }
+      } else {
+        await leave();
+        router.push('/groups');
+      }
     }
 
     function setType(newType: GroupType) {
       type.value = newType;
     }
 
-    return { GroupRoles, groupPassword, description, groupname, type, updateGroup, GroupType, setType, leaveGroup, v };
+    return {
+      GroupRoles,
+      groupPassword,
+      description,
+      groupname,
+      type,
+      updateGroup,
+      GroupType,
+      setType,
+      leaveGroup,
+      v,
+      leaveGroupClicked,
+      isLastAdmin,
+      members,
+      chooseAdmin,
+    };
   },
 });
 </script>
-<style></style>
+<style>
+.backButton {
+  @apply bg-dark-400;
+  @apply focus:ring-dark-400;
+}
+
+.backButton:hover {
+  @apply bg-dark-500;
+}
+
+.leaveButton {
+  @apply bg-red-600;
+  @apply focus:ring-red-600;
+}
+
+.leaveButton:hover {
+  @apply bg-red-700;
+}
+</style>

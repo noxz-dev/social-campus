@@ -439,8 +439,6 @@ export type Query = {
   getFeed: Array<Post>;
   /** returns a specific post */
   postById: Post;
-  /** full text search for posts */
-  searchPosts?: Maybe<Array<Post>>;
   getRoles: Array<Role>;
   search: Search;
   getAllTags: Array<Tag>;
@@ -517,6 +515,7 @@ export type QueryGetPostsFromUserArgs = {
 
 
 export type QueryBrowsePostsArgs = {
+  searchString?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
   take: Scalars['Float'];
   skip: Scalars['Float'];
@@ -538,11 +537,6 @@ export type QueryGetFeedArgs = {
 
 export type QueryPostByIdArgs = {
   postId: Scalars['String'];
-};
-
-
-export type QuerySearchPostsArgs = {
-  searchString: Scalars['String'];
 };
 
 
@@ -1067,6 +1061,7 @@ export type BrowsePostsQueryVariables = Exact<{
   take: Scalars['Float'];
   skip: Scalars['Float'];
   tags?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  searchString?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1510,6 +1505,21 @@ export type GetPostsFromUserQuery = (
       )> }
     ) }
   )>> }
+);
+
+export type RecommendedUsersInterestsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecommendedUsersInterestsQuery = (
+  { __typename?: 'Query' }
+  & { recommendedUsersInterests: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
+    & { avatar?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'name' | 'blurhash'>
+    )> }
+  )> }
 );
 
 export type RecommendedUsersFacultyQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2460,8 +2470,8 @@ export function useUpdateProfileMutation(options: VueApolloComposable.UseMutatio
 }
 export type UpdateProfileMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const BrowsePostsDocument = gql`
-    query browsePosts($take: Float!, $skip: Float!, $tags: [String!]) {
-  browsePosts(take: $take, skip: $skip, tags: $tags) {
+    query browsePosts($take: Float!, $skip: Float!, $tags: [String!], $searchString: String) {
+  browsePosts(take: $take, skip: $skip, tags: $tags, searchString: $searchString) {
     id
     liked
     media {
@@ -2508,6 +2518,7 @@ export const BrowsePostsDocument = gql`
  *   take: // value for 'take'
  *   skip: // value for 'skip'
  *   tags: // value for 'tags'
+ *   searchString: // value for 'searchString'
  * });
  */
 export function useBrowsePostsQuery(variables: BrowsePostsQueryVariables | VueCompositionApi.Ref<BrowsePostsQueryVariables> | ReactiveFunction<BrowsePostsQueryVariables>, options: VueApolloComposable.UseQueryOptions<BrowsePostsQuery, BrowsePostsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<BrowsePostsQuery, BrowsePostsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<BrowsePostsQuery, BrowsePostsQueryVariables>> = {}) {
@@ -3318,6 +3329,38 @@ export function useGetPostsFromUserQuery(variables: GetPostsFromUserQueryVariabl
   return VueApolloComposable.useQuery<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>(GetPostsFromUserDocument, variables, options);
 }
 export type GetPostsFromUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetPostsFromUserQuery, GetPostsFromUserQueryVariables>;
+export const RecommendedUsersInterestsDocument = gql`
+    query recommendedUsersInterests {
+  recommendedUsersInterests {
+    id
+    firstname
+    lastname
+    username
+    meFollowing
+    avatar {
+      name
+      blurhash
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecommendedUsersInterestsQuery__
+ *
+ * To run a query within a Vue component, call `useRecommendedUsersInterestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecommendedUsersInterestsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useRecommendedUsersInterestsQuery();
+ */
+export function useRecommendedUsersInterestsQuery(options: VueApolloComposable.UseQueryOptions<RecommendedUsersInterestsQuery, RecommendedUsersInterestsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<RecommendedUsersInterestsQuery, RecommendedUsersInterestsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<RecommendedUsersInterestsQuery, RecommendedUsersInterestsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<RecommendedUsersInterestsQuery, RecommendedUsersInterestsQueryVariables>(RecommendedUsersInterestsDocument, {}, options);
+}
+export type RecommendedUsersInterestsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<RecommendedUsersInterestsQuery, RecommendedUsersInterestsQueryVariables>;
 export const RecommendedUsersFacultyDocument = gql`
     query recommendedUsersFaculty {
   recommendedUsersFaculty {

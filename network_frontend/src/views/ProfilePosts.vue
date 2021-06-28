@@ -2,7 +2,7 @@
   <div class="w-full flex justify-center lg:justify-start">
     <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-3/4 pb-10">
       <post-list :posts="posts" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
-      <div v-if="loading" class="w-full flex justify-center">
+      <div v-if="loading || customLoading" class="w-full flex justify-center">
         <svg
           class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
           xmlns="http://www.w3.org/2000/svg"

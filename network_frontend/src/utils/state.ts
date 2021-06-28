@@ -4,5 +4,6 @@ import { reactive } from 'vue';
 export const state = reactive({
   refreshGroup: false,
   groupError: false,
+  isDarkMode: false,
   showNewPostFloatingButton: false,
 });

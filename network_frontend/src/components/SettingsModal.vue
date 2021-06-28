@@ -3,14 +3,26 @@
     <label for="newPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-50 !my-2 text-left">
       Neues Passwort
     </label>
-    <input-field id="newPassword" inputClasses="!pr-2" v-model="newPassword" type="password" autocomplete="new-password"></input-field>
+    <input-field
+      id="newPassword"
+      inputClasses="!pr-2"
+      v-model="newPassword"
+      type="password"
+      autocomplete="new-password"
+    ></input-field>
     <label
       for="newPasswordRepeat"
       class="block text-sm font-medium text-gray-700 dark:text-gray-50 !my-2 !mt-4 text-left"
     >
       Neues Passwort wiederholen
-    </label> 
-    <input-field id="newPasswordRepeat" inputClasses="!pr-2" v-model="newPasswordRepeat" type="password" autocomplete="off"></input-field>
+    </label>
+    <input-field
+      id="newPasswordRepeat"
+      inputClasses="!pr-2"
+      v-model="newPasswordRepeat"
+      type="password"
+      autocomplete="off"
+    ></input-field>
 
     <div>
       <div v-for="(error, index) in v.$errors" :key="index" class="text-red-500">
@@ -18,7 +30,9 @@
       </div>
     </div>
     <div class="pt-5 py-3 text-right flex items-center justify-between">
-      <div  class="dark:text-green-500 text-green-700"><span v-if="passwordUpdated">✔ Passwort wurde geändert</span></div>
+      <div class="dark:text-green-500 text-green-700">
+        <span v-if="passwordUpdated">✔ Passwort wurde geändert</span>
+      </div>
       <app-button class="self-end" :disabled="loading" @click="changePassword">
         Ändern
         <svg
@@ -46,7 +60,7 @@
         <svg
           class="h-6 w-6"
           fill="none"
-          :class="isDarkMode ? 'text-gray-700' : 'text-gray-600'"
+          :class="state.isDarkMode ? 'text-gray-700' : 'text-gray-600'"
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
@@ -58,11 +72,11 @@
           />
         </svg>
       </span>
-      <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="isDarkMode" />
+      <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="state.isDarkMode" />
       <span class="">
         <svg
           class="h-6 w-6"
-          :class="isDarkMode ? 'text-gray-200' : 'text-gray-400'"
+          :class="state.isDarkMode ? 'text-gray-200' : 'text-gray-400'"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -88,32 +102,22 @@ import InputField from './Form/InputField.vue';
 import ToggleButton from './Form/ToggleButton.vue';
 import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required, sameAs } from '@vuelidate/validators';
+import { state } from '../utils/state';
 export default defineComponent({
   components: { InputField, ToggleButton },
-  emits: ["close"],
+  emits: ['close'],
   props: {},
   setup() {
     const newPassword = ref();
     const newPasswordRepeat = ref();
-    const isDarkMode = ref(false);
     const passwordUpdated = ref(false);
-
-    //dark light theme handler
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      if (localStorage.theme !== 'light') isDarkMode.value = true;
-    } else {
-      if (localStorage.theme !== 'dark') isDarkMode.value = false;
-    }
 
     /**
      * toggles the theme of the application
      */
     const toggle = () => {
-      isDarkMode.value = !isDarkMode.value;
-      if (isDarkMode.value) localStorage.theme = 'dark';
+      state.isDarkMode = !state.isDarkMode;
+      if (state.isDarkMode) localStorage.theme = 'dark';
       else localStorage.theme = 'light';
       if (
         localStorage.theme === 'dark' ||
@@ -125,45 +129,47 @@ export default defineComponent({
       }
     };
 
+    //register the updatePassword mutation
     const { mutate: updatePassword, loading } = useUpdatePasswordMutation(() => ({
       variables: {
         input: {
-          password: newPassword.value
-        }
-      }
-    }))
+          password: newPassword.value,
+        },
+      },
+    }));
 
+    //input validation rules
     const rules = computed(() => ({
       newPassword: {
         required,
-        minLength: helpers.withMessage("Das Passwort benötigt eine mindestlänge von 5", minLength(5)),
+        minLength: helpers.withMessage('Das Passwort benötigt eine mindestlänge von 5', minLength(5)),
       },
       newPasswordRepeat: {
         required,
-        sameAsRef: helpers.withMessage("Die Passwörter sind nicht identisch", sameAs(newPassword)),
+        sameAsRef: helpers.withMessage('Die Passwörter sind nicht identisch', sameAs(newPassword)),
       },
     }));
 
     const v = useVuelidate(rules, { newPassword, newPasswordRepeat });
 
+    //check the validation and update the password if everything is ok
     const changePassword = async () => {
-      await v.value.$validate()
-      if(v.value.$errors.length > 0) return
+      await v.value.$validate();
+      if (v.value.$errors.length > 0) return;
 
-      const resp = await updatePassword()
-      if(resp.data) passwordUpdated.value = true
-
-    }
+      const resp = await updatePassword();
+      if (resp.data) passwordUpdated.value = true;
+    };
 
     return {
       v,
-      isDarkMode,
+      state,
       newPasswordRepeat,
       newPassword,
       toggle,
       loading,
       changePassword,
-      passwordUpdated
+      passwordUpdated,
     };
   },
 });

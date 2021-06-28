@@ -17,7 +17,7 @@ import { buildSchema } from 'type-graphql';
 import { createConnection, getRepository } from 'typeorm';
 import { MyWebSocket } from 'utils/types/apollo';
 import '../ormconfig';
-// import { Role } from './entity/role.entity';
+import { Role } from './entity/role.entity';
 import { authenticateToken } from './middlewares/auth';
 import { customAuthChecker } from './middlewares/resolverAuthCheck';
 import {
@@ -74,20 +74,19 @@ export class Application {
     //Initizalize the S3-Client and Buckets
     initS3();
 
-    //TODO NOT WORKING
     //init roles
-    // const roleExists = await getRepository(Role).find({ where: { name: 'STUDENT' } });
-    // if (!roleExists) {
-    //   log.info('role created');
-    //   const role = new Role({ name: 'STUDENT' });
-    //   await getRepository(Role).save(role);
-    // }
-    // const roleExists2 = await getRepository(Role).find({ where: { name: 'STUDENT' } });
-    // if (!roleExists2) {
-    //   log.info('role created');
-    //   const role = new Role({ name: 'PROFESSOR' });
-    //   await getRepository(Role).save(role);
-    // }
+    const roleExists = await getRepository(Role).find({ where: { name: 'STUDENT' } });
+    if (!roleExists) {
+      log.info('role created');
+      const role = new Role({ name: 'STUDENT' });
+      await getRepository(Role).save(role);
+    }
+    const roleExists2 = await getRepository(Role).find({ where: { name: 'STUDENT' } });
+    if (!roleExists2) {
+      log.info('role created');
+      const role = new Role({ name: 'PROFESSOR' });
+      await getRepository(Role).save(role);
+    }
 
     try {
       // initialize schema and register resolvers
@@ -217,8 +216,10 @@ export class Application {
 
         try {
           await activateAccount(token);
+          log.info('activated a user account');
           res.redirect('../../login');
         } catch (err) {
+          log.error('activation of a user account failed');
           res.status(400).send(err);
         }
       });

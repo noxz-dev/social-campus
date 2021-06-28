@@ -16,6 +16,7 @@ export class MediaResolver {
   async mediaFromGroup(@Ctx() ctx: MyContext, @Arg('groupId') groupId: string): Promise<GroupMedia[]> {
     const userId = ctx.req.user.id;
 
+    //check if a user is allowed to access this information
     if (!(await isMemberOfGroup(groupId, userId))) throw new Error('youre not a member of this group');
 
     const posts = await getRepository(Post).find({

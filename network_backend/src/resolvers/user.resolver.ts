@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
-import { Brackets, getRepository } from 'typeorm';
+import { Brackets, getConnection, getRepository } from 'typeorm';
 import { Group } from '../entity/group.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -79,9 +79,11 @@ export class UserResolver {
 
     //create a default profile image
     const avatar = new Media();
-    const profileImg = jdenticon.toPng(user.firstname, 300);
+    const profileImg = jdenticon.toPng(user.firstname, 300, { backColor: '#181A20' });
 
+    //uplaod to s3
     const { filename, blurhash } = await uploadFile(profileImg, 'images');
+
     avatar.name = filename;
     avatar.blurhash = blurhash;
     avatar.type = MediaType.IMAGE;
@@ -440,44 +442,67 @@ export class UserResolver {
     const userId = ctx.req.user.id;
     const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
 
-    const following = getRepository(User)
-      .createQueryBuilder('following')
-      .innerJoin('following.followers', 'followers')
-      .where(`followers.id = '${userId}'`)
-      .leftJoinAndSelect('following.avatar', 'avatar')
-      .select('following.id', 'following_id');
+    //parse all needed data, to be usable in the sql query
+    const interests = me.interests.split(',');
+    const stringInterests = [];
 
-    const recommended = await getRepository(User)
-      .createQueryBuilder('user')
-      .where('user.id NOT IN (' + following.getSql() + ')')
-      .andWhere('user.id != :id', { id: userId })
-      .andWhere('lower(user.interests) IN :interests', { interests: me.interests })
-      .leftJoinAndSelect('user.avatar', 'avatar')
-      .orderBy('RANDOM()')
-      .limit(3)
-      .getMany();
+    for (const interest of interests) {
+      stringInterests.push("'" + interest.trim().toLocaleLowerCase() + "'");
+    }
 
-    if (recommended.length < 3) {
-      const ids = recommended.map((u) => u.id);
+    const parsedInterests = stringInterests.toString().replace('[', '').replace(']', '');
+
+    const followingIds = me.following.map((u) => u.id);
+
+    const stringFollowingIds = [];
+
+    for (const id of followingIds) {
+      stringFollowingIds.push("'" + id + "'");
+    }
+
+    const parsedFollowingIds = stringFollowingIds.toString().replace('[', '').replace(']', '');
+
+    //TODO
+    const recommendedUsers = await getConnection().query(
+      `select count(*), "user".* 
+      from "user", 
+      unnest(array[${parsedInterests}]) u 
+      where string_to_array(regexp_replace(lower("user".interests), '[\s*]', '' , 'g'), ',','g') @> array[u]  
+      AND "user".id != $1
+      AND "user".id NOT IN (${parsedFollowingIds}) 
+      group by "user".id
+      order by 1 desc LIMIT 3;`,
+      [userId],
+    );
+
+    //delete key, only needed for ordering
+    recommendedUsers.forEach((u) => {
+      delete u.count;
+    });
+
+    //fill up recommended with random users of the network, to allow more interaction opportunities
+    if (recommendedUsers.length < 3) {
+      const ids = recommendedUsers.map((u) => u.id);
       ids.push(userId);
       const moreUsers = await getRepository(User)
         .createQueryBuilder('user')
-        .where('user.id NOT IN (' + following.getSql() + ')')
+        .where(`user.id NOT IN (${parsedFollowingIds})`)
         .andWhere('user.id NOT IN (:...recommended)', { recommended: ids })
         .leftJoinAndSelect('user.avatar', 'avatar')
         .orderBy('RANDOM()')
         .limit(3)
         .getMany();
 
-      //fill up recommended with random users of the network, to allow more interaction opportunities
-      recommended.push(...moreUsers.splice(0, 3 - recommended.length));
+      recommendedUsers.push(...moreUsers.splice(0, 3 - recommendedUsers.length));
     }
 
-    recommended.forEach((user) => {
-      user.meFollowing = me.following.some((u) => u.id === user.id);
-    });
+    return recommendedUsers;
+  }
 
-    return recommended;
+  @FieldResolver()
+  async meFollowing(@Ctx() ctx: MyContext, @Root() user: User): Promise<boolean> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['followers'] });
+    return u.followers.some((us) => us.id === u.id);
   }
 
   @FieldResolver()

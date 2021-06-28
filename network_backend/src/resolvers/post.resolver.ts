@@ -1,6 +1,6 @@
 import { isUUID } from 'class-validator';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
-import { EntityManager, getConnection, getManager, getRepository, In, IsNull } from 'typeorm';
+import { EntityManager, getConnection, getManager, getRepository, ILike, In, IsNull } from 'typeorm';
 import { Comment } from '../entity/comment.entity';
 import { Group, GroupType } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -61,11 +61,29 @@ export class PostResolver {
     @Arg('skip', () => Number) skip: number,
     @Arg('take', () => Number) take: number,
     @Arg('tags', () => [String], { nullable: true }) tags: string[],
+    @Arg('searchString', () => String, { nullable: true }) searchString: string,
   ): Promise<Post[]> {
     const userId = ctx.req.user.id;
     if (!userId) throw new Error('no user found');
     let posts: Post[];
-    if (tags && tags.length > 0) {
+
+    if (searchString && searchString.length > 0) {
+      //search posts with fulltext search ... could be heavy and should maybe be exhanged with something like elastic search
+
+      //uses like operator because the ts_vector + query were not working properly
+      posts = await getRepository(Post).find({
+        where: {
+          group: null,
+          text: ILike(`%${searchString}%`),
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+        relations: ['user', 'tags'],
+        skip: skip,
+        take: take,
+      });
+    } else if (tags && tags.length > 0) {
       posts = await getRepository(Post)
         .createQueryBuilder('posts')
         .where('posts.group is null')
@@ -521,33 +539,6 @@ export class PostResolver {
     }
     throw Error('youre not allowed to do that');
   }
-
-  @Authorized()
-  @Query(() => [Post], {
-    nullable: true,
-    description: 'full text search for posts',
-  })
-  public async searchPosts(
-    @Ctx() ctx: MyContext,
-    @Arg('searchString', () => String) searchString: string,
-  ): Promise<Post[]> {
-    const userId = ctx.req.user.id;
-    if (!userId) throw new Error('no user found');
-
-    const posts = await getRepository(Post)
-      .createQueryBuilder('post')
-      .where(`to_tsvector('simple', post.text) @@ to_tsquery('simple', :query)`, { query: `${searchString}:*` })
-      .andWhere('group = null')
-      .getMany();
-
-    if (!posts) {
-      return [];
-    }
-
-    log.info(`'User with the id: ${userId} called searchPosts'`);
-    return posts;
-  }
-
   //FIELD RESOLVERS
 
   @FieldResolver()

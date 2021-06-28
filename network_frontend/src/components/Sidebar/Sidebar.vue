@@ -4,7 +4,7 @@
     class="flex fixed top-14 h-screen shadow-right transition-width w-14 xl:w-44 bg-white dark:bg-dark-700"
   >
     <div id="navContent" class="w-full flex flex-col items-start pl-0 mt-12 h-full">
-      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2 ">
+      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>
       </nav-link>
       <div class="h-full w-full flex xl:justify-center items-end">
@@ -13,7 +13,7 @@
             <svg
               class="h-6 w-6"
               fill="none"
-              :class="isDarkMode ? 'text-gray-500' : 'text-gray-800'"
+              :class="state.isDarkMode ? 'text-gray-500' : 'text-gray-800'"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
@@ -25,11 +25,11 @@
               />
             </svg>
           </span>
-          <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="isDarkMode" />
+          <toggle-button @toggleStateUpdate="toggle" class="mx-3 my-3" :initalState="state.isDarkMode" />
           <span class="">
             <svg
               class="h-6 w-6"
-              :class="isDarkMode ? 'text-gray-200' : 'text-gray-400'"
+              :class="state.isDarkMode ? 'text-gray-200' : 'text-gray-400'"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -48,7 +48,7 @@
   </div>
   <div v-else class="fixed h-16 w-full z-50 bottom-0 bg-gray-300 dark:bg-dark-600">
     <div id="navContent" class="h-16 w-full flex flex-row items-center">
-      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2 ">
+      <nav-link v-for="route in routes" :key="route.to" :to="route.to" :name="route.name" class="md:my-2">
         <span v-html="route.icon"></span>
       </nav-link>
     </div>
@@ -57,19 +57,17 @@
 
 <script lang="ts">
 import breakpoints from '../../utils/breakpoints';
-import { defineComponent, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import NavLink from './NavLink.vue';
 import ToggleButton from '../Form/ToggleButton.vue';
+import { state } from '../../utils/state';
 
 export default defineComponent({
   components: { NavLink, ToggleButton },
   setup() {
-    const router = useRouter();
     const show = ref(true);
     const homeActive = ref(true);
     const groupsActive = ref(false);
-    const isDarkMode = ref(false);
 
     //exisiting routes for the sidebar, autogenerates new entires based on this list
     const routes = [
@@ -117,23 +115,22 @@ export default defineComponent({
       console.log(breakpoints.is);
     });
 
-    
     //dark light theme handler
     if (
       localStorage.theme === 'dark' ||
       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
-      if (localStorage.theme !== 'light') isDarkMode.value = true;
+      if (localStorage.theme !== 'light') state.isDarkMode = true;
     } else {
-      if (localStorage.theme !== 'dark') isDarkMode.value = false;
+      if (localStorage.theme !== 'dark') state.isDarkMode = false;
     }
 
     /**
      * toggles the theme of the application
      */
     const toggle = () => {
-      isDarkMode.value = !isDarkMode.value;
-      if (isDarkMode.value) localStorage.theme = 'dark';
+      state.isDarkMode = !state.isDarkMode;
+      if (state.isDarkMode) localStorage.theme = 'dark';
       else localStorage.theme = 'light';
       if (
         localStorage.theme === 'dark' ||
@@ -145,7 +142,7 @@ export default defineComponent({
       }
     };
 
-    return { show, homeActive, groupsActive, breakpoints, routes, toggle, isDarkMode };
+    return { show, homeActive, groupsActive, breakpoints, routes, toggle, state };
   },
 });
 </script>

@@ -263,6 +263,8 @@ export class GroupResolver {
 
     const followingIds = user.following.map((u) => u.id);
 
+    if (followingIds.length === 0) return [];
+
     const stringIds = [];
 
     for (const id of followingIds) {

@@ -443,7 +443,7 @@ export class UserResolver {
     const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
 
     //parse all needed data, to be usable in the sql query
-    const interests = me.interests.split(',');
+    const interests = (me.interests || 'x').split(',');
     const stringInterests = [];
 
     for (const interest of interests) {
@@ -452,7 +452,10 @@ export class UserResolver {
 
     const parsedInterests = stringInterests.toString().replace('[', '').replace(']', '');
 
+    console.log(parsedInterests);
+
     const followingIds = me.following.map((u) => u.id);
+    followingIds.push(userId);
 
     const stringFollowingIds = [];
 
@@ -462,18 +465,18 @@ export class UserResolver {
 
     const parsedFollowingIds = stringFollowingIds.toString().replace('[', '').replace(']', '');
 
-    //TODO
+    //TODO ITS NOT WORKING PROPPERLY ... RANDOM STUFF HAPPENS
     const recommendedUsers = await getConnection().query(
       `select count(*), "user".* 
       from "user", 
       unnest(array[${parsedInterests}]) u 
       where string_to_array(regexp_replace(lower("user".interests), '[\s*]', '' , 'g'), ',','g') @> array[u]  
-      AND "user".id != $1
       AND "user".id NOT IN (${parsedFollowingIds}) 
       group by "user".id
       order by 1 desc LIMIT 3;`,
-      [userId],
     );
+
+    console.log(recommendedUsers);
 
     //delete key, only needed for ordering
     recommendedUsers.forEach((u) => {

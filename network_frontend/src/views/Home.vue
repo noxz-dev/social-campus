@@ -321,7 +321,7 @@ export default defineComponent({
         limit: 10,
         offset: 0,
       },
-      () => ({ enabled: false })
+      () => ({ enabled: feedQueryEnabled.value })
     );
     const posts = useResult(result, null, (data) => data.getFeed);
 

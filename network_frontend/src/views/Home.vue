@@ -295,6 +295,7 @@ export default defineComponent({
 
     const feedQueryEnabled = ref(false);
 
+    //enable the feed query after the user is successfully added to the store
     watch(
       () => store.state.userData.user,
       () => {

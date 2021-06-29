@@ -1,7 +1,10 @@
 # SocialCampus - Open Source self hosted Social Network
 
+## ⚙️ TechStack
+
 - Built on Node version 16.1.0
 - Typescript
+- Node.js
 - Vue 3
 - TypeORM
 - GraphQL
@@ -9,14 +12,14 @@
 - Docker
 - Minio
 
-## Development-Startup
+## 🔨 Development-Startup
 
 - install node 16.1.0
-
 
 - run: npm install in network_backend
 
 - run: npm install in network_frontend
+- run: npm run generate
 
 - add .env file to the root folder for container configuration (.env-sample is given)
 
@@ -24,13 +27,19 @@
 
 - run: docker-compose up -d
 
-## Demo-Startup
+## 💻 Demo-Startup
 
 - set NODE_ENV=production in the .env file
 
 - run: docker-compose -f docker-compose.demo.yml up -d
 
-## Production
+## 🏭 Production
 
+use the production repo for automatic ssl and updated reverse proxy
 
-use the production repo
+## 📁 Folder Structure
+
+- docker-compose.yml: docker-compose configuration for the dev enviroment
+- docker-compose.demo.yml: docker-compose conifguration for the demo enviroment
+- nginx: nginx config for the reverse proxy
+- demo_nginx: nginx config for the reverse proxy in the demo enviroment

@@ -1,4 +1,4 @@
-# SocialCampus - Open Source self hosted Social Network
+# SocialCampus - Open Source Self Hosted Social Network
 
 ## ⚙️ TechStack
 
@@ -43,3 +43,7 @@ use the production repo for automatic ssl and updated reverse proxy
 - docker-compose.demo.yml: docker-compose conifguration for the demo enviroment
 - nginx: nginx config for the reverse proxy
 - demo_nginx: nginx config for the reverse proxy in the demo enviroment
+
+## 📄 License
+
+[MIT License](https://github.com/HeyImNoxz/network/blob/main/LICENSE) © 2021-PRESENT [Finn Beer](https://github.com/HeyImNoxz)

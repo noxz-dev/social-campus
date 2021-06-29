@@ -46,6 +46,8 @@ use the production repo for automatic ssl and updated reverse proxy
 - docker-compose.demo.yml: docker-compose conifguration for the demo enviroment
 - nginx: nginx config for the reverse proxy
 - demo_nginx: nginx config for the reverse proxy in the demo enviroment
+- network_frontend: frontend code of SocialCampus
+- network_backend: backend code of SocialCampus
 
 ## 📄 License
 

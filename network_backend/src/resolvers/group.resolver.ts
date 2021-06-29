@@ -403,13 +403,19 @@ export class GroupResolver {
   public async leaveGroup(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<boolean> {
     const userId = ctx.req.user.id;
 
-    //check the permissions
+    //find the user who wants to leave the group
     const members = await getGroupMembersWithRoles(groupId);
     const user = members.find((member) => member.id === userId);
     if (!user) throw new Error('youre not a member of this group');
 
-    //TODO CHECK IF THE ADMIN IS THE LAST ADMIN
-    // if (user.groupRole === GroupRole.ADMIN) throw new Error('youre not allowed to do this');
+    //check if the user is the last admin
+    if (user.groupRole === GroupRole.ADMIN) {
+      //get all admins
+      const admins = members.filter((m) => m.groupRole === GroupRole.ADMIN);
+
+      //check if the user is not the last admin if there are more members
+      if (admins.length === 1 && members.length > 1) throw new Error('youre not allowed to do this');
+    }
 
     //TODO USE TRANSACTION
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'memberRoles'] });
@@ -420,6 +426,8 @@ export class GroupResolver {
     await getRepository(GroupMemberRole).remove(memberRole);
 
     await getRepository(Group).save(group);
+
+    //TODO DELETE GROUP IF THE USER WAS THE LAST MEMBER
 
     return true;
   }

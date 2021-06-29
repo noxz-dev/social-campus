@@ -70,6 +70,29 @@
   </div>
 
   <div v-else class="text-gray-900 dark:text-gray-50 flex flex-col justify-end">
+    <div class="text-xs text-red-500 flex items-center">
+      <svg class="stroke-red h-4 w-4 fill-red mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <line
+          x1="128"
+          y1="104"
+          x2="128"
+          y2="144"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        ></line>
+        <path
+          d="M114.15243,39.98472,26.17616,191.977a16.00005,16.00005,0,0,0,13.84762,24.01535H215.97625A16,16,0,0,0,229.82386,191.977L141.84757,39.98472A16,16,0,0,0,114.15243,39.98472Z"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        ></path>
+        <circle cx="128" cy="180" r="12"></circle>
+      </svg>
+      <div>Wenn du die letzte Person in dieser Gruppe bist, wird sie gelöscht und alle Posts sind verloren</div>
+    </div>
     <group-role-container :groupId="group.id" :role="GroupRoles.Admin" v-if="isLastAdmin">
       <span class="my-4">Du bist der letzte Admin der Gruppe! Wähle einen neuen:</span>
       <custom-select
@@ -253,7 +276,7 @@ export default defineComponent({
      * leave a group and route back to the group overview page
      */
     async function leaveGroup() {
-      if (isLastAdmin) {
+      if (isLastAdmin.value) {
         if (choosenAdmin.value) {
           const result = await updateGroupRole();
           if (result) {

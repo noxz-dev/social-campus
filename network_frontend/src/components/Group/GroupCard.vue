@@ -10,7 +10,7 @@
         />
       </div>
       <div class="p-3 pt-1 flex flex-col">
-        <div class="line-clamp-2 h-12 md:h-14 ">
+        <div class="line-clamp-2 h-12 md:h-14">
           <span class="text-md md:text-lg break-words font-semibold">{{ group.name }}</span>
         </div>
         <div class="flex flex-row-reverse items-center justify-between">
@@ -63,8 +63,7 @@
             dark:bg-dark-600
             bg-gray-500
             hover:bg-brand-700
-            focus:outline-none
-            focus:ring-2 focus:ring-offset-2
+            focus:outline-none focus:ring-2 focus:ring-offset-2
             dark:focus:ring-offset-dark-700
             focus:ring-brand-500
           "
@@ -134,6 +133,7 @@ export default defineComponent({
   },
   components: { Card, LazyImage },
   setup(props) {
+    //some blurhashes to choose from
     const blurhashes = [
       'LJIzs5=D5uK$^aJWKP#*wd]fnlK5',
       'AePC3PmlGv{c',

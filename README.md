@@ -19,7 +19,8 @@
 - run: npm install in network_backend
 
 - run: npm install in network_frontend
-- run: npm run generate
+
+- run: npm run generate in network_frontend
 
 - add .env file to the root folder for container configuration (.env-sample is given)
 
@@ -28,6 +29,8 @@
 - run: docker-compose up -d
 
 ## 💻 Demo-Startup
+
+- add .env file to the root folder for container configuration (.env-sample is given)
 
 - set NODE_ENV=production in the .env file
 

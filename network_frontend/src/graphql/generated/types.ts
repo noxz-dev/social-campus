@@ -1027,6 +1027,21 @@ export type UpdateAboutGroupMutation = (
   ) }
 );
 
+export type UpdateGroupRoleMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  memberId: Scalars['String'];
+  groupRole: GroupRoles;
+}>;
+
+
+export type UpdateGroupRoleMutation = (
+  { __typename?: 'Mutation' }
+  & { updateGroupRole: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id'>
+  ) }
+);
+
 export type UpdatePasswordMutationVariables = Exact<{
   input: UpdatePasswordInput;
 }>;
@@ -2399,6 +2414,37 @@ export function useUpdateAboutGroupMutation(options: VueApolloComposable.UseMuta
   return VueApolloComposable.useMutation<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>(UpdateAboutGroupDocument, options);
 }
 export type UpdateAboutGroupMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateAboutGroupMutation, UpdateAboutGroupMutationVariables>;
+export const UpdateGroupRoleDocument = gql`
+    mutation updateGroupRole($groupId: String!, $memberId: String!, $groupRole: GroupRoles!) {
+  updateGroupRole(groupId: $groupId, memberId: $memberId, groupRole: $groupRole) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useUpdateGroupRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateGroupRoleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateGroupRoleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateGroupRoleMutation({
+ *   variables: {
+ *     groupId: // value for 'groupId'
+ *     memberId: // value for 'memberId'
+ *     groupRole: // value for 'groupRole'
+ *   },
+ * });
+ */
+export function useUpdateGroupRoleMutation(options: VueApolloComposable.UseMutationOptions<UpdateGroupRoleMutation, UpdateGroupRoleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateGroupRoleMutation, UpdateGroupRoleMutationVariables>>) {
+  return VueApolloComposable.useMutation<UpdateGroupRoleMutation, UpdateGroupRoleMutationVariables>(UpdateGroupRoleDocument, options);
+}
+export type UpdateGroupRoleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateGroupRoleMutation, UpdateGroupRoleMutationVariables>;
 export const UpdatePasswordDocument = gql`
     mutation updatePassword($input: UpdatePasswordInput!) {
   updatePassword(input: $input) {

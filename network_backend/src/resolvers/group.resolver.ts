@@ -308,6 +308,7 @@ export class GroupResolver {
     const loggedInRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId, group: groupId } });
     if (loggedInRole.role !== GroupRole.ADMIN) throw new Error('youre not allowed to do this');
 
+    //find the member, where the role should be updated
     const user = await getRepository(User).findOne({ where: { id: memberId } });
 
     if (!user) throw new Error('User not found');
@@ -316,10 +317,12 @@ export class GroupResolver {
 
     if (!group) throw new Error('Group not found');
 
-    const role = await getRepository(GroupMemberRole).findOne({ where: { user: user } });
+    //find the active role from the member in the group
+    const role = await getRepository(GroupMemberRole).findOne({ where: { user: user, group: groupId } });
 
-    if (!role) throw new Error('Role not found');
+    if (!role) throw new Error('Group Role not found');
 
+    //set the new group
     role.role = groupRole;
 
     await getRepository(GroupMemberRole).save(role);
@@ -405,7 +408,8 @@ export class GroupResolver {
     const user = members.find((member) => member.id === userId);
     if (!user) throw new Error('youre not a member of this group');
 
-    if (user.groupRole === GroupRole.ADMIN) throw new Error('youre not allowed to do this');
+    //TODO CHECK IF THE ADMIN IS THE LAST ADMIN
+    // if (user.groupRole === GroupRole.ADMIN) throw new Error('youre not allowed to do this');
 
     //TODO USE TRANSACTION
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'memberRoles'] });

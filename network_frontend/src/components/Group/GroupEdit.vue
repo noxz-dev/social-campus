@@ -74,6 +74,7 @@
       <span class="my-4">Du bist der letzte Admin der Gruppe! Wähle einen neuen:</span>
       <custom-select
         @value-chosen="chooseAdmin($event)"
+        :inital-value="members.map((u) => u.firstname + ' ' + u.lastname + ' @' + u.username)[0]"
         :options="members.map((u) => u.firstname + ' ' + u.lastname + ' @' + u.username)"
       ></custom-select>
     </group-role-container>
@@ -94,6 +95,7 @@ import {
   useGroupMembersQuery,
   useLeaveGroupMutation,
   useUpdateGroupMutation,
+  useUpdateGroupRoleMutation,
 } from '../../graphql/generated/types';
 import { Group } from '../../graphql/generated/types';
 import { computed, defineComponent, PropType, ref } from 'vue';
@@ -106,6 +108,7 @@ import useVuelidate from '@vuelidate/core';
 import { maxLength, helpers, required, minLength } from '@vuelidate/validators';
 import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
+import { groupMembers } from '../../graphql/queries/groupMembers';
 
 export default defineComponent({
   components: { GroupRoleContainer, CustomSelect, InputField },
@@ -231,15 +234,32 @@ export default defineComponent({
       choosenAdmin.value = foundUser.id;
     }
 
+    //init the update role mutation
+    const { mutate: updateGroupRole } = useUpdateGroupRoleMutation(() => ({
+      variables: {
+        groupId: route.params.id as string,
+        groupRole: GroupRoles.Admin,
+        memberId: choosenAdmin.value,
+      },
+      refetchQueries: [
+        {
+          query: groupMembers,
+          variables: { groupId: route.params.id },
+        },
+      ],
+    }));
+
     /**
-     * leave a group and route back to the overview page
+     * leave a group and route back to the group overview page
      */
     async function leaveGroup() {
       if (isLastAdmin) {
         if (choosenAdmin.value) {
-          //TODO CHANGE ROLE OF A MEMBER OF THE GROUP HERE
-          await leave();
-          router.push('/groups');
+          const result = await updateGroupRole();
+          if (result) {
+            await leave();
+            router.push('/groups');
+          }
         } else {
           // TODO ERROR MESSAGE FOR NOT CHOOSING ADMIN AND CLICKING THE BUTTON
         }

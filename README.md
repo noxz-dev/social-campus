@@ -42,12 +42,13 @@ use the production repo for automatic ssl and updated reverse proxy
 
 ## 📁 Folder Structure
 
+- network_frontend: frontend code of SocialCampus
+- network_backend: backend code of SocialCampus
 - docker-compose.yml: docker-compose configuration for the dev enviroment
 - docker-compose.demo.yml: docker-compose conifguration for the demo enviroment
 - nginx: nginx config for the reverse proxy
 - demo_nginx: nginx config for the reverse proxy in the demo enviroment
-- network_frontend: frontend code of SocialCampus
-- network_backend: backend code of SocialCampus
+- .github/workflows: github actions (CI-Pipeline) to automatically build containers and push to registry
 
 ## 📄 License
 

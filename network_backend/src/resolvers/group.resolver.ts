@@ -1,4 +1,4 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 import { getManager, getRepository, In, Not } from 'typeorm';
 import { Group, GroupType } from '../entity/group.entity';
 import { GroupMemberRole, GroupRole } from '../entity/groupMemberRole.entity';
@@ -103,10 +103,12 @@ export class GroupResolver {
    */
   @Authorized()
   @Query(() => Group)
-  public async groupById(@Ctx() ctx: MyContext, @Arg('groupId', () => String) groupId: string): Promise<Group> {
+  public async groupById(
+    @Ctx() ctx: MyContext,
+    @Arg('groupId', () => String) groupId: string,
+  ): Promise<Group | PreviewGroup> {
     const userId = ctx.req.user.id;
 
-    if (!(await isMemberOfGroup(groupId, userId))) throw new Error('youre not allowed to access this');
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
       throw new Error('group not found');
@@ -114,6 +116,7 @@ export class GroupResolver {
     group.numberOfMembers = group.members.length;
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     group.members = await getGroupMembersWithRoles(group.id);
+
     return group;
   }
 
@@ -131,8 +134,7 @@ export class GroupResolver {
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     group.members = await getGroupMembersWithRoles(group.id);
 
-    const previewGroup = new PreviewGroup(group);
-    return previewGroup;
+    return new PreviewGroup(group);
   }
 
   /**
@@ -455,6 +457,12 @@ export class GroupResolver {
     }
 
     return { isAllowed: false };
+  }
+
+  @FieldResolver()
+  async createdBy(@Root() group: Group): Promise<User> {
+    const g = await getRepository(Group).findOne({ where: { id: group.id }, relations: ['createdBy'] });
+    return g.createdBy;
   }
 }
 

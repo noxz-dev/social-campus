@@ -1,7 +1,6 @@
 import { isUUID } from 'class-validator';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { EntityManager, getConnection, getManager, getRepository, ILike, In, IsNull } from 'typeorm';
-import { queryWithRelations } from '../utils/helpers/utils';
 import { Comment } from '../entity/comment.entity';
 import { Group, GroupType } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -11,6 +10,7 @@ import { Post } from '../entity/post.entity';
 import { Tag } from '../entity/tag.entity';
 import { User } from '../entity/user.entity';
 import { uploadFileGraphql } from '../utils/helpers/fileUpload';
+import { queryWithRelations } from '../utils/helpers/utils';
 import { MyContext } from '../utils/interfaces/interfaces';
 import { log } from '../utils/services/logger';
 import { AddPostInput } from '../validators/addPost.validator';
@@ -728,5 +728,3 @@ const createTags = async (user: User, tags: string[], manager: EntityManager): P
 
   return postTags;
 };
-
-

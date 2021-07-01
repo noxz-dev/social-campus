@@ -26,13 +26,11 @@
             pb-4
             px-4
             shadow
-            sm:rounded-lg
-            sm:px-10
+            sm:rounded-lg sm:px-10
             md:dark:bg-dark-600
             dark:bg-dark-700
             border
-            dark:md:border-dark-600
-            dark:border-dark-700
+            dark:md:border-dark-600 dark:border-dark-700
           "
         >
           <form class="space-y-6" action="#" method="POST" @submit.prevent="onSubmit({ email, password })">
@@ -54,16 +52,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -93,16 +87,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -130,22 +120,21 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
               </div>
               <div v-if="v.emailForm.$error" class="text-red-500 mt-0.5 text-sm">
                 Das ist keine gültige Email, nur Hochschul-Emails erlaubt
+              </div>
+              <div v-if="error && error.message.includes('email already exists')" class="text-red-500 mt-0.5 text-sm">
+                Ein Nutzer mit dieser Email existiert bereits
               </div>
             </div>
             <div>
@@ -167,16 +156,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -184,6 +169,12 @@
               <div v-if="v.username.$error" class="text-red-500 mt-0.5 text-sm">
                 <p>Der Benutzername muss aus 3 Zeichen oder mehr bestehen</p>
                 <p>und darf keine Sonderzeichen oder Leerzeichen enthalten</p>
+              </div>
+              <div
+                v-if="error && error.message.includes('username already in use')"
+                class="text-red-500 mt-0.5 text-sm"
+              >
+                Benutzername wird bereits verwendet
               </div>
             </div>
 
@@ -205,16 +196,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -243,16 +230,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -278,8 +261,7 @@
                   text-white
                   bg-brand-600
                   hover:bg-brand-700
-                  focus:outline-none
-                  focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
                 "
               >
                 Konto erstellen
@@ -300,6 +282,27 @@
               </div>
             </div>
           </div>
+          <div
+            v-if="success"
+            class="
+              bg-[#29b965]
+              text-white
+              rounded-xl
+              p-2
+              flex flex-col
+              items-center
+              px-10
+              absolute
+              my-0
+              mt-8
+              left-1/2
+              transform
+              -translate-x-1/2
+            "
+          >
+            <div class="font-semibold">Dein Account wurde erstellt</div>
+            <div class="text-sm">Bestätigungsemail versand</div>
+          </div>
         </div>
       </div>
     </div>
@@ -314,13 +317,13 @@ import { useRouter } from 'vue-router';
 import { useSignupMutation } from '../../graphql/generated/types';
 export default defineComponent({
   setup() {
-    const router = useRouter();
     const emailForm = ref('');
     const password = ref('');
     const firstname = ref('');
     const lastname = ref('');
     const username = ref('');
     const confirmPassword = ref('');
+    const success = ref(false);
 
     const validEmail = (value) => value.endsWidth('@hs-hannover.de');
 
@@ -385,11 +388,11 @@ export default defineComponent({
       }
     };
 
-    onDone((result) => {
-      router.push('/login');
+    onDone((_) => {
+      success.value = true;
     });
 
-    return { onSubmit, emailForm, password, error, firstname, lastname, username, confirmPassword, v };
+    return { onSubmit, emailForm, password, error, firstname, lastname, username, confirmPassword, v, success };
   },
 });
 </script>

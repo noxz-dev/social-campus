@@ -30,7 +30,7 @@ export class UserResolver {
   /**
    * Query to get all exisiting users
    */
-  @Authorized('ADMIN')
+  @Authorized()
   @Query(() => [User])
   public async getUsers(@Ctx() ctx: MyContext): Promise<User[]> {
     return getRepository(User).find();
@@ -83,7 +83,15 @@ export class UserResolver {
         email: input.email,
       },
     });
-    if (result) throw Error('a user with this email already exisits');
+    if (result) throw Error('a user with this email already exists');
+
+    const userWithUsername = await getRepository(User).findOne({
+      where: {
+        username: input.username,
+      },
+    });
+
+    if (userWithUsername) throw Error('username already in use');
 
     const user = new User(input, hashedPassword);
     user.followers = [];
@@ -102,19 +110,6 @@ export class UserResolver {
 
     const saved = await getRepository(Media).save(avatar);
 
-
-    //if email verification is active send an email.. if not just directly activate the account
-    if(Boolean(process.env.USE_EMAIL_VERIFICATION)) {
-      await sendEmail({
-        email: input.email,
-        subject: 'Aktiviere deinen Account',
-        text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
-      });
-    } else {
-      user.activated = true;
-    }
-    
-
     user.avatar = saved;
 
     const savedUser = await getRepository(User).save(user);
@@ -124,7 +119,20 @@ export class UserResolver {
 
     await getRepository(Token).save(token);
 
+    //if email verification is active send an email.. if not just directly activate the account
+    if (!process.env.USE_EMAIL_VERIFICATION) {
+      log.info('activate account email send');
+      await sendEmail({
+        email: input.email,
+        subject: 'Aktiviere deinen Account',
+        text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
+      });
+    } else {
+      log.info('EMAIL VERIFY IS DISABLED: ACCOUNT GETS AUTOMATICALLY ACTIVATED');
+      savedUser.activated = true;
+    }
 
+    await getRepository(User).save(savedUser);
 
     return true;
   }
@@ -349,9 +357,9 @@ export class UserResolver {
     return saved;
   }
 
-/**
- * returns all users that the logged in user is following
- */
+  /**
+   * returns all users that the logged in user is following
+   */
   @Authorized()
   @Query(() => [User], { description: 'returns all users that the logged in user is following' })
   async getFollowing(
@@ -493,7 +501,7 @@ export class UserResolver {
     return recommended;
   }
 
-   /**
+  /**
    * recommending users based on interests and fill up with random users of the platform
    */
   @Authorized()
@@ -523,7 +531,7 @@ export class UserResolver {
 
     const parsedFollowingIds = stringFollowingIds.toString().replace('[', '').replace(']', '');
 
-    //get other users that are matching with the intrests of the logged in user, 
+    //get other users that are matching with the intrests of the logged in user,
     //its just a string match more complex recommendation logic could be added here
     const recommendedUsers = await getConnection().query(
       `select count(*), "user".* 

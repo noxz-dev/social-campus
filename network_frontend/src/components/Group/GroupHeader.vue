@@ -134,6 +134,7 @@ import InputField from '../../components/Form/InputField.vue';
 import CustomSelect from '../../components/Form/CustomSelect.vue';
 import { GroupRoles } from '../../graphql/generated/types';
 import breakpoints from '../../utils/breakpoints';
+import { useResult } from '@vue/apollo-composable';
 
 export default defineComponent({
   components: { LazyImage, GroupPermissionContainer, Modal, InputField, CustomSelect, GroupEdit },
@@ -148,19 +149,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const group = ref<Group>();
-    const numberOfPosts = ref(0);
-    const numberOfMembers = ref(0);
+    // const group = ref<Group>();
 
-    const { onResult } = useGroupByIdQuery(() => ({
+    const { result } = useGroupByIdQuery(() => ({
       groupId: props.groupId,
     }));
 
-    onResult(({ data }) => {
-      group.value = data.groupById;
-      numberOfPosts.value = data.groupById.numberOfPosts || 0;
-      numberOfMembers.value = data.groupById.numberOfMembers || 0;
-    });
+    const group = useResult(result, null, (data) => data.groupById);
+
+    const numberOfMembers = useResult(result, 0, (data) => data.groupById.numberOfMembers);
+    const numberOfPosts = useResult(result, 0, (data) => data.groupById.numberOfPosts);
 
     const { mutate: joinGrp } = useJoinGroupMutation(() => ({
       variables: {

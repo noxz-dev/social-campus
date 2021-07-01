@@ -3,14 +3,15 @@
     <div
       class="editable markdown bg-gray-100 dark:bg-dark-600 dark:text-gray-50 rounded-lg mt-12 p-5 outline-none"
     ></div>
-    <group-role-container :groupId="$route.params.id" :role="GroupRoles.Admin"></group-role-container>
-    <app-button class="mt-2 self-end" @click="saveAbout">Speichern</app-button>
+    <group-role-container :groupId="$route.params.id" :role="GroupRoles.Admin">
+      <app-button class="mt-2 self-end" @click="saveAbout">Speichern</app-button>
+    </group-role-container>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import MediumEditor from 'medium-editor';
-import { useGroupAboutQuery, useUpdateAboutGroupMutation } from '../../graphql/generated/types';
+import { useGroupAboutQuery, useGroupMembersQuery, useUpdateAboutGroupMutation } from '../../graphql/generated/types';
 import { useRoute } from 'vue-router';
 import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
@@ -26,6 +27,7 @@ export default defineComponent({
     const about = ref('');
     const store = useStore();
     const user = computed(() => store.state.userData.user);
+
     const { result, onResult } = useGroupAboutQuery(() => ({
       groupId: route.params.id as string,
     }));
@@ -40,18 +42,26 @@ export default defineComponent({
       },
     }));
 
-
     //serializes the content of the editor and saves it
-    const saveAbout = async () => {      
+    const saveAbout = async () => {
       const serialized = editor.serialize();
       about.value = serialized['element-0'].value;
       await updateAbout();
     };
 
+    const { refetch } = useGroupMembersQuery(() => ({
+      groupId: route.params.id as string,
+    }));
+
     //destroys the editor
-    onResult(() => {
+    onResult(async () => {
       editor.setContent(group.value?.about);
-      if (editor.isActive && user.value.id !== group.value?.createdBy.id) {
+
+      const members = await refetch();
+      const memberGroupRole = members.data.groupById.members.find((m) => m.id === user.value.id).groupRole;
+
+      //check if the groupRole is Admin
+      if (editor.isActive && memberGroupRole !== GroupRoles.Admin) {
         editor.destroy();
       }
     });

@@ -27,11 +27,18 @@ import { notify } from './notification.resolver';
 
 @Resolver(() => User)
 export class UserResolver {
+  /**
+   * Query to get all exisiting users
+   */
+  @Authorized('ADMIN')
   @Query(() => [User])
   public async getUsers(@Ctx() ctx: MyContext): Promise<User[]> {
     return getRepository(User).find();
   }
 
+  /**
+   * Me Query, returns data of the logged in user
+   */
   @Authorized()
   @Query(() => User, {
     nullable: true,
@@ -55,6 +62,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * Mutation to create a new account
+   */
   @Mutation(() => Boolean, { description: 'creates a new user' })
   public async register(
     @Arg('input', () => UserValidator) input: UserValidator,
@@ -64,6 +74,8 @@ export class UserResolver {
     // if (!input.email.endsWith('@hs-hannover.de') || input.email.endsWith('@stud.hs-hannover.de')) {
     //   throw new Error('only university email allowed');
     // }
+
+    //TODO USE TRANSACTION
 
     const hashedPassword = await argon2.hash(input.password);
     const result = await getRepository(User).findOne({
@@ -90,6 +102,19 @@ export class UserResolver {
 
     const saved = await getRepository(Media).save(avatar);
 
+
+    //if email verification is active send an email.. if not just directly activate the account
+    if(Boolean(process.env.USE_EMAIL_VERIFICATION)) {
+      await sendEmail({
+        email: input.email,
+        subject: 'Aktiviere deinen Account',
+        text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
+      });
+    } else {
+      user.activated = true;
+    }
+    
+
     user.avatar = saved;
 
     const savedUser = await getRepository(User).save(user);
@@ -99,15 +124,14 @@ export class UserResolver {
 
     await getRepository(Token).save(token);
 
-    await sendEmail({
-      email: input.email,
-      subject: 'Aktiviere deinen Account',
-      text: `Willkommen zu SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
-    });
+
 
     return true;
   }
 
+  /**
+   * Mutation to logout the user and add theire token to the blacklist
+   */
   @Authorized()
   @Mutation(() => Boolean, { description: 'logout an user to invalidate the access token' })
   async logout(@Ctx() ctx: MyContext, @Arg('access', () => String) accessToken: string): Promise<boolean> {
@@ -121,6 +145,9 @@ export class UserResolver {
     return true;
   }
 
+  /**
+   * Login, to generate a new access-token for the user
+   */
   @Mutation(() => JwtResponse, { description: 'login to get a new auth token' })
   public async login(
     @Arg('email', () => String) email: string,
@@ -152,6 +179,9 @@ export class UserResolver {
     return response;
   }
 
+  /**
+   * follow a user
+   */
   @Authorized()
   @Mutation(() => User, { description: 'follow a user' })
   async addFollower(@Ctx() ctx: MyContext, @Arg('userID', () => String) userID: string): Promise<User | null> {
@@ -196,6 +226,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * remove the follow
+   */
   @Authorized()
   @Mutation(() => User, { description: 'unfollow a user' })
   async removeFollower(@Ctx() ctx: MyContext, @Arg('userID', () => String) userID: string): Promise<User | null> {
@@ -219,6 +252,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * Update the displayed profile information
+   */
   @Authorized()
   @Mutation(() => User, { description: 'update the profile information of the loggedIn user' })
   async updateProfile(
@@ -254,6 +290,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * get a user by a given id
+   */
   @Authorized()
   @Query(() => User, { description: 'UserById returns a user based on the given id' })
   async userById(@Ctx() ctx: MyContext, @Arg('userId', () => String) userId: string): Promise<User | null> {
@@ -268,6 +307,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * get a user by a given username
+   */
   @Authorized()
   @Query(() => User, { description: 'UserByUsername returns a user based on the given user handle' })
   async userByUsername(@Ctx() ctx: MyContext, @Arg('username', () => String) username: string): Promise<User> {
@@ -286,6 +328,9 @@ export class UserResolver {
     return user;
   }
 
+  /**
+   * update the password
+   */
   @Authorized()
   @Mutation(() => User, { description: 'updates the password' })
   async updatePassword(
@@ -304,6 +349,9 @@ export class UserResolver {
     return saved;
   }
 
+/**
+ * returns all users that the logged in user is following
+ */
   @Authorized()
   @Query(() => [User], { description: 'returns all users that the logged in user is following' })
   async getFollowing(
@@ -330,6 +378,9 @@ export class UserResolver {
     return following;
   }
 
+  /**
+   * returns all followers of the user'
+   */
   @Authorized()
   @Query(() => [User], { description: 'returns all followers of the user' })
   async getFollowers(
@@ -356,6 +407,9 @@ export class UserResolver {
     return followers;
   }
 
+  /**
+   * get user stats to display in the profile
+   */
   @Authorized()
   @Query(() => UserStats, { description: 'UserStats are some stats like follower count, post count ...' })
   async userStats(@Arg('userId', () => String) userId: string): Promise<UserStats> {
@@ -384,6 +438,9 @@ export class UserResolver {
     return userStats;
   }
 
+  /**
+   * recommending users based on faculty and studycourse, fill up with random users of the platform
+   */
   @Authorized()
   @Query(() => [User], { description: 'recommeding users based on Faculty' })
   async recommendedUsersFaculty(@Ctx() ctx: MyContext): Promise<User[]> {
@@ -436,8 +493,11 @@ export class UserResolver {
     return recommended;
   }
 
+   /**
+   * recommending users based on interests and fill up with random users of the platform
+   */
   @Authorized()
-  @Query(() => [User], { description: 'recommeding users based on Faculty' })
+  @Query(() => [User], { description: 'recommeding users based on interests' })
   async recommendedUsersInterests(@Ctx() ctx: MyContext): Promise<User[]> {
     const userId = ctx.req.user.id;
     const me = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
@@ -463,6 +523,8 @@ export class UserResolver {
 
     const parsedFollowingIds = stringFollowingIds.toString().replace('[', '').replace(']', '');
 
+    //get other users that are matching with the intrests of the logged in user, 
+    //its just a string match more complex recommendation logic could be added here
     const recommendedUsers = await getConnection().query(
       `select count(*), "user".* 
       from "user", 
@@ -473,7 +535,7 @@ export class UserResolver {
       order by 1 desc LIMIT 3;`,
     );
 
-    //delete key, only needed for ordering
+    //delete a key, only needed for ordering
     recommendedUsers.forEach((u) => {
       delete u.count;
     });
@@ -496,6 +558,8 @@ export class UserResolver {
 
     return recommendedUsers;
   }
+
+  //FIELD RESOLVERS
 
   @FieldResolver()
   async meFollowing(@Ctx() ctx: MyContext, @Root() user: User): Promise<boolean> {

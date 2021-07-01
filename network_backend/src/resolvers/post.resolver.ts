@@ -1,6 +1,7 @@
 import { isUUID } from 'class-validator';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { EntityManager, getConnection, getManager, getRepository, ILike, In, IsNull } from 'typeorm';
+import { queryWithRelations } from '../utils/helpers/utils';
 import { Comment } from '../entity/comment.entity';
 import { Group, GroupType } from '../entity/group.entity';
 import { Like } from '../entity/like.entity';
@@ -21,8 +22,14 @@ export interface NewPostPayload {
   post?: Post;
 }
 
+/**
+ * Resolver for the post type
+ */
 @Resolver(() => Post)
 export class PostResolver {
+  /**
+   * query to get all posts from a user by id
+   */
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
@@ -51,6 +58,9 @@ export class PostResolver {
     return posts;
   }
 
+  /**
+   * discover posts query
+   */
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
@@ -68,8 +78,8 @@ export class PostResolver {
     let posts: Post[];
 
     if (searchString && searchString.length > 0) {
-      //search posts with fulltext search ... could be heavy and should maybe be exhanged with something like elastic search
-
+      // search posts with fulltext search ... could be heavy and should maybe
+      // be exhanged with something like elastic search
       //uses like operator because the ts_vector + query were not working properly
       posts = await getRepository(Post).find({
         where: {
@@ -84,6 +94,7 @@ export class PostResolver {
         take: take,
       });
     } else if (tags && tags.length > 0) {
+      //find posts with tags
       posts = await getRepository(Post)
         .createQueryBuilder('posts')
         .where('posts.group is null')
@@ -130,6 +141,9 @@ export class PostResolver {
     return posts;
   }
 
+  /**
+   * Get all posts from an group
+   */
   @Authorized()
   @Query(() => [Post], {
     nullable: true,
@@ -168,6 +182,9 @@ export class PostResolver {
     return posts;
   }
 
+  /**
+   * Home - Feed query
+   */
   @Authorized()
   @Query(() => [Post], { description: 'returns the post feed of user' })
   public async getFeed(
@@ -213,6 +230,9 @@ export class PostResolver {
     return feedPosts;
   }
 
+  /**
+   * Get a Post with theire comments
+   */
   @Authorized()
   @Query(() => Post, { description: 'returns a specific post' })
   public async postById(@Ctx() ctx: MyContext, @Arg('postId', () => String) postId: string): Promise<Post | null> {
@@ -249,6 +269,9 @@ export class PostResolver {
     return post;
   }
 
+  /**
+   * create a new post
+   */
   @Authorized()
   @Mutation(() => Post, { description: 'addPost creates a new Post and pushes updates to all followers' })
   public async addPost(@Ctx() ctx: MyContext, @Arg('input', () => AddPostInput) input: AddPostInput): Promise<Post> {
@@ -343,13 +366,17 @@ export class PostResolver {
       }
     }
 
-    //fix circular strucutre
-    // post.user.posts = post.user.posts.filter((p) => p.id !== dbPost.id);
+    post.user.posts = post.user.posts.filter((p) => p.id !== dbPost.id);
+
+    //trigger subscription
     await ctx.req.pubsub.publish(SUB_TOPICS.NEW_POST, { post: dbPost, userId: id });
     log.info(`'User with the id: ${id} added a new post'`);
     return dbPost;
   }
 
+  /**
+   * new post subscription
+   */
   @Subscription(() => Post, {
     topics: SUB_TOPICS.NEW_POST,
     description: 'subscribe to new posts',
@@ -369,7 +396,7 @@ export class PostResolver {
         relations: ['followers'],
       });
 
-      //add user to auto update also the same user on two devices
+      //add user to auto update to also the same user on two devices
       user.followers.push(user);
 
       const ids = user.followers.map((u) => u.id);
@@ -388,6 +415,9 @@ export class PostResolver {
     return payload.post;
   }
 
+  /**
+   * add an like to a post
+   */
   @Authorized()
   @Mutation(() => Post, { description: 'likes an post' })
   public async likePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
@@ -443,6 +473,9 @@ export class PostResolver {
     return post;
   }
 
+  /**
+   * remove a like from a post
+   */
   @Authorized()
   @Mutation(() => Post, { description: 'unlikes an post' })
   public async unlikePost(@Ctx() ctx: MyContext, @Arg('postID', () => String) postID: string): Promise<Post | null> {
@@ -479,6 +512,9 @@ export class PostResolver {
     return post;
   }
 
+  /**
+   * delete a post
+   */
   @Authorized()
   @Mutation(() => Boolean, { description: 'deletes an post' })
   public async deletePost(@Ctx() ctx: MyContext, @Arg('postId', () => String) postId: string): Promise<boolean | null> {
@@ -498,6 +534,9 @@ export class PostResolver {
     throw Error('youre not allowed to do that');
   }
 
+  /**
+   * edit the post text
+   */
   @Authorized()
   @Mutation(() => Post, { description: 'updates the content of a post' })
   public async editPost(
@@ -539,6 +578,7 @@ export class PostResolver {
     }
     throw Error('youre not allowed to do that');
   }
+
   //FIELD RESOLVERS
 
   @FieldResolver()
@@ -658,7 +698,7 @@ const extractTags = (text: string): string[] => {
  * @param user User
  * @param tags string[]
  * @param manager EntitiyManager
- * @returns Tag[]
+ * @returns Tag array
  */
 const createTags = async (user: User, tags: string[], manager: EntityManager): Promise<Tag[]> => {
   const postTags = [];
@@ -689,43 +729,4 @@ const createTags = async (user: User, tags: string[], manager: EntityManager): P
   return postTags;
 };
 
-//Helper functions to make some relational operations faster
 
-export const queryWithRelations = async (
-  id: string,
-  repository: any,
-  alias: string,
-  relations: string[],
-): Promise<any> => {
-  return await Promise.all(
-    relations.map((relation) => {
-      const leftJoinAndSelect = getJoins(alias, relation);
-      return repository.findOne(id, {
-        loadEagerRelations: false,
-        join: { alias, leftJoinAndSelect },
-      });
-    }),
-  ).then(mergeObjects);
-};
-
-const getJoins = (base: any, relation: any) => {
-  if (Array.isArray(relation)) {
-    const parent = relation.shift();
-    const children = relation.reduce((prev, current) => {
-      return { ...prev, ...getJoins(parent, current) };
-    }, {});
-    return {
-      [parent]: `${base}.${parent}`,
-      ...children,
-    };
-  } else {
-    return { [`${base}_${relation}`]: `${base}.${relation}` };
-  }
-};
-
-const mergeObjects = (objects: any) => {
-  return objects.reduce((prev, current) => {
-    const props = Object.fromEntries(Object.entries(current).filter(([_, v]) => v !== undefined));
-    return { ...prev, ...props };
-  }, {});
-};

@@ -253,7 +253,6 @@ export default defineComponent({
      * choose a new admin on leave group if the user is the last admin
      */
     function chooseAdmin(newAdmin: string) {
-      console.log('triggerd', newAdmin);
       const username = newAdmin.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)![0].replace('@', '');
       const foundUser = members.value?.find((u) => u.username === username);
       if (!foundUser) return;

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex justify-center lg:justify-start">
     <div id="profilePosts" class="w-11/12 md:w-3/4 lg:w-3/4 xl:w-3/4 pb-10">
-      <post-list :posts="posts" emptyText="Ganz schön leer hier, schreibe doch einen Post" />
+      <post-list :posts="posts" :emptyText="emptyText" />
       <div v-if="loading || customLoading" class="w-full flex justify-center">
         <svg
           class="animate-spin -ml-1 mr-3 h-10 w-10 text-white"
@@ -23,10 +23,11 @@
 
 <script lang="ts">
 import { useGetPostsFromUserQuery } from '../graphql/generated/types';
-import { defineComponent, getCurrentInstance, ref, watch, watchEffect } from 'vue';
+import { computed, defineComponent, getCurrentInstance, ref, watch, watchEffect } from 'vue';
 import { useResult } from '@vue/apollo-composable';
 import PostList from '../components/Post/PostList.vue';
 import InfiniteScrollWrapper from '../components/InfiniteScrollWrapper.vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   components: { PostList, InfiniteScrollWrapper },
@@ -36,6 +37,11 @@ export default defineComponent({
   setup(props) {
     const customLoading = ref(false);
     let lastResponseLength = 1;
+    const store = useStore();
+    const user = computed(() => store.state.userData.user);
+    const emptyText = computed(() =>
+      props.userId === user.value.id ? 'Ganz schön leer hier, poste doch etwas' : 'Keine Posts vorhanden'
+    );
 
     //fetch the inital profile feed
     const { result, loading, fetchMore } = useGetPostsFromUserQuery(() => ({
@@ -90,7 +96,7 @@ export default defineComponent({
       customLoading.value = false;
     };
 
-    return { posts, loading, loadMore, customLoading };
+    return { posts, loading, loadMore, customLoading, emptyText };
   },
 });
 </script>

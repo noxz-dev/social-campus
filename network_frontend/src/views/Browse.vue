@@ -117,10 +117,6 @@ export default defineComponent({
     );
     const posts = useResult(result);
 
-    watchEffect(() => {
-      console.log(searchString.value);
-    });
-
     watch(
       () => chipInput.value?.chips,
       () => {
@@ -131,6 +127,7 @@ export default defineComponent({
       }
     );
 
+    //set tags from the router query options
     watch(
       () => route.query.tag,
       () => {
@@ -168,6 +165,7 @@ export default defineComponent({
       customLoading.value = false;
     };
 
+    //subscribe to new posts, to auto update
     subscribeToMore(() => ({
       document: gql`
         subscription newPost($all: Boolean!) {

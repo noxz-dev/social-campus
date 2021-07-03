@@ -22,7 +22,6 @@ export default defineComponent({
     watch(
       () => props.queryLoading,
       () => {
-        console.log('watch', props.queryLoading);
         loadStarted.value = props.queryLoading;
       }
     );

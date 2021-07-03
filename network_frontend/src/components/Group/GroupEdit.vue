@@ -93,13 +93,14 @@
       </svg>
       <div>Wenn du die letzte Person in dieser Gruppe bist, wird sie gelöscht und alle Posts sind verloren</div>
     </div>
-    <group-role-container :groupId="group.id" :role="GroupRoles.Admin" v-if="isLastAdmin">
+    <group-role-container :groupId="group.id" :role="GroupRoles.Admin" v-if="isLastAdmin && members.length >= 1">
       <span class="my-4">Du bist der letzte Admin der Gruppe! Wähle einen neuen:</span>
       <custom-select
         @value-chosen="chooseAdmin($event)"
         :inital-value="members.map((u) => u.firstname + ' ' + u.lastname + ' @' + u.username)[0]"
         :options="members.map((u) => u.firstname + ' ' + u.lastname + ' @' + u.username)"
       ></custom-select>
+      <span class="my-4 text-red-500" v-if="showError">Du hast kein Gruppen-Mitglied ausgewählt</span>
     </group-role-container>
 
     <div class="flex gap-4">
@@ -152,6 +153,7 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
     const choosenAdmin = ref();
+    const showError = ref(false);
 
     const user = computed(() => store.state.userData.user);
 
@@ -199,7 +201,7 @@ export default defineComponent({
       result.value.groupById.members.filter((m) => m.groupRole === GroupRoles.Admin)
     );
 
-    const isLastAdmin = computed(() => admins.value?.length == 1);
+    const isLastAdmin = computed(() => admins.value?.length == 1 && admins.value.find((a) => a.id === user.value.id));
 
     const { mutate: leave } = useLeaveGroupMutation(() => ({
       variables: {
@@ -251,6 +253,7 @@ export default defineComponent({
      * choose a new admin on leave group if the user is the last admin
      */
     function chooseAdmin(newAdmin: string) {
+      console.log('triggerd', newAdmin);
       const username = newAdmin.match(/@[a-zA-ZäöüÄÖÜß][a-zA-ZäöüÄÖÜß0-9]*/g)![0].replace('@', '');
       const foundUser = members.value?.find((u) => u.username === username);
       if (!foundUser) return;
@@ -276,7 +279,7 @@ export default defineComponent({
      * leave a group and route back to the group overview page
      */
     async function leaveGroup() {
-      if (isLastAdmin.value) {
+      if (isLastAdmin.value && members.value.length >= 1) {
         if (choosenAdmin.value) {
           const result = await updateGroupRole();
           if (result) {
@@ -284,7 +287,7 @@ export default defineComponent({
             router.push('/groups');
           }
         } else {
-          // TODO ERROR MESSAGE FOR NOT CHOOSING ADMIN AND CLICKING THE BUTTON
+          showError.value = true;
         }
       } else {
         await leave();
@@ -311,6 +314,7 @@ export default defineComponent({
       isLastAdmin,
       members,
       chooseAdmin,
+      showError,
     };
   },
 });

@@ -6,6 +6,7 @@ export const postById = gql`
       id
       liked
       media {
+        id
         name
         blurhash
         type
@@ -21,6 +22,7 @@ export const postById = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }
@@ -35,6 +37,7 @@ export const postById = gql`
           lastname
           username
           avatar {
+            id
             name
             blurhash
           }

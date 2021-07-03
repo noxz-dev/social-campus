@@ -9,6 +9,7 @@ export const search = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }

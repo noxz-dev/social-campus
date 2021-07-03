@@ -17,6 +17,7 @@ export const unlikePost = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }

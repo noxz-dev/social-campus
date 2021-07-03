@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import jdenticon from 'jdenticon';
 import _ from 'lodash';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
-import { Brackets, getConnection, getRepository } from 'typeorm';
+import { Brackets, getConnection, getManager, getRepository } from 'typeorm';
 import { Group } from '../entity/group.entity';
 import { Media, MediaType } from '../entity/media.entity';
 import { NotificationType } from '../entity/notification.entity';
@@ -75,65 +75,64 @@ export class UserResolver {
     //   throw new Error('only university email allowed');
     // }
 
-    //TODO USE TRANSACTION
-
-    const hashedPassword = await argon2.hash(input.password);
-    const result = await getRepository(User).findOne({
-      where: {
-        email: input.email,
-      },
-    });
-    if (result) throw Error('a user with this email already exists');
-
-    const userWithUsername = await getRepository(User).findOne({
-      where: {
-        username: input.username,
-      },
-    });
-
-    if (userWithUsername) throw Error('username already in use');
-
-    const user = new User(input, hashedPassword);
-    user.followers = [];
-    user.following = [];
-
-    //create a default profile image
-    const avatar = new Media();
-    const profileImg = jdenticon.toPng(user.firstname, 300, { backColor: '#181A20' });
-
-    //uplaod to s3
-    const { filename, blurhash } = await uploadFile(profileImg, 'images');
-
-    avatar.name = filename;
-    avatar.blurhash = blurhash;
-    avatar.type = MediaType.IMAGE;
-
-    const saved = await getRepository(Media).save(avatar);
-
-    user.avatar = saved;
-
-    const savedUser = await getRepository(User).save(user);
-
-    //generate a cryptographic save token
-    const token = new Token(crypto.randomBytes(64).toString('hex'), savedUser.id);
-
-    await getRepository(Token).save(token);
-
-    //if email verification is active send an email.. if not just directly activate the account
-    if (!process.env.USE_EMAIL_VERIFICATION) {
-      log.info('activate account email send');
-      await sendEmail({
-        email: input.email,
-        subject: 'Aktiviere deinen Account',
-        text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
+    await getManager().transaction(async (transactionManager) => {
+      const hashedPassword = await argon2.hash(input.password);
+      const result = await getRepository(User).findOne({
+        where: {
+          email: input.email,
+        },
       });
-    } else {
-      log.info('EMAIL VERIFY IS DISABLED: ACCOUNT GETS AUTOMATICALLY ACTIVATED');
-      savedUser.activated = true;
-    }
+      if (result) throw Error('a user with this email already exists');
 
-    await getRepository(User).save(savedUser);
+      const foundUserWithUsername = await getRepository(User).findOne({
+        where: {
+          username: input.username,
+        },
+      });
 
+      if (foundUserWithUsername) throw Error('username already in use');
+
+      const user = new User(input, hashedPassword);
+      user.followers = [];
+      user.following = [];
+
+      //create a default profile image
+      const avatar = new Media();
+      const profileImg = jdenticon.toPng(user.firstname, 300, { backColor: '#181A20' });
+
+      //uplaod to s3
+      const { filename, blurhash } = await uploadFile(profileImg, 'images');
+
+      avatar.name = filename;
+      avatar.blurhash = blurhash;
+      avatar.type = MediaType.IMAGE;
+
+      const saved = await transactionManager.save(Media, avatar);
+
+      user.avatar = saved;
+
+      const savedUser = await transactionManager.save(User, user);
+
+      //generate a save token
+      const token = new Token(crypto.randomBytes(64).toString('hex'), savedUser.id);
+
+      await transactionManager.save(Token, token);
+
+      //if email verification is active send an email.. if not just directly activate the account
+      if (!process.env.USE_EMAIL_VERIFICATION) {
+        log.info('activate account email send');
+        await sendEmail({
+          email: input.email,
+          subject: 'Aktiviere deinen Account',
+          text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
+        });
+      } else {
+        log.info('EMAIL VERIFY IS DISABLED: ACCOUNT GETS AUTOMATICALLY ACTIVATED');
+        savedUser.activated = true;
+      }
+
+      await transactionManager.save(User, savedUser);
+    });
     return true;
   }
 

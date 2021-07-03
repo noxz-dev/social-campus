@@ -17,6 +17,7 @@ export const browsePosts = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }

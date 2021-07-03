@@ -17,6 +17,7 @@ export const getPostsFromGroup = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }

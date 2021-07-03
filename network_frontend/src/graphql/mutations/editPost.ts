@@ -15,6 +15,7 @@ export const editPost = gql`
         firstname
         lastname
         avatar {
+          id
           name
           blurhash
         }

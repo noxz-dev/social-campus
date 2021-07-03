@@ -125,7 +125,6 @@ import LazyImage from '../Blurhash/LazyImage.vue';
 import { numberFormatter } from '../../utils/numberFormatter';
 import { GroupComponents } from '../../views/Group.vue';
 import { useGroupByIdQuery, useJoinGroupMutation } from '../../graphql/generated/types';
-import { Group } from '../../graphql/generated/types';
 import GroupPermissionContainer from './GroupPermissionContainer.vue';
 import { state } from '../../utils/state';
 import GroupEdit from './GroupEdit.vue';

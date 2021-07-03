@@ -15,6 +15,7 @@ export const userByUsername = gql`
         name
       }
       avatar {
+        id
         name
         blurhash
       }

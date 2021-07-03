@@ -11,6 +11,7 @@ export const addFollower = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }

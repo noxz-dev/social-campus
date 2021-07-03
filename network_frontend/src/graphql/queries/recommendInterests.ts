@@ -9,6 +9,7 @@ export const recommendedUsersInterests = gql`
       username
       meFollowing
       avatar {
+        id
         name
         blurhash
       }

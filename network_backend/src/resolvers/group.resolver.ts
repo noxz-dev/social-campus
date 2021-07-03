@@ -24,7 +24,6 @@ export class GroupResolver {
     @Arg('groupType', () => GroupType) groupType: GroupType,
     @Arg('password', () => String, { nullable: true }) password: string,
   ): Promise<PreviewGroup> {
-    //TODO USE A INPUT
     const userId = ctx.req.user.id;
     if (!userId) throw new Error('user not authenticated');
 
@@ -147,7 +146,6 @@ export class GroupResolver {
     @Arg('groupId', () => String) groupId: string,
     @Arg('aboutContent', () => String) aboutContent: string,
   ): Promise<Group> {
-    //TODO NEEDS IS ALLOWED VALIDATION -> only if admin
     const userId = ctx.req.user.id;
     const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'createdBy'] });
     if (!group) {
@@ -156,6 +154,9 @@ export class GroupResolver {
     group.numberOfMembers = group.members.length;
     group.numberOfPosts = await getRepository(Post).count({ where: { group: groupId } });
     group.members = await getGroupMembersWithRoles(group.id);
+
+    const user = group.members.find((m) => m.id === userId);
+    if (user.groupRole !== GroupRole.ADMIN) throw new Error('youre not allowed to change this');
 
     group.about = aboutContent;
     await getRepository(Group).save(group);
@@ -415,22 +416,37 @@ export class GroupResolver {
       //get all admins
       const admins = members.filter((m) => m.groupRole === GroupRole.ADMIN);
 
-      //check if the user is not the last admin if there are more members
+      //check if there are more members
       if (admins.length === 1 && members.length > 1) throw new Error('youre not allowed to do this');
     }
+    await getManager().transaction(async (transactionManager) => {
+      const group = await transactionManager.findOne(Group, {
+        where: { id: groupId },
+        relations: ['members', 'memberRoles'],
+      });
 
-    //TODO USE TRANSACTION
-    const group = await getRepository(Group).findOne({ where: { id: groupId }, relations: ['members', 'memberRoles'] });
-    if (!group) throw new Error('group not found');
-    group.members = group.members.filter((member) => member.id !== userId);
+      if (!group) throw new Error('group not found');
+      group.members = group.members.filter((member) => member.id !== userId);
 
-    const memberRole = await getRepository(GroupMemberRole).findOne({ where: { user: userId, group: groupId } });
-    await getRepository(GroupMemberRole).remove(memberRole);
+      const memberRole = await transactionManager.findOne(GroupMemberRole, {
+        where: { user: userId, group: groupId },
+      });
 
-    await getRepository(Group).save(group);
+      await transactionManager.remove(GroupMemberRole, memberRole);
 
-    //TODO DELETE GROUP IF THE USER WAS THE LAST MEMBER
+      await transactionManager.save(Group, group);
 
+      if (group.members.length === 0) {
+        //delete all posts when the last member leaves the group
+        const posts = await transactionManager.find(Post, { where: { group: groupId } });
+        for await (const post of posts) {
+          await transactionManager.remove(Post, post);
+        }
+
+        //delete the group
+        await transactionManager.remove(Group, group);
+      }
+    });
     return true;
   }
 

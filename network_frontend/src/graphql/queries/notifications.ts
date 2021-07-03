@@ -13,6 +13,7 @@ export const getNotifications = gql`
       toUser {
         id
         avatar {
+          id
           name
           blurhash
         }
@@ -21,6 +22,7 @@ export const getNotifications = gql`
       fromUser {
         id
         avatar {
+          id
           name
           blurhash
         }

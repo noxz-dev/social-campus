@@ -14,6 +14,7 @@ export const notificationsSubscription = gql`
         id
         username
         avatar {
+          id
           name
           blurhash
         }

@@ -457,7 +457,7 @@ export type Query = {
   userStats: UserStats;
   /** recommeding users based on Faculty */
   recommendedUsersFaculty: Array<User>;
-  /** recommeding users based on Faculty */
+  /** recommeding users based on interests */
   recommendedUsersInterests: Array<User>;
   mediaFromGroup: Array<GroupMedia>;
 };
@@ -709,7 +709,7 @@ export type AddFollowerMutation = (
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   ) }
 );
@@ -732,7 +732,7 @@ export type AddPostMutation = (
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -842,7 +842,7 @@ export type EditPostMutation = (
       & Pick<User, 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -893,7 +893,7 @@ export type LikePostMutation = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -938,7 +938,7 @@ export type RemoveFollowerMutation = (
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   ) }
 );
@@ -991,7 +991,7 @@ export type UnlikePostMutation = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -1067,7 +1067,7 @@ export type UpdateProfileMutation = (
     & Pick<User, 'id' | 'bio' | 'studyCourse' | 'faculty' | 'interests' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   ) }
 );
@@ -1093,7 +1093,7 @@ export type BrowsePostsQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), tags: Array<(
       { __typename?: 'Tag' }
@@ -1167,7 +1167,7 @@ export type GetFollowersQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   )> }
 );
@@ -1186,7 +1186,7 @@ export type GetFollowingQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   )> }
 );
@@ -1228,7 +1228,7 @@ export type GetFeedQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), group?: Maybe<(
       { __typename?: 'Group' }
@@ -1257,7 +1257,7 @@ export type GetPostsFromGroupQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ) }
   )>> }
@@ -1321,14 +1321,14 @@ export type GroupMembersQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), members: Array<(
       { __typename?: 'GroupMember' }
       & Pick<GroupMember, 'id' | 'firstname' | 'lastname' | 'username' | 'onlineStatus' | 'groupRole'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     )> }
   ) }
@@ -1362,7 +1362,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )>, roles: Array<(
       { __typename?: 'Role' }
       & Pick<Role, 'id' | 'name'>
@@ -1399,7 +1399,7 @@ export type MyChatsQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     )> }
   )> }
@@ -1439,14 +1439,14 @@ export type GetNotificationsQuery = (
       & Pick<User, 'id' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), fromUser: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), post?: Maybe<(
       { __typename?: 'Post' }
@@ -1470,13 +1470,13 @@ export type PostByIdQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash' | 'type'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), comments: Array<(
       { __typename?: 'Comment' }
@@ -1486,7 +1486,7 @@ export type PostByIdQuery = (
         & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
         & { avatar?: Maybe<(
           { __typename?: 'Media' }
-          & Pick<Media, 'name' | 'blurhash'>
+          & Pick<Media, 'id' | 'name' | 'blurhash'>
         )> }
       ) }
     )>, group?: Maybe<(
@@ -1510,13 +1510,13 @@ export type GetPostsFromUserQuery = (
     & Pick<Post, 'id' | 'liked' | 'text' | 'likesCount' | 'commentCount' | 'createdAt' | 'edited'>
     & { media?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash' | 'type'>
+      & Pick<Media, 'id' | 'name' | 'blurhash' | 'type'>
     )>, user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ) }
   )>> }
@@ -1532,7 +1532,7 @@ export type RecommendedUsersInterestsQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   )> }
 );
@@ -1547,7 +1547,7 @@ export type RecommendedUsersFacultyQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username' | 'meFollowing'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   )> }
 );
@@ -1566,7 +1566,7 @@ export type SearchQuery = (
       & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     )>, groups: Array<(
       { __typename?: 'Group' }
@@ -1590,20 +1590,20 @@ export type UserByIdQuery = (
     & Pick<User, 'id' | 'firstname' | 'lastname' | 'username'>
     & { avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )>, followers: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     )>, following: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'firstname' | 'lastname'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     )> }
   ) }
@@ -1624,7 +1624,7 @@ export type UserByUsernameQuery = (
       & Pick<Role, 'id' | 'name'>
     )>, avatar?: Maybe<(
       { __typename?: 'Media' }
-      & Pick<Media, 'name' | 'blurhash'>
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )> }
   ) }
 );
@@ -1660,7 +1660,7 @@ export type NotificationsSubscription = (
       & Pick<User, 'id' | 'username'>
       & { avatar?: Maybe<(
         { __typename?: 'Media' }
-        & Pick<Media, 'name' | 'blurhash'>
+        & Pick<Media, 'id' | 'name' | 'blurhash'>
       )> }
     ), toUser: (
       { __typename?: 'User' }
@@ -1687,6 +1687,7 @@ export const AddFollowerDocument = gql`
     firstname
     lastname
     avatar {
+      id
       name
       blurhash
     }
@@ -1732,6 +1733,7 @@ export const AddPostDocument = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }
@@ -1975,6 +1977,7 @@ export const EditPostDocument = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }
@@ -2089,6 +2092,7 @@ export const LikePostDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2195,6 +2199,7 @@ export const RemoveFollowerDocument = gql`
     firstname
     lastname
     avatar {
+      id
       name
       blurhash
     }
@@ -2309,6 +2314,7 @@ export const UnlikePostDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2485,6 +2491,7 @@ export const UpdateProfileDocument = gql`
     firstname
     lastname
     avatar {
+      id
       name
       blurhash
     }
@@ -2532,6 +2539,7 @@ export const BrowsePostsDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2678,6 +2686,7 @@ export const GetFollowersDocument = gql`
     username
     meFollowing
     avatar {
+      id
       name
       blurhash
     }
@@ -2715,6 +2724,7 @@ export const GetFollowingDocument = gql`
     username
     meFollowing
     avatar {
+      id
       name
       blurhash
     }
@@ -2796,6 +2806,7 @@ export const GetFeedDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2850,6 +2861,7 @@ export const GetPostsFromGroupDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2988,6 +3000,7 @@ export const GroupMembersDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -2999,6 +3012,7 @@ export const GroupMembersDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -3069,6 +3083,7 @@ export const MeDocument = gql`
   me {
     id
     avatar {
+      id
       name
       blurhash
     }
@@ -3146,6 +3161,7 @@ export const MyChatsDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -3219,6 +3235,7 @@ export const GetNotificationsDocument = gql`
     toUser {
       id
       avatar {
+        id
         name
         blurhash
       }
@@ -3227,6 +3244,7 @@ export const GetNotificationsDocument = gql`
     fromUser {
       id
       avatar {
+        id
         name
         blurhash
       }
@@ -3264,6 +3282,7 @@ export const PostByIdDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
       type
@@ -3279,6 +3298,7 @@ export const PostByIdDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -3293,6 +3313,7 @@ export const PostByIdDocument = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }
@@ -3331,6 +3352,7 @@ export const GetPostsFromUserDocument = gql`
     id
     liked
     media {
+      id
       name
       blurhash
       type
@@ -3341,6 +3363,7 @@ export const GetPostsFromUserDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -3384,6 +3407,7 @@ export const RecommendedUsersInterestsDocument = gql`
     username
     meFollowing
     avatar {
+      id
       name
       blurhash
     }
@@ -3416,6 +3440,7 @@ export const RecommendedUsersFacultyDocument = gql`
     username
     meFollowing
     avatar {
+      id
       name
       blurhash
     }
@@ -3448,6 +3473,7 @@ export const SearchDocument = gql`
       lastname
       username
       avatar {
+        id
         name
         blurhash
       }
@@ -3490,6 +3516,7 @@ export const UserByIdDocument = gql`
     firstname
     lastname
     avatar {
+      id
       name
       blurhash
     }
@@ -3499,6 +3526,7 @@ export const UserByIdDocument = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }
@@ -3508,6 +3536,7 @@ export const UserByIdDocument = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }
@@ -3550,6 +3579,7 @@ export const UserByUsernameDocument = gql`
       name
     }
     avatar {
+      id
       name
       blurhash
     }
@@ -3621,6 +3651,7 @@ export const NotificationsDocument = gql`
       id
       username
       avatar {
+        id
         name
         blurhash
       }

@@ -10,6 +10,7 @@ export const groupMembers = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }
@@ -21,6 +22,7 @@ export const groupMembers = gql`
         lastname
         username
         avatar {
+          id
           name
           blurhash
         }

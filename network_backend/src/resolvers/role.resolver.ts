@@ -53,7 +53,6 @@ export class RoleResolver {
   ): Promise<User | null> {
     //disable the ability to assign the admin group via this call
     if (roleName.toLocaleLowerCase() === 'admin') throw new Error('youre not allowed to do this');
-    //TODO MOVE EMAIL TO ID
     const role = await getRepository(Role).findOne({ name: roleName });
     if (!role) throw new Error('Role not found!');
     const user = await getRepository(User).findOne({ relations: ['roles'], where: { email } });

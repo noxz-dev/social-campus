@@ -199,17 +199,15 @@ export class ChatResolver {
     console.log('DEL message', message);
     const user = message.sendBy;
     if (user.id !== userId) throw Error('youre not allowed to delete this message');
+    await getRepository(ChatMessage).remove(message);
 
-    // const chat = await getRepository(Chat).findOne()
-
-    console.log('TODO');
     log.info(`'User with the id: ${userId} deleted a message'`);
     return true;
   }
 }
 
 /**
- * check if an user is member of a chat
+ * Helper function to check if an user is member of a chat
  */
 const checkChatAccess = (members: User[], userId: string): boolean => {
   const user = members.find((member) => member.id === userId);

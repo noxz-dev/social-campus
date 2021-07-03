@@ -67,6 +67,8 @@ export default defineComponent({
               lastname
               username
               avatar {
+                blurhash
+                id
                 name
               }
             }

@@ -7,6 +7,7 @@ export const userById = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }
@@ -16,6 +17,7 @@ export const userById = gql`
         firstname
         lastname
         avatar {
+          id
           name
           blurhash
         }
@@ -25,6 +27,7 @@ export const userById = gql`
         firstname
         lastname
         avatar {
+          id
           name
           blurhash
         }

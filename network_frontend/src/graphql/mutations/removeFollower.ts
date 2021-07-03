@@ -11,6 +11,7 @@ export const removeFollower = gql`
       firstname
       lastname
       avatar {
+        id
         name
         blurhash
       }

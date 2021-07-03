@@ -12,10 +12,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];
 
+    //check the blacklist
     const result = await redis.lrange('token', 0, 99999999);
     if (result.indexOf(token) > -1) {
       log.info('this token is blacklisted');
-      //TODO ACITVATE KICK OUT
+      throw new Error('your token is not valid');
     }
 
     if (token) {

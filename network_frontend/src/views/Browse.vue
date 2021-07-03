@@ -175,6 +175,8 @@ export default defineComponent({
             id
             liked
             media {
+              type
+              id
               name
               blurhash
             }
@@ -184,6 +186,7 @@ export default defineComponent({
               lastname
               username
               avatar {
+                id
                 name
                 blurhash
               }

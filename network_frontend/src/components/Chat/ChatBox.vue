@@ -51,8 +51,7 @@
             flex
             items-center
             justify-center
-            focus:outline-none
-            focus:ring-2 focus:ring-white
+            focus:outline-none focus:ring-2 focus:ring-white
           "
         >
           <svg viewBox="0 0 24 24" class="fill-white">
@@ -311,6 +310,8 @@ export default defineComponent({
                     content
                     createdAt
                     media {
+                      type
+                      id
                       name
                       blurhash
                     }

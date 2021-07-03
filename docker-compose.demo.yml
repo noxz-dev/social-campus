@@ -23,7 +23,7 @@ services:
     depends_on:
       - backend
   backend:
-    build: "./network_backend/"
+    build: './network_backend/'
     ports:
       - 3000:3000
     environment:
@@ -36,6 +36,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - APP_URL=${APP_URL}
       - SMTP_SERVER=${SMTP_SERVER}
       - USE_EMAIL_VERIFICATION=${USE_EMAIL_VERIFICATION}
       - EMAIL_USER=${EMAIL_USER}
@@ -45,7 +46,7 @@ services:
     depends_on:
       - postgres
   frontend:
-    build: "./network_frontend/"
+    build: './network_frontend/'
     ports:
       - 8080:8080
     depends_on:

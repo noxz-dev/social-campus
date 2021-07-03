@@ -124,7 +124,7 @@ export class UserResolver {
         await sendEmail({
           email: input.email,
           subject: 'Aktiviere deinen Account',
-          text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: https://social.noxz.dev/api/activate/${token.token}`,
+          text: `Willkommen auf dem SocialCampus, aktiviere jetzt deinen Account: ${process.env.APP_URL}/api/activate/${token.token}`,
         });
       } else {
         log.info('EMAIL VERIFY IS DISABLED: ACCOUNT GETS AUTOMATICALLY ACTIVATED');

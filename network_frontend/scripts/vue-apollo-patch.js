@@ -1,9 +1,10 @@
 /**
- * fix issues with the vue apollo package
+ * fixes issues with the vue apollo package
  */
 const fs = require('fs');
 const path = require('path');
 
+//if youre using node 14 uncomment this
 // fs.rmdirSync(path.resolve(__dirname, '../node_modules/.vite_opt_cache'), {
 //   recursive: true,
 // });

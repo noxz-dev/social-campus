@@ -196,7 +196,6 @@ export class ChatResolver {
     const message = await getRepository(ChatMessage).findOne({
       where: { id: messageId },
     });
-    console.log('DEL message', message);
     const user = message.sendBy;
     if (user.id !== userId) throw Error('youre not allowed to delete this message');
     await getRepository(ChatMessage).remove(message);

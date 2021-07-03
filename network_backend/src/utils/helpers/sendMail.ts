@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { log } from '../../utils/services/logger';
 
 interface SendEmail {
   email: string;
@@ -30,8 +31,8 @@ export async function sendEmail({ email, subject, text, html }: SendEmail): Prom
       html: html,
     });
 
-    console.log('⚠️  Sent Email to: %s', email);
+    log.info('⚠️  Sent Email to: %s', email);
   } catch (err) {
-    console.log(err);
+    log.error(err);
   }
 }

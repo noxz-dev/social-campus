@@ -146,7 +146,7 @@ export class UserResolver {
       //add token to blacklist
       redis.lpush('token', accessToken);
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
 
     return true;

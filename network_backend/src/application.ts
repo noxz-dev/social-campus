@@ -125,7 +125,7 @@ export class Application {
             throw new Error('Missing auth token!');
           },
           async onDisconnect(socket: MyWebSocket) {
-            log.info('⛏ user disconnected from the subscriptions server');
+            log.info('🔌 user disconnected from the subscriptions server');
             if (socket.user) {
               await updateOnlineStatus(socket.user.id, OnlineStatus.OFFLINE);
             }
@@ -144,7 +144,6 @@ export class Application {
         uploads: false,
         formatError: (error) => {
           log.error('GRAPHQL ERROR', JSON.stringify(error));
-          // console.log(error.extensions.exception.stacktrace);
           const response = { message: error.message };
           return response;
         },

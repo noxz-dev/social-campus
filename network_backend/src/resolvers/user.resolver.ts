@@ -570,8 +570,9 @@ export class UserResolver {
 
   @FieldResolver()
   async meFollowing(@Ctx() ctx: MyContext, @Root() user: User): Promise<boolean> {
-    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['followers'] });
-    return u.followers.some((us) => us.id === u.id);
+    const userId = ctx.req.user.id;
+    const usr = await getRepository(User).findOne({ where: { id: userId }, relations: ['following'] });
+    return usr.following.some((u) => u.id === user.id);
   }
 
   @FieldResolver()

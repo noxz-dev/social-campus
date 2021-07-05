@@ -13,19 +13,23 @@ export const loadProxyImage = async (filename: string): Promise<string> => {
   if (imageCache.has(filename)) {
     return 'data:' + 'image/jpeg' + ';base64,' + imageCache.get(filename);
   }
-
-  const response = await axios({
-    url: `/api/files/${filename}`,
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('apollo-token'),
-    },
-    method: 'GET',
-    responseType: 'arraybuffer',
-  });
-  const b64encoded = Buffer.from(response.data, 'base64');
-  const srcUrl = 'data:' + 'image/jpeg' + ';base64,' + b64encoded;
-  imageCache.set(filename, b64encoded);
-  return srcUrl;
+  try {
+    const response = await axios({
+      url: `/api/files/${filename}`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('apollo-token'),
+      },
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+    const b64encoded = Buffer.from(response.data, 'base64');
+    const srcUrl = 'data:' + 'image/jpeg' + ';base64,' + b64encoded;
+    imageCache.set(filename, b64encoded);
+    return srcUrl;
+  } catch (err) {
+    console.log('could not load the image via the proxy');
+    throw Error('whoops, that shouldnt happen');
+  }
 };
 
 /**
@@ -34,15 +38,20 @@ export const loadProxyImage = async (filename: string): Promise<string> => {
  * @returns srcUrl
  */
 export const loadProxyFile = async (filename: string): Promise<string> => {
-  const response = await axios({
-    url: `/api/files/${filename}`,
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('apollo-token'),
-    },
-    method: 'GET',
-    responseType: 'arraybuffer',
-  });
-  const b64encoded = Buffer.from(response.data, 'base64');
-  const src = 'data:application/octet-stream;base64,' + b64encoded;
-  return src;
+  try {
+    const response = await axios({
+      url: `/api/files/${filename}`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('apollo-token'),
+      },
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+    const b64encoded = Buffer.from(response.data, 'base64');
+    const src = 'data:application/octet-stream;base64,' + b64encoded;
+    return src;
+  } catch (err) {
+    console.log('could not load the file via the proxy');
+    throw Error('whoops, that shouldnt happen');
+  }
 };

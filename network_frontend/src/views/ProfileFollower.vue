@@ -22,24 +22,22 @@ import LazyImage from '../components/Blurhash/LazyImage.vue';
 import FollowUserCard from '../components/FollowUserCard.vue';
 import { useResult } from '@vue/apollo-composable';
 
-
 export default defineComponent({
   components: { PostList, Card, LazyImage, FollowUserCard },
   props: {
     userId: {
-      type:String,
-      required: true
-    }
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     const { result } = useGetFollowersQuery(() => ({
       userId: props.userId,
       take: 99999999,
-      skip: 0 
+      skip: 0,
     }));
-        
-    const followers = useResult(result, [], data => data.getFollowers)
-    
+
+    const followers = useResult(result, [], (data) => data.getFollowers);
 
     return {
       followers,

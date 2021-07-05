@@ -77,6 +77,8 @@ import { useAddFollowerMutation, useRemoveFollowerMutation } from '../../graphql
 import { defineComponent, ref } from 'vue';
 import { getFeed } from '../../graphql/queries/getFeed';
 import { browsePosts } from '../../graphql/queries/browsePosts';
+import { recommendedUsersFaculty } from '../../graphql/queries/recommendUsersFaculty';
+import { recommendedUsersInterests } from '../../graphql/queries/recommendInterests';
 export default defineComponent({
   props: {
     user: { type: Object, required: true },
@@ -95,12 +97,10 @@ export default defineComponent({
       },
       refetchQueries: [
         {
-          query: getFeed,
-          variables: { offset: 0, limit: 10 },
+          query: recommendedUsersFaculty,
         },
         {
-          query: browsePosts,
-          variables: { skip: 0, take: 10 },
+          query: recommendedUsersInterests,
         },
       ],
       update: (cache, { data: { addFollower } }) => {
@@ -108,6 +108,7 @@ export default defineComponent({
           id: cache.identify(props.user),
           fields: {
             meFollowing() {
+              console.log(addFollower.meFollowing);
               return addFollower.meFollowing;
             },
           },
@@ -120,16 +121,6 @@ export default defineComponent({
       variables: {
         userID: props.user?.id as string,
       },
-      refetchQueries: [
-        {
-          query: getFeed,
-          variables: { offset: 0, limit: 10 },
-        },
-        {
-          query: browsePosts,
-          variables: { skip: 0, take: 10 },
-        },
-      ],
       update: (cache, { data: { removeFollower } }) => {
         cache.modify({
           id: cache.identify(props.user),

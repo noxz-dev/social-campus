@@ -32,13 +32,18 @@
 
 - add .env file to the root folder for container configuration (.env-sample is given)
 
+- .env.production in the network_frontend folder needs to be set to:
+
+  - VITE_API_URL=http://localhost/api/graphql
+  - VITE_WS_URL=ws://localhost/subs/
+
 - set NODE_ENV=production in the .env file
 
 - run: docker-compose -f docker-compose.demo.yml up -d
 
 ## 🏭 Production
 
-use the production repo for automatic ssl and updated reverse proxy
+- use the production repo for automatic ssl and updated reverse proxy
 
 ## 📁 Folder Structure
 

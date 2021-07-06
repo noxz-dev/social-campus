@@ -29,7 +29,6 @@ services:
     environment:
       - PORT=${PORT}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_REFRESH=${JWT_REFRESH}
       - NODE_ENV=${NODE_ENV}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

@@ -11,6 +11,10 @@ export class TagResolver {
   @Authorized()
   @Query(() => [Tag])
   async getAllTags(): Promise<Tag[]> {
-    return getRepository(Tag).find();
+    return getRepository(Tag).find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 }

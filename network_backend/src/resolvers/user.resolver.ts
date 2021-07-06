@@ -254,8 +254,9 @@ export class UserResolver {
     });
 
     await getRepository(User).save(user);
-    log.info(`user with the id ${user.id} unfollowed ${userID}`);
+
     user.meFollowing = false;
+    log.info(`user with the id ${user.id} unfollowed ${userID}`);
     return user;
   }
 

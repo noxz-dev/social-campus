@@ -17,21 +17,21 @@ export class SearchResolver {
     const users = await getRepository(User).find({
       where: [{ firstname: ILike(`%${searchString}%`) }, { lastname: ILike(`%${searchString}%`) }],
       order: {
-        firstname: 'DESC',
+        firstname: 'ASC',
       },
     });
 
     const tags = await getRepository(Tag).find({
       where: { name: ILike(`%${searchString}%`) },
       order: {
-        name: 'DESC',
+        name: 'ASC',
       },
     });
 
     const groups = await getRepository(Group).find({
       where: { name: ILike(`%${searchString}%`) },
       order: {
-        name: 'DESC',
+        name: 'ASC',
       },
     });
 

@@ -14,6 +14,7 @@ import CustomSelect from '../Form/CustomSelect.vue';
 import { useCreateChatMutation, useSearchQuery } from '../../graphql/generated/types';
 import { useResult } from '@vue/apollo-composable';
 import { useStore } from 'vuex';
+import { myChats } from '../../graphql/queries/myChats';
 export default defineComponent({
   components: { InputField, CustomSelect },
   emits: ['close'],
@@ -32,6 +33,11 @@ export default defineComponent({
       variables: {
         memberId: choosenId.value,
       },
+      refetchQueries: [
+        {
+          query: myChats,
+        },
+      ],
     }));
 
     const choosenId = ref('');

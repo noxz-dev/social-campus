@@ -1,5 +1,9 @@
 # SocialCampus - Open Source Self Hosted Social Network
 
+## ❗ IMPORTANT
+
+this software was developed under linux (wsl2), there is no guarantee that it is compatible with windows
+
 ## ⚙️ TechStack
 
 - Built on Node version 16.1.0

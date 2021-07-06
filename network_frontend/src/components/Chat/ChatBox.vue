@@ -93,6 +93,7 @@
     <div class="w-full pb-32 md:pb-0">
       <div class="pb-4 md:pb-5 p-2 pt-1 w-full mb-14 md:mb-0 fixed md:static bottom-0 dark:bg-dark-700 bg-white">
         <input-field
+          :disabled="sending"
           :showExtraButton="true"
           :showButton="true"
           v-model="newMessage"
@@ -283,7 +284,7 @@ export default defineComponent({
     }));
 
     //register the send message mutation
-    const { mutate: send } = useSendMessageMutation(() => ({
+    const { mutate: send, loading: sending } = useSendMessageMutation(() => ({
       variables: {
         input: {
           chatId: route.params.id as string,
@@ -402,6 +403,7 @@ export default defineComponent({
       emojiPickerOpen,
       emojiPicker,
       input,
+      sending,
       getRootProps,
       getInputProps,
       ...dropUtils,

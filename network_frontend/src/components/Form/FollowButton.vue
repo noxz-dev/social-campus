@@ -65,7 +65,7 @@ export default defineComponent({
           id: cache.identify(props.user),
           fields: {
             meFollowing() {
-              return addFollower.meFollowing;
+              return true;
             },
           },
         });

@@ -171,7 +171,7 @@ export class Application {
       //authentication middleware
       app.use(authenticateToken);
 
-      app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+      app.use(graphqlUploadExpress({ maxFiles: 1 }));
 
       //add the pubsub to the context
       app.use((req: express.Request, _res: express.Response, next: express.NextFunction): void => {

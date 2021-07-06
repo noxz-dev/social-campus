@@ -1,6 +1,5 @@
-import { ImagePool } from '@squoosh/lib';
 import { encode } from 'blurhash';
-import { createWriteStream, unlink, writeFileSync } from 'fs';
+import { createWriteStream, promises as fsPromisses, unlink, writeFileSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
 import os from 'os';
 import path from 'path';
@@ -56,7 +55,7 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
         }
 
         // upload file to s3
-        minioClient.fPutObject(bucketName, filename, path, metaData, (err, etag) => {
+        minioClient.fPutObject(bucketName, filename, path, metaData, async (err, etag) => {
           if (err) {
             log.error(err.stack);
             throw Error('image upload failed');
@@ -64,9 +63,9 @@ export const uploadFileGraphql = async (file: FileUpload, bucketName: string): P
           log.info('File uploaded successfully.');
 
           //Delete the tmp file uploaded
-          unlink(destinationPath, () => {
-            res(filename);
-          });
+          await fsPromisses.unlink(destinationPath);
+          await fsPromisses.unlink(path);
+          res(filename);
         });
       }),
   );
@@ -140,16 +139,16 @@ const generateBlurhash = async (path: string): Promise<string> => {
  * @param path file path to the image
  * @returns filepath where the compressed image got saved
  */
-const compressImage = async (path: string): Promise<string> => {
+const compressImage = async (imagePath: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
-    const imagePool = new ImagePool();
-    const image = imagePool.ingestImage(path);
-    await image.decoded;
-    await image.encode({ mozjpeg: {} });
-    const newPath = path.split('.')[0] + '.jpg';
-    const rawEncodedImage = (await image.encodedWith.mozjpeg).binary;
-    writeFileSync(newPath, rawEncodedImage);
-    await imagePool.close();
-    resolve(newPath);
+    try {
+      const newPath = path.join(os.tmpdir(), uuidv4() + '.jpg');
+      console.log(newPath);
+      await sharp(imagePath).jpeg({ mozjpeg: true, quality: 70 }).toFile(newPath);
+      resolve(newPath);
+    } catch (err) {
+      console.log(err);
+      reject();
+    }
   });
 };

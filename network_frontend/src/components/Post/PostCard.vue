@@ -318,7 +318,7 @@ export default defineComponent({
       toolbar: false,
       tooltip: false,
       movable: false,
-      zoomable: false,
+      zoomable: true,
       rotatable: false,
       scalable: false,
       transition: true,

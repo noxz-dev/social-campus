@@ -28,6 +28,7 @@
     "@types/pg": "^7.14.10",
     "@types/prettier": "^2.2.1",
     "@types/reflect-metadata": "^0.1.0",
+    "@types/sharp": "^0.28.3",
     "@types/typescript": "^2.0.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -43,7 +44,6 @@
   },
   "dependencies": {
     "@boost/log": "^2.2.3",
-    "@squoosh/lib": "^0.3.1",
     "apollo-server-express": "^2.21.0",
     "argon2": "^0.27.1",
     "axios": "^0.21.1",
@@ -73,7 +73,7 @@
     "nodemailer": "^6.4.18",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
-    "sharp": "^0.28.1",
+    "sharp": "^0.28.3",
     "type-graphql": "^1.1.1",
     "typeorm": "0.2.31",
     "uuid": "^8.3.2"

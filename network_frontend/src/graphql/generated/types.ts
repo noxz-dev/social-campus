@@ -105,6 +105,7 @@ export type GroupMember = {
   activated: Scalars['Boolean'];
   email: Scalars['String'];
   avatar?: Maybe<Media>;
+  banner?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -656,6 +657,7 @@ export type UpdateProfileInput = {
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['Upload']>;
+  banner?: Maybe<Scalars['Upload']>;
 };
 
 
@@ -669,6 +671,7 @@ export type User = {
   activated: Scalars['Boolean'];
   email: Scalars['String'];
   avatar?: Maybe<Media>;
+  banner?: Maybe<Media>;
   bio?: Maybe<Scalars['String']>;
   faculty?: Maybe<Scalars['String']>;
   studyCourse?: Maybe<Scalars['String']>;
@@ -1622,6 +1625,9 @@ export type UserByUsernameQuery = (
     & { roles: Array<(
       { __typename?: 'Role' }
       & Pick<Role, 'id' | 'name'>
+    )>, banner?: Maybe<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'id' | 'name' | 'blurhash'>
     )>, avatar?: Maybe<(
       { __typename?: 'Media' }
       & Pick<Media, 'id' | 'name' | 'blurhash'>
@@ -3577,6 +3583,11 @@ export const UserByUsernameDocument = gql`
     roles {
       id
       name
+    }
+    banner {
+      id
+      name
+      blurhash
     }
     avatar {
       id

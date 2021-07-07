@@ -40,6 +40,11 @@ export class User extends Base {
   @JoinColumn()
   avatar: Media;
 
+  @Field(() => Media, { nullable: true })
+  @OneToOne(() => Media)
+  @JoinColumn()
+  banner: Media;
+
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })
   bio: string;

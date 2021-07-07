@@ -14,6 +14,11 @@ export const userByUsername = gql`
         id
         name
       }
+      banner {
+        id
+        name
+        blurhash
+      }
       avatar {
         id
         name

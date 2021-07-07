@@ -11,13 +11,22 @@
     >
       <div class="dark:bg-dark-600 bg-gray-100 w-11/12 my-3 mb-2 flex flex-col rounded-xl">
         <div>
-          <div class="h-32 w-full lg:h-64">
+          <div class="h-32 w-full lg:h-64" v-if="!showBanner">
             <lazy-image
               class="object-cover h-32 w-full lg:h-64 rounded-xl"
-              src="abc"
+              src=""
               alt=""
               blurhash="LvICmx{hjJJ8B,EzX7wdJTNHoysS"
               :onLoad="false"
+            />
+          </div>
+          <div class="h-32 w-full lg:h-64" v-else>
+            <lazy-image
+              class="object-cover h-32 w-full lg:h-64 rounded-xl"
+              :src="user?.banner?.name"
+              alt=""
+              blurhash="LvICmx{hjJJ8B,EzX7wdJTNHoysS"
+              :onLoad="true"
             />
           </div>
           <div class="max-w-5xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-14 2xl:px-0">
@@ -382,6 +391,8 @@ export default defineComponent({
     const profileImage = useResult(result, null, (data) => data.userByUsername.avatar.name);
     const following = useResult(result, null, (data) => data.userByUsername.meFollowing);
 
+    const showBanner = computed(() => (user.value?.banner ? true : false));
+
     //stats query is disabled by default, activate the query if the user is set
     watch(
       () => user.value,
@@ -448,6 +459,7 @@ export default defineComponent({
       openAboutMe,
       breakpoints,
       numberFormatter,
+      showBanner,
     };
   },
 });

@@ -290,6 +290,16 @@ export class UserResolver {
       await getRepository(Media).save(user.avatar);
     }
 
+    if (input.banner) {
+      const { filename, blurhash } = await uploadFileGraphql(input.banner, 'images');
+      const banner = new Media();
+      banner.name = filename;
+      banner.blurhash = blurhash;
+      banner.type = MediaType.IMAGE;
+      user.banner = banner;
+      await getRepository(Media).save(banner);
+    }
+
     await userRepo.save(user);
 
     const followState = user.followers.some((user) => user.id === userId);
@@ -592,6 +602,12 @@ export class UserResolver {
   async avatar(@Root() user: User): Promise<Media> {
     const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['avatar'] });
     return u.avatar;
+  }
+
+  @FieldResolver()
+  async banner(@Root() user: User): Promise<Media> {
+    const u = await getRepository(User).findOne({ where: { id: user.id }, relations: ['banner'] });
+    return u.banner;
   }
 
   @FieldResolver()

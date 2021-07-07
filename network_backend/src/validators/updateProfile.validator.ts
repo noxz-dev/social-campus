@@ -26,6 +26,6 @@ export class UpdateProfileInput {
   @Field(() => GraphQLUpload, { nullable: true })
   avatar: FileUpload;
 
-  //   @Field(() => GraphQLUpload, { nullable: true })
-  //   banner: FileUpload;
+  @Field(() => GraphQLUpload, { nullable: true })
+  banner: FileUpload;
 }

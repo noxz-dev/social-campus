@@ -12,13 +12,12 @@
           class="
             w-full
             border-2 border-gray-700
-            h-24
+            h-32
             resize-none
             rounded-lg
             p-2
             outline-none
-            focus:ring-1 focus:ring-brand-500
-            focus:border-indigo-500
+            focus:ring-1 focus:ring-brand-500 focus:border-indigo-500
           "
           :placeholder="placeholderText"
         />

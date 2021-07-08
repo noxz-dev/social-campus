@@ -68,7 +68,6 @@
                       ></path>
                     </svg>
                     Beitreten
-                   
                   </app-button>
                 </div>
               </div>
@@ -98,7 +97,11 @@ export default defineComponent({
   setup(props) {
     const groupPassword = ref('');
 
-    const { mutate: joinGrp, error,loading } = useJoinGroupMutation(() => ({
+    const {
+      mutate: joinGrp,
+      error,
+      loading,
+    } = useJoinGroupMutation(() => ({
       variables: {
         groupId: props.groupId,
         password: groupPassword.value,
@@ -112,9 +115,8 @@ export default defineComponent({
 
     const group = useResult(result, null, (data) => data.groupByIdPreview);
 
-    //TODO INPUT VALIDATION AND FEEDBACK
     const joinGroup = async () => {
-      if (groupPassword.value.length >= 3) {
+      if (groupPassword.value.length >= 1) {
         await joinGrp();
         state.refreshGroup = true;
       }
@@ -126,7 +128,7 @@ export default defineComponent({
       joinGroup,
       group,
       error,
-      loading
+      loading,
     };
   },
 });

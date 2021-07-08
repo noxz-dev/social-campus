@@ -484,6 +484,9 @@ export default defineComponent({
       newProfileImage.value = URL.createObjectURL(files[0]);
     };
 
+    /**
+     * generates a preview for the bannerimage if choosen
+     */
     const onBannerChanged = (e: any) => {
       const files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;

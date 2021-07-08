@@ -9,7 +9,7 @@
     <div class="flex justify-between">
       <span
         class="text-xs mt-2 hover:text-highlight-500 cursor-pointer flex items-center hover:underline"
-        @click="openMarkdownDoku"
+        @click="openMarkdownDoc"
       >
         <span class="">🛈 Markdown wird unterstützt</span></span
       >
@@ -61,8 +61,7 @@
           bg-black
           text-white
           bg-opacity-80
-          hover:stroke-red
-          hover:fill-red
+          hover:stroke-red hover:fill-red
           fill-white
           transition
           shadow
@@ -72,8 +71,7 @@
           flex
           items-center
           justify-center
-          focus:outline-none
-          focus:ring-2 focus:ring-white
+          focus:outline-none focus:ring-2 focus:ring-white
         "
       >
         <svg viewBox="0 0 24 24" class="">
@@ -131,8 +129,7 @@
               dark:border-white
               border-black
               rounded-full
-              hover:stroke-red
-              hover:fill-red
+              hover:stroke-red hover:fill-red
               transition-all
               dark:fill-white
               flex
@@ -395,7 +392,7 @@ export default defineComponent({
       }
     };
 
-    const openMarkdownDoku = () => {
+    const openMarkdownDoc = () => {
       window.open('https://guides.github.com/features/mastering-markdown/');
     };
 
@@ -472,7 +469,7 @@ export default defineComponent({
       getInputProps,
       ...rest,
       autoCompleteOptions,
-      openMarkdownDoku,
+      openMarkdownDoc,
       emojiOpen,
       emojiPicker,
       loading,

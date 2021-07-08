@@ -115,6 +115,9 @@ export default defineComponent({
 
     const group = useResult(result, null, (data) => data.groupByIdPreview);
 
+    /**
+     * try to join a group with the password
+     */
     const joinGroup = async () => {
       if (groupPassword.value.length >= 1) {
         await joinGrp();

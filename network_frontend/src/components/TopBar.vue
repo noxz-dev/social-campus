@@ -650,7 +650,6 @@ import { RecursivePartial } from '../utils/typeUtils';
 import LazyImage from './Blurhash/LazyImage.vue';
 import SettingsModal from './SettingsModal.vue';
 import { state } from '../utils/state';
-import { gql, useMutation } from '@apollo/client';
 
 export default defineComponent({
   components: {

@@ -159,7 +159,7 @@
 <script lang="ts">
 import { onClickOutside } from '@vueuse/core';
 import { useSearchQuery } from '../graphql/generated/types';
-import { customRef, defineComponent, ref, Ref, unref, watch } from 'vue';
+import { customRef, defineComponent, ref, Ref, unref } from 'vue';
 import { useRouter } from 'vue-router';
 import breakpoints from '../utils/breakpoints';
 import InputField from './Form/InputField.vue';

@@ -129,13 +129,11 @@
 </template>
 <script lang="ts">
 import { useCreateGroupMutation } from '../../graphql/generated/types';
-import { CreateGroupMutationVariables, GroupType } from '../../graphql/generated/types';
 import { computed, defineComponent, ref } from 'vue';
 import CustomSelect from '../Form/CustomSelect.vue';
 import InputField from '../Form/InputField.vue';
 import useVuelidate from '@vuelidate/core';
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue';
-import { myGroups } from '../../graphql/queries/myGroups';
 import { minLength, required, maxLength, helpers } from '@vuelidate/validators';
 import gql from 'graphql-tag';
 export default defineComponent({

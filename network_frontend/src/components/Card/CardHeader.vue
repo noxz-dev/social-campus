@@ -120,8 +120,7 @@
                 rounded-md
                 shadow-lg
                 bg-white
-                dark:bg-dark-600
-                dark:border-dark-400
+                dark:bg-dark-600 dark:border-dark-400
                 border
                 ring-1 ring-black ring-opacity-5
                 focus:outline-none
@@ -192,8 +191,7 @@
                     py-2
                     text-sm text-gray-700
                     hover:bg-gray-100
-                    dark:text-gray-50
-                    dark:hover:bg-dark-500
+                    dark:text-gray-50 dark:hover:bg-dark-500
                     stroke-grayLight
                     rounded-b-lg
                   "
@@ -246,7 +244,6 @@ import { onClickOutside } from '@vueuse/core';
 import PermissionContainer from '../PermissionContainer.vue';
 import { useDeleteCommentMutation, useDeletePostMutation } from '../../graphql/generated/types';
 import { Post } from '../../graphql/generated/types';
-import { useRoute } from 'vue-router';
 import LazyImage from '../../components/Blurhash/LazyImage.vue';
 
 export default defineComponent({

@@ -37,8 +37,10 @@ const app = createApp({
   .use(router)
   .use(store);
 
+//register global components
 app.component('app-button', AppButton);
 app.component('lazy-image', LazyImageVue);
 
+//mount the eventbus
 app.config.globalProperties.eventbus = eventbus;
 app.mount('#app');

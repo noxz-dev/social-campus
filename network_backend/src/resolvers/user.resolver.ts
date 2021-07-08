@@ -71,9 +71,9 @@ export class UserResolver {
     @Ctx() ctx: MyContext,
   ): Promise<boolean | null> {
     //validate the email, to check if it is a valid university email
-    // if (!input.email.endsWith('@hs-hannover.de') || input.email.endsWith('@stud.hs-hannover.de')) {
-    //   throw new Error('only university email allowed');
-    // }
+    if (!input.email.endsWith('@hs-hannover.de') && !input.email.endsWith('@stud.hs-hannover.de')) {
+      throw new Error('only university email allowed');
+    }
 
     await getManager().transaction(async (transactionManager) => {
       const hashedPassword = await argon2.hash(input.password);

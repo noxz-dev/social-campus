@@ -126,7 +126,7 @@
 
 <script lang="ts">
 import { useDeleteNotificationMutation } from '../graphql/generated/types';
-import { defineComponent, PropType, ref, toRefs, watch } from 'vue';
+import { defineComponent, PropType, ref, watch } from 'vue';
 import { Notification, NotificationType } from '../graphql/generated/types';
 import { useRouter } from 'vue-router';
 import lazyImage from '../components/Blurhash/LazyImage.vue';

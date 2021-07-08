@@ -9,7 +9,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import MediumEditor from 'medium-editor';
 import { useGroupAboutQuery, useGroupMembersQuery, useUpdateAboutGroupMutation } from '../../graphql/generated/types';
 import { useRoute } from 'vue-router';

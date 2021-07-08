@@ -65,8 +65,7 @@
             py-8
             px-4
             shadow
-            sm:rounded-lg
-            sm:px-10
+            sm:rounded-lg sm:px-10
             md:dark:bg-dark-600
             dark:bg-dark-700
             border
@@ -93,16 +92,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -127,16 +122,12 @@
                     px-3
                     py-2
                     border
-                    dark:text-gray-100
-                    dark:bg-dark-700
-                    dark:border-dark-600
+                    dark:text-gray-100 dark:bg-dark-700 dark:border-dark-600
                     border-gray-300
                     rounded-md
                     shadow-sm
                     placeholder-gray-400
-                    focus:outline-none
-                    focus:ring-brand-500
-                    focus:border-indigo-500
+                    focus:outline-none focus:ring-brand-500 focus:border-indigo-500
                     sm:text-sm
                   "
                 />
@@ -169,8 +160,7 @@
                   text-white
                   bg-brand-600
                   hover:bg-brand-700
-                  focus:outline-none
-                  focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500
                 "
               >
                 Login
@@ -223,14 +213,11 @@ export default defineComponent({
     const emailForm = ref('');
     const password = ref('');
 
-    const validEmail = (value) => value.endsWidth('@hs-hannover.de');
-
     //input validation rules
     const rules = computed(() => ({
       emailForm: {
         required: helpers.withMessage('Email wird benötigt', required),
         email: helpers.withMessage('Keine gültige Email', email),
-        // validEmail: helpers.withMessage('Nur Hochschul-Emails sind erlaubt', validEmail)
       },
       password: {
         required: helpers.withMessage('Passwort wird benötigt', required),

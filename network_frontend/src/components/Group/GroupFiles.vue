@@ -111,6 +111,9 @@ export default defineComponent({
       return dayjs(date).format('ddd DD. MMM YYYY HH:mm');
     };
 
+    /**
+     * fetch a file via the proxy and start the download
+     */
     const downloadFile = async (name: string, fileType: MediaType) => {
       if (fileType === MediaType.File) {
         const link = document.createElement('a');

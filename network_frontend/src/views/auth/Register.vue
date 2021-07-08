@@ -313,7 +313,6 @@
 import { computed, defineComponent, ref } from 'vue';
 import { required, minLength, email, sameAs, alpha, alphaNum, helpers } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
-import { useRouter } from 'vue-router';
 import { useSignupMutation } from '../../graphql/generated/types';
 export default defineComponent({
   setup() {
@@ -325,14 +324,14 @@ export default defineComponent({
     const confirmPassword = ref('');
     const success = ref(false);
 
-    const validEmail = (value) => value.endsWidth('@hs-hannover.de');
+    const validEmail = (value) => value.endsWith('hs-hannover.de') || value.endsWith('@stud.hs-hannover.de');
 
     //input validation rules
     const rules = computed(() => ({
       emailForm: {
         required,
         email,
-        // validEmail: helpers.withMessage('Nur Hochschul-Emails sind erlaubt', validEmail)
+        validEmail: helpers.withMessage('Nur Hochschul-Emails sind erlaubt', validEmail),
       },
       password: {
         required,

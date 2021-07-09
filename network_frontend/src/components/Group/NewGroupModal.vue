@@ -36,10 +36,7 @@
               shadow-xl
               transform
               transition-all
-              sm:my-8
-              sm:align-middle
-              sm:max-w-lg
-              sm:w-full
+              sm:my-8 sm:align-middle sm:max-w-lg sm:w-full
             "
           >
             <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -85,8 +82,7 @@
                         rounded-lg
                         p-2
                         outline-none
-                        focus:ring-1 focus:ring-brand-500
-                        focus:border-indigo-500
+                        focus:ring-1 focus:ring-brand-500 focus:border-indigo-500
                       "
                       placeholder="Gruppenbeschreibung"
                       v-model="description"
@@ -107,8 +103,7 @@
                 class="
                   !border-gray-300
                   !bg-white
-                  dark:!border-dark-500
-                  dark:!bg-dark-500
+                  dark:!border-dark-500 dark:!bg-dark-500
                   hover:!bg-gray-200
                   dark:hover:!bg-dark-600
                   !text-gray-900
@@ -128,7 +123,7 @@
   </TransitionRoot>
 </template>
 <script lang="ts">
-import { useCreateGroupMutation } from '../../graphql/generated/types';
+import { GroupType, useCreateGroupMutation } from '../../graphql/generated/types';
 import { computed, defineComponent, ref } from 'vue';
 import CustomSelect from '../Form/CustomSelect.vue';
 import InputField from '../Form/InputField.vue';
@@ -199,7 +194,6 @@ export default defineComponent({
         password: groupPassword.value,
       },
       update: (cache, { data: { createGroup } }) => {
-
         //add the newly created group to the exisiting cache
         cache.modify({
           fields: {
@@ -221,7 +215,6 @@ export default defineComponent({
                 `,
               });
 
-
               return [newGroupRef, ...existingGroups];
             },
           },
@@ -237,7 +230,7 @@ export default defineComponent({
       if (v.value.$errors.length === 0) {
         try {
           await createGrp();
-          v.value.$reset()
+          v.value.$reset();
           groupname.value = '';
           description.value = '';
           groupPassword.value = '';

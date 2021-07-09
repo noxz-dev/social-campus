@@ -131,6 +131,7 @@
             >
               <div class="">
                 <button
+                  v-if="post"
                   @click="eventbus.emit('open-edit-modal', post)"
                   class="
                     w-full

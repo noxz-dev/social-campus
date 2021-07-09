@@ -121,6 +121,9 @@
         </div>
         <div class="hidden lg:flex lg:items-center lg:justify-end xl:col-span-3" id="notify-button" ref="notifyTarget">
           <div
+            role="button"
+            tabindex="0"
+            @keydown.space="notifyOpen = !notifyOpen"
             @click="notifyOpen = !notifyOpen"
             class="
               hover:opacity-70

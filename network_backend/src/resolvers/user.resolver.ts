@@ -119,7 +119,7 @@ export class UserResolver {
       await transactionManager.save(Token, token);
 
       //if email verification is active send an email.. if not just directly activate the account
-      if (!process.env.USE_EMAIL_VERIFICATION) {
+      if (process.env.USE_EMAIL_VERIFICATION.toLowerCase() === 'true') {
         log.info('activate account email send');
         await sendEmail({
           email: input.email,
